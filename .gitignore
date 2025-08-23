@@ -1,0 +1,91 @@
+#OS junk files
+[Tt]humbs.db
+*.DS_Store
+*.db
+
+#Visual Studio files
+*.filters
+.vs/
+*.[Oo]bj
+*.user
+*.aps
+*.pch
+*.vspscc
+*.vssscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.[Cc]ache
+*.ilk
+*.log
+*.lib
+*.sbr
+*.sdf
+*.opensdf
+*.unsuccessfulbuild
+ipch/
+[Oo]bj/
+[Bb]in
+[Dd]ebug*/
+[Rr]elease*/
+Ankh.NoLoad
+
+#MonoDevelop
+*.pidb
+*.userprefs
+
+#Tooling
+_ReSharper*/
+*.resharper
+[Tt]est[Rr]esult*
+*.sass-cache
+
+#Project files
+#[Bb]uild/
+
+node_modules/
+fable_modules/
+
+#Subversion files
+.svn
+
+#Configuration files
+*appsettings*
+
+# Office Temp Files
+~$*
+
+# vim Temp Files
+*~
+
+#NuGet
+*.nupkg
+
+#ncrunch
+*ncrunch*
+*crunch*.local.xml
+
+# visual studio database projects
+*.dbmdl
+
+#Test files
+*TestShell.cs
+*TestScript.cs
+*.testsettings
+/ActiveClients
+/.vs/MTUtility/v15
+/.vs/MTUtility/v15/Browse.VC.opendb
+/packages/CommandLineParser.1.9.71
+/packages
+/FIXGateway/MsgStorage
+/SetteeWebsiteApi/appsettings.json
+
+.fake
+
+EcommerceFrontend/EcommerceFrontend/dist/
+EcommerceFrontend/EcommerceFrontend/localhost-key.pem
+EcommerceFrontend/EcommerceFrontend/localhost.pem
