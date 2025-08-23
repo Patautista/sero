@@ -1,0 +1,1202 @@
+[
+	{
+		"meaningId": 1,
+		"id": 1,
+		"text": "Eu não doei sangue.",
+		"language": "pt",
+		"tags": [
+			{ "name": "health", "type": "generalTopic"},
+			{ "name": "negation", "type": "learningTopic"},
+			{ "name": "past", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"},
+		]
+	},
+	{
+		"meaningId": 1,
+		"id": 2,
+		"text": "Non donai sangue.",
+		"language": "it",
+		"tags": [
+			{ "name": "health", "type": "generalTopic"},
+			{ "name": "negation", "type": "learningTopic"},
+			{ "name": "past", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"},
+		]
+	},
+	{
+		"meaningId": 2,
+		"id": 3,
+		"text": "Tom coleciona gibis.",
+		"language": "pt",
+		"tags": [
+			{ "name": "culture", "type": "generalTopic"},
+			{ "name": "beginner", "type": "difficulty"},
+		]
+	},
+	{
+		"meaningId": 2,
+		"id": 4,
+		"text": "Tom colleziona fumetti.",
+		"language": "it",
+		"tags": [
+			{ "name": "culture", "type": "generalTopic"},
+			{ "name": "beginner", "type": "difficulty"},
+		]
+	},
+	{
+		"meaningId": 3,
+		"id": 5,
+		"text": "Qual caixa (você) prefere?",
+		"language": "it",
+		"tags": [
+			{ "name": "like", "type": "generalTopic"},
+			{ "name": "beginner", "type": "difficulty"},
+		]
+	},
+	{
+		"meaningId": 3,
+		"id": 6,
+		"text": "Quale scatola preferisci?",
+		"language": "it",
+		"tags": [
+			{ "name": "like", "type": "generalTopic"},
+			{ "name": "beginner", "type": "difficulty"},
+		]
+	},
+	{
+		"meaningId": 4,
+		"id": 7,
+		"text": "Pode chover esta noite.",
+		"language": "pt",
+		"tags": [
+			{ "name": "nature", "type": "generalTopic"},
+			{ "name": "beginner", "type": "difficulty"},
+		]
+	},
+	{
+		"meaningId": 4,
+		"id": 8,
+		"text": "Potrebbe piovere stanotte.",
+		"language": "it",
+		"tags": [
+			{ "name": "nature", "type": "generalTopic"},
+			{ "name": "beginner", "type": "difficulty"},
+		]
+	},
+	{
+		"meaningId": 5,
+		"id": 9,
+		"text": "Eu gosto de maçãs.",
+		"language": "pt",
+		"tags": [
+			{ "name": "food", "type": "generalTopic"},
+			{ "name": "like", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 5,
+		"id": 10,
+		"text": "Mi piacciono le mele.",
+		"language": "it",
+		"tags": [
+			{ "name": "food", "type": "generalTopic"},
+			{ "name": "like", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 6,
+		"id": 11,
+		"text": "Nós estamos na escola.",
+		"language": "pt",
+		"tags": [
+			{ "name": "education", "type": "generalTopic"},
+			{ "name": "present", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 6,
+		"id": 12,
+		"text": "Noi siamo a scuola.",
+		"language": "it",
+		"tags": [
+			{ "name": "education", "type": "generalTopic"},
+			{ "name": "present", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 7,
+		"id": 13,
+		"text": "Ele tem um cachorro pequeno.",
+		"language": "pt",
+		"tags": [
+			{ "name": "pets", "type": "generalTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 7,
+		"id": 14,
+		"text": "Lui ha un cane piccolo.",
+		"language": "it",
+		"tags": [
+			{ "name": "pets", "type": "generalTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 8,
+		"id": 15,
+		"text": "Você quer café?",
+		"language": "pt",
+		"tags": [
+			{ "name": "food", "type": "generalTopic"},
+			{ "name": "question", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 8,
+		"id": 16,
+		"text": "Vuoi del caffè?",
+		"language": "it",
+		"tags": [
+			{ "name": "food", "type": "generalTopic"},
+			{ "name": "question", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 9,
+		"id": 17,
+		"text": "O quarto é grande.",
+		"language": "pt",
+		"tags": [
+			{ "name": "home", "type": "generalTopic"},
+			{ "name": "adjective", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 9,
+		"id": 18,
+		"text": "La stanza è grande.",
+		"language": "it",
+		"tags": [
+			{ "name": "home", "type": "generalTopic"},
+			{ "name": "adjective", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 10,
+		"id": 19,
+		"text": "Eles não estudam à noite.",
+		"language": "pt",
+		"tags": [
+			{ "name": "education", "type": "generalTopic"},
+			{ "name": "negation", "type": "learningTopic"},
+			{ "name": "present", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 10,
+		"id": 20,
+		"text": "Loro non studiano di notte.",
+		"language": "it",
+		"tags": [
+			{ "name": "education", "type": "generalTopic"},
+			{ "name": "negation", "type": "learningTopic"},
+			{ "name": "present", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 11,
+		"id": 21,
+		"text": "A porta está aberta.",
+		"language": "pt",
+		"tags": [
+			{ "name": "home", "type": "generalTopic"},
+			{ "name": "present", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 11,
+		"id": 22,
+		"text": "La porta è aperta.",
+		"language": "it",
+		"tags": [
+			{ "name": "home", "type": "generalTopic"},
+			{ "name": "present", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 12,
+		"id": 23,
+		"text": "Maria lê um livro.",
+		"language": "pt",
+		"tags": [
+			{ "name": "culture", "type": "generalTopic"},
+			{ "name": "present", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 12,
+		"id": 24,
+		"text": "Maria legge un libro.",
+		"language": "it",
+		"tags": [
+			{ "name": "culture", "type": "generalTopic"},
+			{ "name": "present", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 13,
+		"id": 25,
+		"text": "Hoje está frio.",
+		"language": "pt",
+		"tags": [
+			{ "name": "weather", "type": "generalTopic"},
+			{ "name": "adjective", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 13,
+		"id": 26,
+		"text": "Oggi fa freddo.",
+		"language": "it",
+		"tags": [
+			{ "name": "weather", "type": "generalTopic"},
+			{ "name": "adjective", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 14,
+		"id": 27,
+		"text": "Eu vou ao mercado.",
+		"language": "pt",
+		"tags": [
+			{ "name": "dailyLife", "type": "generalTopic"},
+			{ "name": "future", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 14,
+		"id": 28,
+		"text": "Vado al mercato.",
+		"language": "it",
+		"tags": [
+			{ "name": "dailyLife", "type": "generalTopic"},
+			{ "name": "future", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 15,
+		"id": 29,
+		"text": "Eu moro em Fortaleza.",
+		"language": "pt",
+		"tags": [
+			{ "name": "dailyLife", "type": "generalTopic"},
+			{ "name": "present", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 15,
+		"id": 30,
+		"text": "Io vivo a Fortaleza.",
+		"language": "it",
+		"tags": [
+			{ "name": "dailyLife", "type": "generalTopic"},
+			{ "name": "present", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 16,
+		"id": 31,
+		"text": "Nós temos dois filhos.",
+		"language": "pt",
+		"tags": [
+			{ "name": "family", "type": "generalTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 16,
+		"id": 32,
+		"text": "Abbiamo due figli.",
+		"language": "it",
+		"tags": [
+			{ "name": "family", "type": "generalTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 17,
+		"id": 33,
+		"text": "Eu bebo água todos os dias.",
+		"language": "pt",
+		"tags": [
+			{ "name": "health", "type": "generalTopic"},
+			{ "name": "habit", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 17,
+		"id": 34,
+		"text": "Bevo acqua tutti i giorni.",
+		"language": "it",
+		"tags": [
+			{ "name": "health", "type": "generalTopic"},
+			{ "name": "habit", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 18,
+		"id": 35,
+		"text": "A casa é amarela.",
+		"language": "pt",
+		"tags": [
+			{ "name": "home", "type": "generalTopic"},
+			{ "name": "adjective", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 18,
+		"id": 36,
+		"text": "La casa è gialla.",
+		"language": "it",
+		"tags": [
+			{ "name": "home", "type": "generalTopic"},
+			{ "name": "adjective", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 19,
+		"id": 37,
+		"text": "Ele está no trabalho.",
+		"language": "pt",
+		"tags": [
+			{ "name": "work", "type": "generalTopic"},
+			{ "name": "present", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 19,
+		"id": 38,
+		"text": "Lui è al lavoro.",
+		"language": "it",
+		"tags": [
+			{ "name": "work", "type": "generalTopic"},
+			{ "name": "present", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 20,
+		"id": 39,
+		"text": "Você tem um carro?",
+		"language": "pt",
+		"tags": [
+			{ "name": "transport", "type": "generalTopic"},
+			{ "name": "question", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 20,
+		"id": 40,
+		"text": "Hai una macchina?",
+		"language": "it",
+		"tags": [
+			{ "name": "transport", "type": "generalTopic"},
+			{ "name": "question", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 21,
+		"id": 41,
+		"text": "Eu não gosto de leite.",
+		"language": "pt",
+		"tags": [
+			{ "name": "food", "type": "generalTopic"},
+			{ "name": "negation", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 21,
+		"id": 42,
+		"text": "Non mi piace il latte.",
+		"language": "it",
+		"tags": [
+			{ "name": "food", "type": "generalTopic"},
+			{ "name": "negation", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 22,
+		"id": 43,
+		"text": "Hoje é segunda-feira.",
+		"language": "pt",
+		"tags": [
+			{ "name": "time", "type": "generalTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 22,
+		"id": 44,
+		"text": "Oggi è lunedì.",
+		"language": "it",
+		"tags": [
+			{ "name": "time", "type": "generalTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 23,
+		"id": 45,
+		"text": "Nós estamos felizes.",
+		"language": "pt",
+		"tags": [
+			{ "name": "feelings", "type": "generalTopic"},
+			{ "name": "adjective", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 23,
+		"id": 46,
+		"text": "Siamo felici.",
+		"language": "it",
+		"tags": [
+			{ "name": "feelings", "type": "generalTopic"},
+			{ "name": "adjective", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 24,
+		"id": 47,
+		"text": "Eles jogam futebol.",
+		"language": "pt",
+		"tags": [
+			{ "name": "sports", "type": "generalTopic"},
+			{ "name": "present", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 24,
+		"id": 48,
+		"text": "Loro giocano a calcio.",
+		"language": "it",
+		"tags": [
+			{ "name": "sports", "type": "generalTopic"},
+			{ "name": "present", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 25,
+		"id": 49,
+		"text": "O ônibus chegou cedo.",
+		"language": "pt",
+		"tags": [
+			{ "name": "transport", "type": "generalTopic"},
+			{ "name": "past", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 25,
+		"id": 50,
+		"text": "L'autobus è arrivato presto.",
+		"language": "it",
+		"tags": [
+			{ "name": "transport", "type": "generalTopic"},
+			{ "name": "past", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 26,
+		"id": 51,
+		"text": "Eu comprei pão ontem.",
+		"language": "pt",
+		"tags": [
+			{ "name": "food", "type": "generalTopic"},
+			{ "name": "past", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 26,
+		"id": 52,
+		"text": "Ho comprato il pane ieri.",
+		"language": "it",
+		"tags": [
+			{ "name": "food", "type": "generalTopic"},
+			{ "name": "past", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 27,
+		"id": 53,
+		"text": "A sala tem uma janela.",
+		"language": "pt",
+		"tags": [
+			{ "name": "home", "type": "generalTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 27,
+		"id": 54,
+		"text": "La sala ha una finestra.",
+		"language": "it",
+		"tags": [
+			{ "name": "home", "type": "generalTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 28,
+		"id": 55,
+		"text": "Eu vou dormir cedo.",
+		"language": "pt",
+		"tags": [
+			{ "name": "dailyLife", "type": "generalTopic"},
+			{ "name": "future", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 28,
+		"id": 56,
+		"text": "Vado a dormire presto.",
+		"language": "it",
+		"tags": [
+			{ "name": "dailyLife", "type": "generalTopic"},
+			{ "name": "future", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 29,
+		"id": 57,
+		"text": "Você está cansado?",
+		"language": "pt",
+		"tags": [
+			{ "name": "feelings", "type": "generalTopic"},
+			{ "name": "question", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 29,
+		"id": 58,
+		"text": "Sei stanco?",
+		"language": "it",
+		"tags": [
+			{ "name": "feelings", "type": "generalTopic"},
+			{ "name": "question", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 30,
+		"id": 59,
+		"text": "O gato está na cama.",
+		"language": "pt",
+		"tags": [
+			{ "name": "pets", "type": "generalTopic"},
+			{ "name": "present", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 30,
+		"id": 60,
+		"text": "Il gatto è sul letto.",
+		"language": "it",
+		"tags": [
+			{ "name": "pets", "type": "generalTopic"},
+			{ "name": "present", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 31,
+		"id": 61,
+		"text": "Nós estamos no parque.",
+		"language": "pt",
+		"tags": [
+			{ "name": "nature", "type": "generalTopic"},
+			{ "name": "present", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 31,
+		"id": 62,
+		"text": "Siamo al parco.",
+		"language": "it",
+		"tags": [
+			{ "name": "nature", "type": "generalTopic"},
+			{ "name": "present", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 32,
+		"id": 63,
+		"text": "Ele bebeu vinho.",
+		"language": "pt",
+		"tags": [
+			{ "name": "food", "type": "generalTopic"},
+			{ "name": "past", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 32,
+		"id": 64,
+		"text": "Ha bevuto vino.",
+		"language": "it",
+		"tags": [
+			{ "name": "food", "type": "generalTopic"},
+			{ "name": "past", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 33,
+		"id": 65,
+		"text": "Hoje está ensolarado.",
+		"language": "pt",
+		"tags": [
+			{ "name": "weather", "type": "generalTopic"},
+			{ "name": "adjective", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 33,
+		"id": 66,
+		"text": "Oggi è soleggiato.",
+		"language": "it",
+		"tags": [
+			{ "name": "weather", "type": "generalTopic"},
+			{ "name": "adjective", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 34,
+		"id": 67,
+		"text": "Você lê jornais?",
+		"language": "pt",
+		"tags": [
+			{ "name": "culture", "type": "generalTopic"},
+			{ "name": "question", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 34,
+		"id": 68,
+		"text": "Leggi i giornali?",
+		"language": "it",
+		"tags": [
+			{ "name": "culture", "type": "generalTopic"},
+			{ "name": "question", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 35,
+		"id": 69,
+		"text": "Ela vai cozinhar hoje.",
+		"language": "pt",
+		"tags": [
+			{ "name": "food", "type": "generalTopic"},
+			{ "name": "future", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 35,
+		"id": 70,
+		"text": "Lei cucinerà oggi.",
+		"language": "it",
+		"tags": [
+			{ "name": "food", "type": "generalTopic"},
+			{ "name": "future", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 36,
+		"id": 71,
+		"text": "A janela está fechada.",
+		"language": "pt",
+		"tags": [
+			{ "name": "home", "type": "generalTopic"},
+			{ "name": "present", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 36,
+		"id": 72,
+		"text": "La finestra è chiusa.",
+		"language": "it",
+		"tags": [
+			{ "name": "home", "type": "generalTopic"},
+			{ "name": "present", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 37,
+		"id": 73,
+		"text": "Eles viajaram em julho.",
+		"language": "pt",
+		"tags": [
+			{ "name": "travel", "type": "generalTopic"},
+			{ "name": "past", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 37,
+		"id": 74,
+		"text": "Sono andati in viaggio a luglio.",
+		"language": "it",
+		"tags": [
+			{ "name": "travel", "type": "generalTopic"},
+			{ "name": "past", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 38,
+		"id": 75,
+		"text": "O bebê está dormindo.",
+		"language": "pt",
+		"tags": [
+			{ "name": "family", "type": "generalTopic"},
+			{ "name": "presentContinuous", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 38,
+		"id": 76,
+		"text": "Il bambino sta dormendo.",
+		"language": "it",
+		"tags": [
+			{ "name": "family", "type": "generalTopic"},
+			{ "name": "presentContinuous", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 21,
+		"id": 40,
+		"text": "A Revolução Francesa começou em 1789.",
+		"language": "pt",
+		"tags": [
+			{ "name": "history", "type": "generalTopic"},
+			{ "name": "past", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 21,
+		"id": 41,
+		"text": "La Rivoluzione francese iniziò nel 1789.",
+		"language": "it",
+		"tags": [
+			{ "name": "history", "type": "generalTopic"},
+			{ "name": "past", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 22,
+		"id": 42,
+		"text": "O DNA guarda informações genéticas.",
+		"language": "pt",
+		"tags": [
+			{ "name": "biology", "type": "generalTopic"},
+			{ "name": "present", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 22,
+		"id": 43,
+		"text": "Il DNA conserva informazioni genetiche.",
+		"language": "it",
+		"tags": [
+			{ "name": "biology", "type": "generalTopic"},
+			{ "name": "present", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 23,
+		"id": 44,
+		"text": "O Brasil é o maior país da América do Sul.",
+		"language": "pt",
+		"tags": [
+			{ "name": "geography", "type": "generalTopic"},
+			{ "name": "fact", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 23,
+		"id": 45,
+		"text": "Il Brasile è il più grande paese del Sud America.",
+		"language": "it",
+		"tags": [
+			{ "name": "geography", "type": "generalTopic"},
+			{ "name": "fact", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 24,
+		"id": 46,
+		"text": "Você assistiu ao último filme do Batman?",
+		"language": "pt",
+		"tags": [
+			{ "name": "popCulture", "type": "generalTopic"},
+			{ "name": "question", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 24,
+		"id": 47,
+		"text": "Hai visto l'ultimo film di Batman?",
+		"language": "it",
+		"tags": [
+			{ "name": "popCulture", "type": "generalTopic"},
+			{ "name": "question", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 25,
+		"id": 48,
+		"text": "A pizza é um prato típico da Itália.",
+		"language": "pt",
+		"tags": [
+			{ "name": "cooking", "type": "generalTopic"},
+			{ "name": "fact", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 25,
+		"id": 49,
+		"text": "La pizza è un piatto tipico d'Italia.",
+		"language": "it",
+		"tags": [
+			{ "name": "cooking", "type": "generalTopic"},
+			{ "name": "fact", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 26,
+		"id": 50,
+		"text": "O sol nasce no leste.",
+		"language": "pt",
+		"tags": [
+			{ "name": "nature", "type": "generalTopic"},
+			{ "name": "fact", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 26,
+		"id": 51,
+		"text": "Il sole sorge a est.",
+		"language": "it",
+		"tags": [
+			{ "name": "nature", "type": "generalTopic"},
+			{ "name": "fact", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 27,
+		"id": 52,
+		"text": "Ele está bolado com a prova.",
+		"language": "pt",
+		"tags": [
+			{ "name": "slang", "type": "generalTopic"},
+			{ "name": "emotion", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 27,
+		"id": 53,
+		"text": "Lui è arrabbiato per l'esame.",
+		"language": "it",
+		"tags": [
+			{ "name": "slang", "type": "generalTopic"},
+			{ "name": "emotion", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 28,
+		"id": 54,
+		"text": "Sócrates dizia: conhece-te a ti mesmo.",
+		"language": "pt",
+		"tags": [
+			{ "name": "philosophy", "type": "generalTopic"},
+			{ "name": "quote", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 28,
+		"id": 55,
+		"text": "Socrate diceva: conosci te stesso.",
+		"language": "it",
+		"tags": [
+			{ "name": "philosophy", "type": "generalTopic"},
+			{ "name": "quote", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 29,
+		"id": 56,
+		"text": "A água ferve a cem graus Celsius.",
+		"language": "pt",
+		"tags": [
+			{ "name": "science", "type": "generalTopic"},
+			{ "name": "fact", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 29,
+		"id": 57,
+		"text": "L'acqua bolle a cento gradi Celsius.",
+		"language": "it",
+		"tags": [
+			{ "name": "science", "type": "generalTopic"},
+			{ "name": "fact", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 30,
+		"id": 58,
+		"text": "O parlamento aprovou a nova lei.",
+		"language": "pt",
+		"tags": [
+			{ "name": "politics", "type": "generalTopic"},
+			{ "name": "past", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+		"meaningId": 30,
+		"id": 59,
+		"text": "Il parlamento ha approvato la nuova legge.",
+		"language": "it",
+		"tags": [
+			{ "name": "politics", "type": "generalTopic"},
+			{ "name": "past", "type": "learningTopic"},
+			{ "name": "beginner", "type": "difficulty"}
+		]
+	},
+	{
+    "meaningId": 31,
+    "id": 60,
+    "text": "A capital da França é Paris.",
+    "language": "pt",
+    "tags": [
+      { "name": "geography", "type": "generalTopic" },
+      { "name": "present", "type": "learningTopic" },
+      { "name": "beginner", "type": "difficulty" }
+    ]
+  },
+  {
+    "meaningId": 31,
+    "id": 61,
+    "text": "La capitale della Francia è Parigi.",
+    "language": "it",
+    "tags": [
+      { "name": "geography", "type": "generalTopic" },
+      { "name": "present", "type": "learningTopic" },
+      { "name": "beginner", "type": "difficulty" }
+    ]
+  },
+  {
+    "meaningId": 32,
+    "id": 62,
+    "text": "A democracia valoriza a participação popular.",
+    "language": "pt",
+    "tags": [
+      { "name": "politics", "type": "generalTopic" },
+      { "name": "present", "type": "learningTopic" },
+      { "name": "beginner", "type": "difficulty" }
+    ]
+  },
+  {
+    "meaningId": 32,
+    "id": 63,
+    "text": "La democrazia valorizza la partecipazione popolare.",
+    "language": "it",
+    "tags": [
+      { "name": "politics", "type": "generalTopic" },
+      { "name": "present", "type": "learningTopic" },
+      { "name": "beginner", "type": "difficulty" }
+    ]
+  },
+  {
+    "meaningId": 33,
+    "id": 64,
+    "text": "O DNA carrega informações genéticas.",
+    "language": "pt",
+    "tags": [
+      { "name": "biology", "type": "generalTopic" },
+      { "name": "present", "type": "learningTopic" },
+      { "name": "beginner", "type": "difficulty" }
+    ]
+  },
+  {
+    "meaningId": 33,
+    "id": 65,
+    "text": "Il DNA trasporta informazioni genetiche.",
+    "language": "it",
+    "tags": [
+      { "name": "biology", "type": "generalTopic" },
+      { "name": "present", "type": "learningTopic" },
+      { "name": "beginner", "type": "difficulty" }
+    ]
+  },
+  {
+    "meaningId": 34,
+    "id": 66,
+    "text": "Os filósofos fazem muitas perguntas.",
+    "language": "pt",
+    "tags": [
+      { "name": "philosophy", "type": "generalTopic" },
+      { "name": "present", "type": "learningTopic" },
+      { "name": "beginner", "type": "difficulty" }
+    ]
+  },
+  {
+    "meaningId": 34,
+    "id": 67,
+    "text": "I filosofi fanno molte domande.",
+    "language": "it",
+    "tags": [
+      { "name": "philosophy", "type": "generalTopic" },
+      { "name": "present", "type": "learningTopic" },
+      { "name": "beginner", "type": "difficulty" }
+    ]
+  },
+  {
+    "meaningId": 35,
+    "id": 68,
+    "text": "O vulcão entrou em erupção ontem.",
+    "language": "pt",
+    "tags": [
+      { "name": "nature", "type": "generalTopic" },
+      { "name": "past", "type": "learningTopic" },
+      { "name": "beginner", "type": "difficulty" }
+    ]
+  },
+  {
+    "meaningId": 35,
+    "id": 69,
+    "text": "Il vulcano è eruttato ieri.",
+    "language": "it",
+    "tags": [
+      { "name": "nature", "type": "generalTopic" },
+      { "name": "past", "type": "learningTopic" },
+      { "name": "beginner", "type": "difficulty" }
+    ]
+  },
+  {
+    "meaningId": 36,
+    "id": 70,
+    "text": "Ela pediu pizza no jantar.",
+    "language": "pt",
+    "tags": [
+      { "name": "food", "type": "generalTopic" },
+      { "name": "past", "type": "learningTopic" },
+      { "name": "beginner", "type": "difficulty" }
+    ]
+  },
+  {
+    "meaningId": 36,
+    "id": 71,
+    "text": "Lei ha ordinato la pizza a cena.",
+    "language": "it",
+    "tags": [
+      { "name": "food", "type": "generalTopic" },
+      { "name": "past", "type": "learningTopic" },
+      { "name": "beginner", "type": "difficulty" }
+    ]
+  },
+  {
+    "meaningId": 37,
+    "id": 72,
+    "text": "O filme foi lançado em 1999.",
+    "language": "pt",
+    "tags": [
+      { "name": "pop culture", "type": "generalTopic" },
+      { "name": "past", "type": "learningTopic" },
+      { "name": "beginner", "type": "difficulty" }
+    ]
+  },
+  {
+    "meaningId": 37,
+    "id": 73,
+    "text": "Il film è uscito nel 1999.",
+    "language": "it",
+    "tags": [
+      { "name": "pop culture", "type": "generalTopic" },
+      { "name": "past", "type": "learningTopic" },
+      { "name": "beginner", "type": "difficulty" }
+    ]
+  }
+]

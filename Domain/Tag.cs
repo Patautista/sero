@@ -17,4 +17,24 @@ namespace Domain
         public static string LearningTopic { get; set; }
         public static string GeneralTopic { get; set; }
     }
+    public static class TagConstants {
+        public static Tag Beginner = new Tag { Name = nameof(Beginner), Type = TagTypes.Difficulty };
+        public static Tag Intermediate = new Tag { Name = nameof(Intermediate), Type = TagTypes.Difficulty };
+        public static Tag Advanced = new Tag { Name = nameof(Advanced), Type = TagTypes.Difficulty };
+
+        public static Tag Culture = new Tag { Name = nameof(Culture), Type = TagTypes.GeneralTopic };
+        public static Tag DailyLife = new Tag { Name = nameof(DailyLife), Type = TagTypes.GeneralTopic };
+        public static Tag Biology = new Tag { Name = nameof(Biology), Type = TagTypes.GeneralTopic };
+        public static Tag Health = new Tag { Name = nameof(Health), Type = TagTypes.GeneralTopic };
+
+        public static Tag Numbers = new Tag { Name = nameof(Numbers), Type = TagTypes.LearningTopic };
+        public static Tag Past = new Tag { Name = nameof(Past), Type = TagTypes.LearningTopic };
+        public static Tag Future = new Tag { Name = nameof(Future), Type = TagTypes.LearningTopic };
+        public static Tag Imperative = new Tag { Name = nameof(Imperative), Type = TagTypes.LearningTopic };
+        public static Tag Interrogative = new Tag { Name = nameof(Interrogative), Type = TagTypes.LearningTopic };
+        public static Tag Negation = new Tag { Name = nameof(Negation), Type = TagTypes.LearningTopic };
+        public static Tag Movement = new Tag { Name = nameof(Movement), Type = TagTypes.LearningTopic };
+        public static Tag ToBeSomething = new Tag { Name = nameof(ToBeSomething), Type = TagTypes.LearningTopic };
+        public static Tag ToLikeSomething = new Tag { Name = nameof(ToLikeSomething), Type = TagTypes.LearningTopic };
+    }
 }
