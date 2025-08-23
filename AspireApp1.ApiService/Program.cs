@@ -1,3 +1,6 @@
+using Domain;
+using System.Text.Json;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add service defaults & Aspire client integrations.
@@ -26,6 +29,14 @@ app.MapGet("/weatherforecast", () =>
     return forecast;
 })
 .WithName("GetWeatherForecast");
+
+app.MapGet("/sentences", async () =>
+{
+    string filePath = "sentences_it-pt.json";
+    string json = await File.ReadAllTextAsync(filePath);
+    return JsonSerializer.Deserialize<List<Sentence>>(json);
+})
+.WithName("GetCards");
 
 app.MapDefaultEndpoints();
 
