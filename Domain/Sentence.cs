@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain
 {
-    public class Sentence
+    public record Sentence
     {
         public int MeaningId { get; set; }
         public int Id { get; set; }
