@@ -1,24 +1,13 @@
-﻿using AspireApp1.ApiService;
+﻿
+using Infrastructure;
 
 class Program
 {
     static async Task Main()
     {
-        var config = new DictCcConfig
-        {
-            LanguagePair = "deen",  // German-English
-            MaxResults = 5,
-            EnableCaching = true
-        };
+        var client = new WiktionaryClient();
 
-        var client = new DictCcClient(config);
-
-        var translations = await client.GetHtmlTranslationsAsync("house");
-
-        Console.WriteLine("Translations for 'house':");
-        foreach (var t in translations)
-        {
-            Console.WriteLine(" - " + t);
-        }
+        var res = await client.GetHtmlVerbInflectionTable("avere");
+        Console.WriteLine(res);
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace AspireApp1.ApiService
+﻿namespace Infrastructure
 {
     using HtmlAgilityPack;
     using System;
@@ -49,15 +49,17 @@
 
         private async Task<string> FetchWithRetryAsync(string url)
         {
-            for (int i = 0; i < _config.MaxRetries; i++)
+            for (int i = 0; i < 3; i++)
             {
                 try
                 {
-                    return await _httpClient.GetStringAsync(url);
+                    var res = await _httpClient.GetAsync(url);
+                    if (!res.IsSuccessStatusCode) continue;
+                    return await res.Content.ReadAsStringAsync();
                 }
-                catch when (i < _config.MaxRetries - 1)
+                catch when (i < 3 - 1)
                 {
-                    await Task.Delay(500);
+                    await Task.Delay(1000);
                 }
             }
             throw new HttpRequestException($"Failed to fetch from {url}");
