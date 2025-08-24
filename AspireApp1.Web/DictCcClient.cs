@@ -21,12 +21,8 @@
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "C# dict.cc client");
         }
 
-        public async Task<string[]> TranslateAsync(string word)
+        public async Task<string> GetHtmlTranslationsAsync(string word)
         {
-            if (_config.EnableCaching && _cache.TryGetValue(word, out var cached))
-            {
-                return cached;
-            }
 
             try
             {
@@ -38,33 +34,16 @@
                 doc.LoadHtml(html);
 
                 var rows = doc.DocumentNode.SelectNodes("//tr[contains(@id,'tr')]");
-                if (rows == null) return Array.Empty<string>();
+                if (rows == null) return String.Empty;
 
-                var translations = rows
-                    .Select(row =>
-                    {
-                        var cols = row.SelectNodes("td");
-                        if (cols == null || cols.Count < 3) return null;
+                // Grab only the translation table instead of whole page
+                var table = rows.First().ParentNode;
+                return table.OuterHtml ?? "<p>No results found</p>";
 
-                        cols[2].RemoveChild(cols[2].FirstChild);
-                        string left = CleanText(cols[1].InnerText);
-                        string right = CleanText(cols[2].InnerText);
-                        return $"{left} ⇔ {right}";
-                    })
-                    .Where(x => !string.IsNullOrWhiteSpace(x))
-                    .Take(_config.MaxResults)
-                    .ToArray();
-
-                if (_config.EnableCaching)
-                {
-                    _cache[word] = translations;
-                }
-
-                return translations;
             }
             catch(Exception ex)
             {
-                return Array.Empty<string>();
+                return String.Empty;
             }
         }
 

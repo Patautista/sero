@@ -13,7 +13,7 @@ class Program
 
         var client = new DictCcClient(config);
 
-        var translations = await client.TranslateAsync("house");
+        var translations = await client.GetHtmlTranslationsAsync("house");
 
         Console.WriteLine("Translations for 'house':");
         foreach (var t in translations)
