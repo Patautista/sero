@@ -13,12 +13,16 @@
         private readonly HttpClient _httpClient;
         private readonly DictCcConfig _config;
         private readonly ConcurrentDictionary<string, string[]> _cache = new();
+        private string UserAgent { get; set; } =
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
+            "AppleWebKit/537.36 (KHTML, like Gecko) " +
+            "Chrome/114.0 Safari/537.36";
 
         public DictCcClient(DictCcConfig config)
         {
             _config = config;
             _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Add("User-Agent", "C# dict.cc client");
+            _httpClient.DefaultRequestHeaders.Add("User-Agent", UserAgent);
         }
 
         public async Task<string> GetHtmlTranslationsAsync(string word)
@@ -38,7 +42,7 @@
 
                 // Grab only the translation table instead of whole page
                 var table = rows.First().ParentNode;
-                return table.OuterHtml ?? "<p>No results found</p>";
+                return ApplyBootstrapStyling(table?.OuterHtml) ?? "<p>No results found</p>";
 
             }
             catch(Exception ex)
@@ -65,9 +69,14 @@
             throw new HttpRequestException($"Failed to fetch from {url}");
         }
 
-        private static string CleanText(string raw)
+        private string ApplyBootstrapStyling(string tableHtml)
         {
-            return HtmlEntity.DeEntitize(raw).Trim();
+            if (string.IsNullOrWhiteSpace(tableHtml))
+                return string.Empty;
+
+            return tableHtml
+                .Replace("<table", "<table class=\"table table-bordered table-striped table-hover\"")
+                .Replace("<th", "<th class=\"table-light\"");
         }
     }
 

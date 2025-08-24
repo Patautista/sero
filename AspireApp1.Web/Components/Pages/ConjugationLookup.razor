@@ -1,8 +1,8 @@
-﻿@page "/dict"
+﻿@page "/wikt"
 @rendermode InteractiveServer
 
 <input @bind="searchWord" placeholder="Enter a word" />
-<button @onclick="Search">Lookup term (Dict.cc)</button>
+<button @onclick="Search">Lookup conjugation (Wiktionary)</button>
 
 @if (showModal)
 {
@@ -14,9 +14,9 @@
                     <button type="button" class="btn-close" @onclick="CloseModal"></button>
                 </div>
                 <div class="modal-body">
-                    @if (!string.IsNullOrEmpty(translationsHtml))
+                    @if (!string.IsNullOrEmpty(conjugationHtml))
                     {
-                        @((MarkupString)translationsHtml)
+                        @((MarkupString)conjugationHtml)
                     }
                     else
                     {
@@ -30,19 +30,14 @@
 
 @code {
     private string searchWord;
-    private string translationsHtml;
+    private string conjugationHtml;
     private bool showModal = false;
 
     private async Task Search()
     {
-        var client = new DictCcClient(new DictCcConfig
-        {
-            LanguagePair = "enit",
-            MaxResults = 20,
-            EnableCaching = false
-        });
+        var client = new WiktionaryClient();
 
-        translationsHtml = await client.GetHtmlTranslationsAsync(searchWord);
+        conjugationHtml = await client.GetHtmlVerbInflectionTable(searchWord);
         showModal = true;
     }
     private void CloseModal()
