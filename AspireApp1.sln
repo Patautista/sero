@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36414.22 d17.14
+VisualStudioVersion = 17.14.36414.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspireApp1.AppHost", "AspireApp1.AppHost\AspireApp1.AppHost.csproj", "{BDA4DC98-80E9-44BA-A0F7-B50D1CA92673}"
 EndProject
@@ -13,6 +13,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{FA8FAAAC-F226-4A51-B5A7-3522BA6F9F3A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTests", "ConsoleTests\ConsoleTests.csproj", "{45347216-99B5-4838-BAEE-F52389B89CA3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,6 +42,10 @@ Global
 		{FA8FAAAC-F226-4A51-B5A7-3522BA6F9F3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA8FAAAC-F226-4A51-B5A7-3522BA6F9F3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA8FAAAC-F226-4A51-B5A7-3522BA6F9F3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45347216-99B5-4838-BAEE-F52389B89CA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45347216-99B5-4838-BAEE-F52389B89CA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45347216-99B5-4838-BAEE-F52389B89CA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45347216-99B5-4838-BAEE-F52389B89CA3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

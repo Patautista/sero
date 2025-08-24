@@ -1,0 +1,121 @@
+﻿@page "/anki"
+@using Domain
+@attribute [StreamRendering(true)]
+@attribute [OutputCache(Duration = 5)]
+@rendermode InteractiveServer
+
+@inject ApiClient Api
+
+<PageTitle>Frases Anki</PageTitle>
+
+<h1>Frases Anki</h1>
+
+@if (sentences == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (currentSentence != null)
+{
+    <div class="card p-4 mb-3" style="max-width: 600px;">
+        <h5>Traduza para a língua alvo:</h5>
+        <p class="mb-3"><strong>@currentSentence.Text</strong></p>
+
+        @if (currentSentence.Tags != null && currentSentence.Tags.Any())
+        {
+            <p class="mb-3 text-muted">
+                Tags: @string.Join(", ", currentSentence.Tags.Select(t => t.Name))
+            </p>
+        }
+
+        <input class="form-control mb-2" @bind="userAnswer" placeholder="Type your answer" />
+        <button class="btn btn-primary mb-2" @onclick="CheckAnswer">Check</button>
+
+        @if (validationMessage != null)
+        {
+            <p class="mt-2" style="color:@(isCorrect ? "green" : "red")">@validationMessage</p>
+        }
+
+        <button class="btn btn-secondary mt-2" @onclick="NextSentence">Next</button>
+    </div>
+}
+
+@code {
+    private ICollection<Sentence> sentences;
+    private Sentence currentSentence;
+    private string userAnswer;
+    private string validationMessage;
+    private bool isCorrect;
+
+    protected override async Task OnInitializedAsync()
+    {
+        sentences = await Api.GetSentences();
+        NextSentence();
+    }
+
+    private void NextSentence()
+    {
+        if (sentences == null || !sentences.Any()) return;
+
+        var frontCards = sentences.Where(s => s.Language == "pt").ToList();
+        if (!frontCards.Any()) return;
+
+        // Pick a random sentence for simplicity
+        var rnd = new Random();
+        currentSentence = frontCards[rnd.Next(frontCards.Count)];
+        userAnswer = string.Empty;
+        validationMessage = null;
+        isCorrect = false;
+    }
+
+    private Task CheckAnswer()
+    {
+        if (string.IsNullOrWhiteSpace(userAnswer)) return Task.CompletedTask;
+
+        // Get all sentences with the same MeaningId
+        var possibleAnswers = sentences.Where(s => s.MeaningId == currentSentence.MeaningId)
+                                       .Select(s => s.Text)
+                                       .ToList();
+
+        // Check if any of the answers match fuzzily
+        isCorrect = possibleAnswers.Any(ans => FuzzyMatch(userAnswer, ans));
+
+        validationMessage = isCorrect ? "✅ Correct!" : $"❌ Try again. Possible answer: {possibleAnswers.First()}";
+        return Task.CompletedTask;
+    }
+
+    // Simple fuzzy matching based on Levenshtein distance
+    private bool FuzzyMatch(string a, string b, double threshold = 0.7)
+    {
+        a = a.Trim().ToLower();
+        b = b.Trim().ToLower();
+
+        int distance = LevenshteinDistance(a, b);
+        double score = 1.0 - (double)distance / Math.Max(a.Length, b.Length);
+
+        return score >= threshold;
+    }
+
+    // Levenshtein distance algorithm
+    private int LevenshteinDistance(string s, string t)
+    {
+        int n = s.Length;
+        int m = t.Length;
+        int[,] d = new int[n + 1, m + 1];
+
+        for (int i = 0; i <= n; i++) d[i, 0] = i;
+        for (int j = 0; j <= m; j++) d[0, j] = j;
+
+        for (int i = 1; i <= n; i++)
+        {
+            for (int j = 1; j <= m; j++)
+            {
+                int cost = s[i - 1] == t[j - 1] ? 0 : 1;
+                d[i, j] = Math.Min(
+                    Math.Min(d[i - 1, j] + 1, d[i, j - 1] + 1),
+                    d[i - 1, j - 1] + cost
+                );
+            }
+        }
+        return d[n, m];
+    }
+}

@@ -18,7 +18,7 @@ app.MapGet("/sentences", async () =>
 {
     string filePath = "sentences_it-pt.json";
     string json = await File.ReadAllTextAsync(filePath);
-    return JsonSerializer.Deserialize<List<Sentence>>(json);
+    return json;
 })
 .WithName("GetCards");
 
