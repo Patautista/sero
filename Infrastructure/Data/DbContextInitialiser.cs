@@ -1,4 +1,4 @@
-﻿using Domain;
+﻿using Infrastructure.Data.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -67,7 +67,7 @@ namespace Infrastructure.Data
             // 1) Load JSON
             var json = await File.ReadAllTextAsync("sentences_it-pt.json");
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-            var sentences = JsonSerializer.Deserialize<List<Sentence>>(json, options) ?? new();
+            var sentences = JsonSerializer.Deserialize<List<Domain.Sentence>>(json, options) ?? new();
 
             // 2) Group by meaning (ensure at least 2 sentences)
             var groups = sentences
@@ -107,44 +107,10 @@ namespace Infrastructure.Data
                 }
             }
 
-            // Optional: persist tags first so the join table can reference them safely
+            //persist tags first so the join table can reference them safely
             await _context.SaveChangesAsync();
 
-            // 6) Build cards referencing the tracked Tag instances from tagMap
-            var cards = new List<Card>();
-
-            foreach (var g in groups)
-            {
-                // Pick language-specific sentences (adjust if your data differs)
-                var native = g.FirstOrDefault(s => s.Language == "pt") ?? g.ElementAt(0);
-                var target = g.FirstOrDefault(s => s.Language != "pt") ?? g.ElementAt(1);
-
-                var cardTags = native.Tags
-                    .Select(t => tagMap[t.Name])  // <-- always reuse the same tracked Tag instance
-                    .ToList();
-
-                var card = new Card
-                {
-                    Id = g.Key,                  // if you seed by MeaningId
-                    MeaningId = g.Key,
-                    NativeSentence = native,
-                    TargetSentence = target,
-                    Tags = cardTags
-                };
-
-                cards.Add(card);
-                _context.Add(card);
-            }
-
-            // 7) Avoid duplicate card inserts if seeding twice
-            var existingIds = _context.Cards.Select(c => c.Id).ToHashSet();
-            var newCards = cards.Where(c => !existingIds.Contains(c.Id)).ToList();
-
-            if (newCards.Count > 0)
-            {
-                _context.Cards.AddRange(newCards);
-                await _context.SaveChangesAsync();
-            }
+            
         }
     }
 }

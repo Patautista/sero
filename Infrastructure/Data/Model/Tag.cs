@@ -11,12 +11,10 @@ namespace Infrastructure.Data.Model
 {
     public record Tag
     {
-        [JsonPropertyName("type")]
         public string Type { get; set; }
-        [JsonPropertyName("name")]
         [Key]
         public string Name { get; set; }
-        public ICollection<Card>? Cards { get; set; } = new HashSet<Card>();
+        public ICollection<Meaning>? Meanings { get; set; } = new HashSet<Meaning>();
     }
     public static class TagTypes
     {

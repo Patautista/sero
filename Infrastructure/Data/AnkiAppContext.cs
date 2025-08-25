@@ -1,5 +1,4 @@
-﻿using Application.Model;
-using Domain;
+﻿using Infrastructure.Data.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using System;
@@ -23,6 +22,18 @@ namespace Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Card>()
+                    .HasOne(c => c.NativeSentence)
+                    .WithMany() // sentence doesn’t need to know about cards
+                    .HasForeignKey(c => c.NativeSentenceId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Card>()
+                        .HasOne(c => c.TargetSentence)
+                        .WithMany()
+                        .HasForeignKey(c => c.TargetSentenceId)
+                        .OnDelete(DeleteBehavior.Restrict);
+
             // Tag primary key is Name
             modelBuilder.Entity<Tag>(e =>
             {
@@ -33,25 +44,25 @@ namespace Infrastructure.Data
             });
 
             // Many-to-many Card <-> Tag with explicit join table using Tag.Name as principal key
-            modelBuilder.Entity<Card>()
+            modelBuilder.Entity<Meaning>()
                 .HasMany(c => c.Tags)
-                .WithMany(t => t.Cards)
+                .WithMany(t => t.Meanings)
                 .UsingEntity<Dictionary<string, object>>(
-                    "CardTag",
+                    "MeaningTag",
                     r => r.HasOne<Tag>()
                           .WithMany()
                           .HasForeignKey("TagName")
                           .HasPrincipalKey(nameof(Tag.Name))
                           .OnDelete(DeleteBehavior.Cascade),
-                    l => l.HasOne<Card>()
+                    l => l.HasOne<Meaning>()
                           .WithMany()
-                          .HasForeignKey("CardId")
-                          .HasPrincipalKey(nameof(Card.Id))
+                          .HasForeignKey("MeaningId")
+                          .HasPrincipalKey(nameof(Meaning.Id))
                           .OnDelete(DeleteBehavior.Cascade),
                     j =>
                     {
-                        j.HasKey("CardId", "TagName");
-                        j.ToTable("CardTags");
+                        j.HasKey("MeaningId", "TagName");
+                        j.ToTable("MeaningTags");
                     });
         }
 
