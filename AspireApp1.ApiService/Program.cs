@@ -1,4 +1,6 @@
 ﻿using Domain;
+using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +19,8 @@ builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.WriteIndented = true;
 });
 
+builder.Services.AddDbContext<AnkiAppContext>(p => p.UseSqlite("Data Source=localdb.db"));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -34,6 +38,7 @@ app.MapGet("/cards", async () =>
 
     var cards = groups.Select(g => new Card
     {
+        Id = g.Key,
         MeaningId = g.Key,
         NativeSentence = g.ElementAt(0),
         TargetSentence = g.ElementAt(1),
