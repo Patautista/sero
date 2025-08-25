@@ -20,6 +20,5 @@ namespace Infrastructure.Data.Model
         // Target sentence (e.g. English)
         public int TargetSentenceId { get; set; }
         public Sentence TargetSentence { get; set; } = null!;
-        public ICollection<Tag> Tags { get; set; }
     }
 }

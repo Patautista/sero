@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Infrastructure.Data.Model
 
@@ -15,6 +16,15 @@ namespace Infrastructure.Data.Model
         [Key]
         public string Name { get; set; }
         public ICollection<Meaning>? Meanings { get; set; } = new HashSet<Meaning>();
+
+        public Domain.Tag ToDomain()
+        {
+            return new Domain.Tag
+            {
+                Type = Type,
+                Name = Name,
+            };
+        }
     }
     public static class TagTypes
     {

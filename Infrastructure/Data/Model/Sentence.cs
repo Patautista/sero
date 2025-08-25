@@ -17,5 +17,15 @@ namespace Infrastructure.Data.Model
         public int MeaningId { get; set; }
         public string Text { get; set; }
         public string Language { get; set; } = "pt";
+
+        public Domain.Sentence ToDomain()
+        {
+            return new Domain.Sentence
+            {
+                Id = Id,
+                Language = Language,
+                Text = Text
+            };
+        }
     }
 }
