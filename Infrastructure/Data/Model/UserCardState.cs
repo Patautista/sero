@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace Infrastructure.Data.Model
     {
         public int Id { get; set;  }
         public int UserId { get; set; }          // link to the user
+        [ForeignKey($"{nameof(Card)}s")]
         public int CardId { get; set; }          // link to the card
         public int Repetitions { get; set; } = 0;
         public double EaseFactor { get; set; } = 2.5;
@@ -18,5 +20,18 @@ namespace Infrastructure.Data.Model
 
         // Optional: keep track of last review date
         public DateTime LastReviewed { get; set; } = DateTime.MinValue;
+
+        public Application.Model.UserCardState ToDomain()
+        {
+            return new Application.Model.UserCardState
+            {
+                CardId = CardId,
+                Repetitions = Repetitions,
+                EaseFactor = EaseFactor,
+                Interval = Interval,
+                NextReview = NextReview,
+                LastReviewed = LastReviewed,
+            };
+        }
     }
 }

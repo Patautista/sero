@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Application.Model;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -20,5 +21,6 @@ namespace Infrastructure.Data.Model
         // Target sentence (e.g. English)
         public int TargetSentenceId { get; set; }
         public Sentence TargetSentence { get; set; } = null!;
+        public UserCardState? UserCardState { get; set; }
     }
 }
