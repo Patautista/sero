@@ -12,7 +12,8 @@ namespace Infrastructure.Data.Model
     public record Sentence
     {
         public int Id { get; set; }
-        [ForeignKey(nameof(Meaning))]
+        [ForeignKey($"{nameof(Meaning)}s")]
+        public Meaning? Meaning { get; set; }
         public int MeaningId { get; set; }
         public string Text { get; set; }
         public string Language { get; set; } = "pt";

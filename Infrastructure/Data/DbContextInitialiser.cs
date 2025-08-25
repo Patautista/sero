@@ -64,53 +64,78 @@ namespace Infrastructure.Data
 
         public async Task TrySeedAsync()
         {
-            // 1) Load JSON
             var json = await File.ReadAllTextAsync("sentences_it-pt.json");
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-            var sentences = JsonSerializer.Deserialize<List<Domain.Sentence>>(json, options) ?? new();
+            var sentences = JsonSerializer.Deserialize<List<SentenceSeed>>(json, options) ?? new();
 
-            // 2) Group by meaning (ensure at least 2 sentences)
-            var groups = sentences
-                .GroupBy(s => s.MeaningId)
-                .Where(g => g.Count() >= 2)
-                .ToList();
+            var grouped = sentences.GroupBy(s => s.MeaningId);
 
-            // 3) Collect all tag names we’ll need
-            var allTagNames = sentences
-                .SelectMany(s => s.Tags)
-                .Select(t => t.Name)
-                .Where(n => !string.IsNullOrWhiteSpace(n))
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .ToList();
-
-            // 4) Preload existing Tag instances (TRACKED)
-            //    Important: do not use AsNoTracking here, we want tracked instances.
-            var tagMap = await _context.Tags
-                .Where(t => allTagNames.Contains(t.Name))
-                .ToDictionaryAsync(t => t.Name, StringComparer.OrdinalIgnoreCase);
-
-            // 5) Create any missing Tag instances ONCE and track them
-            //    We’ll pick the first observed Type for that name (or default).
-            var firstTagByName = sentences
-                .SelectMany(s => s.Tags)
-                .GroupBy(t => t.Name, StringComparer.OrdinalIgnoreCase)
-                .ToDictionary(g => g.Key, g => g.First(), StringComparer.OrdinalIgnoreCase);
-
-            foreach (var name in allTagNames)
+            foreach (var group in grouped)
             {
-                if (!tagMap.ContainsKey(name))
+                var meaning = new Meaning { Id = group.Key };
+
+                // Sentences
+                foreach (var s in group)
                 {
-                    var src = firstTagByName[name];
-                    var newTag = new Tag { Name = name, Type = src.Type ?? "general" };
-                    _context.Tags.Add(newTag);         // tracked now
-                    tagMap[name] = newTag;             // reuse this instance everywhere
+                    meaning.Sentences.Add(new Sentence
+                    {
+                        Id = s.Id,
+                        Meaning = meaning,
+                        Text = s.Text,
+                        Language = s.Language
+                    });
+                }
+
+                // Tags (attach existing or create new)
+                var tagNames = group.SelectMany(s => s.Tags).DistinctBy(t => t.Name);
+
+                foreach (var tagSeed in tagNames)
+                {
+                    var tag = await _context.Tags.FindAsync(tagSeed.Name);
+                    if (tag == null)
+                    {
+                        tag = new Tag { Name = tagSeed.Name, Type = tagSeed.Type };
+                        _context.Tags.Add(tag);
+                    }
+
+                    meaning.Tags.Add(tag);
+                }
+
+                _context.Meanings.Add(meaning);
+
+                // Optional: build PT->IT card
+                var pt = meaning.Sentences.FirstOrDefault(s => s.Language == "pt");
+                var it = meaning.Sentences.FirstOrDefault(s => s.Language == "it");
+
+                if (pt != null && it != null)
+                {
+                    _context.Cards.Add(new Card
+                    {
+                        Meaning = meaning,
+                        NativeSentence = pt,
+                        TargetSentence = it
+                    });
                 }
             }
 
-            //persist tags first so the join table can reference them safely
             await _context.SaveChangesAsync();
-
-            
         }
+
     }
+
+    public class SentenceSeed
+    {
+        public int Id { get; set; }
+        public int MeaningId { get; set; }
+        public string Text { get; set; } = "";
+        public string Language { get; set; } = "pt";
+        public List<TagSeed> Tags { get; set; } = new();
+    }
+
+    public class TagSeed
+    {
+        public string Name { get; set; } = "";
+        public string Type { get; set; } = "";
+    }
+
 }

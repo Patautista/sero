@@ -10,7 +10,7 @@ namespace Infrastructure.Data.Model
     public class Card
     {
         public int Id { get; set; }
-        [ForeignKey(nameof(Meaning))]
+        [ForeignKey($"{nameof(Meaning)}s")]
         public int MeaningId { get; set; }
         public Meaning Meaning { get; set; }
         // Native sentence (e.g. Portuguese)

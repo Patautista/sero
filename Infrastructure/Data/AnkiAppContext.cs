@@ -17,6 +17,7 @@ namespace Infrastructure.Data
         public DbSet<UserCardState> UserCardStates { get; set; }
         public DbSet<Sentence> Sentences { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<Meaning> Meanings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

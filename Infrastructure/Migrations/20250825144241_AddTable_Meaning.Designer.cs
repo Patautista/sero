@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AnkiAppContext))]
-    partial class AnkiAppContextModelSnapshot : ModelSnapshot
+    [Migration("20250825144241_AddTable_Meaning")]
+    partial class AddTable_Meaning
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
@@ -51,7 +54,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Meanings");
+                    b.ToTable("Meaning");
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Model.Sentence", b =>
@@ -67,16 +70,11 @@ namespace Infrastructure.Migrations
                     b.Property<int>("MeaningId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("Meanings")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Meanings");
 
                     b.ToTable("Sentences");
                 });
@@ -155,7 +153,7 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Infrastructure.Data.Model.Card", b =>
                 {
                     b.HasOne("Infrastructure.Data.Model.Meaning", "Meaning")
-                        .WithMany("Cards")
+                        .WithMany()
                         .HasForeignKey("MeaningId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -177,15 +175,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("NativeSentence");
 
                     b.Navigation("TargetSentence");
-                });
-
-            modelBuilder.Entity("Infrastructure.Data.Model.Sentence", b =>
-                {
-                    b.HasOne("Infrastructure.Data.Model.Meaning", "Meaning")
-                        .WithMany("Sentences")
-                        .HasForeignKey("Meanings");
-
-                    b.Navigation("Meaning");
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Model.Tag", b =>
@@ -213,13 +202,6 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Infrastructure.Data.Model.Card", b =>
                 {
                     b.Navigation("Tags");
-                });
-
-            modelBuilder.Entity("Infrastructure.Data.Model.Meaning", b =>
-                {
-                    b.Navigation("Cards");
-
-                    b.Navigation("Sentences");
                 });
 #pragma warning restore 612, 618
         }
