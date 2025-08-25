@@ -14,16 +14,16 @@
 {
     <p><em>Loading...</em></p>
 }
-else if (currentSentence != null)
+else if (currentCard != null)
 {
     <div class="card p-4 mb-3" style="max-width: 600px;">
         <h5>Traduza para a língua alvo:</h5>
-        <p class="mb-3"><strong>@currentSentence.Text</strong></p>
+        <p class="mb-3"><strong>@currentCard.NativeSentence.Text</strong></p>
 
-        @if (currentSentence.Tags != null && currentSentence.Tags.Any())
+        @if (currentCard.Tags != null && currentCard.Tags.Any())
         {
             <p class="mb-3 text-muted">
-                Tags: @string.Join(", ", currentSentence.Tags.Select(t => t.Name))
+                Tags: @string.Join(", ", currentCard.Tags.Select(t => t.Name))
             </p>
         }
 
@@ -42,15 +42,15 @@ else if (currentSentence != null)
 }
 
 @code {
-    private ICollection<Sentence> sentences;
-    private Sentence currentSentence;
+    private ICollection<Card> sentences;
+    private Card currentCard;
     private string userAnswer;
     private string validationMessage;
     private bool isCorrect;
 
     protected override async Task OnInitializedAsync()
     {
-        sentences = await Api.GetSentences();
+        sentences = await Api.GetCards();
         NextSentence();
     }
 
@@ -58,12 +58,9 @@ else if (currentSentence != null)
     {
         if (sentences == null || !sentences.Any()) return;
 
-        var frontCards = sentences.Where(s => s.Language == "pt").ToList();
-        if (!frontCards.Any()) return;
-
         // Pick a random sentence for simplicity
         var rnd = new Random();
-        currentSentence = frontCards[rnd.Next(frontCards.Count)];
+        currentCard = sentences.ElementAt(rnd.Next(sentences.Count));
         userAnswer = string.Empty;
         validationMessage = null;
         isCorrect = false;
@@ -74,14 +71,13 @@ else if (currentSentence != null)
         if (string.IsNullOrWhiteSpace(userAnswer)) return Task.CompletedTask;
 
         // Get all sentences with the same MeaningId
-        var possibleAnswers = sentences.Where(s => s.MeaningId == currentSentence.MeaningId)
-                                       .Select(s => s.Text)
-                                       .ToList();
+        var possibleAnswers = new List<string>();
+        possibleAnswers.Add(currentCard.TargetSentence.Text);
 
         // Check if any of the answers match fuzzily
         isCorrect = possibleAnswers.Any(ans => FuzzyMatch(userAnswer, ans));
 
-        validationMessage = isCorrect ? "✅ Correct!" : $"❌ Try again. Possible answer: {possibleAnswers.First()}";
+        validationMessage = isCorrect ? "✅ Correto!" : $"❌ Tente de novo. Resposta possível: {possibleAnswers.First()}";
         return Task.CompletedTask;
     }
 
