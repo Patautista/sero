@@ -14,5 +14,10 @@ namespace Domain
 
         [ForeignKey("Tags")]
         public ICollection<Tag> Tags { get; set; }
+
+        public bool HasTag(string name)
+        {
+            return Tags.Any(t => t.Name == name.ToLower());
+        }
     }
 }
