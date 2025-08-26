@@ -16,9 +16,13 @@
 {
     <p><em>Loading...</em></p>
 }
-else
-@if (currentCard != null)
+else if (currentCard != null)
 {
+    <div class="mb-3">
+        <span class="badge bg-success">Novos: @newCount</span>
+        <span class="badge bg-info text-dark">Revisões: @reviewCount</span>
+    </div>
+
     <div class="card p-4 mb-3" style="max-width: 600px;">
         <h5>Traduza para a língua alvo:</h5>
         <p class="mb-3"><strong>@currentCard.Card.NativeSentence.Text</strong></p>
@@ -32,12 +36,11 @@ else
 
         @if (currentCard.State.Repetitions == 0)
         {
-            <!-- First time seeing card: show answer -->
             <p class="alert alert-info">
                 Novo card! Resposta: <strong>@currentCard.Card.TargetSentence.Text</strong>
             </p>
         }
-        <!-- Normal flow -->
+
         <input class="form-control mb-2" @bind="userAnswer" placeholder="Type your answer" />
         <button class="btn btn-primary mb-2" @onclick="CheckAnswer">Check</button>
 
@@ -46,12 +49,17 @@ else
             <p class="mt-2" style="color:@(isCorrect ? "green" : "red")">@validationMessage</p>
         }
 
+        @if (countdown > 0)
+        {
+            <p class="text-muted">Próxima frase em @countdown...</p>
+        }
+
         <button class="btn btn-secondary mt-2" @onclick="NextSentence">Next</button>
+
         <DictCcSearch></DictCcSearch>
         <ConjugationLookup></ConjugationLookup>
     </div>
 }
-
 
 @code {
     private ICollection<CardWithState> cards;
@@ -59,10 +67,19 @@ else
     private string userAnswer;
     private string validationMessage;
     private bool isCorrect;
+    private int countdown;
+    private int newCount;
+    private int reviewCount;
+    private System.Timers.Timer countdownTimer;
 
     protected override async Task OnInitializedAsync()
     {
         cards = await Api.GetCards();
+
+        // Calculate counters
+        newCount = cards.Count(c => c.State.Repetitions == 0);
+        reviewCount = cards.Count(c => c.State.Repetitions > 0);
+
         NextSentence();
     }
 
@@ -70,12 +87,18 @@ else
     {
         if (cards == null || !cards.Any()) return;
 
-        // Pick a random sentence for simplicity
+        // Stop any running timer
+        countdownTimer?.Stop();
+        countdown = 0;
+
+        // Pick a random card
         var rnd = new Random();
         currentCard = cards.ElementAt(rnd.Next(cards.Count));
         userAnswer = string.Empty;
         validationMessage = null;
         isCorrect = false;
+
+        StateHasChanged();
     }
 
     private async Task CheckAnswer()
@@ -87,14 +110,38 @@ else
         var evaluation = AnswerEvaluator.Evaluate(userAnswer, possibleAnswers);
 
         isCorrect = evaluation.Quality != AnswerQuality.Wrong;
-
         Srs.Review(currentCard.State, (int)evaluation.Quality);
 
-        // Display feedback
         validationMessage = BuildFeedbackMessage(evaluation);
 
         // Save state
         await Api.UpdateUserCardState(currentCard.State);
+
+        // Update counters
+        newCount = cards.Count(c => c.State.Repetitions == 0);
+        reviewCount = cards.Count(c => c.State.Repetitions > 0);
+
+        // Start countdown for auto-advance
+        StartCountdown(5);
+    }
+
+    private void StartCountdown(int seconds)
+    {
+        countdown = seconds;
+
+        countdownTimer = new System.Timers.Timer(1000); // 1 second
+        countdownTimer.Elapsed += (s, e) =>
+        {
+            countdown--;
+            InvokeAsync(StateHasChanged);
+
+            if (countdown <= 0)
+            {
+                countdownTimer.Stop();
+                InvokeAsync(NextSentence);
+            }
+        };
+        countdownTimer.Start();
     }
 
     private string BuildFeedbackMessage(AnswerEvaluation evaluation)
