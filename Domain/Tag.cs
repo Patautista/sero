@@ -19,9 +19,9 @@ namespace Domain
     }
     public static class TagTypes
     {
-        public static string Difficulty { get; set; }
-        public static string LearningTopic { get; set; }
-        public static string GeneralTopic { get; set; }
+        public static string Difficulty { get; set; } = nameof(Difficulty).ToLower();
+        public static string LearningTopic { get; set; } = nameof(LearningTopic).ToLower();
+        public static string GeneralTopic { get; set; } = nameof(GeneralTopic).ToLower();
     }
     public static class TagConstants {
         public static Tag Beginner = new Tag { Name = nameof(Beginner), Type = TagTypes.Difficulty };
