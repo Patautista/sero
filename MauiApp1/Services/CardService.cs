@@ -1,3 +1,5 @@
+using AppLogic.Web;
+using Business;
 using Business.Model;
 using Business.ViewModel;
 using Domain;
@@ -5,9 +7,9 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Net.Http.Json;
 
-namespace AppLogic.Web;
+namespace MauiApp1.Services;
 
-public class CardService(AnkiDbContext db)
+public class CardService(AnkiDbContext db, ISettingsService settingsService)
 {
     public async Task<ICollection<CardWithState>> GetCards(CancellationToken cancellationToken = default)
     {
@@ -39,7 +41,7 @@ public class CardService(AnkiDbContext db)
         // Now project to domain
         var cardWithStates = cards.Select(x => new CardWithState
         {
-            Card = new Domain.Card
+            Card = new Card
             {
                 NativeSentence = x.NativeSentence.ToDomain(),
                 Tags = x.Meaning.Tags.Select(t => t.ToDomain()).ToList(),
@@ -52,7 +54,10 @@ public class CardService(AnkiDbContext db)
             }.ToDomain()
         }).ToList();
 
-        return cardWithStates;
+        var userDifficulty = (await settingsService.LoadAsync())?.DifficultyLevel ?? DifficultyLevel.Advanced;
+        var filtered = cardWithStates.Where(c => c.Card.SuitsDifficulty(userDifficulty)).ToList();
+
+        return filtered;
     }
     public async Task UpdateUserCardState(UserCardState userCardState,CancellationToken cancellationToken = default)
     {

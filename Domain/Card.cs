@@ -19,5 +19,11 @@ namespace Domain
         {
             return Tags.Any(t => t.Name == name.ToLower());
         }
+        public bool SuitsDifficulty(DifficultyLevel difficultyLevel)
+        {
+            var tag = Tags.First(t => t.Type == TagTypes.Difficulty);
+            var cardDifficulty = DifficultyLevelExtensions.FromString(tag.Name);
+            return cardDifficulty <= difficultyLevel;
+        }
     }
 }

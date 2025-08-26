@@ -4,6 +4,7 @@ using Infrastructure.Data;
 using MauiApp1.Services.Seed;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using MauiApp1.Services;
 
 namespace MauiApp1
 {
