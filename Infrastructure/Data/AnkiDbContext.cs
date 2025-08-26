@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Data
 {
-    public class AnkiAppContext : DbContext
+    public class AnkiDbContext : DbContext
     {
-        public AnkiAppContext(DbContextOptions<AnkiAppContext> options) : base(options) { }
+        public AnkiDbContext(DbContextOptions<AnkiDbContext> options) : base(options) { }
         public DbSet<Card> Cards { get; set; }
         public DbSet<UserCardState> UserCardStates { get; set; }
         public DbSet<Sentence> Sentences { get; set; }
@@ -69,19 +69,19 @@ namespace Infrastructure.Data
 
     }
 
-    public class AnkiAppDbContextFactory : IDesignTimeDbContextFactory<AnkiAppContext>
+    public class AnkiAppDbContextFactory : IDesignTimeDbContextFactory<AnkiDbContext>
     {
-        public AnkiAppContext CreateDbContext(string[] args)
+        public AnkiDbContext CreateDbContext(string[] args)
         {
 
             string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development";
             Console.WriteLine($"Environment detected: {environment}");
 
             string connectionString = ParseConnectionStringFromCommandLine(args);
-            var builder = new DbContextOptionsBuilder<AnkiAppContext>();
+            var builder = new DbContextOptionsBuilder<AnkiDbContext>();
             builder.UseSqlite("Data Source = localdb.db");
 
-            return new AnkiAppContext(builder.Options);
+            return new AnkiDbContext(builder.Options);
         }
         private string ParseConnectionStringFromCommandLine(string[] args)
         {

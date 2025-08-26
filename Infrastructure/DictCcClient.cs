@@ -58,7 +58,11 @@
                 try
                 {
                     var res = await _httpClient.GetAsync(url);
-                    if (!res.IsSuccessStatusCode) continue;
+                    if (!res.IsSuccessStatusCode)
+                    {
+                        await Task.Delay((i + 1) * 3000);
+                        continue;
+                    }
                     return await res.Content.ReadAsStringAsync();
                 }
                 catch when (i < 3 - 1)

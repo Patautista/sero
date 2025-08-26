@@ -1,4 +1,6 @@
 ﻿@page "/anki"
+@using ApplicationL
+@using ApplicationL.ViewModel
 @using Domain
 @attribute [StreamRendering(true)]
 @attribute [OutputCache(Duration = 5)]
@@ -10,29 +12,41 @@
 
 <h1>Frases Anki</h1>
 
-@if (sentences == null)
+@if (cards == null)
 {
     <p><em>Loading...</em></p>
 }
-else if (currentCard != null)
+else
+@if (currentCard != null)
 {
     <div class="card p-4 mb-3" style="max-width: 600px;">
         <h5>Traduza para a língua alvo:</h5>
-        <p class="mb-3"><strong>@currentCard.NativeSentence.Text</strong></p>
+        <p class="mb-3"><strong>@currentCard.Card.NativeSentence.Text</strong></p>
 
-        @if (currentCard.Tags != null && currentCard.Tags.Any())
+        @if (currentCard.Card.Tags != null && currentCard.Card.Tags.Any())
         {
             <p class="mb-3 text-muted">
-                Tags: @string.Join(", ", currentCard.Tags.Select(t => t.Name))
+                Tags: @string.Join(", ", currentCard.Card.Tags.Select(t => t.Name))
             </p>
         }
 
-        <input class="form-control mb-2" @bind="userAnswer" placeholder="Type your answer" />
-        <button class="btn btn-primary mb-2" @onclick="CheckAnswer">Check</button>
-
-        @if (validationMessage != null)
+        @if (currentCard.State.Repetitions == 0)
         {
-            <p class="mt-2" style="color:@(isCorrect ? "green" : "red")">@validationMessage</p>
+            <!-- First time seeing card: show answer -->
+            <p class="alert alert-info">
+                Primeira vez! Resposta: <strong>@currentCard.Card.TargetSentence.Text</strong>
+            </p>
+        }
+        else
+        {
+            <!-- Normal flow -->
+            <input class="form-control mb-2" @bind="userAnswer" placeholder="Type your answer" />
+            <button class="btn btn-primary mb-2" @onclick="CheckAnswer">Check</button>
+
+            @if (validationMessage != null)
+            {
+                <p class="mt-2" style="color:@(isCorrect ? "green" : "red")">@validationMessage</p>
+            }
         }
 
         <button class="btn btn-secondary mt-2" @onclick="NextSentence">Next</button>
@@ -41,44 +55,52 @@ else if (currentCard != null)
     </div>
 }
 
+
 @code {
-    private ICollection<Card> sentences;
-    private Card currentCard;
+    private ICollection<CardWithState> cards;
+    private CardWithState currentCard;
     private string userAnswer;
     private string validationMessage;
     private bool isCorrect;
 
     protected override async Task OnInitializedAsync()
     {
-        sentences = await Api.GetCards();
+        cards = await Api.GetCards();
         NextSentence();
     }
 
     private void NextSentence()
     {
-        if (sentences == null || !sentences.Any()) return;
+        if (cards == null || !cards.Any()) return;
 
         // Pick a random sentence for simplicity
         var rnd = new Random();
-        currentCard = sentences.ElementAt(rnd.Next(sentences.Count));
+        currentCard = cards.ElementAt(rnd.Next(cards.Count));
         userAnswer = string.Empty;
         validationMessage = null;
         isCorrect = false;
     }
 
-    private Task CheckAnswer()
+    private async Task CheckAnswer()
     {
-        if (string.IsNullOrWhiteSpace(userAnswer)) return Task.CompletedTask;
+        if (string.IsNullOrWhiteSpace(userAnswer)) return;
 
-        // Get all sentences with the same MeaningId
-        var possibleAnswers = new List<string>();
-        possibleAnswers.Add(currentCard.TargetSentence.Text);
+        var possibleAnswers = new List<string> { currentCard.Card.TargetSentence.Text };
 
-        // Check if any of the answers match fuzzily
+        // Determine correctness (fuzzy match)
         isCorrect = possibleAnswers.Any(ans => FuzzyMatch(userAnswer, ans));
 
-        validationMessage = isCorrect ? "✅ Correto!" : $"❌ Tente de novo. Resposta possível: {possibleAnswers.First()}";
-        return Task.CompletedTask;
+        // Map correctness to quality (0–5)
+        int quality = isCorrect ? 5 : 2; // simple: perfect=5, wrong=2
+        Srs.Review(currentCard.State, quality);
+
+        // Display feedback
+        validationMessage = isCorrect
+            ? "✅ Correto!"
+            : $"❌ Tente de novo. Resposta possível: {possibleAnswers.First()}";
+
+        // Save state
+        await Api.UpdateUserCardState(currentCard.State);
     }
 
     // Simple fuzzy matching based on Levenshtein distance

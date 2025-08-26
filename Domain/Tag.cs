@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -12,7 +13,9 @@ namespace Domain
         [JsonPropertyName("type")]
         public string Type { get; set; }
         [JsonPropertyName("name")]
+        [Key]
         public string Name { get; set; }
+        public ICollection<Card>? Cards { get; set; } = new HashSet<Card>();
     }
     public static class TagTypes
     {

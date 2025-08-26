@@ -1,11 +1,11 @@
-﻿using Application.Model;
+﻿using ApplicationL.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application
+namespace ApplicationL
 {
     public static class Srs
     {

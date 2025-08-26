@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Model
+namespace ApplicationL.Model
 {
     public class UserCardState
     {
+        public int Id { get; set;  }
         public int UserId { get; set; }          // link to the user
         public int CardId { get; set; }          // link to the card
         public int Repetitions { get; set; } = 0;

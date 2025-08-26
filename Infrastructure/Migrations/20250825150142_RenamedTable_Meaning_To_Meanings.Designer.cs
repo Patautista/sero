@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Migrations
 {
-    [DbContext(typeof(AnkiAppContext))]
+    [DbContext(typeof(AnkiDbContext))]
     [Migration("20250825150142_RenamedTable_Meaning_To_Meanings")]
     partial class RenamedTable_Meaning_To_Meanings
     {

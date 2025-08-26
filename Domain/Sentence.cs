@@ -17,7 +17,5 @@ namespace Domain
         public string Text { get; set; }
         [JsonPropertyName("language")]
         public string Language { get; set; } = "pt";
-        [JsonPropertyName("tags")]
-        public ICollection<Tag> Tags { get; set; } = new HashSet<Tag>();
     }
 }

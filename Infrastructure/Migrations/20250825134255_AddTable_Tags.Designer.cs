@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Migrations
 {
-    [DbContext(typeof(AnkiAppContext))]
+    [DbContext(typeof(AnkiDbContext))]
     [Migration("20250825134255_AddTable_Tags")]
     partial class AddTable_Tags
     {
