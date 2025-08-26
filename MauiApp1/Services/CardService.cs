@@ -55,7 +55,7 @@ public class CardService(AnkiDbContext db, ISettingsService settingsService)
                 CardId = x.UserCardState.Id,
                 Repetitions = 0
             }.ToDomain()
-        }).ToList();
+        }).OrderBy(c => c.Card.NativeSentence.Text.Length).ToList();
 
         var userDifficulty = (await settingsService.LoadAsync())?.DifficultyLevel ?? DifficultyLevel.Advanced;
         var filtered = cardWithStates.Where(c => c.Card.SuitsDifficulty(userDifficulty)).ToList();
