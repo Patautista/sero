@@ -60,7 +60,7 @@ public class CardService(AnkiDbContext db)
 
         if (oldState == null)
         {
-            return;
+            oldState = new Infrastructure.Data.Model.UserCardState();
         }
 
         oldState.Interval = userCardState.Interval;
