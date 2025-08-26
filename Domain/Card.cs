@@ -12,8 +12,8 @@ namespace Domain
         public Sentence NativeSentence { get; set; }
         public Sentence TargetSentence { get; set; }
 
-        [ForeignKey("Tags")]
         public ICollection<Tag> Tags { get; set; }
+        public DifficultyLevel DifficultyLevel;
 
         public bool HasTag(string name)
         {

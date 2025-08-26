@@ -84,3 +84,31 @@ h1:focus {
         padding-left: env(safe-area-inset-left);
     }
 }
+
+.exp-badge {
+    position: absolute;
+    top: -20px;
+    right: 20px;
+    background-color: gold;
+    color: black;
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-weight: bold;
+    opacity: 1;
+    transform: translateY(0);
+    animation: floatExp 1s ease-out forwards;
+    pointer-events: none;
+    z-index: 100;
+}
+
+@keyframes floatExp {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-40px);
+    }
+}

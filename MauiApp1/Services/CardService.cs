@@ -43,6 +43,9 @@ public class CardService(AnkiDbContext db, ISettingsService settingsService)
         {
             Card = new Card
             {
+                DifficultyLevel = DifficultyLevelExtensions.FromString(
+                    x.Meaning.Tags.FirstOrDefault(x => x.Type == TagTypes.Difficulty).Name
+                ), 
                 NativeSentence = x.NativeSentence.ToDomain(),
                 Tags = x.Meaning.Tags.Select(t => t.ToDomain()).ToList(),
                 TargetSentence = x.TargetSentence.ToDomain(),
