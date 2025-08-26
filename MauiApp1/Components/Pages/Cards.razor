@@ -86,55 +86,32 @@ else
 
         var possibleAnswers = new List<string> { currentCard.Card.TargetSentence.Text };
 
-        // Determine correctness (fuzzy match)
-        isCorrect = possibleAnswers.Any(ans => FuzzyMatch(userAnswer, ans));
+        var evaluation = AnswerEvaluator.Evaluate(userAnswer, possibleAnswers);
 
-        // Map correctness to quality (0–5)
-        int quality = isCorrect ? 5 : 2; // simple: perfect=5, wrong=2
-        Srs.Review(currentCard.State, quality);
+        Srs.Review(currentCard.State, (int)evaluation.Quality);
 
         // Display feedback
-        validationMessage = isCorrect
-            ? "✅ Correto!"
-            : $"❌ Tente de novo. Resposta possível: {possibleAnswers.First()}";
+        validationMessage = BuildFeedbackMessage(evaluation);
 
         // Save state
         await Api.UpdateUserCardState(currentCard.State);
     }
 
-    // Simple fuzzy matching based on Levenshtein distance
-    private bool FuzzyMatch(string a, string b, double threshold = 0.7)
+    private string BuildFeedbackMessage(AnswerEvaluation evaluation)
     {
-        a = a.Trim().ToLower();
-        b = b.Trim().ToLower();
-
-        int distance = LevenshteinDistance(a, b);
-        double score = 1.0 - (double)distance / Math.Max(a.Length, b.Length);
-
-        return score >= threshold;
-    }
-
-    // Levenshtein distance algorithm
-    private int LevenshteinDistance(string s, string t)
-    {
-        int n = s.Length;
-        int m = t.Length;
-        int[,] d = new int[n + 1, m + 1];
-
-        for (int i = 0; i <= n; i++) d[i, 0] = i;
-        for (int j = 0; j <= m; j++) d[0, j] = j;
-
-        for (int i = 1; i <= n; i++)
+        var buffer = String.Empty;
+        if(evaluation.Quality > AnswerQuality.Wrong)
         {
-            for (int j = 1; j <= m; j++)
-            {
-                int cost = s[i - 1] == t[j - 1] ? 0 : 1;
-                d[i, j] = Math.Min(
-                    Math.Min(d[i - 1, j] + 1, d[i, j - 1] + 1),
-                    d[i - 1, j - 1] + cost
-                );
-            }
+            buffer.Concat("✅ Correto!");
         }
-        return d[n, m];
+        else if (evaluation.Quality == AnswerQuality.Wrong)
+        {
+            buffer.Concat("❌ Tente de novo.");
+        }
+        if(evaluation.Quality < AnswerQuality.Perfect)
+        {
+            buffer.Concat($" Resposta mais próxima: {evaluation.ClosestMatch}");
+        }
+        return buffer;
     }
 }
