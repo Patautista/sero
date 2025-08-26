@@ -3,6 +3,7 @@
 @using ApplicationL
 @using ApplicationL.ViewModel
 @using Domain
+@using System.Text
 @attribute [StreamRendering(true)]
 
 @inject CardService Api
@@ -33,19 +34,16 @@ else
         {
             <!-- First time seeing card: show answer -->
             <p class="alert alert-info">
-                Primeira vez! Resposta: <strong>@currentCard.Card.TargetSentence.Text</strong>
+                Novo card! Resposta: <strong>@currentCard.Card.TargetSentence.Text</strong>
             </p>
         }
-        else
-        {
-            <!-- Normal flow -->
-            <input class="form-control mb-2" @bind="userAnswer" placeholder="Type your answer" />
-            <button class="btn btn-primary mb-2" @onclick="CheckAnswer">Check</button>
+        <!-- Normal flow -->
+        <input class="form-control mb-2" @bind="userAnswer" placeholder="Type your answer" />
+        <button class="btn btn-primary mb-2" @onclick="CheckAnswer">Check</button>
 
-            @if (validationMessage != null)
-            {
-                <p class="mt-2" style="color:@(isCorrect ? "green" : "red")">@validationMessage</p>
-            }
+        @if (validationMessage != null)
+        {
+            <p class="mt-2" style="color:@(isCorrect ? "green" : "red")">@validationMessage</p>
         }
 
         <button class="btn btn-secondary mt-2" @onclick="NextSentence">Next</button>
@@ -88,6 +86,8 @@ else
 
         var evaluation = AnswerEvaluator.Evaluate(userAnswer, possibleAnswers);
 
+        isCorrect = evaluation.Quality != AnswerQuality.Wrong;
+
         Srs.Review(currentCard.State, (int)evaluation.Quality);
 
         // Display feedback
@@ -99,19 +99,22 @@ else
 
     private string BuildFeedbackMessage(AnswerEvaluation evaluation)
     {
-        var buffer = String.Empty;
-        if(evaluation.Quality > AnswerQuality.Wrong)
+        var sb = new StringBuilder();
+
+        if (evaluation.Quality > AnswerQuality.Wrong)
         {
-            buffer.Concat("✅ Correto!");
+            sb.Append("✅ Correto!");
         }
         else if (evaluation.Quality == AnswerQuality.Wrong)
         {
-            buffer.Concat("❌ Tente de novo.");
+            sb.Append("❌ Tente de novo.");
         }
-        if(evaluation.Quality < AnswerQuality.Perfect)
+
+        if (evaluation.Quality < AnswerQuality.Perfect)
         {
-            buffer.Concat($" Resposta mais próxima: {evaluation.ClosestMatch}");
+            sb.Append($" Resposta mais próxima: {evaluation.ClosestMatch}");
         }
-        return buffer;
+
+        return sb.ToString();
     }
 }
