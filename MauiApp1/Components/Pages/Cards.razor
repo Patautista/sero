@@ -46,7 +46,11 @@ else if (currentCard != null)
 
         @if (validationMessage != null)
         {
-            <p class="mt-2" style="color:@(isCorrect ? "green" : "red")">@validationMessage</p>
+            <p class="mt-2" style="color:@(isCorrect ? "green" : "red")">
+                @validationMessage
+                <br />
+                <small>Tempo da resposta: @answerTime.TotalSeconds.ToString("0.00") s</small>
+            </p>
         }
 
         @if (countdown > 0)
@@ -56,8 +60,10 @@ else if (currentCard != null)
 
         <button class="btn btn-secondary mt-2" @onclick="NextSentence">Next</button>
 
-        <DictCcSearch></DictCcSearch>
-        <ConjugationLookup></ConjugationLookup>
+        <div style="margin-top: 5vh">
+            <DictCcSearch></DictCcSearch>
+            <ConjugationLookup></ConjugationLookup>
+        </div>
     </div>
 }
 
@@ -71,6 +77,9 @@ else if (currentCard != null)
     private int newCount;
     private int reviewCount;
     private System.Timers.Timer countdownTimer;
+
+    private DateTime cardShownAt;
+    private TimeSpan answerTime;
 
     protected override async Task OnInitializedAsync()
     {
@@ -97,6 +106,10 @@ else if (currentCard != null)
         userAnswer = string.Empty;
         validationMessage = null;
         isCorrect = false;
+        answerTime = TimeSpan.Zero;
+
+        // Record when this card is shown
+        cardShownAt = DateTime.UtcNow;
 
         StateHasChanged();
     }
@@ -105,8 +118,10 @@ else if (currentCard != null)
     {
         if (string.IsNullOrWhiteSpace(userAnswer)) return;
 
-        var possibleAnswers = new List<string> { currentCard.Card.TargetSentence.Text };
+        // Calculate answer time
+        answerTime = DateTime.UtcNow - cardShownAt;
 
+        var possibleAnswers = new List<string> { currentCard.Card.TargetSentence.Text };
         var evaluation = AnswerEvaluator.Evaluate(userAnswer, possibleAnswers);
 
         isCorrect = evaluation.Quality != AnswerQuality.Wrong;
@@ -149,18 +164,12 @@ else if (currentCard != null)
         var sb = new StringBuilder();
 
         if (evaluation.Quality > AnswerQuality.Wrong)
-        {
             sb.Append("✅ Correto!");
-        }
         else if (evaluation.Quality == AnswerQuality.Wrong)
-        {
             sb.Append("❌ Tente de novo.");
-        }
 
         if (evaluation.Quality < AnswerQuality.Perfect)
-        {
             sb.Append($" Resposta mais próxima: {evaluation.ClosestMatch}");
-        }
 
         return sb.ToString();
     }
