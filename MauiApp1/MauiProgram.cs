@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Infrastructure.Data;
+﻿using Business;
 using AppLogic.Web;
-using Mobile.Data;
+using Infrastructure.Data;
+using MauiApp1.Services.Seed;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace MauiApp1
 {
@@ -20,9 +21,10 @@ namespace MauiApp1
 
             builder.Services.AddMauiBlazorWebView();
             builder.Services.AddScoped<CardService>();
+            builder.Services.AddSingleton<ISettingsService, SettingsService>();
 
 #if DEBUG
-    		builder.Services.AddBlazorWebViewDeveloperTools();
+            builder.Services.AddBlazorWebViewDeveloperTools();
     		builder.Logging.AddDebug();
 #endif
 

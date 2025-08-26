@@ -1,4 +1,4 @@
-﻿using ApplicationL.Model;
+﻿using Business.Model;
 using Domain;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ApplicationL.ViewModel
+namespace Business.ViewModel
 {
     public class CardWithState
     {

@@ -7,7 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
-namespace Mobile.Data
+namespace MauiApp1.Services.Seed
 {
     public static class InitialiserExtensions
     {

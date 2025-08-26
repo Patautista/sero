@@ -1,0 +1,21 @@
+﻿@page "/"
+
+@code {
+    [Inject] private ISettingsService SettingsService { get; set; }
+    [Inject] private NavigationManager Nav { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        //await SettingsService.SaveAsync(null);
+        var cfg = await SettingsService.LoadAsync();
+
+        if (cfg == null)
+        {
+            Nav.NavigateTo($"/{Routes.Settings}", true);
+        }
+        else
+        {
+            Nav.NavigateTo($"/{Routes.Cards}", true);
+        }
+    }
+}

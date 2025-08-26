@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ApplicationL.Model
+namespace Business.Model
 {
     public class UserCardState
     {

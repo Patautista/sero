@@ -1,5 +1,5 @@
-using ApplicationL.Model;
-using ApplicationL.ViewModel;
+using Business.Model;
+using Business.ViewModel;
 using Domain;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;

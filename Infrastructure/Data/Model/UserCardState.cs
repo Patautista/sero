@@ -21,9 +21,9 @@ namespace Infrastructure.Data.Model
         // Optional: keep track of last review date
         public DateTime LastReviewed { get; set; } = DateTime.MinValue;
 
-        public ApplicationL.Model.UserCardState ToDomain()
+        public Business.Model.UserCardState ToDomain()
         {
-            return new ApplicationL.Model.UserCardState
+            return new Business.Model.UserCardState
             {
                 CardId = CardId,
                 Repetitions = Repetitions,
