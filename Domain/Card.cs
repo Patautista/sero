@@ -13,7 +13,7 @@ namespace Domain
         public Sentence TargetSentence { get; set; }
 
         public ICollection<Tag> Tags { get; set; }
-        public DifficultyLevel DifficultyLevel;
+        public DifficultyLevel DifficultyLevel { get; set; }
 
         public bool HasTag(string name)
         {

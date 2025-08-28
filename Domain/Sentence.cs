@@ -9,13 +9,9 @@ namespace Domain
 {
     public record Sentence
     {
-        [JsonPropertyName("meaningId")]
         public int MeaningId { get; set; }
-        [JsonPropertyName("id")]
         public int Id { get; set; }
-        [JsonPropertyName("text")]
         public string Text { get; set; }
-        [JsonPropertyName("language")]
         public string Language { get; set; } = "pt";
     }
 }
