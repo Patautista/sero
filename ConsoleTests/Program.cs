@@ -10,7 +10,9 @@ class Program
 {
     static async Task Main()
     {
-        await TestAiTagging();
+        for (int i = 0; i < 10; i++) {
+            await RunAITagging();
+        }
     }
     static async Task ProcessTatoeba()
     {
@@ -63,12 +65,12 @@ class Program
         var json = JsonSerializer.Serialize(cards, options: new JsonSerializerOptions { WriteIndented = true, PropertyNameCaseInsensitive = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
         File.WriteAllText("tatoeba-cards.json", json);
     }
-    static async Task TestAiTagging()
+    static async Task RunAITagging()
     {
         //var api = new OpenAIClient(new HttpClient(), "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");
         var api = new GeminiClient("AIzaSyD_cIyYXmvyyCGtLJLNVHvpZ3-0JZh5cA0");
 
-        var batchPath = "C:\\Users\\caleb\\source\\repos\\AspireApp1\\ConsoleTests\\tag batches";
+        var batchPath = "C:\\Users\\caleb\\source\\repos\\AspireApp1\\ConsoleTests\\tagging";
 
         string preffix = "tagged-cards-batch"; // the string to look for in file names
 
@@ -81,7 +83,7 @@ class Program
         var tags = JsonSerializer.Deserialize<List<Tag>>(File.ReadAllText("tags.json"), options: options) ?? new List<Tag>();
         var cards = JsonSerializer.Deserialize<List<Card>>(File.ReadAllText("tatoeba-cards.json"), options: options) ?? new List<Card>();
 
-        var cardBatch = cards.Where(c => c.NativeSentence.Text.Split(" ").Count() > 1).Skip(count).Take(30);
+        var cardBatch = cards.Where(c => c.NativeSentence.Text.Split(" ").Count() > 1).Skip(count * 30).Take(30);
 
         var sb = new StringBuilder();
         foreach (var card in cardBatch) {
@@ -89,17 +91,17 @@ class Program
             sb.AppendLine($"Sentence: {card.NativeSentence.Text}");
             sb.AppendLine($"Give no more explanation.");
             var res = await api.GenerateContentAsync(sb.ToString());
-            if (res == null) break;
+            if (string.IsNullOrEmpty(res)) break;
 
-            var selectedTags = tags.AsParallel().Where(t => res.Contains(t.Name)).ToList();
-            card.Tags.ToList().AddRange(selectedTags);
+            var selectedTags = tags.AsParallel().Where(t => res.Contains(t.Name.ToLower())).ToList();
+            card.Tags = card.Tags.Union(selectedTags).ToList();
             Console.WriteLine(sb.ToString());
             Console.WriteLine(res);
             sb.Clear();
         }
 
-        var json = JsonSerializer.Serialize(cards, options: options);
+        var json = JsonSerializer.Serialize(cardBatch, options: options);
 
-        File.WriteAllText($"{batchPath}\\{preffix}-{DateTime.Now.ToString("H:m - dd/MM/yy")}.json", json);
+        File.WriteAllText($"{batchPath}\\{preffix} {count}" + ".json", json);
     }
 }
