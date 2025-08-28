@@ -6,7 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Infrastructure
+namespace Infrastructure.Lookup
 {
     public class WiktionaryOptions
     {

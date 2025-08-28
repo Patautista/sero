@@ -1,4 +1,4 @@
-﻿namespace Infrastructure
+﻿namespace Infrastructure.Lookup
 {
     using HtmlAgilityPack;
     using System;
@@ -38,7 +38,7 @@
                 doc.LoadHtml(html);
 
                 var rows = doc.DocumentNode.SelectNodes("//tr[contains(@id,'tr')]");
-                if (rows == null) return String.Empty;
+                if (rows == null) return string.Empty;
 
                 // Grab only the translation table instead of whole page
                 var table = rows.First().ParentNode;
@@ -47,7 +47,7 @@
             }
             catch(Exception ex)
             {
-                return String.Empty;
+                return string.Empty;
             }
         }
 
