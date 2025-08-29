@@ -11,7 +11,7 @@ namespace MauiApp1.Services;
 
 public class CardService(AnkiDbContext db, ISettingsService settingsService)
 {
-    public async Task<ICollection<CardWithState>> GetCards(CancellationToken cancellationToken = default)
+    public async Task<ICollection<CardWithState>> GetCards(ReviewSessionMode sessionMode, CancellationToken cancellationToken = default)
     {
         var cards = new List<Infrastructure.Data.Model.Card>();
 
@@ -60,7 +60,25 @@ public class CardService(AnkiDbContext db, ISettingsService settingsService)
         var userDifficulty = (await settingsService.LoadAsync())?.DifficultyLevel ?? DifficultyLevel.Advanced;
         var filtered = cardWithStates.Where(c => c.Card.SuitsDifficulty(userDifficulty)).ToList();
 
-        return filtered;
+        // Separate new vs review
+        var newCards = filtered.Where(c => c.State.Repetitions == 0).ToList();
+        var reviewCards = filtered.Where(c => c.State.Repetitions > 0).ToList();
+
+        // Session-specific limits
+        (int newLimit, int reviewLimit) = sessionMode switch
+        {
+            ReviewSessionMode.Quick => (5, 15),
+            ReviewSessionMode.Regular => (10, 30),
+            ReviewSessionMode.Grind => (20, 60),
+            _ => (10, 30)
+        };
+
+        // Pick cards
+        var sessionCards = new List<CardWithState>();
+        sessionCards.AddRange(reviewCards.Take(reviewLimit));
+        sessionCards.AddRange(newCards.Take(newLimit));
+
+        return sessionCards.ToList();
     }
     public async Task UpdateUserCardState(UserCardState userCardState,CancellationToken cancellationToken = default)
     {

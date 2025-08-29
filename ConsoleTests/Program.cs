@@ -2,6 +2,7 @@
 using Domain;
 using Infrastructure;
 using Infrastructure.AI;
+using Infrastructure.ETL;
 using Infrastructure.Parsing;
 using System.Text;
 using System.Text.Json;
@@ -67,41 +68,14 @@ class Program
     }
     static async Task RunAITagging()
     {
-        //var api = new OpenAIClient(new HttpClient(), "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");
         var api = new GeminiClient("AIzaSyD_cIyYXmvyyCGtLJLNVHvpZ3-0JZh5cA0");
-
-        var batchPath = "C:\\Users\\caleb\\source\\repos\\AspireApp1\\ConsoleTests\\tagging";
-
-        string preffix = "tagged-cards-batch"; // the string to look for in file names
-
-        int count = Directory
-            .EnumerateFiles(batchPath, "*", SearchOption.TopDirectoryOnly)
-            .Count(file => Path.GetFileName(file).Contains(preffix, StringComparison.OrdinalIgnoreCase));
-
+        var batchPath = "C:\\Users\\caleb\\source\\repos\\AspireApp1\\ConsoleTests\\etl\\2 tagged";
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, WriteIndented = true };
+
 
         var tags = JsonSerializer.Deserialize<List<Tag>>(File.ReadAllText("tags.json"), options: options) ?? new List<Tag>();
         var cards = JsonSerializer.Deserialize<List<Card>>(File.ReadAllText("tatoeba-cards.json"), options: options) ?? new List<Card>();
 
-        var cardBatch = cards.Where(c => c.NativeSentence.Text.Split(" ").Count() > 1).Skip(count * 30).Take(30);
-
-        var sb = new StringBuilder();
-        foreach (var card in cardBatch) {
-            sb.AppendLine($"Simply assign tags to the highlighted sentence from this tag pool: {string.Join(", ", tags.Select(t => t.Name))}.");
-            sb.AppendLine($"Sentence: {card.NativeSentence.Text}");
-            sb.AppendLine($"Give no more explanation.");
-            var res = await api.GenerateContentAsync(sb.ToString());
-            if (string.IsNullOrEmpty(res)) break;
-
-            var selectedTags = tags.AsParallel().Where(t => res.Contains(t.Name.ToLower())).ToList();
-            card.Tags = card.Tags.Union(selectedTags).ToList();
-            Console.WriteLine(sb.ToString());
-            Console.WriteLine(res);
-            sb.Clear();
-        }
-
-        var json = JsonSerializer.Serialize(cardBatch, options: options);
-
-        File.WriteAllText($"{batchPath}\\{preffix} {count}" + ".json", json);
+        await TaggingService.RunAITagging(batchPath, api, tags, cards);
     }
 }

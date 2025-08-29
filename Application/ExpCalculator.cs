@@ -9,7 +9,9 @@ namespace Business
 {
     public static class ExpCalculator
     {
-        public static int CalculateExp(Card card, int repetitions)
+        private const int BaseExp = 100; // tweakable: base scaling factor
+        private const double GrowthFactor = 1.5; // tweakable: how fast difficulty scales
+        public static int CalculateEarnedExp(Card card, int repetitions)
         {
             // --- 1. Repetition factor (slower decay) ---
             // Use an exponential decay with gentle slope
@@ -35,6 +37,44 @@ namespace Business
             double totalExp = baseExp * repetitionFactor * difficultyFactor * lengthFactor;
 
             return (int)Math.Round(totalExp);
+        }
+        // Returns the total exp required to reach a specific level
+        // --- Total EXP required to *reach* a given level (cumulative) ---
+        public static int ExpForLevel(int level)
+        {
+            if (level <= 1) return 0; // Level 1 starts at 0 XP
+
+            int exp = 0;
+            for (int i = 2; i <= level; i++)
+            {
+                exp += (int)(BaseExp * Math.Pow(i - 1, GrowthFactor));
+            }
+            return exp;
+        }
+
+        // --- Given total EXP, calculate current level ---
+        public static int GetLevel(int totalExp)
+        {
+            int level = 1;
+            while (totalExp >= ExpForLevel(level + 1))
+            {
+                level++;
+            }
+            return level;
+        }
+
+        // --- Progress toward next level (for progress bar) ---
+        public static (int currentLevel, int expIntoLevel, int expForNextLevel) GetLevelProgress(int totalExp)
+        {
+            int level = GetLevel(totalExp);
+
+            int expForCurrent = ExpForLevel(level);
+            int expForNext = ExpForLevel(level + 1);
+
+            int expIntoLevel = totalExp - expForCurrent;
+            int expNeeded = expForNext - expForCurrent;
+
+            return (level, expIntoLevel, expNeeded);
         }
     }
 }

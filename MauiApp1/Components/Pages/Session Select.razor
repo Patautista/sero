@@ -1,0 +1,25 @@
+﻿@page "/session-select"
+@inject NavigationManager Navigation
+
+<h3>Choose your session</h3>
+
+<div class="d-flex flex-column gap-2" style="max-width: 250px;">
+    <button class="btn btn-success" @onclick="() => StartSession(ReviewSessionMode.Quick)">
+        ⚡ Quick (5 new, 15 review)
+    </button>
+
+    <button class="btn btn-primary" @onclick="() => StartSession(ReviewSessionMode.Regular)">
+        📘 Regular (10 new, 30 review)
+    </button>
+
+    <button class="btn btn-danger" @onclick="() => StartSession(ReviewSessionMode.Grind)">
+        💪 Grind (20 new, 60 review)
+    </button>
+</div>
+
+@code {
+    private void StartSession(ReviewSessionMode mode)
+    {
+        Navigation.NavigateTo($"{Routes.CardsReview}?mode={mode}");
+    }
+}

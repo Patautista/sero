@@ -3,6 +3,9 @@
 @using System.Text
 @using Business.ViewModel
 @using Domain
+@using Microsoft.AspNetCore.WebUtilities;
+
+@inject NavigationManager Navigation
 @using MauiApp1.Services
 @attribute [StreamRendering(true)]
 
@@ -24,8 +27,28 @@ else if (currentCard != null)
     </div>
 
     <div class="card p-4 mb-3" style="max-width: 600px; position: relative">
-        <div>
+        <div class="d-flex justify-content-between align-items-center mb-2">
             <h5>Traduza para o Italiano:</h5>
+
+            <!-- Level display -->
+            @if (totalExp >= 0)
+            {
+                var (level, expInto, expNeeded) = ExpCalculator.GetLevelProgress(totalExp);
+                <div class="text-end">
+                    <span class="badge bg-warning text-dark">Lv. @level</span>
+                    <div class="progress" style="width: 120px; height: 10px; margin-top: 4px;">
+                        <div class="progress-bar bg-success"
+                             role="progressbar"
+                             style="width:@((expInto * 100 / expNeeded))%"
+                             aria-valuenow="@expInto"
+                             aria-valuemin="0"
+                             aria-valuemax="@expNeeded">
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Floating EXP badge -->
             @if (expEarned.HasValue)
             {
                 <div class="exp-badge">
@@ -33,6 +56,7 @@ else if (currentCard != null)
                 </div>
             }
         </div>
+
         <p class="mb-3"><strong>@currentCard.Card.NativeSentence.Text</strong></p>
 
         @if (currentCard.Card.Tags != null && currentCard.Card.Tags.Any())
@@ -76,6 +100,7 @@ else if (currentCard != null)
 }
 
 @code {
+    [Parameter] public ReviewSessionMode ReviewSessionMode { get; set; } = ReviewSessionMode.Regular;
     private ICollection<CardWithState> cards;
     private CardWithState currentCard;
     private string userAnswer;
@@ -85,6 +110,7 @@ else if (currentCard != null)
     private int newCount;
     private int reviewCount;
     private int? expEarned;
+    private int totalExp;
     private System.Timers.Timer countdownTimer;
 
     private DateTime cardShownAt;
@@ -92,7 +118,16 @@ else if (currentCard != null)
 
     protected override async Task OnInitializedAsync()
     {
-        cards = await Api.GetCards();
+        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+        var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+
+        if (query.TryGetValue("mode", out var limitParam) && Enum.TryParse<ReviewSessionMode>(limitParam, out var mode))
+        {
+            ReviewSessionMode = mode;
+        }
+
+
+        cards = await Api.GetCards(ReviewSessionMode);
 
         // Calculate counters
         newCount = cards.Count(c => c.State.Repetitions == 0);
@@ -137,7 +172,12 @@ else if (currentCard != null)
         isCorrect = evaluation.Quality != AnswerQuality.Wrong;
         if (isCorrect)
         {
-            expEarned = ExpCalculator.CalculateExp(currentCard.Card, currentCard.State.Repetitions);
+            expEarned = ExpCalculator.CalculateEarnedExp(
+                currentCard.Card,
+                currentCard.State.Repetitions
+            );
+
+            totalExp += expEarned.Value;
         }
         else
         {

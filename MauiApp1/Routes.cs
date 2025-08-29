@@ -9,6 +9,7 @@ namespace MauiApp1
     public static class Routes
     {
         public static string Settings = "settings";
-        public static string Cards = "anki";
+        public static string CardsReview = "anki";
+        public static string SessionSelect = "session-select";
     }
 }
