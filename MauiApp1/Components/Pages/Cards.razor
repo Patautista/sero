@@ -13,8 +13,6 @@
 
 <PageTitle>Frases Anki</PageTitle>
 
-<h1>Frases Anki</h1>
-
 @if (cards == null)
 {
     <p><em>Loading...</em></p>
@@ -74,7 +72,7 @@ else if (currentCard != null)
         }
 
         <input class="form-control mb-2" @bind="userAnswer" placeholder="Type your answer" />
-        <button class="btn btn-primary mb-2" @onclick="CheckAnswer">Check</button>
+        <button class="btn btn-primary mb-2" @onclick="CheckAnswer">Conferir</button>
 
         @if (validationMessage != null)
         {
@@ -90,7 +88,7 @@ else if (currentCard != null)
             <p class="text-muted">Próxima frase em @countdown...</p>
         }
 
-        <button class="btn btn-secondary mt-2" @onclick="NextSentence">Next</button>
+        <button class="btn btn-secondary mt-2" @onclick="NextSentence">Próxima frase</button>
 
         <div style="margin-top: 5vh">
             <DictCcSearch></DictCcSearch>
@@ -196,7 +194,7 @@ else if (currentCard != null)
         reviewCount = cards.Count(c => c.State.Repetitions > 0);
 
         // Start countdown for auto-advance
-        StartCountdown(5);
+        StartCountdown(3);
     }
 
     private void StartCountdown(int seconds)

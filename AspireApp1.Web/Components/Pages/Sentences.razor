@@ -41,7 +41,7 @@ else
         {
             <!-- Normal flow -->
             <input class="form-control mb-2" @bind="userAnswer" placeholder="Type your answer" />
-            <button class="btn btn-primary mb-2" @onclick="CheckAnswer">Check</button>
+            <button class="btn btn-primary mb-2" @onclick="CheckAnswer">Conferir</button>
 
             @if (validationMessage != null)
             {
@@ -49,7 +49,7 @@ else
             }
         }
 
-        <button class="btn btn-secondary mt-2" @onclick="NextSentence">Next</button>
+        <button class="btn btn-secondary mt-2" @onclick="NextSentence">Próxima frase</button>
         <DictCcSearch></DictCcSearch>
         <ConjugationLookup></ConjugationLookup>
     </div>
