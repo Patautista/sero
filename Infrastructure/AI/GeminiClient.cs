@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.AI
 {
-    public class GeminiClient
+    public class GeminiClient : IPromptClient
     {
         private readonly HttpClient _httpClient;
         private readonly string _apiKey;
@@ -22,7 +22,7 @@ namespace Infrastructure.AI
             _httpClient.DefaultRequestHeaders.Add("x-goog-api-key", _apiKey);
         }
 
-        public async Task<string> GenerateContentAsync(string prompt, string model = "gemini-2.5-flash")
+        public async Task<string> GenerateAsync(string prompt, string model = "gemini-2.5-flash")
         {
             var requestBody = new
             {

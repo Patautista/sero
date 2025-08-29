@@ -11,6 +11,41 @@
   },
   {
     "CardId": null,
+    "Name": "introduction",
+    "Type": "learningTopic"
+  },
+  {
+    "CardId": null,
+    "Name": "first person singular",
+    "Type": "learningTopic"
+  },
+  {
+    "CardId": null,
+    "Name": "second person singular",
+    "Type": "learningTopic"
+  },
+  {
+    "CardId": null,
+    "Name": "third person singular",
+    "Type": "learningTopic"
+  },
+  {
+    "CardId": null,
+    "Name": "first person plural",
+    "Type": "learningTopic"
+  },
+  {
+    "CardId": null,
+    "Name": "second person plural",
+    "Type": "learningTopic"
+  },
+  {
+    "CardId": null,
+    "Name": "third person plural",
+    "Type": "learningTopic"
+  },
+  {
+    "CardId": null,
     "Name": "biology",
     "Type": "generalTopic"
   },

@@ -11,7 +11,14 @@ namespace Infrastructure.ETL
 {
     public class TaggingService
     {
-        public static async Task RunAITagging(string batchPath, GeminiClient api, List<Tag> tags, List<Card> cards)
+        private readonly IPromptClient _api;
+        private readonly string _defaultModel;
+        public TaggingService(string defaultModel, IPromptClient api)
+        {
+            _api = api;
+            _defaultModel = defaultModel;
+        }
+        public async Task RunAITagging(string batchPath, List<Tag> tags, List<Card> cards)
         {
             string preffix = "tagged-cards-batch"; // the string to look for in file names
 
@@ -29,7 +36,7 @@ namespace Infrastructure.ETL
                 sb.AppendLine($"Simply assign tags to the highlighted sentence from this tag pool: {string.Join(", ", tags.Select(t => t.Name))}.");
                 sb.AppendLine($"Sentence: {card.NativeSentence.Text}");
                 sb.AppendLine($"Give no more explanation.");
-                var res = await api.GenerateContentAsync(sb.ToString());
+                var res = await _api.GenerateAsync(sb.ToString(), _defaultModel);
                 if (string.IsNullOrEmpty(res)) break;
 
                 var selectedTags = tags.AsParallel().Where(t => res.Contains(t.Name.ToLower())).ToList();
@@ -37,6 +44,7 @@ namespace Infrastructure.ETL
                 Console.WriteLine(sb.ToString());
                 Console.WriteLine(res);
                 sb.Clear();
+                await Task.Delay(TimeSpan.FromSeconds(30));
             }
 
             var json = JsonSerializer.Serialize(cardBatch, options: options);

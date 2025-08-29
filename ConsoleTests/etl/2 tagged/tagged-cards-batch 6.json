@@ -1,0 +1,1202 @@
+[
+  {
+    "NativeSentence": {
+      "MeaningId": 223,
+      "Id": 0,
+      "Text": "Voc\u00EAs a amavam.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 223,
+      "Id": 0,
+      "Text": "La amavate.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": "learningTopic",
+        "name": "emotion",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "habit",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "past",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 224,
+      "Id": 0,
+      "Text": "\u00C9 popular?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 224,
+      "Id": 0,
+      "Text": "\u00C8 popolare?",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": "learningTopic",
+        "name": "adjective",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "present",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "question",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 225,
+      "Id": 0,
+      "Text": "Tu \u00E9s honesta?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 225,
+      "Id": 0,
+      "Text": "Sei onesta?",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "adjective",
+        "Cards": []
+      },
+      {
+        "type": "generalTopic",
+        "name": "language",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "present",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "question",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 226,
+      "Id": 0,
+      "Text": "Tu \u00E9s honesto?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 226,
+      "Id": 0,
+      "Text": "Sei onesto?",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "adjective",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "question",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 227,
+      "Id": 0,
+      "Text": "\u00C9 uma sombra.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 227,
+      "Id": 0,
+      "Text": "\u00C8 un\u0027ombra.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": "difficulty",
+        "name": "beginner",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "fact",
+        "Cards": []
+      },
+      {
+        "type": "generalTopic",
+        "name": "nature",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "present",
+        "Cards": []
+      },
+      {
+        "type": "generalTopic",
+        "name": "science",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 228,
+      "Id": 0,
+      "Text": "Tu \u00E9s fiel.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 228,
+      "Id": 0,
+      "Text": "Sei fedele.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": "learningTopic",
+        "name": "adjective",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "fact",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "present",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 229,
+      "Id": 0,
+      "Text": "Tu \u00E9s famoso.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 229,
+      "Id": 0,
+      "Text": "Sei famoso.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": "learningTopic",
+        "name": "adjective",
+        "Cards": []
+      },
+      {
+        "type": "difficulty",
+        "name": "beginner",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "fact",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "present",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 230,
+      "Id": 0,
+      "Text": "Tu \u00E9s famosa.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 230,
+      "Id": 0,
+      "Text": "Sei famosa.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": "learningTopic",
+        "name": "adjective",
+        "Cards": []
+      },
+      {
+        "type": "difficulty",
+        "name": "beginner",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "fact",
+        "Cards": []
+      },
+      {
+        "type": "generalTopic",
+        "name": "language",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "present",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 231,
+      "Id": 0,
+      "Text": "Tu est\u00E1s aqui.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 231,
+      "Id": 0,
+      "Text": "Tu sei qui.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": "difficulty",
+        "name": "beginner",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "fact",
+        "Cards": []
+      },
+      {
+        "type": "generalTopic",
+        "name": "language",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "present",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 232,
+      "Id": 0,
+      "Text": "Tu \u00E9s honesto.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 232,
+      "Id": 0,
+      "Text": "Sei onesto.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": "learningTopic",
+        "name": "adjective",
+        "Cards": []
+      },
+      {
+        "type": "difficulty",
+        "name": "beginner",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "fact",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "present",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 233,
+      "Id": 0,
+      "Text": "Tu \u00E9s maduro.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 233,
+      "Id": 0,
+      "Text": "Sei maturo.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": "learningTopic",
+        "name": "adjective",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "fact",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "present",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 234,
+      "Id": 0,
+      "Text": "Tu \u00E9s madura.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 234,
+      "Id": 0,
+      "Text": "Sei matura.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": "learningTopic",
+        "name": "adjective",
+        "Cards": []
+      },
+      {
+        "type": "difficulty",
+        "name": "beginner",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "fact",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "present",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 235,
+      "Id": 0,
+      "Text": "Voc\u00EA \u00E9 met\u00F3dico.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 235,
+      "Id": 0,
+      "Text": "\u00C8 metodico.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": "learningTopic",
+        "name": "adjective",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "fact",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "habit",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "present",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 236,
+      "Id": 0,
+      "Text": "Voc\u00EA \u00E9 met\u00F3dica.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 236,
+      "Id": 0,
+      "Text": "\u00C8 metodica.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": "learningTopic",
+        "name": "adjective",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "fact",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "present",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 237,
+      "Id": 0,
+      "Text": "Voc\u00EA \u00E9 rid\u00EDculo.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 237,
+      "Id": 0,
+      "Text": "\u00C8 ridicolo.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "adjective",
+        "Cards": []
+      },
+      {
+        "type": "difficulty",
+        "name": "beginner",
+        "Cards": []
+      },
+      {
+        "type": "generalTopic",
+        "name": "feelings",
+        "Cards": []
+      },
+      {
+        "type": "generalTopic",
+        "name": "language",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "present",
+        "Cards": []
+      },
+      {
+        "type": "generalTopic",
+        "name": "time",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 238,
+      "Id": 0,
+      "Text": "Voc\u00EA est\u00E1 arruinada.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 238,
+      "Id": 0,
+      "Text": "\u00C8 rovinata.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": "learningTopic",
+        "name": "adjective",
+        "Cards": []
+      },
+      {
+        "type": "difficulty",
+        "name": "beginner",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "emotion",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "present",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 239,
+      "Id": 0,
+      "Text": "Voc\u00EA est\u00E1 arruinado.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 239,
+      "Id": 0,
+      "Text": "\u00C8 rovinato.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": "learningTopic",
+        "name": "adjective",
+        "Cards": []
+      },
+      {
+        "type": "difficulty",
+        "name": "beginner",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "emotion",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "fact",
+        "Cards": []
+      },
+      {
+        "type": "generalTopic",
+        "name": "feelings",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "present",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 240,
+      "Id": 0,
+      "Text": "Tu est\u00E1s triste.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 240,
+      "Id": 0,
+      "Text": "Sei triste.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "adjective",
+        "Cards": []
+      },
+      {
+        "type": "difficulty",
+        "name": "beginner",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "emotion",
+        "Cards": []
+      },
+      {
+        "type": "generalTopic",
+        "name": "feelings",
+        "Cards": []
+      },
+      {
+        "type": "generalTopic",
+        "name": "language",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "present",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 241,
+      "Id": 0,
+      "Text": "Tu \u00E9s t\u00EDmido.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 241,
+      "Id": 0,
+      "Text": "Sei timido.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "adjective",
+        "Cards": []
+      },
+      {
+        "type": "difficulty",
+        "name": "beginner",
+        "Cards": []
+      },
+      {
+        "type": "generalTopic",
+        "name": "feelings",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "present",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 242,
+      "Id": 0,
+      "Text": "Tu \u00E9s t\u00EDmida.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 242,
+      "Id": 0,
+      "Text": "Sei timida.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "adjective",
+        "Cards": []
+      },
+      {
+        "type": "difficulty",
+        "name": "beginner",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "emotion",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "fact",
+        "Cards": []
+      },
+      {
+        "type": "generalTopic",
+        "name": "feelings",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "present",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 243,
+      "Id": 0,
+      "Text": "Voc\u00EA \u00E9 injusto.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 243,
+      "Id": 0,
+      "Text": "\u00C8 ingiusto.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "adjective",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "fact",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "present",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 244,
+      "Id": 0,
+      "Text": "Tu est\u00E1s ferido.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 244,
+      "Id": 0,
+      "Text": "Sei ferito.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": "learningTopic",
+        "name": "adjective",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "fact",
+        "Cards": []
+      },
+      {
+        "type": "generalTopic",
+        "name": "health",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "present",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 245,
+      "Id": 0,
+      "Text": "Tu est\u00E1s ferida.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 245,
+      "Id": 0,
+      "Text": "Sei ferita.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": "learningTopic",
+        "name": "adjective",
+        "Cards": []
+      },
+      {
+        "type": "difficulty",
+        "name": "beginner",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "fact",
+        "Cards": []
+      },
+      {
+        "type": "generalTopic",
+        "name": "health",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "present",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 247,
+      "Id": 0,
+      "Text": "Ch\u00E1 ou caf\u00E9?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 247,
+      "Id": 0,
+      "Text": "T\u00E8 o caff\u00E8?",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": "generalTopic",
+        "name": "food",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "present",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "question",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 248,
+      "Id": 0,
+      "Text": "N\u00E3o \u00E9 importante.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 248,
+      "Id": 0,
+      "Text": "Non importa.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "adjective",
+        "Cards": []
+      },
+      {
+        "type": "difficulty",
+        "name": "beginner",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "fact",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "negation",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "present",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 249,
+      "Id": 0,
+      "Text": "Eu tenho um sonho.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 249,
+      "Id": 0,
+      "Text": "Ho un sogno.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      },
+      {
+        "type": "difficulty",
+        "name": "beginner",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "emotion",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "fact",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "future",
+        "Cards": []
+      },
+      {
+        "type": "generalTopic",
+        "name": "language",
+        "Cards": []
+      },
+      {
+        "type": "mood",
+        "name": "poetic",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "present",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 250,
+      "Id": 0,
+      "Text": "Eu sou feliz.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 250,
+      "Id": 0,
+      "Text": "Sono felice!",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": "learningTopic",
+        "name": "adjective",
+        "Cards": []
+      },
+      {
+        "type": "difficulty",
+        "name": "beginner",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "emotion",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "fact",
+        "Cards": []
+      },
+      {
+        "type": "generalTopic",
+        "name": "feelings",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "present",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 251,
+      "Id": 0,
+      "Text": "Estou triste.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 251,
+      "Id": 0,
+      "Text": "Sono triste.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "adjective",
+        "Cards": []
+      },
+      {
+        "type": "difficulty",
+        "name": "beginner",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "emotion",
+        "Cards": []
+      },
+      {
+        "type": "generalTopic",
+        "name": "feelings",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "present",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 252,
+      "Id": 0,
+      "Text": "Feliz Natal!",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 252,
+      "Id": 0,
+      "Text": "Buon Natale!",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": "generalTopic",
+        "name": "culture",
+        "Cards": []
+      },
+      {
+        "type": "generalTopic",
+        "name": "language",
+        "Cards": []
+      },
+      {
+        "type": "generalTopic",
+        "name": "time",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 253,
+      "Id": 0,
+      "Text": "Quem sou eu?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 253,
+      "Id": 0,
+      "Text": "Chi sono io?",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      },
+      {
+        "type": "generalTopic",
+        "name": "philosophy",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "present",
+        "Cards": []
+      },
+      {
+        "type": "learningTopic",
+        "name": "question",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  }
+]

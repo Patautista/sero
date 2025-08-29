@@ -11,9 +11,7 @@ class Program
 {
     static async Task Main()
     {
-        for (int i = 0; i < 10; i++) {
-            await RunAITagging();
-        }
+        await RunAITagging();
     }
     static async Task ProcessTatoeba()
     {
@@ -68,14 +66,15 @@ class Program
     }
     static async Task RunAITagging()
     {
-        var api = new GeminiClient("AIzaSyD_cIyYXmvyyCGtLJLNVHvpZ3-0JZh5cA0");
+        //var api = new GeminiClient("AIzaSyD_cIyYXmvyyCGtLJLNVHvpZ3-0JZh5cA0");
+        var api = new OllamaClient();
         var batchPath = "C:\\Users\\caleb\\source\\repos\\AspireApp1\\ConsoleTests\\etl\\2 tagged";
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, WriteIndented = true };
-
+        var service = new TaggingService("deepseek-llm:latest", api);
 
         var tags = JsonSerializer.Deserialize<List<Tag>>(File.ReadAllText("tags.json"), options: options) ?? new List<Tag>();
         var cards = JsonSerializer.Deserialize<List<Card>>(File.ReadAllText("tatoeba-cards.json"), options: options) ?? new List<Card>();
 
-        await TaggingService.RunAITagging(batchPath, api, tags, cards);
+        await service.RunAITagging(batchPath, tags, cards);
     }
 }
