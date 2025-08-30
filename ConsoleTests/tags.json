@@ -12,6 +12,11 @@
   },
   {
     "CardId": null,
+    "Name": "possessive pronoun/qualifier",
+    "Type": "learningTopic"
+  },
+  {
+    "CardId": null,
     "Name": "numbers",
     "Type": "learningTopic"
   },
@@ -140,7 +145,37 @@
   },
   {
     "CardId": null,
+    "Name": "frequency adverb",
+    "Type": "learningTopic"
+  },
+  {
+    "CardId": null,
+    "Name": "manner adverb",
+    "Type": "learningTopic"
+  },
+  {
+    "CardId": null,
     "Name": "emotion",
+    "Type": "learningTopic"
+  },
+  {
+    "CardId": null,
+    "Name": "must",
+    "Type": "learningTopic"
+  },
+  {
+    "CardId": null,
+    "Name": "may",
+    "Type": "learningTopic"
+  },
+  {
+    "CardId": null,
+    "Name": "can",
+    "Type": "learningTopic"
+  },
+  {
+    "CardId": null,
+    "Name": "should",
     "Type": "learningTopic"
   },
   {
