@@ -4,6 +4,7 @@ using Infrastructure;
 using Infrastructure.AI;
 using Infrastructure.ETL;
 using Infrastructure.Parsing;
+using Microsoft.Extensions.Options;
 using System.Text;
 using System.Text.Json;
 
@@ -11,9 +12,7 @@ class Program
 {
     static async Task Main()
     {
-        for (int i = 0; i < 5; i++) {
-            await RunAITagging();
-        }
+        await SummarizeTatoebaCards();
     }
     static async Task ProcessTatoeba()
     {
@@ -77,8 +76,33 @@ class Program
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, WriteIndented = true };
 
         var tags = JsonSerializer.Deserialize<List<Tag>>(File.ReadAllText("tags.json"), options: options) ?? new List<Tag>();
-        var cards = JsonSerializer.Deserialize<List<Card>>(File.ReadAllText("tatoeba-cards.json"), options: options) ?? new List<Card>();
+        var cards = JsonSerializer.Deserialize<List<Card>>(File.ReadAllText("C:\\Users\\caleb\\source\\repos\\AspireApp1\\ConsoleTests\\etl\\1 normalized\\tatoeba-summarized.json"), options: options) ?? new List<Card>();
 
         await service.RunAITagging(batchPath, tags, cards);
+    }
+    static async Task SummarizeTatoebaCards()
+    {
+        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, WriteIndented = true };
+        var cards = JsonSerializer.Deserialize<List<Card>>(File.ReadAllText("C:\\Users\\caleb\\source\\repos\\AspireApp1\\ConsoleTests\\etl\\1 normalized\\tatoeba-cards.json"), options: options) ?? new List<Card>();
+        cards = cards.Where(c => c.NativeSentence.Text.Split(" ").Count() > 1).ToList();
+        var beginner = cards
+           .Where(c => c.DifficultyLevel == DifficultyLevel.Beginner)
+           .Take(640); // 540 + 100
+        var intermediate = cards
+            .Where(c => c.DifficultyLevel == DifficultyLevel.Intermediate)
+            .Skip(200)
+            .Take(500);
+        var advanced = cards
+            .Where(c => c.DifficultyLevel == DifficultyLevel.Advanced)
+            .Take(350);
+
+        var result = beginner
+            .Concat(intermediate)
+            .Concat(advanced)
+            .ToList();
+
+        var json = JsonSerializer.Serialize(result, options: options);
+
+        File.WriteAllText($"C:\\\\Users\\\\caleb\\\\source\\\\repos\\\\AspireApp1\\\\ConsoleTests\\\\etl\\\\1 normalized\\\\tatoeba-summarized.json", json);
     }
 }

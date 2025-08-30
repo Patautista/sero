@@ -37,7 +37,7 @@
   },
   {
     "CardId": null,
-    "Name": "have",
+    "Name": "have/possess",
     "Type": "learningTopic"
   },
   {
@@ -180,6 +180,11 @@
   },
   {
     "CardId": null,
+    "Name": "seem",
+    "Type": "learningTopic"
+  },
+  {
+    "CardId": null,
     "Name": "habit",
     "Type": "learningTopic"
   },
@@ -272,13 +277,8 @@
   },
   {
     "CardId": null,
-    "Name": "concession",
-    "Type": "learningTopic"
-  },
-  {
-    "CardId": null,
     "Name": "quote",
-    "Type": "learningTopic"
+    "Type": "generalTopic"
   },
   {
     "CardId": null,

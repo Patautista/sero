@@ -111,9 +111,13 @@ namespace Infrastructure.ETL
         public List<Tag> FilterRelevantTags(List<Tag> tags, Card card)
         {
             var cardlimitIndex = tags.IndexOf(new Tag { Name = (card.DifficultyLevel + 1).ToString().ToLower() });
+            if(card.DifficultyLevel == DifficultyLevel.Advanced)
+            {
+                cardlimitIndex = tags.Count;
+            }
 
             return tags
-                .Where((tag, i) => tag.Type == TagTypes.LearningTopic || i < cardlimitIndex)
+                .Where((tag, i) => tag.Type.ToLowerInvariant() == TagTypes.LearningTopic.ToLowerInvariant() || i < cardlimitIndex)
                 .Where(t => t.Type != TagTypes.Difficulty)
                 .ToList();
         }
