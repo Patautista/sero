@@ -11,7 +11,9 @@ class Program
 {
     static async Task Main()
     {
-        await RunAITagging();
+        for (int i = 0; i < 5; i++) {
+            await RunAITagging();
+        }
     }
     static async Task ProcessTatoeba()
     {
@@ -66,13 +68,15 @@ class Program
     }
     static async Task RunAITagging()
     {
-        //var api = new GeminiClient("AIzaSyD_cIyYXmvyyCGtLJLNVHvpZ3-0JZh5cA0");
-        var api = new OllamaClient();
+        var api = new GeminiClient("AIzaSyD_cIyYXmvyyCGtLJLNVHvpZ3-0JZh5cA0");
+        var service = new TaggingService("gemini-2.5-flash", api);
+
+        //var api = new OllamaClient();
+        //var service = new TaggingService("deepseek-r1:14b-qwen-distill-q4_K_M", api);
         var batchPath = "C:\\Users\\caleb\\source\\repos\\AspireApp1\\ConsoleTests\\etl\\2 tagged";
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, WriteIndented = true };
-        var service = new TaggingService("deepseek-r1:14b-qwen-distill-q4_K_M", api);
 
-        var tags = JsonSerializer.Deserialize<List<Tag>>(File.ReadAllText("tags.json"), options: options).Where(t => t.Type != TagTypes.Difficulty).ToList() ?? new List<Tag>();
+        var tags = JsonSerializer.Deserialize<List<Tag>>(File.ReadAllText("tags.json"), options: options) ?? new List<Tag>();
         var cards = JsonSerializer.Deserialize<List<Card>>(File.ReadAllText("tatoeba-cards.json"), options: options) ?? new List<Card>();
 
         await service.RunAITagging(batchPath, tags, cards);

@@ -8,14 +8,27 @@ using System.Threading.Tasks;
 
 namespace Domain
 {
-    public record Tag
+    public sealed record Tag : IEquatable<Tag>
     {
         [JsonPropertyName("type")]
         public string Type { get; set; }
+
         [JsonPropertyName("name")]
         [Key]
         public string Name { get; set; }
+
         public ICollection<Card>? Cards { get; set; } = new HashSet<Card>();
+
+        public bool Equals(Tag? other)
+        {
+            if (other is null) return false;
+            return string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public override int GetHashCode()
+        {
+            return Name?.ToLowerInvariant().GetHashCode() ?? 0;
+        }
     }
     public static class TagTypes
     {

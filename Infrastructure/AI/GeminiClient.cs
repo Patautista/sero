@@ -22,7 +22,7 @@ namespace Infrastructure.AI
             _httpClient.DefaultRequestHeaders.Add("x-goog-api-key", _apiKey);
         }
 
-        public async Task<string> GenerateAsync(string prompt, string model = "gemini-2.5-flash")
+        public async Task<string> GenerateAsync(string prompt, string model = "gemini-2.0-flash")
         {
             var requestBody = new
             {

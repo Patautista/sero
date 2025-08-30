@@ -41,8 +41,9 @@ namespace Infrastructure.ETL
 
             var stopwatch = Stopwatch.StartNew();
 
-            foreach (var card in cardBatch)
+            foreach (var (card, index) in cardBatch.Select((c, i) => (c, i + 1)))
             {
+                Console.WriteLine($"Card #{index} is being tagged...");
                 await TagCard(card, tags);
             }
 
@@ -68,6 +69,8 @@ namespace Infrastructure.ETL
         public async Task TagCard(Card card, List<Tag> tags)
         {
             var sb = new StringBuilder();
+
+            tags = FilterRelevantTags(tags, card);
 
             if (_api is OllamaClient)
             {
@@ -104,6 +107,15 @@ namespace Infrastructure.ETL
                 Console.WriteLine(string.Join(", ", selectedTags.Select(t => t.Name)));
                 Console.WriteLine("\n");
             }
+        }
+        public List<Tag> FilterRelevantTags(List<Tag> tags, Card card)
+        {
+            var cardlimitIndex = tags.IndexOf(new Tag { Name = (card.DifficultyLevel + 1).ToString().ToLower() });
+
+            return tags
+                .Where((tag, i) => tag.Type == TagTypes.LearningTopic || i < cardlimitIndex)
+                .Where(t => t.Type != TagTypes.Difficulty)
+                .ToList();
         }
     }
 
