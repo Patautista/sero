@@ -16,32 +16,32 @@
   },
   {
     "CardId": null,
-    "Name": "first person singular",
+    "Name": "first person singular subject",
     "Type": "learningTopic"
   },
   {
     "CardId": null,
-    "Name": "second person singular",
+    "Name": "second person singular subject",
     "Type": "learningTopic"
   },
   {
     "CardId": null,
-    "Name": "third person singular",
+    "Name": "third person singular subject",
     "Type": "learningTopic"
   },
   {
     "CardId": null,
-    "Name": "first person plural",
+    "Name": "first person plural subject",
     "Type": "learningTopic"
   },
   {
     "CardId": null,
-    "Name": "second person plural",
+    "Name": "second person plural subject",
     "Type": "learningTopic"
   },
   {
     "CardId": null,
-    "Name": "third person plural",
+    "Name": "third person plural subject",
     "Type": "learningTopic"
   },
   {

@@ -21,17 +21,23 @@ namespace Infrastructure.AI
         {
             _baseUrl = baseUrl.TrimEnd('/');
             _httpClient = new HttpClient();
+            _httpClient.Timeout = TimeSpan.FromSeconds(300);
         }
 
         /// <summary>
         /// Send a prompt to the given model running in Ollama
         /// </summary>
-        public async Task<string> GenerateAsync(string model, string prompt)
+        public async Task<string> GenerateAsync(string prompt, string model)
         {
             var requestBody = new
             {
                 model = model,
                 prompt = prompt,
+                think = true,
+                options = new
+                {
+                    temperature =  0.3
+                },
                 stream = false   // set to true if you want incremental streaming
             };
 

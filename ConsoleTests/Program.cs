@@ -70,9 +70,9 @@ class Program
         var api = new OllamaClient();
         var batchPath = "C:\\Users\\caleb\\source\\repos\\AspireApp1\\ConsoleTests\\etl\\2 tagged";
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, WriteIndented = true };
-        var service = new TaggingService("deepseek-llm:latest", api);
+        var service = new TaggingService("deepseek-r1:14b-qwen-distill-q4_K_M", api);
 
-        var tags = JsonSerializer.Deserialize<List<Tag>>(File.ReadAllText("tags.json"), options: options) ?? new List<Tag>();
+        var tags = JsonSerializer.Deserialize<List<Tag>>(File.ReadAllText("tags.json"), options: options).Where(t => t.Type != TagTypes.Difficulty).ToList() ?? new List<Tag>();
         var cards = JsonSerializer.Deserialize<List<Card>>(File.ReadAllText("tatoeba-cards.json"), options: options) ?? new List<Card>();
 
         await service.RunAITagging(batchPath, tags, cards);
