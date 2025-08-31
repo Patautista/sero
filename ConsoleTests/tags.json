@@ -119,7 +119,12 @@
   {
     "CardId": null,
     "Name": "time",
-    "Type": "generalTopic"
+    "Type": "learningTopic"
+  },
+  {
+    "CardId": null,
+    "Name": "directions/where",
+    "Type": "learningTopic"
   },
   {
     "CardId": null,
@@ -136,6 +141,11 @@
   {
     "CardId": null,
     "Name": "adjective",
+    "Type": "learningTopic"
+  },
+  {
+    "CardId": null,
+    "Name": "imperative",
     "Type": "learningTopic"
   },
   {

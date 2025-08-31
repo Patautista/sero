@@ -1,5 +1,6 @@
 {
   "Schema": "anki-tagging-v1",
+  "Status": "complete",
   "FinishTime": "2025-08-30T01:54:56.5794461Z",
   "DurationMs": 4236207,
   "BatchSize": 30,

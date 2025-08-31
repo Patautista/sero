@@ -10,11 +10,18 @@ using System.Text.Json;
 
 class Program
 {
+    static string DeepSeek14BQ = "deepseek-r1:14b-qwen-distill-q4_K_M";
+    static string DeepSeek14Q_LLamaFile = "DeepSeek-R1-Distill-Qwen-14B-Q4_K_M";
+    static string DeepSeek14B_Pure = "deepseek-r1:14b";
+    static string DeepSeek8B = "deepseek-r1:8b";
+    static string GeminiFlash = "gemini-2.5-flash";
     static async Task Main()
     {
-        await SummarizeTatoebaCards();
+        for (int i = 0; i < 4; i++) {
+            await RunAITagging("tatoeba-summarized.json");
+        }
     }
-    static async Task ProcessTatoeba()
+    static async Task NormalizeTatoeba()
     {
         string filePath = "tatoeba it-pt.tsv";
 
@@ -65,26 +72,30 @@ class Program
         var json = JsonSerializer.Serialize(cards, options: new JsonSerializerOptions { WriteIndented = true, PropertyNameCaseInsensitive = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
         File.WriteAllText("tatoeba-cards.json", json);
     }
-    static async Task RunAITagging()
+    static async Task RunAITagging(string dataset)
     {
-        var api = new GeminiClient("AIzaSyD_cIyYXmvyyCGtLJLNVHvpZ3-0JZh5cA0");
-        var service = new TaggingService("gemini-2.5-flash", api);
+        //var api = new GeminiClient("AIzaSyD_cIyYXmvyyCGtLJLNVHvpZ3-0JZh5cA0");
+        var api = new OllamaClient();
+        //var api = new LlamafileClient();
+        var service = new TaggingService(DeepSeek14B_Pure, api);
 
-        //var api = new OllamaClient();
         //var service = new TaggingService("deepseek-r1:14b-qwen-distill-q4_K_M", api);
+
         var batchPath = "C:\\Users\\caleb\\source\\repos\\AspireApp1\\ConsoleTests\\etl\\2 tagged";
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, WriteIndented = true };
 
         var tags = JsonSerializer.Deserialize<List<Tag>>(File.ReadAllText("tags.json"), options: options) ?? new List<Tag>();
-        var cards = JsonSerializer.Deserialize<List<Card>>(File.ReadAllText("C:\\Users\\caleb\\source\\repos\\AspireApp1\\ConsoleTests\\etl\\1 normalized\\tatoeba-summarized.json"), options: options) ?? new List<Card>();
+        var cards = JsonSerializer.Deserialize<List<Card>>(File.ReadAllText($"C:\\Users\\caleb\\source\\repos\\AspireApp1\\ConsoleTests\\etl\\1 normalized\\{dataset}"), options: options) ?? new List<Card>();
 
         await service.RunAITagging(batchPath, tags, cards);
     }
-    static async Task SummarizeTatoebaCards()
+    static void SummarizeTatoebaCards()
     {
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, WriteIndented = true };
-        var cards = JsonSerializer.Deserialize<List<Card>>(File.ReadAllText("C:\\Users\\caleb\\source\\repos\\AspireApp1\\ConsoleTests\\etl\\1 normalized\\tatoeba-cards.json"), options: options) ?? new List<Card>();
-        cards = cards.Where(c => c.NativeSentence.Text.Split(" ").Count() > 1).ToList();
+        var cards = JsonSerializer.Deserialize<List<Card>>(File.ReadAllText("C:\\Users\\caleb\\source\\repos\\AspireApp1\\ConsoleTests\\etl\\1 normalized\\tatoeba-full.json"), options: options) ?? new List<Card>();
+        cards = cards.Where(c => c.NativeSentence.Text.Split(" ").Count() > 1)
+            .DistinctBy(c => c.NativeSentence.Text)
+            .DistinctBy(c => c.TargetSentence.Text).ToList();
         var beginner = cards
            .Where(c => c.DifficultyLevel == DifficultyLevel.Beginner)
            .Take(640); // 540 + 100

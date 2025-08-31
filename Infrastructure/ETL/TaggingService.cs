@@ -2,13 +2,12 @@
 using Infrastructure.AI;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Diagnostics;
-using System.Text.Json;
-using System.Text;
 
 namespace Infrastructure.ETL
 {
@@ -16,6 +15,7 @@ namespace Infrastructure.ETL
     {
         private readonly IPromptClient _api;
         private readonly string _defaultModel;
+        private const string Prefix = "tagged-cards-batch";
 
         public TaggingService(string defaultModel, IPromptClient api)
         {
@@ -25,26 +25,83 @@ namespace Infrastructure.ETL
 
         public async Task RunAITagging(string batchPath, List<Tag> tags, List<Card> cards)
         {
-            string preffix = "tagged-cards-batch";
-
-            int count = Directory
-                .EnumerateFiles(batchPath, "*", SearchOption.TopDirectoryOnly)
-                .Count(file => Path.GetFileName(file).Contains(preffix, StringComparison.OrdinalIgnoreCase));
-
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, WriteIndented = true };
 
-            var cardBatch = cards
-                .Where(c => c.NativeSentence.Text.Split(" ").Count() > 1)
-                .Skip(count * 30)
-                .Take(30)
-                .ToList();
+            // find the most recent batch file
+            var latestFile = Directory
+                .EnumerateFiles(batchPath, $"{Prefix}*.json", SearchOption.TopDirectoryOnly)
+                .OrderByDescending(File.GetCreationTimeUtc)
+                .FirstOrDefault();
+
+            TaggingBatchResult? latestBatch = null;
+            if (latestFile != null)
+            {
+                var content = File.ReadAllText(latestFile);
+                latestBatch = JsonSerializer.Deserialize<TaggingBatchResult>(content, options);
+            }
+
+            List<Card> cardBatch;
+
+            if (latestBatch != null && latestBatch.Status.Equals("incomplete", StringComparison.OrdinalIgnoreCase))
+            {
+                Console.WriteLine("Resuming incomplete batch...");
+
+                // Use the same cards as before
+                cardBatch = latestBatch.Cards;
+
+                // Filter only those without tags
+                cardBatch = cardBatch.Where(c => c.Tags == null || !c.Tags.Any()).ToList();
+            }
+            else
+            {
+                // Count how many complete files exist
+                int completeCount = Directory
+                    .EnumerateFiles(batchPath, $"{Prefix}*.json", SearchOption.TopDirectoryOnly)
+                    .Count();
+
+                // pick next 30 cards
+                cardBatch = cards
+                    .Where(c => c.NativeSentence.Text.Split(" ").Length > 1)
+                    .Skip(completeCount * 30)
+                    .Take(30)
+                    .ToList();
+            }
+
+            if (cardBatch.Count == 0)
+            {
+                Console.WriteLine("No cards to tag.");
+                return;
+            }
 
             var stopwatch = Stopwatch.StartNew();
 
             foreach (var (card, index) in cardBatch.Select((c, i) => (c, i + 1)))
             {
-                Console.WriteLine($"Card #{index} is being tagged...");
-                await TagCard(card, tags);
+                Console.WriteLine($"Card #{index} is being tagged at {DateTime.Now.ToString("H:mm")}...");
+                var res = await TagCard(card, tags);
+                if (!res)
+                {
+                    var processedCards = cardBatch.Where((c, i) => i < cardBatch.IndexOf(card)).ToList();
+                    if(processedCards.Count() > 0)
+                    {
+                        var incompleteBatchResult = new TaggingBatchResult
+                        {
+                            Schema = "anki-tagging-v1",
+                            Status = "incomplete",
+                            FinishTime = DateTime.UtcNow,
+                            DurationMs = stopwatch.ElapsedMilliseconds,
+                            BatchSize = cardBatch.Count,
+                            Cards = processedCards
+                        };
+
+                        var incompleteJsonOut = JsonSerializer.Serialize(incompleteBatchResult, options);
+                        var incompleteFileIndex = Directory
+                            .EnumerateFiles(batchPath, $"{Prefix}*.json", SearchOption.TopDirectoryOnly)
+                            .Count();
+
+                        File.WriteAllText(Path.Combine(batchPath, $"{Prefix} {incompleteFileIndex}.json"), incompleteJsonOut);
+                    }
+                }
             }
 
             stopwatch.Stop();
@@ -52,41 +109,44 @@ namespace Infrastructure.ETL
             var batchResult = new TaggingBatchResult
             {
                 Schema = "anki-tagging-v1",
+                Status = "complete",
                 FinishTime = DateTime.UtcNow,
                 DurationMs = stopwatch.ElapsedMilliseconds,
                 BatchSize = cardBatch.Count,
                 Cards = cardBatch
             };
 
-            var json = JsonSerializer.Serialize(batchResult, options: options);
+            var jsonOut = JsonSerializer.Serialize(batchResult, options);
+            var fileIndex = Directory
+                .EnumerateFiles(batchPath, $"{Prefix}*.json", SearchOption.TopDirectoryOnly)
+                .Count();
 
-            File.WriteAllText($"{batchPath}\\{preffix} {count}.json", json);
+            File.WriteAllText(Path.Combine(batchPath, $"{Prefix} {fileIndex}.json"), jsonOut);
         }
 
         /// <summary>
         /// Tags a single card using the LLM.
         /// </summary>
-        public async Task TagCard(Card card, List<Tag> tags)
+        public async Task<bool> TagCard(Card card, List<Tag> tags)
         {
             var sb = new StringBuilder();
-
             tags = FilterRelevantTags(tags, card);
 
-            if (_api is OllamaClient)
+            if (_api is OllamaClient || _api is LlamafileClient)
             {
                 var tagPool = string.Join(", ", tags.Select(t => t.Name));
 
                 sb.AppendLine("You are a tagging assistant.");
                 sb.AppendLine("Extract only relevant tags from the following sentence.");
                 sb.AppendLine($"Use **only** tags from this pool: {tagPool}");
-                sb.AppendLine("Do NOT invent any tags outside this pool.");
                 sb.AppendLine("Output the tags as a comma-separated list.");
                 sb.AppendLine("Do NOT provide explanations or commentary.");
+                sb.AppendLine("Think briefly (max 3–4 steps) before answering.");
                 sb.AppendLine("Ignore the sentence's language; just match tags literally.");
                 sb.AppendLine();
                 sb.AppendLine($"Sentence: \"{card.NativeSentence.Text}\"");
             }
-            else if(_api is GeminiClient)
+            else if (_api is GeminiClient)
             {
                 sb.AppendLine($"Return only relevant tags to the highlighted sentence from this tag pool: {string.Join(", ", tags.Select(t => t.Name))}.");
                 sb.AppendLine();
@@ -106,19 +166,24 @@ namespace Infrastructure.ETL
                 Console.WriteLine("\n");
                 Console.WriteLine(string.Join(", ", selectedTags.Select(t => t.Name)));
                 Console.WriteLine("\n");
+                return true;
+            }
+            else {
+                return false;
             }
         }
+
         public List<Tag> FilterRelevantTags(List<Tag> tags, Card card)
         {
             var cardlimitIndex = tags.IndexOf(new Tag { Name = (card.DifficultyLevel + 1).ToString().ToLower() });
-            if(card.DifficultyLevel == DifficultyLevel.Advanced)
+            if (card.DifficultyLevel == DifficultyLevel.Advanced)
             {
                 cardlimitIndex = tags.Count;
             }
 
             return tags
-                .Where((tag, i) => tag.Type.ToLowerInvariant() == TagTypes.LearningTopic.ToLowerInvariant() || i < cardlimitIndex)
-                .Where(t => t.Type != TagTypes.Difficulty)
+                .Where((tag, i) => tag.Type.Equals(TagTypes.LearningTopic, StringComparison.OrdinalIgnoreCase) || i < cardlimitIndex)
+                .Where(t => !t.Type.Equals(TagTypes.Difficulty, StringComparison.OrdinalIgnoreCase))
                 .ToList();
         }
     }
@@ -129,10 +194,10 @@ namespace Infrastructure.ETL
     public class TaggingBatchResult
     {
         public string Schema { get; set; } = "";
+        public string Status { get; set; } = "incomplete";
         public DateTime FinishTime { get; set; }
         public long DurationMs { get; set; }
         public int BatchSize { get; set; }
         public List<Card> Cards { get; set; } = new();
     }
-
 }

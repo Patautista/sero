@@ -36,7 +36,9 @@ namespace Infrastructure.AI
                 think = true,
                 options = new
                 {
-                    temperature =  0.3
+                    temperature =  0.3,
+                    num_threads = 8,
+                    num_gpu_layers = 20,
                 },
                 stream = false   // set to true if you want incremental streaming
             };
@@ -46,14 +48,29 @@ namespace Infrastructure.AI
                 Encoding.UTF8,
                 "application/json");
 
-            using var response = await _httpClient.PostAsync($"{_baseUrl}/api/generate", content);
-            response.EnsureSuccessStatusCode();
+            
 
-            var json = await response.Content.ReadAsStringAsync();
-            using var doc = JsonDocument.Parse(json);
+            for (int attempt = 1; attempt <= 5; attempt++)
+            {
+                try
+                {
+                    using var response = await _httpClient.PostAsync($"{_baseUrl}/api/generate", content);
+                    response.EnsureSuccessStatusCode();
 
-            if (doc.RootElement.TryGetProperty("response", out var respElement))
-                return respElement.GetString() ?? string.Empty;
+                    var json = await response.Content.ReadAsStringAsync();
+                    using var doc = JsonDocument.Parse(json);
+
+
+                    if (doc.RootElement.TryGetProperty("response", out var respElement))
+                        return respElement.GetString() ?? string.Empty;
+                }
+                catch (Exception ex)
+                {
+                    if (attempt == 5)
+                        break; // stop retrying
+
+                }
+            }
 
             return string.Empty;
         }

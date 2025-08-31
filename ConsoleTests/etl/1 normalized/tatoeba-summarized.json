@@ -438,22 +438,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 48,
-      "Id": 0,
-      "Text": "Eu te odeio.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 48,
-      "Id": 0,
-      "Text": "Ti odio.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 50,
       "Id": 0,
       "Text": "Vou embora.",
@@ -782,22 +766,6 @@
       "MeaningId": 69,
       "Id": 0,
       "Text": "Vive qui?",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 70,
-      "Id": 0,
-      "Text": "\u00C9 melhor.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 70,
-      "Id": 0,
-      "Text": "\u00C8 meglio.",
       "Language": "it"
     },
     "Tags": [],
@@ -1339,22 +1307,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 106,
-      "Id": 0,
-      "Text": "Eu estou trabalhando.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 106,
-      "Id": 0,
-      "Text": "Io lavoro.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 107,
       "Id": 0,
       "Text": "Pobre de mim.",
@@ -1370,28 +1322,6 @@
       {
         "type": null,
         "name": "male speaker",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 108,
-      "Id": 0,
-      "Text": "Pobre de mim.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 108,
-      "Id": 0,
-      "Text": "Povera me.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "female speaker",
         "Cards": []
       }
     ],
@@ -1628,28 +1558,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 122,
-      "Id": 0,
-      "Text": "N\u00E3o \u00E9 seu.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 122,
-      "Id": 0,
-      "Text": "Non \u00E8 tua.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 123,
       "Id": 0,
       "Text": "Tom est\u00E1 aqui.",
@@ -1697,28 +1605,6 @@
       "MeaningId": 125,
       "Id": 0,
       "Text": "Chi \u00E8 lei?",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 126,
-      "Id": 0,
-      "Text": "Est\u00E1s louca?",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 126,
-      "Id": 0,
-      "Text": "Sei pazza?",
       "Language": "it"
     },
     "Tags": [
@@ -1886,28 +1772,6 @@
       "MeaningId": 136,
       "Id": 0,
       "Text": "\u00C8 la vita!",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 137,
-      "Id": 0,
-      "Text": "\u00C9 a vida!",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 137,
-      "Id": 0,
-      "Text": "\u00C8 la vita.",
       "Language": "it"
     },
     "Tags": [
@@ -2758,28 +2622,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 185,
-      "Id": 0,
-      "Text": "Me mostra.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 185,
-      "Id": 0,
-      "Text": "Mostratemi.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "imperativo presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 187,
       "Id": 0,
       "Text": "Mary entrou.",
@@ -2894,38 +2736,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 195,
-      "Id": 0,
-      "Text": "Eu te odeio.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 195,
-      "Id": 0,
-      "Text": "Io ti odio!",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 196,
-      "Id": 0,
-      "Text": "\u00C9 um ateu.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 196,
-      "Id": 0,
-      "Text": "Lui \u00E8 ateo.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 197,
       "Id": 0,
       "Text": "Estou bonito?",
@@ -2992,22 +2802,6 @@
         "Cards": []
       }
     ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 200,
-      "Id": 0,
-      "Text": "Vou embora.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 200,
-      "Id": 0,
-      "Text": "Io partir\u00F2.",
-      "Language": "it"
-    },
-    "Tags": [],
     "DifficultyLevel": 0
   },
   {
@@ -3136,22 +2930,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 208,
-      "Id": 0,
-      "Text": "Bom dia!",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 208,
-      "Id": 0,
-      "Text": "Buongiorno.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 209,
       "Id": 0,
       "Text": "Voc\u00EA o conhece?",
@@ -3168,22 +2946,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 210,
-      "Id": 0,
-      "Text": "Ele detona.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 210,
-      "Id": 0,
-      "Text": "Lui spacca.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 211,
       "Id": 0,
       "Text": "Ele tem bigode.",
@@ -3193,22 +2955,6 @@
       "MeaningId": 211,
       "Id": 0,
       "Text": "Ha i baffi.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 212,
-      "Id": 0,
-      "Text": "Eu vou nadar.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 212,
-      "Id": 0,
-      "Text": "Io nuoter\u00F2.",
       "Language": "it"
     },
     "Tags": [],
@@ -3517,22 +3263,6 @@
       "MeaningId": 230,
       "Id": 0,
       "Text": "Sei famosa.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 231,
-      "Id": 0,
-      "Text": "Tu est\u00E1s aqui.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 231,
-      "Id": 0,
-      "Text": "Tu sei qui.",
       "Language": "it"
     },
     "Tags": [],
@@ -4296,22 +4026,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 274,
-      "Id": 0,
-      "Text": "Tenho um visto.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 274,
-      "Id": 0,
-      "Text": "Ho un visto.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 275,
       "Id": 0,
       "Text": "Elas s\u00E3o m\u00E9dicas.",
@@ -4324,28 +4038,6 @@
       "Language": "it"
     },
     "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 277,
-      "Id": 0,
-      "Text": "Tenho calor.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 277,
-      "Id": 0,
-      "Text": "Io ho caldo.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
     "DifficultyLevel": 0
   },
   {
@@ -4470,22 +4162,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 284,
-      "Id": 0,
-      "Text": "Oh, meu Deus!",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 284,
-      "Id": 0,
-      "Text": "Oh, mio Dio!",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 285,
       "Id": 0,
       "Text": "Para mim, \u00E9.",
@@ -4549,22 +4225,6 @@
       "MeaningId": 288,
       "Id": 0,
       "Text": "\u00C8 sua amica.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 289,
-      "Id": 0,
-      "Text": "Onde voc\u00EA est\u00E1?",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 289,
-      "Id": 0,
-      "Text": "Tu dove sei?",
       "Language": "it"
     },
     "Tags": [],
@@ -4945,38 +4605,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 310,
-      "Id": 0,
-      "Text": "Boa noite!",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 310,
-      "Id": 0,
-      "Text": "Buona notte.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 311,
-      "Id": 0,
-      "Text": "Eu vejo o Tom.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 311,
-      "Id": 0,
-      "Text": "Io vedo Tom.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 312,
       "Id": 0,
       "Text": "Tenho dois carros.",
@@ -5280,44 +4908,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 330,
-      "Id": 0,
-      "Text": "Aquele n\u00E3o era o Tom.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 330,
-      "Id": 0,
-      "Text": "Non era Tom.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 331,
-      "Id": 0,
-      "Text": "Que deseja a senhora?",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 331,
-      "Id": 0,
-      "Text": "Cosa volete?",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 332,
       "Id": 0,
       "Text": "N\u00E3o h\u00E1 nada a fazer.",
@@ -5327,22 +4917,6 @@
       "MeaningId": 332,
       "Id": 0,
       "Text": "Digli addio.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 333,
-      "Id": 0,
-      "Text": "Isso \u00E9 um fake.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 333,
-      "Id": 0,
-      "Text": "\u00C8 una copia.",
       "Language": "it"
     },
     "Tags": [],
@@ -5899,28 +5473,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 364,
-      "Id": 0,
-      "Text": "O que \u00E9 isto?",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 364,
-      "Id": 0,
-      "Text": "Cos\u0027\u00E8 questo?",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 365,
       "Id": 0,
       "Text": "Falas chin\u00EAs?",
@@ -6012,44 +5564,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 370,
-      "Id": 0,
-      "Text": "Ele n\u00E3o fuma.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 370,
-      "Id": 0,
-      "Text": "Lui non fuma.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 371,
-      "Id": 0,
-      "Text": "Ele mora aqui?",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 371,
-      "Id": 0,
-      "Text": "Lui vive qui?",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 372,
       "Id": 0,
       "Text": "Que grand\u00E3o!",
@@ -6078,28 +5592,6 @@
       "Language": "it"
     },
     "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 374,
-      "Id": 0,
-      "Text": "Eu gosto dele.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 374,
-      "Id": 0,
-      "Text": "Lui mi piace.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
     "DifficultyLevel": 0
   },
   {
@@ -6245,28 +5737,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 382,
-      "Id": 0,
-      "Text": "Voc\u00EA vem comigo?",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 382,
-      "Id": 0,
-      "Text": "Viene con me?",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 383,
       "Id": 0,
       "Text": "Coma isto.",
@@ -6353,28 +5823,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 388,
-      "Id": 0,
-      "Text": "N\u00E3o \u00E9 bonito?",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 388,
-      "Id": 0,
-      "Text": "Non \u00E8 carino?",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 389,
       "Id": 0,
       "Text": "Pobre gato.",
@@ -6422,22 +5870,6 @@
       "MeaningId": 391,
       "Id": 0,
       "Text": "Posso usarlo?",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 392,
-      "Id": 0,
-      "Text": "Posso usar isso?",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 392,
-      "Id": 0,
-      "Text": "Posso usarla?",
       "Language": "it"
     },
     "Tags": [],
@@ -6624,28 +6056,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 403,
-      "Id": 0,
-      "Text": "Voc\u00EA tem WhatsApp?",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 403,
-      "Id": 0,
-      "Text": "Hai WhatsApp?",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 404,
       "Id": 0,
       "Text": "Sou Ricardo.",
@@ -6682,22 +6092,6 @@
       "MeaningId": 405,
       "Id": 0,
       "Text": "Grazie mille!",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 406,
-      "Id": 0,
-      "Text": "Muito obrigado!",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 406,
-      "Id": 0,
-      "Text": "Grazie mille.",
       "Language": "it"
     },
     "Tags": [],
@@ -7066,28 +6460,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 428,
-      "Id": 0,
-      "Text": "N\u00E3o leio.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 428,
-      "Id": 0,
-      "Text": "Io non leggo.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 429,
       "Id": 0,
       "Text": "Eu tenho um laptop.",
@@ -7265,22 +6637,6 @@
       "MeaningId": 438,
       "Id": 0,
       "Text": "Siamo liberi!",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 439,
-      "Id": 0,
-      "Text": "Estamos livres!",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 439,
-      "Id": 0,
-      "Text": "Siamo libere!",
       "Language": "it"
     },
     "Tags": [],
@@ -7514,28 +6870,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 453,
-      "Id": 0,
-      "Text": "Eu os matei.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 453,
-      "Id": 0,
-      "Text": "Le ho uccise.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "passato prossimo",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 454,
       "Id": 0,
       "Text": "Ela saiu com ele.",
@@ -7602,22 +6936,6 @@
         "Cards": []
       }
     ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 458,
-      "Id": 0,
-      "Text": "Fui a p\u00E9.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 458,
-      "Id": 0,
-      "Text": "Ho camminato.",
-      "Language": "it"
-    },
-    "Tags": [],
     "DifficultyLevel": 0
   },
   {
@@ -7917,50 +7235,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 477,
-      "Id": 0,
-      "Text": "Tu \u00E9s boa.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 477,
-      "Id": 0,
-      "Text": "Tu sei buona.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 478,
-      "Id": 0,
-      "Text": "Tu \u00E9s bom.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 478,
-      "Id": 0,
-      "Text": "Tu sei buono.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 479,
       "Id": 0,
       "Text": "Tu \u00E9s met\u00F3dica.",
@@ -7986,102 +7260,6 @@
       "MeaningId": 480,
       "Id": 0,
       "Text": "Sei metodico.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 481,
-      "Id": 0,
-      "Text": "Tu \u00E9s pregui\u00E7osa.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 481,
-      "Id": 0,
-      "Text": "Tu sei pigra.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 482,
-      "Id": 0,
-      "Text": "Tu \u00E9s pregui\u00E7oso.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 482,
-      "Id": 0,
-      "Text": "Tu sei pigro.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 483,
-      "Id": 0,
-      "Text": "Tu est\u00E1s perdida.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 483,
-      "Id": 0,
-      "Text": "Tu sei persa.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 484,
-      "Id": 0,
-      "Text": "Tu est\u00E1s perdido.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 484,
-      "Id": 0,
-      "Text": "Tu sei perso.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 485,
-      "Id": 0,
-      "Text": "Voc\u00EA \u00E9 maduro.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 485,
-      "Id": 0,
-      "Text": "Lei \u00E8 maturo.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 486,
-      "Id": 0,
-      "Text": "Voc\u00EA \u00E9 madura.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 486,
-      "Id": 0,
-      "Text": "Lei \u00E8 matura.",
       "Language": "it"
     },
     "Tags": [],
@@ -8184,28 +7362,6 @@
       "MeaningId": 492,
       "Id": 0,
       "Text": "\u00C8 sarcastico.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 493,
-      "Id": 0,
-      "Text": "Tu \u00E9s forte.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 493,
-      "Id": 0,
-      "Text": "Tu sei forte.",
       "Language": "it"
     },
     "Tags": [
@@ -8563,28 +7719,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 513,
-      "Id": 0,
-      "Text": "Ele mora em Quioto.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 513,
-      "Id": 0,
-      "Text": "Abita a Kyoto.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 514,
       "Id": 0,
       "Text": "Por que voc\u00EA me ama?",
@@ -8802,22 +7936,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 526,
-      "Id": 0,
-      "Text": "Ela o odiava.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 526,
-      "Id": 0,
-      "Text": "Lei lo odiava.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 527,
       "Id": 0,
       "Text": "Voc\u00EAs v\u00EAm comigo?",
@@ -8840,22 +7958,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 528,
-      "Id": 0,
-      "Text": "Coma isto.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 528,
-      "Id": 0,
-      "Text": "Mangia questo.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 529,
       "Id": 0,
       "Text": "Eu te conhe\u00E7o.",
@@ -8865,44 +7967,6 @@
       "MeaningId": 529,
       "Id": 0,
       "Text": "Io ti conosco.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 530,
-      "Id": 0,
-      "Text": "Eu bebo \u00E1lcool.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 530,
-      "Id": 0,
-      "Text": "Io bevo alcol.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 531,
-      "Id": 0,
-      "Text": "Eu estou trabalhando.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 531,
-      "Id": 0,
-      "Text": "Sto lavorando.",
       "Language": "it"
     },
     "Tags": [],
@@ -9201,22 +8265,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 547,
-      "Id": 0,
-      "Text": "Eu sou Charlie.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 547,
-      "Id": 0,
-      "Text": "Seguo Charlie.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 548,
       "Id": 0,
       "Text": "\u00C9 hora do jantar.",
@@ -9267,22 +8315,6 @@
         "Cards": []
       }
     ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 551,
-      "Id": 0,
-      "Text": "Eu como aqui.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 551,
-      "Id": 0,
-      "Text": "Io mangio qui.",
-      "Language": "it"
-    },
-    "Tags": [],
     "DifficultyLevel": 0
   },
   {
@@ -9374,28 +8406,6 @@
       "Language": "it"
     },
     "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 557,
-      "Id": 0,
-      "Text": "N\u00E3o entendo.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 557,
-      "Id": 0,
-      "Text": "Non comprendo.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
     "DifficultyLevel": 0
   },
   {
@@ -9534,28 +8544,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 566,
-      "Id": 0,
-      "Text": "Eu sonharei com voc\u00EA.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 566,
-      "Id": 0,
-      "Text": "Io ti sogner\u00F2.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "futuro semplice",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 567,
       "Id": 0,
       "Text": "Estou em Londres.",
@@ -9649,28 +8637,6 @@
       "Language": "it"
     },
     "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 572,
-      "Id": 0,
-      "Text": "Ele n\u00E3o est\u00E1 aqui.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 572,
-      "Id": 0,
-      "Text": "Lui non \u00E8 qui.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
     "DifficultyLevel": 0
   },
   {
@@ -9782,33 +8748,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 579,
-      "Id": 0,
-      "Text": "Estou bonito?",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 579,
-      "Id": 0,
-      "Text": "Io sono bello?",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "male speaker",
-        "Cards": []
-      },
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 580,
       "Id": 0,
       "Text": "Falo \u00E1rabe.",
@@ -9896,33 +8835,6 @@
       "Language": "it"
     },
     "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 585,
-      "Id": 0,
-      "Text": "O Tom terminou.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 585,
-      "Id": 0,
-      "Text": "Tom ha finito.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "male name",
-        "Cards": []
-      },
-      {
-        "type": null,
-        "name": "passato prossimo",
-        "Cards": []
-      }
-    ],
     "DifficultyLevel": 0
   },
   {
@@ -10061,22 +8973,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 593,
-      "Id": 0,
-      "Text": "Feliz Natal!",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 593,
-      "Id": 0,
-      "Text": "Felice Natale!",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 594,
       "Id": 0,
       "Text": "Voc\u00EA pode me ajudar?",
@@ -10175,28 +9071,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 599,
-      "Id": 0,
-      "Text": "Por que voc\u00EA me ama?",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 599,
-      "Id": 0,
-      "Text": "Perch\u00E9 mi ama?",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 600,
       "Id": 0,
       "Text": "Voc\u00EA conhecia Tom?",
@@ -10256,28 +9130,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 603,
-      "Id": 0,
-      "Text": "Eu vou bem.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 603,
-      "Id": 0,
-      "Text": "Mi sento bene.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 604,
       "Id": 0,
       "Text": "Eu tenho que ajudar voc\u00EA.",
@@ -10301,22 +9153,6 @@
         "Cards": []
       }
     ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 605,
-      "Id": 0,
-      "Text": "Eu tenho que ajudar voc\u00EA.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 605,
-      "Id": 0,
-      "Text": "Devo aiutarti.",
-      "Language": "it"
-    },
-    "Tags": [],
     "DifficultyLevel": 0
   },
   {
@@ -10600,60 +9436,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 621,
-      "Id": 0,
-      "Text": "Tenho que falar com voc\u00EA.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 621,
-      "Id": 0,
-      "Text": "Devo parlarvi.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      },
-      {
-        "type": null,
-        "name": "infinito presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 622,
-      "Id": 0,
-      "Text": "Tenho que falar com voc\u00EA.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 622,
-      "Id": 0,
-      "Text": "Devo parlarle.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      },
-      {
-        "type": null,
-        "name": "infinito presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 623,
       "Id": 0,
       "Text": "O senhor fala alem\u00E3o?",
@@ -10902,103 +9684,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 636,
-      "Id": 0,
-      "Text": "Hoje \u00E9 segunda.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 636,
-      "Id": 0,
-      "Text": "\u00C8 luned\u00EC oggi.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      },
-      {
-        "type": null,
-        "name": "day of the week",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 637,
-      "Id": 0,
-      "Text": "Que deseja a senhora?",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 637,
-      "Id": 0,
-      "Text": "Cosa vorreste?",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "condizionale presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 638,
-      "Id": 0,
-      "Text": "Que deseja a senhora?",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 638,
-      "Id": 0,
-      "Text": "Cosa vi serve?",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 639,
-      "Id": 0,
-      "Text": "Que deseja a senhora?",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 639,
-      "Id": 0,
-      "Text": "Cosa le serve?",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 640,
-      "Id": 0,
-      "Text": "Que deseja a senhora?",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 640,
-      "Id": 0,
-      "Text": "Cosa desidera?",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 641,
       "Id": 0,
       "Text": "O lobo uiva.",
@@ -11056,22 +9741,6 @@
       "MeaningId": 644,
       "Id": 0,
       "Text": "Siete egoiste.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 645,
-      "Id": 0,
-      "Text": "Eles sabem?",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 645,
-      "Id": 0,
-      "Text": "Loro lo sanno?",
       "Language": "it"
     },
     "Tags": [],
@@ -11139,50 +9808,6 @@
       "Language": "it"
     },
     "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 650,
-      "Id": 0,
-      "Text": "Tu \u00E9s honesto?",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 650,
-      "Id": 0,
-      "Text": "Tu sei onesto?",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 651,
-      "Id": 0,
-      "Text": "Tu \u00E9s honesta?",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 651,
-      "Id": 0,
-      "Text": "Tu sei onesta?",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
     "DifficultyLevel": 0
   },
   {
@@ -11451,70 +10076,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 666,
-      "Id": 0,
-      "Text": "Tu \u00E9s fiel.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 666,
-      "Id": 0,
-      "Text": "Tu sei fedele.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 667,
-      "Id": 0,
-      "Text": "Tu \u00E9s famoso.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 667,
-      "Id": 0,
-      "Text": "Tu sei famoso.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 668,
-      "Id": 0,
-      "Text": "Tu \u00E9s famosa.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 668,
-      "Id": 0,
-      "Text": "Tu sei famosa.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 669,
-      "Id": 0,
-      "Text": "Tu \u00E9s honesto.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 669,
-      "Id": 0,
-      "Text": "Tu sei onesto.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 670,
       "Id": 0,
       "Text": "Tu \u00E9s diligente.",
@@ -11597,38 +10158,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 674,
-      "Id": 0,
-      "Text": "Tu \u00E9s maduro.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 674,
-      "Id": 0,
-      "Text": "Tu sei maturo.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 675,
-      "Id": 0,
-      "Text": "Tu \u00E9s madura.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 675,
-      "Id": 0,
-      "Text": "Tu sei matura.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 676,
       "Id": 0,
       "Text": "Tu \u00E9s reservada.",
@@ -11654,104 +10183,6 @@
       "MeaningId": 677,
       "Id": 0,
       "Text": "Sei riservato.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 678,
-      "Id": 0,
-      "Text": "Tu est\u00E1s triste.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 678,
-      "Id": 0,
-      "Text": "Tu sei triste.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 679,
-      "Id": 0,
-      "Text": "Tu \u00E9s t\u00EDmido.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 679,
-      "Id": 0,
-      "Text": "Tu sei timido.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 680,
-      "Id": 0,
-      "Text": "Tu \u00E9s t\u00EDmida.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 680,
-      "Id": 0,
-      "Text": "Tu sei timida.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 681,
-      "Id": 0,
-      "Text": "Voc\u00EA \u00E9 sincero.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 681,
-      "Id": 0,
-      "Text": "Lei \u00E8 sincero.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 682,
-      "Id": 0,
-      "Text": "Voc\u00EA \u00E9 sincera.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 682,
-      "Id": 0,
-      "Text": "Lei \u00E8 sincera.",
       "Language": "it"
     },
     "Tags": [],
@@ -11823,38 +10254,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 687,
-      "Id": 0,
-      "Text": "Tu est\u00E1s ferido.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 687,
-      "Id": 0,
-      "Text": "Tu sei ferito.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 688,
-      "Id": 0,
-      "Text": "Tu est\u00E1s ferida.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 688,
-      "Id": 0,
-      "Text": "Tu sei ferita.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 0
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 689,
       "Id": 0,
       "Text": "Tu est\u00E1s fugindo.",
@@ -11887,47 +10286,63 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 4224,
+      "MeaningId": 691,
       "Id": 0,
-      "Text": "Necessito de um advogado.",
+      "Text": "O Tom era bom.",
       "Language": "pt"
     },
     "TargetSentence": {
-      "MeaningId": 4224,
+      "MeaningId": 691,
       "Id": 0,
-      "Text": "Ho bisogno di un avvocato.",
+      "Text": "Tom era bravo.",
       "Language": "it"
     },
     "Tags": [],
-    "DifficultyLevel": 1
+    "DifficultyLevel": 0
   },
   {
     "NativeSentence": {
-      "MeaningId": 4225,
+      "MeaningId": 692,
       "Id": 0,
-      "Text": "O que mais voc\u00EA poderia querer?",
+      "Text": "Voc\u00EA est\u00E1 no meio.",
       "Language": "pt"
     },
     "TargetSentence": {
-      "MeaningId": 4225,
+      "MeaningId": 692,
       "Id": 0,
-      "Text": "Che altro potrebbe volere?",
+      "Text": "Sei nel mezzo.",
       "Language": "it"
     },
     "Tags": [],
-    "DifficultyLevel": 1
+    "DifficultyLevel": 0
   },
   {
     "NativeSentence": {
-      "MeaningId": 4226,
+      "MeaningId": 693,
       "Id": 0,
-      "Text": "O curso inicia em outubro.",
+      "Text": "Eu adoro dan\u00E7ar.",
       "Language": "pt"
     },
     "TargetSentence": {
-      "MeaningId": 4226,
+      "MeaningId": 693,
       "Id": 0,
-      "Text": "Il corso inizia a ottobre.",
+      "Text": "Adoro ballare.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 696,
+      "Id": 0,
+      "Text": "Como voc\u00EA se chama?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 696,
+      "Id": 0,
+      "Text": "Come ti chiami?",
       "Language": "it"
     },
     "Tags": [
@@ -11937,51 +10352,445 @@
         "Cards": []
       }
     ],
-    "DifficultyLevel": 1
+    "DifficultyLevel": 0
   },
   {
     "NativeSentence": {
-      "MeaningId": 4227,
+      "MeaningId": 697,
       "Id": 0,
-      "Text": "As moedas s\u00E3o feitas de metal.",
+      "Text": "Como voc\u00EA \u00E9 bonita!",
       "Language": "pt"
     },
     "TargetSentence": {
-      "MeaningId": 4227,
+      "MeaningId": 697,
       "Id": 0,
-      "Text": "Le monete sono di metallo.",
+      "Text": "Come sei bella!",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 698,
+      "Id": 0,
+      "Text": "O que est\u00E1 faltando?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 698,
+      "Id": 0,
+      "Text": "Che cosa manca?",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 699,
+      "Id": 0,
+      "Text": "Eu tenho muitos amigos.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 699,
+      "Id": 0,
+      "Text": "Ho molti amici.",
       "Language": "it"
     },
     "Tags": [],
-    "DifficultyLevel": 1
+    "DifficultyLevel": 0
   },
   {
     "NativeSentence": {
-      "MeaningId": 4228,
+      "MeaningId": 700,
       "Id": 0,
-      "Text": "Comemos com as nossas bocas.",
+      "Text": "O que voc\u00EA est\u00E1 lendo?",
       "Language": "pt"
     },
     "TargetSentence": {
-      "MeaningId": 4228,
+      "MeaningId": 700,
       "Id": 0,
-      "Text": "Noi mangiamo con la bocca.",
+      "Text": "Che cosa leggi?",
       "Language": "it"
     },
     "Tags": [],
-    "DifficultyLevel": 1
+    "DifficultyLevel": 0
   },
   {
     "NativeSentence": {
-      "MeaningId": 4229,
+      "MeaningId": 701,
       "Id": 0,
-      "Text": "Quer ir ao cinema?",
+      "Text": "O sol brilha.",
       "Language": "pt"
     },
     "TargetSentence": {
-      "MeaningId": 4229,
+      "MeaningId": 701,
       "Id": 0,
-      "Text": "Ti va di andare al cinema?",
+      "Text": "Il sole brilla.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 702,
+      "Id": 0,
+      "Text": "Onde est\u00E1 o livro?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 702,
+      "Id": 0,
+      "Text": "Dov\u0027\u00E8 il libro?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 703,
+      "Id": 0,
+      "Text": "Ela n\u00E3o \u00E9 alta.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 703,
+      "Id": 0,
+      "Text": "Lei non \u00E8 alta.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 704,
+      "Id": 0,
+      "Text": "Quantos anos voc\u00EA tem?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 704,
+      "Id": 0,
+      "Text": "Quanti anni ha?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 705,
+      "Id": 0,
+      "Text": "Eu tenho pouco dinheiro.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 705,
+      "Id": 0,
+      "Text": "Ho pochi soldi.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 706,
+      "Id": 0,
+      "Text": "\u00C9 muito triste.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 706,
+      "Id": 0,
+      "Text": "\u00C8 molto triste.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 707,
+      "Id": 0,
+      "Text": "Jim \u00E9 canadense.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 707,
+      "Id": 0,
+      "Text": "Jim \u00E8 canadese.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "nationality",
+        "Cards": []
+      },
+      {
+        "type": null,
+        "name": "male name",
+        "Cards": []
+      },
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 708,
+      "Id": 0,
+      "Text": "Ele \u00E9 pontual.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 708,
+      "Id": 0,
+      "Text": "Lui \u00E8 puntuale.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 709,
+      "Id": 0,
+      "Text": "Onde \u00E9 o banheiro?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 709,
+      "Id": 0,
+      "Text": "Dov\u0027\u00E8 il bagno?",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 710,
+      "Id": 0,
+      "Text": "Eu estou traduzindo.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 710,
+      "Id": 0,
+      "Text": "Sto traducendo.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 711,
+      "Id": 0,
+      "Text": "Onde Tom nasceu?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 711,
+      "Id": 0,
+      "Text": "Dov\u0027\u00E8 nato Tom?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 712,
+      "Id": 0,
+      "Text": "Onde est\u00E1 o cozinheiro?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 712,
+      "Id": 0,
+      "Text": "Dov\u0027\u00E8 il cuoco?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 713,
+      "Id": 0,
+      "Text": "Ensino chin\u00EAs.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 713,
+      "Id": 0,
+      "Text": "Insegno cinese.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 714,
+      "Id": 0,
+      "Text": "Eu me chamo Wang.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 714,
+      "Id": 0,
+      "Text": "Mi chiamo Wang.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 715,
+      "Id": 0,
+      "Text": "Ele tem muito dinheiro.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 715,
+      "Id": 0,
+      "Text": "Ha molti soldi.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 716,
+      "Id": 0,
+      "Text": "Onde fica o banco?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 716,
+      "Id": 0,
+      "Text": "Dov\u0027\u00E8 la banca?",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 717,
+      "Id": 0,
+      "Text": "Voc\u00EAs se perderam?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 717,
+      "Id": 0,
+      "Text": "Vi siete persi?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 718,
+      "Id": 0,
+      "Text": "Onde aconteceu?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 718,
+      "Id": 0,
+      "Text": "Dov\u0027\u00E8 successo?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 719,
+      "Id": 0,
+      "Text": "Voc\u00EA sabe onde nasceu?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 719,
+      "Id": 0,
+      "Text": "Sai dov\u0027\u00E8 nato?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 720,
+      "Id": 0,
+      "Text": "Ela n\u00E3o sabe nadar.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 720,
+      "Id": 0,
+      "Text": "Non sa nuotare.",
       "Language": "it"
     },
     "Tags": [
@@ -11996,35 +10805,115 @@
         "Cards": []
       }
     ],
-    "DifficultyLevel": 1
+    "DifficultyLevel": 0
   },
   {
     "NativeSentence": {
-      "MeaningId": 4230,
+      "MeaningId": 721,
       "Id": 0,
-      "Text": "Tom n\u00E3o estar\u00E1 aqui hoje \u00E0 noite.",
+      "Text": "Vamos para casa!",
       "Language": "pt"
     },
     "TargetSentence": {
-      "MeaningId": 4230,
+      "MeaningId": 721,
       "Id": 0,
-      "Text": "Tom non sar\u00E0 qui stanotte.",
+      "Text": "Andiamo a casa!",
       "Language": "it"
     },
     "Tags": [],
-    "DifficultyLevel": 1
+    "DifficultyLevel": 0
   },
   {
     "NativeSentence": {
-      "MeaningId": 4231,
+      "MeaningId": 722,
       "Id": 0,
-      "Text": "S\u00E3o muito amigos uns dos outros.",
+      "Text": "Posso te ajudar?",
       "Language": "pt"
     },
     "TargetSentence": {
-      "MeaningId": 4231,
+      "MeaningId": 722,
       "Id": 0,
-      "Text": "Sono molto amici fra loro.",
+      "Text": "Posso aiutarti?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 723,
+      "Id": 0,
+      "Text": "Sou uma mulher.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 723,
+      "Id": 0,
+      "Text": "Sono una donna.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 724,
+      "Id": 0,
+      "Text": "David est\u00E1 em casa.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 724,
+      "Id": 0,
+      "Text": "David \u00E8 a casa.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 725,
+      "Id": 0,
+      "Text": "Voc\u00EA confia nela?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 725,
+      "Id": 0,
+      "Text": "Ti fidi di lei?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 726,
+      "Id": 0,
+      "Text": "Voc\u00EA \u00E9 muito sexy.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 726,
+      "Id": 0,
+      "Text": "Sei molto sexy.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 727,
+      "Id": 0,
+      "Text": "Onde est\u00E1 a vodca?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 727,
+      "Id": 0,
+      "Text": "Dov\u0027\u00E8 la vodka?",
       "Language": "it"
     },
     "Tags": [
@@ -12034,147 +10923,41 @@
         "Cards": []
       }
     ],
-    "DifficultyLevel": 1
+    "DifficultyLevel": 0
   },
   {
     "NativeSentence": {
-      "MeaningId": 4232,
+      "MeaningId": 728,
       "Id": 0,
-      "Text": "Tive que permanecer em casa.",
+      "Text": "Ele \u00E9 seu amigo.",
       "Language": "pt"
     },
     "TargetSentence": {
-      "MeaningId": 4232,
+      "MeaningId": 728,
       "Id": 0,
-      "Text": "Ero dovuta restare a casa.",
+      "Text": "\u00C8 il suo amico.",
       "Language": "it"
     },
     "Tags": [
-      {
-        "type": null,
-        "name": "female speaker",
-        "Cards": []
-      },
-      {
-        "type": null,
-        "name": "trapassato prossimo",
-        "Cards": []
-      },
-      {
-        "type": null,
-        "name": "infinito presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4233,
-      "Id": 0,
-      "Text": "O menino tem um jornal.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4233,
-      "Id": 0,
-      "Text": "Il ragazzo ha un giornale.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4234,
-      "Id": 0,
-      "Text": "O apetite vem durante o comer.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4234,
-      "Id": 0,
-      "Text": "L\u0027appetito vien mangiando.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "proverb",
-        "Cards": []
-      },
       {
         "type": null,
         "name": "presente",
         "Cards": []
-      },
-      {
-        "type": null,
-        "name": "gerundio presente",
-        "Cards": []
       }
     ],
-    "DifficultyLevel": 1
+    "DifficultyLevel": 0
   },
   {
     "NativeSentence": {
-      "MeaningId": 4235,
+      "MeaningId": 729,
       "Id": 0,
-      "Text": "Um c\u00E3o mordeu sua perna.",
+      "Text": "Posso prov\u00E1-lo?",
       "Language": "pt"
     },
     "TargetSentence": {
-      "MeaningId": 4235,
+      "MeaningId": 729,
       "Id": 0,
-      "Text": "Un cane le morse la gamba.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4236,
-      "Id": 0,
-      "Text": "Tendes lugar para uma tenda?",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4236,
-      "Id": 0,
-      "Text": "Avete posto per una tenda?",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4237,
-      "Id": 0,
-      "Text": "Tu tens um f\u00F3sforo?",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4237,
-      "Id": 0,
-      "Text": "Lei ce l\u0027ha un fiammifero?",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4238,
-      "Id": 0,
-      "Text": "N\u00E3o deves mais te preocupar.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4238,
-      "Id": 0,
-      "Text": "Non deve pi\u00F9 preoccuparsi.",
+      "Text": "Posso provarlo?",
       "Language": "it"
     },
     "Tags": [
@@ -12189,19 +10972,78 @@
         "Cards": []
       }
     ],
-    "DifficultyLevel": 1
+    "DifficultyLevel": 0
   },
   {
     "NativeSentence": {
-      "MeaningId": 4239,
+      "MeaningId": 730,
       "Id": 0,
-      "Text": "N\u00E3o deves mais te preocupar.",
+      "Text": "Estou exausto.",
       "Language": "pt"
     },
     "TargetSentence": {
-      "MeaningId": 4239,
+      "MeaningId": 730,
       "Id": 0,
-      "Text": "Non devi pi\u00F9 preoccuparti.",
+      "Text": "Sono sfiancato.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "male speaker",
+        "Cards": []
+      },
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 731,
+      "Id": 0,
+      "Text": "Vivendo e aprendendo.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 731,
+      "Id": 0,
+      "Text": "Vivendo impari.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 732,
+      "Id": 0,
+      "Text": "Eu n\u00E3o tenho irm\u00E3s.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 732,
+      "Id": 0,
+      "Text": "Non ho sorelle.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 733,
+      "Id": 0,
+      "Text": "Voc\u00EA gosta de Moscou?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 733,
+      "Id": 0,
+      "Text": "Ti piace Mosca?",
       "Language": "it"
     },
     "Tags": [
@@ -12209,62 +11051,799 @@
         "type": null,
         "name": "presente",
         "Cards": []
-      },
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 734,
+      "Id": 0,
+      "Text": "Voc\u00EAs gostam de Moscou?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 734,
+      "Id": 0,
+      "Text": "Vi piace Mosca?",
+      "Language": "it"
+    },
+    "Tags": [
       {
         "type": null,
-        "name": "infinito presente",
+        "name": "presente",
         "Cards": []
       }
     ],
-    "DifficultyLevel": 1
+    "DifficultyLevel": 0
   },
   {
     "NativeSentence": {
-      "MeaningId": 4240,
+      "MeaningId": 735,
       "Id": 0,
-      "Text": "Boa noite e doces sonhos!",
+      "Text": "O senhor gosta de Moscou?",
       "Language": "pt"
     },
     "TargetSentence": {
-      "MeaningId": 4240,
+      "MeaningId": 735,
       "Id": 0,
-      "Text": "Buona notte e dolci sogni!",
+      "Text": "Le piace Mosca?",
       "Language": "it"
     },
-    "Tags": [],
-    "DifficultyLevel": 1
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
   },
   {
     "NativeSentence": {
-      "MeaningId": 4241,
+      "MeaningId": 736,
       "Id": 0,
-      "Text": "Qual \u00E9 a tua nacionalidade?",
+      "Text": "Eu sou solit\u00E1rio.",
       "Language": "pt"
     },
     "TargetSentence": {
-      "MeaningId": 4241,
+      "MeaningId": 736,
       "Id": 0,
-      "Text": "Qual \u00E8 la tua nazionalit\u00E0?",
+      "Text": "Sono solitario.",
       "Language": "it"
     },
     "Tags": [],
-    "DifficultyLevel": 1
+    "DifficultyLevel": 0
   },
   {
     "NativeSentence": {
-      "MeaningId": 4242,
+      "MeaningId": 737,
       "Id": 0,
-      "Text": "O filme tem legendas?",
+      "Text": "Vou ao cinema.",
       "Language": "pt"
     },
     "TargetSentence": {
-      "MeaningId": 4242,
+      "MeaningId": 737,
       "Id": 0,
-      "Text": "Il film ha i sottotitoli ?",
+      "Text": "Vado al cinema.",
       "Language": "it"
     },
     "Tags": [],
-    "DifficultyLevel": 1
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 738,
+      "Id": 0,
+      "Text": "Al\u00E1 \u00E9 grande!",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 738,
+      "Id": 0,
+      "Text": "Allah \u00E8 grande!",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 739,
+      "Id": 0,
+      "Text": "Estamos quase l\u00E1.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 739,
+      "Id": 0,
+      "Text": "Ci siamo quasi.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 740,
+      "Id": 0,
+      "Text": "\u00C9 um detalhe.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 740,
+      "Id": 0,
+      "Text": "\u00C8 un dettaglio.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 741,
+      "Id": 0,
+      "Text": "Voc\u00EA vai voltar amanh\u00E3?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 741,
+      "Id": 0,
+      "Text": "Ritorni domani?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 742,
+      "Id": 0,
+      "Text": "Nem uma palavra!",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 742,
+      "Id": 0,
+      "Text": "Non dire nulla!",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 743,
+      "Id": 0,
+      "Text": "Eu estou com tosse.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 743,
+      "Id": 0,
+      "Text": "Io ho la tosse.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 744,
+      "Id": 0,
+      "Text": "Eu tenho o v\u00EDdeo.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 744,
+      "Id": 0,
+      "Text": "Io ho il video.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 745,
+      "Id": 0,
+      "Text": "Quero dan\u00E7ar.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 745,
+      "Id": 0,
+      "Text": "Voglio ballare.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 747,
+      "Id": 0,
+      "Text": "\u00C9 muito estranho!",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 747,
+      "Id": 0,
+      "Text": "\u00C8 molto strano!",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 748,
+      "Id": 0,
+      "Text": "Ele \u00E9 italiano.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 748,
+      "Id": 0,
+      "Text": "Lui \u00E8 italiano.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "nationality",
+        "Cards": []
+      },
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 749,
+      "Id": 0,
+      "Text": "N\u00E3o \u00E9 um peixe.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 749,
+      "Id": 0,
+      "Text": "Non \u00E8 un pesce.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 750,
+      "Id": 0,
+      "Text": "Temo que n\u00E3o.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 750,
+      "Id": 0,
+      "Text": "Ho paura di no.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 751,
+      "Id": 0,
+      "Text": "Que pessimismo!",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 751,
+      "Id": 0,
+      "Text": "Che pessimismo!",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 752,
+      "Id": 0,
+      "Text": "Toc, toc. Quem est\u00E1 a\u00ED?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 752,
+      "Id": 0,
+      "Text": "Toc toc. Chi \u00E8?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 753,
+      "Id": 0,
+      "Text": "Voc\u00EA tem um cachorro?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 753,
+      "Id": 0,
+      "Text": "Tu hai un cane?",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 755,
+      "Id": 0,
+      "Text": "Tudo \u00E9 l\u00F3gico.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 755,
+      "Id": 0,
+      "Text": "Tutto \u00E8 logico.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 756,
+      "Id": 0,
+      "Text": "N\u00E3o tenho dormido.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 756,
+      "Id": 0,
+      "Text": "Non ho dormito.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 757,
+      "Id": 0,
+      "Text": "N\u00E3o tentei.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 757,
+      "Id": 0,
+      "Text": "Non ho provato.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "passato prossimo",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 758,
+      "Id": 0,
+      "Text": "Ela est\u00E1 no banheiro.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 758,
+      "Id": 0,
+      "Text": "Lei \u00E8 in bagno.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 760,
+      "Id": 0,
+      "Text": "Consegue faz\u00EA-lo?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 760,
+      "Id": 0,
+      "Text": "Riesce a farlo?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 761,
+      "Id": 0,
+      "Text": "Voc\u00EA quer tomar uma cerveja?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 761,
+      "Id": 0,
+      "Text": "Vuoi una birra?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 762,
+      "Id": 0,
+      "Text": "Vendem sapatos.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 762,
+      "Id": 0,
+      "Text": "Vendono scarpe.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 763,
+      "Id": 0,
+      "Text": "Voc\u00EAs vendem sapatos.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 763,
+      "Id": 0,
+      "Text": "Vendete scarpe.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 764,
+      "Id": 0,
+      "Text": "Eu li um livro.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 764,
+      "Id": 0,
+      "Text": "Lessi un libro.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "passato remoto",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 765,
+      "Id": 0,
+      "Text": "Primeiro as damas.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 765,
+      "Id": 0,
+      "Text": "Prima le donne.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 766,
+      "Id": 0,
+      "Text": "Isso n\u00E3o \u00E9 perfeito?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 766,
+      "Id": 0,
+      "Text": "Non \u00E8 perfetto?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 767,
+      "Id": 0,
+      "Text": "Desculpe o desabafo!",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 767,
+      "Id": 0,
+      "Text": "Scusa lo sfogo!",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 768,
+      "Id": 0,
+      "Text": "Que espet\u00E1culo!",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 768,
+      "Id": 0,
+      "Text": "Che spettacolo!",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 769,
+      "Id": 0,
+      "Text": "Mas est\u00E1 faltando voc\u00EA!",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 769,
+      "Id": 0,
+      "Text": "Per\u00F2 manchi tu!",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 770,
+      "Id": 0,
+      "Text": "Mais uma vez, queira desculpar!",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 770,
+      "Id": 0,
+      "Text": "Scusate ancora!",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 771,
+      "Id": 0,
+      "Text": "Onde \u00E9 a cafeteria?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 771,
+      "Id": 0,
+      "Text": "Dov\u0027\u00E8 la mensa?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 772,
+      "Id": 0,
+      "Text": "Onde est\u00E1 o gato?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 772,
+      "Id": 0,
+      "Text": "Dov\u0027\u00E8 il gatto?",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "animals",
+        "Cards": []
+      },
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 774,
+      "Id": 0,
+      "Text": "Este sou eu.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 774,
+      "Id": 0,
+      "Text": "Questo sono io!",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 775,
+      "Id": 0,
+      "Text": "N\u00E3o fa\u00E7a isso comigo!",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 775,
+      "Id": 0,
+      "Text": "Non farmi cos\u00EC!",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 776,
+      "Id": 0,
+      "Text": "A febre est\u00E1 aumentando!",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 776,
+      "Id": 0,
+      "Text": "La febbre sale!",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 777,
+      "Id": 0,
+      "Text": "Eu posso te ajudar.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 777,
+      "Id": 0,
+      "Text": "Posso aiutarti.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 779,
+      "Id": 0,
+      "Text": "O livro est\u00E1 aqui.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 779,
+      "Id": 0,
+      "Text": "Il libro \u00E8 qui.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 780,
+      "Id": 0,
+      "Text": "Oi, minha linda!",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 780,
+      "Id": 0,
+      "Text": "Ciao mia bella!",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 781,
+      "Id": 0,
+      "Text": "Meu nome \u00E9 Jack.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 781,
+      "Id": 0,
+      "Text": "Mi chiamo Jack.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "male name",
+        "Cards": []
+      },
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 782,
+      "Id": 0,
+      "Text": "Meu nome \u00E9 Lu\u00EDs.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 782,
+      "Id": 0,
+      "Text": "Mi chiamo Luis.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "male name",
+        "Cards": []
+      },
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 0
   },
   {
     "NativeSentence": {
@@ -12363,22 +11942,6 @@
       "MeaningId": 4248,
       "Id": 0,
       "Text": "Tom fu pagato per perdere.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4249,
-      "Id": 0,
-      "Text": "Somos da Fran\u00E7a.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4249,
-      "Id": 0,
-      "Text": "Noi veniamo dalla Francia.",
       "Language": "it"
     },
     "Tags": [],
@@ -13286,22 +12849,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 4299,
-      "Id": 0,
-      "Text": "A Marie deveria iniciar.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4299,
-      "Id": 0,
-      "Text": "Marie dovrebbe cominciare.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 4300,
       "Id": 0,
       "Text": "A viagem vai custar quanto?",
@@ -13391,22 +12938,6 @@
       "MeaningId": 4305,
       "Id": 0,
       "Text": "Non \u00E8 scritto in francese.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4306,
-      "Id": 0,
-      "Text": "N\u00E3o est\u00E1 escrito em franc\u00EAs.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4306,
-      "Id": 0,
-      "Text": "Non \u00E8 scritta in francese.",
       "Language": "it"
     },
     "Tags": [],
@@ -13591,22 +13122,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 4316,
-      "Id": 0,
-      "Text": "Eu j\u00E1 falei com ele.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4316,
-      "Id": 0,
-      "Text": "Io ho gi\u00E0 parlato con lui.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 4317,
       "Id": 0,
       "Text": "Eu espero que voc\u00EA esteja bem.",
@@ -13662,33 +13177,6 @@
       "Language": "it"
     },
     "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4320,
-      "Id": 0,
-      "Text": "Eu sou da Inglaterra.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4320,
-      "Id": 0,
-      "Text": "Io vengo dall\u0027Inghilterra.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "country",
-        "Cards": []
-      },
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
     "DifficultyLevel": 1
   },
   {
@@ -13801,65 +13289,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 4326,
-      "Id": 0,
-      "Text": "Com licen\u00E7a, eu tenho uma pergunta.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4326,
-      "Id": 0,
-      "Text": "Scusatemi, ho una domanda.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      },
-      {
-        "type": null,
-        "name": "imperativo presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4327,
-      "Id": 0,
-      "Text": "S\u00F3 estava com curiosidade.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4327,
-      "Id": 0,
-      "Text": "Ero semplicemente curioso.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4328,
-      "Id": 0,
-      "Text": "S\u00F3 estava com curiosidade.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4328,
-      "Id": 0,
-      "Text": "Ero semplicemente curiosa.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 4329,
       "Id": 0,
       "Text": "Eu n\u00E3o consigo viver sem uma televis\u00E3o.",
@@ -13909,22 +13338,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 4331,
-      "Id": 0,
-      "Text": "Eu sofri o bastante.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4331,
-      "Id": 0,
-      "Text": "Io ho sofferto abbastanza.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 4332,
       "Id": 0,
       "Text": "Estou lendo seus livros.",
@@ -13948,22 +13361,6 @@
         "Cards": []
       }
     ],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4333,
-      "Id": 0,
-      "Text": "Voc\u00EA conhece Tom pessoalmente?",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4333,
-      "Id": 0,
-      "Text": "Tu conosci Tom di persona?",
-      "Language": "it"
-    },
-    "Tags": [],
     "DifficultyLevel": 1
   },
   {
@@ -14004,22 +13401,6 @@
       "MeaningId": 4335,
       "Id": 0,
       "Text": "Non voglio essere diverso.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4336,
-      "Id": 0,
-      "Text": "Eu n\u00E3o quero ser diferente.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4336,
-      "Id": 0,
-      "Text": "Non voglio essere diversa.",
       "Language": "it"
     },
     "Tags": [],
@@ -14091,22 +13472,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 4341,
-      "Id": 0,
-      "Text": "Voc\u00EA mora em S\u00E3o Petersburgo.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4341,
-      "Id": 0,
-      "Text": "Tu vivi a San Pietroburgo.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 4342,
       "Id": 0,
       "Text": "Falo com Tom todos os dias.",
@@ -14119,33 +13484,6 @@
       "Language": "it"
     },
     "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4343,
-      "Id": 0,
-      "Text": "Eu estou deixando a cidade.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4343,
-      "Id": 0,
-      "Text": "Io sto lasciando la citt\u00E0.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      },
-      {
-        "type": null,
-        "name": "gerundio presente",
-        "Cards": []
-      }
-    ],
     "DifficultyLevel": 1
   },
   {
@@ -14268,28 +13606,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 4350,
-      "Id": 0,
-      "Text": "N\u00F3s temos a mesma idade.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4350,
-      "Id": 0,
-      "Text": "Noi abbiamo la stessa et\u00E0.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 4351,
       "Id": 0,
       "Text": "O Tom \u00E9 ainda um novato.",
@@ -14337,22 +13653,6 @@
       "MeaningId": 4353,
       "Id": 0,
       "Text": "Sa che pu\u00F2 fidarsi di noi.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4354,
-      "Id": 0,
-      "Text": "Gosto de comida chinesa.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4354,
-      "Id": 0,
-      "Text": "A me piace il cibo cinese.",
       "Language": "it"
     },
     "Tags": [],
@@ -14628,28 +13928,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 4370,
-      "Id": 0,
-      "Text": "Eu confirmei o pedido.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4370,
-      "Id": 0,
-      "Text": "Io ho confermato l\u0027ordine.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "passato prossimo",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 4371,
       "Id": 0,
       "Text": "Esse gato tem um belo pelo.",
@@ -14702,22 +13980,6 @@
       "MeaningId": 4373,
       "Id": 0,
       "Text": "Tom non ti mentirebbe mai.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4374,
-      "Id": 0,
-      "Text": "Os incentivos est\u00E3o claros.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4374,
-      "Id": 0,
-      "Text": "Gli incentivi sono sicuri.",
       "Language": "it"
     },
     "Tags": [],
@@ -14885,38 +14147,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 4385,
-      "Id": 0,
-      "Text": "\u00C9 melhor eu n\u00E3o comer isso.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4385,
-      "Id": 0,
-      "Text": "\u00C8 meglio se non lo mangio.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4386,
-      "Id": 0,
-      "Text": "\u00C9 melhor eu n\u00E3o comer isso.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4386,
-      "Id": 0,
-      "Text": "\u00C8 meglio che non lo mangi.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 4387,
       "Id": 0,
       "Text": "\u00C9 poss\u00EDvel que ela venha.",
@@ -14926,38 +14156,6 @@
       "MeaningId": 4387,
       "Id": 0,
       "Text": "\u00C8 possibile che lei venga.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4388,
-      "Id": 0,
-      "Text": "Vou \u00E0 casa do Tom.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4388,
-      "Id": 0,
-      "Text": "Sto andando a casa di Tom.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4389,
-      "Id": 0,
-      "Text": "Eu posso usar o qu\u00EA?",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4389,
-      "Id": 0,
-      "Text": "Che cosa posso utilizzare?",
       "Language": "it"
     },
     "Tags": [],
@@ -15061,38 +14259,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 4396,
-      "Id": 0,
-      "Text": "Espero v\u00EA-la de novo.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4396,
-      "Id": 0,
-      "Text": "Io spero che ci rivedremo.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4397,
-      "Id": 0,
-      "Text": "Esse \u00E9 de meu irm\u00E3o.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4397,
-      "Id": 0,
-      "Text": "Appartiene a mio fratello.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 4398,
       "Id": 0,
       "Text": "Tu j\u00E1 foste professor?",
@@ -15102,70 +14268,6 @@
       "MeaningId": 4398,
       "Id": 0,
       "Text": "\u00C8 mai stato un insegnante?",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4399,
-      "Id": 0,
-      "Text": "Est\u00E1s zombando de mim.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4399,
-      "Id": 0,
-      "Text": "Mi stai prendendo in giro.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4400,
-      "Id": 0,
-      "Text": "N\u00F3s duas somos amigas.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4400,
-      "Id": 0,
-      "Text": "Noi siamo entrambe amiche.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4401,
-      "Id": 0,
-      "Text": "N\u00E3o pretendo ferir-te.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4401,
-      "Id": 0,
-      "Text": "Non voglio farti del male.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4402,
-      "Id": 0,
-      "Text": "Eu sou irm\u00E3 de Tom.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4402,
-      "Id": 0,
-      "Text": "Io sono la sorella di Tom.",
       "Language": "it"
     },
     "Tags": [],
@@ -15479,22 +14581,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 4420,
-      "Id": 0,
-      "Text": "Estou aprendendo basco.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4420,
-      "Id": 0,
-      "Text": "Io sto imparando il basco.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 4421,
       "Id": 0,
       "Text": "Eu estou aprendendo franc\u00EAs.",
@@ -15523,22 +14609,6 @@
         "Cards": []
       }
     ],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4422,
-      "Id": 0,
-      "Text": "Rezamos pela paz.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4422,
-      "Id": 0,
-      "Text": "Noi preghiamo per la pace.",
-      "Language": "it"
-    },
-    "Tags": [],
     "DifficultyLevel": 1
   },
   {
@@ -15600,22 +14670,6 @@
       "MeaningId": 4426,
       "Id": 0,
       "Text": "Non voglio essere come te.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4427,
-      "Id": 0,
-      "Text": "N\u00E3o quero sandu\u00EDches.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4427,
-      "Id": 0,
-      "Text": "Io non voglio un sandwich.",
       "Language": "it"
     },
     "Tags": [],
@@ -15794,33 +14848,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 4438,
-      "Id": 0,
-      "Text": "Desejo falar com a senhora.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4438,
-      "Id": 0,
-      "Text": "Io vorrei parlare con voi.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "condizionale presente",
-        "Cards": []
-      },
-      {
-        "type": null,
-        "name": "infinito presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 4439,
       "Id": 0,
       "Text": "Temos ma\u00E7\u00E3s amarelas.",
@@ -15830,22 +14857,6 @@
       "MeaningId": 4439,
       "Id": 0,
       "Text": "Abbiamo delle mele gialle.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4440,
-      "Id": 0,
-      "Text": "Onde est\u00E1 o restante do dinheiro?",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4440,
-      "Id": 0,
-      "Text": "Dov\u0027\u00E8 il resto del denaro?",
       "Language": "it"
     },
     "Tags": [],
@@ -16239,33 +15250,6 @@
       "Language": "it"
     },
     "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4465,
-      "Id": 0,
-      "Text": "Voltei para o Jap\u00E3o.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4465,
-      "Id": 0,
-      "Text": "Sono ritornato in Giappone.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "male speaker",
-        "Cards": []
-      },
-      {
-        "type": null,
-        "name": "passato prossimo",
-        "Cards": []
-      }
-    ],
     "DifficultyLevel": 1
   },
   {
@@ -16714,22 +15698,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 4492,
-      "Id": 0,
-      "Text": "Ela j\u00E1 terminou de ler o livro?",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4492,
-      "Id": 0,
-      "Text": "Lei ha gi\u00E0 finito il libro?",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 4493,
       "Id": 0,
       "Text": "Qu\u00E3o grande \u00E9 S\u00E3o Marino?",
@@ -16870,22 +15838,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 4501,
-      "Id": 0,
-      "Text": "Agora eu sinto pena por ela.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4501,
-      "Id": 0,
-      "Text": "Adesso mi dispiace per lei.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 4502,
       "Id": 0,
       "Text": "Este filme \u00E9 maravilhoso.",
@@ -16911,22 +15863,6 @@
       "MeaningId": 4503,
       "Id": 0,
       "Text": "Odio le analisi del sangue.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4504,
-      "Id": 0,
-      "Text": "Ele sabe tocar viol\u00E3o.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4504,
-      "Id": 0,
-      "Text": "Lui sa suonare la chitarra.",
       "Language": "it"
     },
     "Tags": [],
@@ -17866,49 +16802,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 4557,
-      "Id": 0,
-      "Text": "Eu trabalho como um escravo!",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4557,
-      "Id": 0,
-      "Text": "Io lavoro come una schiava!",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4558,
-      "Id": 0,
-      "Text": "Estou pagando adiantado.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4558,
-      "Id": 0,
-      "Text": "Io sto pagando in anticipo.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      },
-      {
-        "type": null,
-        "name": "gerundio presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 4559,
       "Id": 0,
       "Text": "Os trabalhadores est\u00E3o zangados.",
@@ -18178,22 +17071,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 4573,
-      "Id": 0,
-      "Text": "Eu espero que o Tom esteja bem.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4573,
-      "Id": 0,
-      "Text": "Io spero che Tom stia bene.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 4574,
       "Id": 0,
       "Text": "Talvez um dia voc\u00EA me entenda.",
@@ -18431,22 +17308,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 4587,
-      "Id": 0,
-      "Text": "O meu irm\u00E3o n\u00E3o tem dinheiro.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4587,
-      "Id": 0,
-      "Text": "Mio fratello non ha denaro.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 4588,
       "Id": 0,
       "Text": "Eu tenho alguns livros para estudar ingl\u00EAs.",
@@ -18479,22 +17340,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 4590,
-      "Id": 0,
-      "Text": "Eu me pergunto o que ele vai dizer.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4590,
-      "Id": 0,
-      "Text": "Io mi chiedo cosa dir\u00E0 lui.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 4591,
       "Id": 0,
       "Text": "Ele tem um carro japon\u00EAs.",
@@ -18504,22 +17349,6 @@
       "MeaningId": 4591,
       "Id": 0,
       "Text": "Ha una macchina giapponese.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4592,
-      "Id": 0,
-      "Text": "O que querem as mulheres?",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4592,
-      "Id": 0,
-      "Text": "Che cosa vogliono le donne?",
       "Language": "it"
     },
     "Tags": [],
@@ -18568,22 +17397,6 @@
       "MeaningId": 4595,
       "Id": 0,
       "Text": "Mi raccomando, non mancate.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4596,
-      "Id": 0,
-      "Text": "Eu quero viver na It\u00E1lia.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4596,
-      "Id": 0,
-      "Text": "Io voglio vivere in Italia.",
       "Language": "it"
     },
     "Tags": [],
@@ -18715,22 +17528,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 4604,
-      "Id": 0,
-      "Text": "Tenho uma bicicleta vermelha.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4604,
-      "Id": 0,
-      "Text": "Io ho una bicicletta rossa.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 4605,
       "Id": 0,
       "Text": "Nunca vi o seu pai.",
@@ -18756,22 +17553,6 @@
       "MeaningId": 4606,
       "Id": 0,
       "Text": "Penso che tu piaccia a Tom.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4607,
-      "Id": 0,
-      "Text": "Tive de voltar para Boston.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4607,
-      "Id": 0,
-      "Text": "Io dovevo tornare a Boston.",
       "Language": "it"
     },
     "Tags": [],
@@ -18810,22 +17591,6 @@
       "MeaningId": 4609,
       "Id": 0,
       "Text": "Conosco Tom da molto tempo.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4610,
-      "Id": 0,
-      "Text": "Somos os amigos do Tom.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4610,
-      "Id": 0,
-      "Text": "Noi siamo gli amici di Tom.",
       "Language": "it"
     },
     "Tags": [],
@@ -19404,38 +18169,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 4639,
-      "Id": 0,
-      "Text": "N\u00E3o posso beber leite.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4639,
-      "Id": 0,
-      "Text": "Io non posso bere il latte.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4640,
-      "Id": 0,
-      "Text": "Tom est\u00E1 em casa, mas a Mary n\u00E3o est\u00E1.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4640,
-      "Id": 0,
-      "Text": "Tom \u00E8 a casa, per\u00F2 Mary no.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 4641,
       "Id": 0,
       "Text": "Ele n\u00E3o pode fazer o imposs\u00EDvel.",
@@ -19479,28 +18212,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 4643,
-      "Id": 0,
-      "Text": "Eu estou na casa de uma amiga.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4643,
-      "Id": 0,
-      "Text": "Io sono a casa di un\u0027amica.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 4644,
       "Id": 0,
       "Text": "Este bolo \u00E9 muito doce.",
@@ -19523,38 +18234,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 4645,
-      "Id": 0,
-      "Text": "Eu sou apenas outro homem.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4645,
-      "Id": 0,
-      "Text": "Io sono solo un altro uomo.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4646,
-      "Id": 0,
-      "Text": "\u0022Obrigado.\u0022 \u0022De nada.\u0022",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4646,
-      "Id": 0,
-      "Text": "\u0022Grazie.\u0022 \u0022Non c\u0027\u00E8 di che.\u0022",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 4647,
       "Id": 0,
       "Text": "N\u00E3o queremos que eles retornem.",
@@ -19564,22 +18243,6 @@
       "MeaningId": 4647,
       "Id": 0,
       "Text": "Non vogliamo che ritornino.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4648,
-      "Id": 0,
-      "Text": "Eu quero saber o porqu\u00EA.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4648,
-      "Id": 0,
-      "Text": "Io voglio sapere il perch\u00E9.",
       "Language": "it"
     },
     "Tags": [],
@@ -19749,22 +18412,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 4658,
-      "Id": 0,
-      "Text": "Mary n\u00E3o era sua namorada?",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4658,
-      "Id": 0,
-      "Text": "Mary non era la tua morosa?",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 4659,
       "Id": 0,
       "Text": "Eu sou bom em dar conselhos.",
@@ -19829,22 +18476,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 4662,
-      "Id": 0,
-      "Text": "Eu estava lendo um livro.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4662,
-      "Id": 0,
-      "Text": "Io stavo leggendo un libro.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 4663,
       "Id": 0,
       "Text": "Sabemos o que n\u00F3s queremos.",
@@ -19884,22 +18515,6 @@
         "Cards": []
       }
     ],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4665,
-      "Id": 0,
-      "Text": "Aquele \u00E9 o carro dela.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4665,
-      "Id": 0,
-      "Text": "Quella \u00E8 la sua automobile.",
-      "Language": "it"
-    },
-    "Tags": [],
     "DifficultyLevel": 1
   },
   {
@@ -19961,22 +18576,6 @@
       "MeaningId": 4669,
       "Id": 0,
       "Text": "Ho bisogno di pi\u00F9 caffeina.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4670,
-      "Id": 0,
-      "Text": "Por que voc\u00EA odeia tanto o Tom?",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4670,
-      "Id": 0,
-      "Text": "Perch\u00E9 odia cos\u00EC tanto Tom?",
       "Language": "it"
     },
     "Tags": [],
@@ -20168,22 +18767,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 4680,
-      "Id": 0,
-      "Text": "Ela \u00E9 sempre muito educada.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4680,
-      "Id": 0,
-      "Text": "Lei \u00E8 sempre molto educata.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 4681,
       "Id": 0,
       "Text": "Todos sabem que n\u00E3o fui eu.",
@@ -20352,28 +18935,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 4690,
-      "Id": 0,
-      "Text": "O seu telefone tocou.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4690,
-      "Id": 0,
-      "Text": "Il suo telefono ha suonato.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "passato prossimo",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 4691,
       "Id": 0,
       "Text": "A pata do cachorro \u00E9 grande.",
@@ -20407,28 +18968,6 @@
         "name": "food",
         "Cards": []
       },
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4693,
-      "Id": 0,
-      "Text": "Voc\u00EA tem alguma ideia melhor?",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4693,
-      "Id": 0,
-      "Text": "Tu hai delle idee migliori?",
-      "Language": "it"
-    },
-    "Tags": [
       {
         "type": null,
         "name": "presente",
@@ -20496,22 +19035,6 @@
       "MeaningId": 4696,
       "Id": 0,
       "Text": "Siete allergiche al lavoro?",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4697,
-      "Id": 0,
-      "Text": "Ele morreu em meus bra\u00E7os.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4697,
-      "Id": 0,
-      "Text": "\u00C8 morto tra le mie braccia.",
       "Language": "it"
     },
     "Tags": [],
@@ -20608,22 +19131,6 @@
       "MeaningId": 4703,
       "Id": 0,
       "Text": "\u0022Grazie!\u0022 \u0022Non c\u2019\u00E8 di che!\u0022",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 1
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 4704,
-      "Id": 0,
-      "Text": "N\u00E3o quero a sua ajuda.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 4704,
-      "Id": 0,
-      "Text": "Io non voglio il tuo aiuto.",
       "Language": "it"
     },
     "Tags": [],
@@ -20959,6 +19466,1412 @@
         "Cards": []
       }
     ],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4727,
+      "Id": 0,
+      "Text": "N\u00E3o quero morar em Boston.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4727,
+      "Id": 0,
+      "Text": "Non voglio vivere a Boston.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4730,
+      "Id": 0,
+      "Text": "Tom quer ir de trem.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4730,
+      "Id": 0,
+      "Text": "Tom vuole andare col treno.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4731,
+      "Id": 0,
+      "Text": "Eu sei que o Tom tem treze anos.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4731,
+      "Id": 0,
+      "Text": "So che Tom ha tredici anni.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4732,
+      "Id": 0,
+      "Text": "Poderia me dar licen\u00E7a, por favor?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4732,
+      "Id": 0,
+      "Text": "Puoi scusarmi, per piacere?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4733,
+      "Id": 0,
+      "Text": "Onde se compra autoestima?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4733,
+      "Id": 0,
+      "Text": "Dove si compra l\u0027autostima?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4734,
+      "Id": 0,
+      "Text": "N\u00E3o preciso de uma cama.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4734,
+      "Id": 0,
+      "Text": "Non ho bisogno di un letto.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4735,
+      "Id": 0,
+      "Text": "Queres vender o papagaio?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4735,
+      "Id": 0,
+      "Text": "Vuoi vendere il pappagallo?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4736,
+      "Id": 0,
+      "Text": "A gasolina est\u00E1 muito cara.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4736,
+      "Id": 0,
+      "Text": "La benzina \u00E8 molto costosa.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4738,
+      "Id": 0,
+      "Text": "Venha se sentar aqui comigo.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4738,
+      "Id": 0,
+      "Text": "Vieni a sederti qui con me.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "imperativo presente",
+        "Cards": []
+      },
+      {
+        "type": null,
+        "name": "infinito presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4739,
+      "Id": 0,
+      "Text": "Ele havia pensado em muitas coisas.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4739,
+      "Id": 0,
+      "Text": "Aveva pensato a molte cose.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4740,
+      "Id": 0,
+      "Text": "Hoje \u00E9 o dia do le\u00E3o.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4740,
+      "Id": 0,
+      "Text": "Oggi \u00E8 il giorno del leone.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4741,
+      "Id": 0,
+      "Text": "Eles est\u00E3o prestes a ter um filho.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4741,
+      "Id": 0,
+      "Text": "Stanno per avere un figlio.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4742,
+      "Id": 0,
+      "Text": "N\u00E3o o sei e n\u00E3o me importa.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4742,
+      "Id": 0,
+      "Text": "Non lo so e non mi importa.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4743,
+      "Id": 0,
+      "Text": "A porta est\u00E1 aberta ou fechada?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4743,
+      "Id": 0,
+      "Text": "La porta \u00E8 aperta o chiusa?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4744,
+      "Id": 0,
+      "Text": "Esta \u00E9 uma tradu\u00E7\u00E3o literal?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4744,
+      "Id": 0,
+      "Text": "\u00C8 una traduzione letterale?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4745,
+      "Id": 0,
+      "Text": "A primavera chegar\u00E1 logo.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4745,
+      "Id": 0,
+      "Text": "La primavera arriva presto.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4747,
+      "Id": 0,
+      "Text": "Sou Testemunha de Jeov\u00E1.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4747,
+      "Id": 0,
+      "Text": "Sono un testimone di Geova.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4748,
+      "Id": 0,
+      "Text": "Aquelas uvas n\u00E3o est\u00E3o maduras.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4748,
+      "Id": 0,
+      "Text": "Quelle uve non sono mature.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4749,
+      "Id": 0,
+      "Text": "O progresso \u00E9 inevit\u00E1vel.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4749,
+      "Id": 0,
+      "Text": "Il progresso \u00E8 inevitabile.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4751,
+      "Id": 0,
+      "Text": "Meu av\u00F4 \u00E9 carpinteiro.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4751,
+      "Id": 0,
+      "Text": "Mio nonno \u00E8 un carpentiere.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4752,
+      "Id": 0,
+      "Text": "Ela nasceu pra me fazer feliz.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4752,
+      "Id": 0,
+      "Text": "\u00C8 nata per rendermi felice.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4753,
+      "Id": 0,
+      "Text": "Tom era muito independente.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4753,
+      "Id": 0,
+      "Text": "Tom era molto indipendente.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "male name",
+        "Cards": []
+      },
+      {
+        "type": null,
+        "name": "imperfetto",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4755,
+      "Id": 0,
+      "Text": "Ele pintou a porta de azul.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4755,
+      "Id": 0,
+      "Text": "Ha dipinto la porta di blu.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4756,
+      "Id": 0,
+      "Text": "Est\u00E1s aprendendo franc\u00EAs?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4756,
+      "Id": 0,
+      "Text": "Stai imparando il francese?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4757,
+      "Id": 0,
+      "Text": "Nove vezes nove s\u00E3o oitenta e um.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4757,
+      "Id": 0,
+      "Text": "Nove per nove fa ottantuno.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4758,
+      "Id": 0,
+      "Text": "Isto pode ser comido?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4758,
+      "Id": 0,
+      "Text": "Questo pu\u00F2 essere mangiato?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4759,
+      "Id": 0,
+      "Text": "Preciso de uma massagem.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4759,
+      "Id": 0,
+      "Text": "Ho bisogno di un massaggio.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4760,
+      "Id": 0,
+      "Text": "Obviamente, Tom tem talento.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4760,
+      "Id": 0,
+      "Text": "Ovviamente, Tom ha talento.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4761,
+      "Id": 0,
+      "Text": "Tom tem um talento natural.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4761,
+      "Id": 0,
+      "Text": "Tom ha un talento naturale.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "male name",
+        "Cards": []
+      },
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4762,
+      "Id": 0,
+      "Text": "Onde est\u00E1 a embaixada da Su\u00E9cia?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4762,
+      "Id": 0,
+      "Text": "Dov\u0027\u00E8 l\u0027ambasciata svedese?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4763,
+      "Id": 0,
+      "Text": "H\u00E1 muitos turistas aqui.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4763,
+      "Id": 0,
+      "Text": "Ci sono troppi turisti qui.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4765,
+      "Id": 0,
+      "Text": "Eu preciso de um teclado.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4765,
+      "Id": 0,
+      "Text": "Ho bisogno di una tastiera.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4767,
+      "Id": 0,
+      "Text": "Obrigado pela tua resposta.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4767,
+      "Id": 0,
+      "Text": "Grazie per la tua risposta.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4768,
+      "Id": 0,
+      "Text": "Obrigado pela sua resposta.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4768,
+      "Id": 0,
+      "Text": "Grazie per la sua risposta.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4769,
+      "Id": 0,
+      "Text": "O livro pertence a Paulo.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4769,
+      "Id": 0,
+      "Text": "Il libro appartiene a Paul.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4770,
+      "Id": 0,
+      "Text": "Podemos ajud\u00E1-lo agora.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4770,
+      "Id": 0,
+      "Text": "Lo possiamo aiutare adesso.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4771,
+      "Id": 0,
+      "Text": "A reuni\u00E3o j\u00E1 come\u00E7ou.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4771,
+      "Id": 0,
+      "Text": "La riunione \u00E8 gi\u00E0 iniziata.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4772,
+      "Id": 0,
+      "Text": "Porque a devemos ajudar?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4772,
+      "Id": 0,
+      "Text": "Perch\u00E9 la dobbiamo aiutare?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4773,
+      "Id": 0,
+      "Text": "Voc\u00EA tem uma caneta ou um l\u00E1pis?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4773,
+      "Id": 0,
+      "Text": "Hai una penna o una matita?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4774,
+      "Id": 0,
+      "Text": "A berinjela \u00E9 um legume.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4774,
+      "Id": 0,
+      "Text": "La melanzana \u00E8 una verdura.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4775,
+      "Id": 0,
+      "Text": "Tente ser corajosa.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4775,
+      "Id": 0,
+      "Text": "Prova ad essere coraggiosa.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4776,
+      "Id": 0,
+      "Text": "\u0022\u00C9 voc\u00EA quem est\u00E1 a\u00ED?\u0022 \u0022Sim, sou eu mesmo.\u0022",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4776,
+      "Id": 0,
+      "Text": "\u0022Sei tu l\u00EC?\u0022 \u0022S\u00EC, sono io.\u0022",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4779,
+      "Id": 0,
+      "Text": "Epstein n\u00E3o se matou.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4779,
+      "Id": 0,
+      "Text": "Epstein non si \u00E8 suicidato.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4780,
+      "Id": 0,
+      "Text": "Eles nem sabem por qu\u00EA.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4780,
+      "Id": 0,
+      "Text": "Non sanno nemmeno il perch\u00E9.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4781,
+      "Id": 0,
+      "Text": "Ela fuma vinte cigarros por dia.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4781,
+      "Id": 0,
+      "Text": "Fuma 20 sigarette al giorno.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4782,
+      "Id": 0,
+      "Text": "A televis\u00E3o n\u00E3o funciona.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4782,
+      "Id": 0,
+      "Text": "La televisione non funziona.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4783,
+      "Id": 0,
+      "Text": "Tenho uma foto de um aeroporto.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4783,
+      "Id": 0,
+      "Text": "Ho una foto di un aeroporto.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4784,
+      "Id": 0,
+      "Text": "Escutei algu\u00E9m gritar.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4784,
+      "Id": 0,
+      "Text": "Ho sentito qualcuno gridare.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4785,
+      "Id": 0,
+      "Text": "Minha av\u00F3 mora no campo.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4785,
+      "Id": 0,
+      "Text": "Mia nonna abita in campagna.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "relatives",
+        "Cards": []
+      },
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4786,
+      "Id": 0,
+      "Text": "Minha m\u00E3e n\u00E3o fala ingl\u00EAs.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4786,
+      "Id": 0,
+      "Text": "Mia madre non parla inglese.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4787,
+      "Id": 0,
+      "Text": "Eu tomo caf\u00E9 da manh\u00E3 \u00E0s sete.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4787,
+      "Id": 0,
+      "Text": "Faccio colazione alle sette.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4788,
+      "Id": 0,
+      "Text": "O cachorro \u00E9 um animal fiel.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4788,
+      "Id": 0,
+      "Text": "Il cane \u00E8 un animale fedele.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4789,
+      "Id": 0,
+      "Text": "\u00C9 apenas a sua imagina\u00E7\u00E3o.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4789,
+      "Id": 0,
+      "Text": "\u00C8 solo la tua immaginazione.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4790,
+      "Id": 0,
+      "Text": "Ele era severo com os filhos.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4790,
+      "Id": 0,
+      "Text": "Era severo con i suoi figli.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4791,
+      "Id": 0,
+      "Text": "O paciente estava em perigo.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4791,
+      "Id": 0,
+      "Text": "Il paziente era in pericolo.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4792,
+      "Id": 0,
+      "Text": "Ele fala japon\u00EAs muito bem.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4792,
+      "Id": 0,
+      "Text": "Parla molto bene giapponese.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4793,
+      "Id": 0,
+      "Text": "O que voc\u00EA faz antes do caf\u00E9 da manh\u00E3?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4793,
+      "Id": 0,
+      "Text": "Cosa fai prima di colazione?",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4794,
+      "Id": 0,
+      "Text": "Somos praticamente irm\u00E3os.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4794,
+      "Id": 0,
+      "Text": "Siamo praticamente fratelli.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4795,
+      "Id": 0,
+      "Text": "Voc\u00EA sabe aonde o seu pai foi?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4795,
+      "Id": 0,
+      "Text": "Sai dove \u00E8 andato tuo padre?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4796,
+      "Id": 0,
+      "Text": "Ela se divorciou do marido.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4796,
+      "Id": 0,
+      "Text": "Ha divorziato da suo marito.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4797,
+      "Id": 0,
+      "Text": "Acenda a luz, por favor.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4797,
+      "Id": 0,
+      "Text": "Accendi la luce, per favore.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4798,
+      "Id": 0,
+      "Text": "Sou casada e tenho dois filhos.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4798,
+      "Id": 0,
+      "Text": "Sono sposata e ho due figli.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "female speaker",
+        "Cards": []
+      },
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      },
+      {
+        "type": null,
+        "name": "passato prossimo",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4799,
+      "Id": 0,
+      "Text": "Minha mala foi roubada.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4799,
+      "Id": 0,
+      "Text": "La mia borsa \u00E8 stata rubata.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4800,
+      "Id": 0,
+      "Text": "A minha garrafa se quebrou.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4800,
+      "Id": 0,
+      "Text": "La mia bottiglia si \u00E8 rotta.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4801,
+      "Id": 0,
+      "Text": "Este rel\u00F3gio \u00E9 el\u00E9trico.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4801,
+      "Id": 0,
+      "Text": "Questo orologio \u00E8 elettrico.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4802,
+      "Id": 0,
+      "Text": "Quem de voc\u00EAs dois vir\u00E1 comigo?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4802,
+      "Id": 0,
+      "Text": "Chi di voi due verr\u00E0 con me?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4803,
+      "Id": 0,
+      "Text": "Onde fica o shopping?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4803,
+      "Id": 0,
+      "Text": "Dov\u0027\u00E8 il centro commerciale?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4804,
+      "Id": 0,
+      "Text": "Estes s\u00E3o os seus \u00F3culos?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4804,
+      "Id": 0,
+      "Text": "Sono questi i tuoi occhiali?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4805,
+      "Id": 0,
+      "Text": "O mar estava cheio de barcos.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4805,
+      "Id": 0,
+      "Text": "Il mare era pieno di barche.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4806,
+      "Id": 0,
+      "Text": "Ele era um m\u00FAsico pobre.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4806,
+      "Id": 0,
+      "Text": "Lui era un musicista povero.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4807,
+      "Id": 0,
+      "Text": "Comprei p\u00E3o fresco.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4807,
+      "Id": 0,
+      "Text": "Ho comprato del pane fresco.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4808,
+      "Id": 0,
+      "Text": "Ela \u00E9 casada com um estrangeiro.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4808,
+      "Id": 0,
+      "Text": "\u00C8 sposata con uno straniero.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4809,
+      "Id": 0,
+      "Text": "Suco de laranja ou champanhe?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4809,
+      "Id": 0,
+      "Text": "Succo d\u0027arancia o champagne?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4810,
+      "Id": 0,
+      "Text": "Os homens est\u00E3o a almo\u00E7ar.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4810,
+      "Id": 0,
+      "Text": "Gli uomini stanno pranzando.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4811,
+      "Id": 0,
+      "Text": "Aquela bicicleta n\u00E3o \u00E9 sua.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4811,
+      "Id": 0,
+      "Text": "Quella bicicletta non \u00E8 sua.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "presente",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4812,
+      "Id": 0,
+      "Text": "Ela teve uma vida dif\u00EDcil.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4812,
+      "Id": 0,
+      "Text": "Ha avuto una vita difficile.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4814,
+      "Id": 0,
+      "Text": "Ele corre no parque todo dia.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4814,
+      "Id": 0,
+      "Text": "Corre nel parco ogni giorno.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4815,
+      "Id": 0,
+      "Text": "Eu sei quem mora nesta casa.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4815,
+      "Id": 0,
+      "Text": "So chi abita in questa casa.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4816,
+      "Id": 0,
+      "Text": "Eu ensino biologia e franc\u00EAs.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4816,
+      "Id": 0,
+      "Text": "Insegno biologia e francese.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 1
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 4817,
+      "Id": 0,
+      "Text": "Berlim \u00E9 uma cidade alem\u00E3.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 4817,
+      "Id": 0,
+      "Text": "Berlino \u00E8 una citt\u00E0 tedesca.",
+      "Language": "it"
+    },
+    "Tags": [],
     "DifficultyLevel": 1
   },
   {
@@ -21324,22 +21237,6 @@
       "MeaningId": 10018,
       "Id": 0,
       "Text": "Tutto \u00E8 follia in questo mondo, tranne il piacere.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 2
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 10019,
-      "Id": 0,
-      "Text": "Esse \u00E9 um autor muito representativo de sua \u00E9poca.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 10019,
-      "Id": 0,
-      "Text": "\u00C8 un autore molto rappresentativo della sua epoca.",
       "Language": "it"
     },
     "Tags": [],
@@ -21861,22 +21758,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 10049,
-      "Id": 0,
-      "Text": "Ela me escreveu uma carta de amor em esperanto.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 10049,
-      "Id": 0,
-      "Text": "Lei mi ha scritto una lettera d\u0027amore in esperanto.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 2
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 10050,
       "Id": 0,
       "Text": "\u00C9 prov\u00E1vel que os meus pais cheguem amanh\u00E3 de manh\u00E3.",
@@ -22250,22 +22131,6 @@
       "MeaningId": 10072,
       "Id": 0,
       "Text": "Ho intenzione di passare tutta la giornata con Tom.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 2
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 10073,
-      "Id": 0,
-      "Text": "Acho que o Tom pode estar com raiva de mim.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 10073,
-      "Id": 0,
-      "Text": "Io penso che Tom potrebbe essere arrabbiato con me.",
       "Language": "it"
     },
     "Tags": [],
@@ -22860,22 +22725,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 10108,
-      "Id": 0,
-      "Text": "Precisamos de uma alavanca se quisermos levantar isto.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 10108,
-      "Id": 0,
-      "Text": "Abbiamo bisogno di una leva se vogliamo sollevarlo.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 2
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 10109,
       "Id": 0,
       "Text": "O sangue \u00E9 vermelho, o preto lembra a escravid\u00E3o.",
@@ -23458,54 +23307,6 @@
       "MeaningId": 10140,
       "Id": 0,
       "Text": "Non preoccuparti se ne trovi uno verde che ti piace.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 2
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 10141,
-      "Id": 0,
-      "Text": "N\u00E3o se preocupe se voc\u00EA acha um verde do que voc\u00EA gosta.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 10141,
-      "Id": 0,
-      "Text": "Non preoccuparti se ne trovi una verde che ti piace.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 2
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 10142,
-      "Id": 0,
-      "Text": "N\u00E3o se preocupe se voc\u00EA acha um verde do que voc\u00EA gosta.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 10142,
-      "Id": 0,
-      "Text": "Non si preoccupi se ne trova uno verde che le piace.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 2
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 10143,
-      "Id": 0,
-      "Text": "N\u00E3o se preocupe se voc\u00EA acha um verde do que voc\u00EA gosta.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 10143,
-      "Id": 0,
-      "Text": "Non si preoccupi se ne trova una verde che le piace.",
       "Language": "it"
     },
     "Tags": [],
@@ -24422,28 +24223,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 10198,
-      "Id": 0,
-      "Text": "O rio que corre por Paris \u00E9 o Sena.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 10198,
-      "Id": 0,
-      "Text": "Il fiume che passa attraverso Parigi si chiama Senna.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "@check translation",
-        "Cards": []
-      }
-    ],
-    "DifficultyLevel": 2
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 10199,
       "Id": 0,
       "Text": "Eu n\u00E3o entendo porque a Alemanha ganhou o Eurovision.",
@@ -24954,22 +24733,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 10228,
-      "Id": 0,
-      "Text": "Eu n\u00E3o entendo o significado exato dessa frase.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 10228,
-      "Id": 0,
-      "Text": "Io non capisco il significato esatto di questa frase.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 2
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 10229,
       "Id": 0,
       "Text": "Esta frase parece estar gramaticalmente correta.",
@@ -25367,22 +25130,6 @@
         "Cards": []
       }
     ],
-    "DifficultyLevel": 2
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 10252,
-      "Id": 0,
-      "Text": "Como voc\u00EA consegue trabalhar e estudar?",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 10252,
-      "Id": 0,
-      "Text": "Come fate a trovare il tempo per lavorare e studiare?",
-      "Language": "it"
-    },
-    "Tags": [],
     "DifficultyLevel": 2
   },
   {
@@ -25980,28 +25727,6 @@
       "Language": "it"
     },
     "Tags": [],
-    "DifficultyLevel": 2
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 10288,
-      "Id": 0,
-      "Text": "A parte superior da montanha est\u00E1 coberta de neve.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 10288,
-      "Id": 0,
-      "Text": "La parte superiore della montagna \u00E8 ricoperta di neve.",
-      "Language": "it"
-    },
-    "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      }
-    ],
     "DifficultyLevel": 2
   },
   {
@@ -26615,38 +26340,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 10326,
-      "Id": 0,
-      "Text": "Ela veste-se com o mesmo tipo de roupa que a irm\u00E3 dela.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 10326,
-      "Id": 0,
-      "Text": "Lei indossa gli stessi tipi di vestiti di sua sorella.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 2
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 10327,
-      "Id": 0,
-      "Text": "Planejo passar o dia com o Tom.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 10327,
-      "Id": 0,
-      "Text": "Io ho intenzione di passare tutta la giornata con Tom.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 2
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 10328,
       "Id": 0,
       "Text": "Ai, meu Deus! Esqueci a carteira no quarto!",
@@ -26656,38 +26349,6 @@
       "MeaningId": 10328,
       "Id": 0,
       "Text": "Oddio! Ho dimenticato il portafoglio nella mia stanza!",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 2
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 10329,
-      "Id": 0,
-      "Text": "O Facebook vai comprar o WhatsApp por 19 bilh\u00F5es de d\u00F3lares.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 10329,
-      "Id": 0,
-      "Text": "Facebook comprer\u00E0 Whatsapp per 19 miliardi di dollari.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 2
-  },
-  {
-    "NativeSentence": {
-      "MeaningId": 10330,
-      "Id": 0,
-      "Text": "Eu sei que o Tom est\u00E1 escondendo alguma coisa, mas eu n\u00E3o sei o qu\u00EA.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 10330,
-      "Id": 0,
-      "Text": "So che Tom sta nascondendo qualcosa, per\u00F2 non so cosa.",
       "Language": "it"
     },
     "Tags": [],
@@ -26903,22 +26564,6 @@
   },
   {
     "NativeSentence": {
-      "MeaningId": 10344,
-      "Id": 0,
-      "Text": "A l\u00EDngua vai ficando mais bonita na medida em que a vamos aprendendo.",
-      "Language": "pt"
-    },
-    "TargetSentence": {
-      "MeaningId": 10344,
-      "Id": 0,
-      "Text": "La lingua diventa pi\u00F9 bella man mano che la impariamo.",
-      "Language": "it"
-    },
-    "Tags": [],
-    "DifficultyLevel": 2
-  },
-  {
-    "NativeSentence": {
       "MeaningId": 10345,
       "Id": 0,
       "Text": "A aurora do saber vem no ocaso da vida.",
@@ -26928,6 +26573,268 @@
       "MeaningId": 10345,
       "Id": 0,
       "Text": "L\u0027alba della conoscenza arriva al tramonto della vita.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 2
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 10346,
+      "Id": 0,
+      "Text": "As pessoas mais belas n\u00E3o s\u00E3o perfeitas, s\u00E3o especiais.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 10346,
+      "Id": 0,
+      "Text": "Le persone pi\u00F9 belle non sono perfette, sono speciali.",
+      "Language": "it"
+    },
+    "Tags": [
+      {
+        "type": null,
+        "name": "people",
+        "Cards": []
+      }
+    ],
+    "DifficultyLevel": 2
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 10347,
+      "Id": 0,
+      "Text": "Em Toki Pona, a ordem dos fatores altera o produto.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 10347,
+      "Id": 0,
+      "Text": "In Toki Pona, l\u0027ordine dei fattori cambia il prodotto.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 2
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 10348,
+      "Id": 0,
+      "Text": "O Latim prova que a morte n\u00E3o existe.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 10348,
+      "Id": 0,
+      "Text": "La lingua latina dimostra che la morte \u00E8 un\u0027illusione.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 2
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 10349,
+      "Id": 0,
+      "Text": "Queres que eu te ensine qual \u00E9 o dever de um juiz.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 10349,
+      "Id": 0,
+      "Text": "Volete che vi insegni qual \u00E8 il compito di un giudice.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 2
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 10350,
+      "Id": 0,
+      "Text": "A forma\u00E7\u00E3o da juventude \u00E9 a renova\u00E7\u00E3o do mundo.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 10350,
+      "Id": 0,
+      "Text": "La formazione dei giovani \u00E8 il rinnovamento del mondo.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 2
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 10351,
+      "Id": 0,
+      "Text": "A juventude indolente cria uma velhice mendicante.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 10351,
+      "Id": 0,
+      "Text": "La giovinezza indolente crea una vecchiaia implorante.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 2
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 10352,
+      "Id": 0,
+      "Text": "Nada se ensina corretamente sem um exemplo.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 10352,
+      "Id": 0,
+      "Text": "Niente viene insegnato correttamente senza un esempio.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 2
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 10353,
+      "Id": 0,
+      "Text": "A porta da casa est\u00E1 fechada, mas as janelas est\u00E3o abertas.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 10353,
+      "Id": 0,
+      "Text": "La porta di casa \u00E8 chiusa, ma le finestre sono aperte.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 2
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 10354,
+      "Id": 0,
+      "Text": "Eu gostaria muito de conhecer a Gr\u00E9cia e a Rom\u00EAnia.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 10354,
+      "Id": 0,
+      "Text": "Mi piacerebbe davvero visitare la Grecia e la Romania.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 2
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 10356,
+      "Id": 0,
+      "Text": "Os principais produtos do pa\u00EDs s\u00E3o cacau e ouro.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 10356,
+      "Id": 0,
+      "Text": "I principali prodotti del paese sono il cacao e l\u0027oro.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 2
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 10357,
+      "Id": 0,
+      "Text": "Cubra a massa para que ela cres\u00E7a mais r\u00E1pido.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 10357,
+      "Id": 0,
+      "Text": "Coprire l\u0027impasto per farlo lievitare pi\u00F9 velocemente.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 2
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 10358,
+      "Id": 0,
+      "Text": "Se tens uma mensagem, tens um p\u00FAblico. Basta descobri-lo!",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 10358,
+      "Id": 0,
+      "Text": "Se hai un messaggio, hai un pubblico. Basta scoprirlo!",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 2
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 10359,
+      "Id": 0,
+      "Text": "Quem consegue ser eloquente diante do Mist\u00E9rio que \u00E9 Deus?",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 10359,
+      "Id": 0,
+      "Text": "Chi pu\u00F2 essere eloquente davanti al Mistero che \u00E8 Dio?",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 2
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 10360,
+      "Id": 0,
+      "Text": "A m\u00E3e dele \u00E9 irm\u00E3 de meu pai. N\u00F3s somos primos.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 10360,
+      "Id": 0,
+      "Text": "Sua madre \u00E8 la sorella di mio padre. Noi siamo cugini.",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 2
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 10361,
+      "Id": 0,
+      "Text": "\u0022De que nacionalidade s\u00E3o os vizinhos deles?\u0022 \u0022Finlandesa\u0022.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 10361,
+      "Id": 0,
+      "Text": "\u0022Di che nazionalit\u00E0 sono i loro vicini?\u0022 \u0022Finlandese.\u0022",
+      "Language": "it"
+    },
+    "Tags": [],
+    "DifficultyLevel": 2
+  },
+  {
+    "NativeSentence": {
+      "MeaningId": 10362,
+      "Id": 0,
+      "Text": "A morte \u00E9, por assim dizer, uma esp\u00E9cie de baldea\u00E7\u00E3o.",
+      "Language": "pt"
+    },
+    "TargetSentence": {
+      "MeaningId": 10362,
+      "Id": 0,
+      "Text": "La morte \u00E8, per cos\u00EC dire, una sorta di trasferimento.",
       "Language": "it"
     },
     "Tags": [],
