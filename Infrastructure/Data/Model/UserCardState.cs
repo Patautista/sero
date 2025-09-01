@@ -10,6 +10,7 @@ namespace Infrastructure.Data.Model
     public class UserCardState
     {
         public int Id { get; set;  }
+        [ForeignKey($"{nameof(User)}s")]
         public int UserId { get; set; }          // link to the user
         [ForeignKey($"{nameof(Card)}s")]
         public int CardId { get; set; }          // link to the card
