@@ -159,7 +159,7 @@
     },
     "Tags": [
       {
-        "type": null,
+        "type": "learningTopic",
         "name": "present",
         "Cards": []
       },
@@ -187,7 +187,7 @@
         "type": "learningTopic",
         "name": "present",
         "Cards": []
-      },
+      }
     ],
     "DifficultyLevel": 0
   },
@@ -206,13 +206,8 @@
     },
     "Tags": [
       {
-        "type": null,
+        "type": "generalTopic",
         "name": "weather",
-        "Cards": []
-      },
-      {
-        "type": null,
-        "name": "presente",
         "Cards": []
       },
       {
@@ -252,11 +247,6 @@
       "Language": "it"
     },
     "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      },
       {
         "type": "learningTopic",
         "name": "fact",
@@ -358,11 +348,6 @@
       "Language": "it"
     },
     "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      },
       {
         "type": "learningTopic",
         "name": "fact",
@@ -529,11 +514,6 @@
     },
     "Tags": [
       {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      },
-      {
         "type": "difficulty",
         "name": "beginner",
         "Cards": []
@@ -635,8 +615,8 @@
     },
     "Tags": [
       {
-        "type": null,
-        "name": "imperativo presente",
+        "type": "learningTopic",
+        "name": "imperative",
         "Cards": []
       },
       {
@@ -676,11 +656,6 @@
       "Language": "it"
     },
     "Tags": [
-      {
-        "type": null,
-        "name": "futuro semplice",
-        "Cards": []
-      },
       {
         "type": "learningTopic",
         "name": "future",
@@ -936,11 +911,6 @@
     },
     "Tags": [
       {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      },
-      {
         "type": "learningTopic",
         "name": "adjective",
         "Cards": []
@@ -1083,11 +1053,6 @@
       "Language": "it"
     },
     "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      },
       {
         "type": "difficulty",
         "name": "beginner",
@@ -1263,11 +1228,6 @@
       "Language": "it"
     },
     "Tags": [
-      {
-        "type": null,
-        "name": "presente",
-        "Cards": []
-      },
       {
         "type": "learningTopic",
         "name": "habit",

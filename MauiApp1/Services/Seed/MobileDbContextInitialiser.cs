@@ -67,13 +67,15 @@ namespace MauiApp1.Services.Seed
         {
             var json = await SeedHelper.LoadMauiAsset("backup_it-pt.json");
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-            var sentences = JsonSerializer.Deserialize<List<Domain.Card>>(json, options) ?? new();
+            var cards = JsonSerializer.Deserialize<List<Domain.Card>>(json, options) ?? new();
 
-            var grouped = sentences.GroupBy(card => card.NativeSentence.MeaningId);
+            var grouped = cards.GroupBy(card => card.NativeSentence.MeaningId);
+
+            await _context.Users.AddAsync(User.Default);
 
             foreach (var group in grouped)
             {
-                var meaning = new Meaning { Id = group.Key };
+                var meaning = new Meaning { Id = group.Key, DifficultyLevel = group.First().DifficultyLevel.ToString() };
 
                 // Sentences
                 foreach (var s in group)
@@ -100,7 +102,7 @@ namespace MauiApp1.Services.Seed
                     var tag = await _context.Tags.FindAsync(tagSeed.Name);
                     if (tag == null)
                     {
-                        tag = new Tag { Name = tagSeed.Name, Type = tagSeed.Type };
+                        tag = new Tag { Name = tagSeed.Name, Type = tagSeed.Type ?? "learningTopic" };
                         _context.Tags.Add(tag);
                     }
 

@@ -9,7 +9,7 @@
 @using MauiApp1.Services
 @attribute [StreamRendering(true)]
 
-@inject CardService Api
+@inject MemoryService Api
 
 <PageTitle>Frases Anki</PageTitle>
 
@@ -88,7 +88,7 @@ else if (currentCard != null)
             <p class="text-muted">Próxima frase em @countdown...</p>
         }
 
-        <button class="btn btn-secondary mt-2" @onclick="NextSentence">Próxima frase</button>
+        <button class="btn btn-secondary mt-2" @onclick="NextCard">Próxima frase</button>
 
         <div style="margin-top: 5vh">
             <DictCcSearch></DictCcSearch>
@@ -96,7 +96,14 @@ else if (currentCard != null)
         </div>
     </div>
 }
-
+else
+{
+    <div class="card p-4 mb-3 text-center" style="max-width: 600px;">
+        <h3>🎉 Sessão concluída!</h3>
+        <p>Você revisou todos os cards de hoje.</p>
+        <button class="btn btn-primary" @onclick="ReturnToReview">Retornar à tela de seleção</button>
+    </div>
+}
 @code {
     [Parameter] public ReviewSessionMode ReviewSessionMode { get; set; } = ReviewSessionMode.Regular;
     private ICollection<CardWithState> cards;
@@ -124,36 +131,43 @@ else if (currentCard != null)
             ReviewSessionMode = mode;
         }
 
-
+        totalExp = await Api.GetUserExpAsync();
         cards = await Api.GetCards(ReviewSessionMode);
 
         // Calculate counters
         newCount = cards.Count(c => c.State.Repetitions == 0);
         reviewCount = cards.Count(c => c.State.Repetitions > 0);
 
-        NextSentence();
+        NextCard();
     }
 
-    private void NextSentence()
+    private void NextCard()
     {
-        if (cards == null || !cards.Any()) return;
+        if (cards == null || !cards.Any())
+        {
+            currentCard = null; // nothing left → trigger completion screen
+            StateHasChanged();
+            return;
+        }
 
-        // Stop any running timer
+        // Stop timer
         countdownTimer?.Stop();
         countdown = 0;
 
-        // Pick a random card
+        // Pick random card
         var rnd = new Random();
         currentCard = cards.ElementAt(rnd.Next(cards.Count));
+
+        // Remove it from the pool once shown
+        cards.Remove(currentCard);
+
         userAnswer = string.Empty;
         validationMessage = null;
         isCorrect = false;
         answerTime = TimeSpan.Zero;
         expEarned = null;
 
-        // Record when this card is shown
         cardShownAt = DateTime.UtcNow;
-
         StateHasChanged();
     }
 
@@ -170,11 +184,7 @@ else if (currentCard != null)
         isCorrect = evaluation.Quality != AnswerQuality.Wrong;
         if (isCorrect)
         {
-            expEarned = ExpCalculator.CalculateEarnedExp(
-                currentCard.Card,
-                currentCard.State.Repetitions
-            );
-
+            expEarned = ExpCalculator.CalculateEarnedExp(currentCard.Card, currentCard.State.Repetitions);
             totalExp += expEarned.Value;
         }
         else
@@ -183,17 +193,14 @@ else if (currentCard != null)
         }
 
         Srs.Review(currentCard.State, (int)evaluation.Quality);
-
         validationMessage = BuildFeedbackMessage(evaluation);
 
-        // Save state
-        await Api.UpdateUserCardState(currentCard.State);
+        await Api.UpdateUserCardState(currentCard.State, expEarned ?? 0);
 
         // Update counters
         newCount = cards.Count(c => c.State.Repetitions == 0);
         reviewCount = cards.Count(c => c.State.Repetitions > 0);
 
-        // Start countdown for auto-advance
         StartCountdown(3);
     }
 
@@ -210,10 +217,20 @@ else if (currentCard != null)
             if (countdown <= 0)
             {
                 countdownTimer.Stop();
-                InvokeAsync(NextSentence);
+                InvokeAsync(NextCard);
             }
         };
         countdownTimer.Start();
+    }
+
+    private void RestartSession()
+    {
+        // reload everything fresh
+        Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
+    }
+    private void ReturnToReview()
+    {
+        Navigation.NavigateTo(Routes.SessionSelect);
     }
 
     private string BuildFeedbackMessage(AnswerEvaluation evaluation)

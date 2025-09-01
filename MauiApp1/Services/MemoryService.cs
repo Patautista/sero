@@ -9,7 +9,7 @@ using System.Net.Http.Json;
 
 namespace MauiApp1.Services;
 
-public class CardService(AnkiDbContext db, ISettingsService settingsService)
+public class MemoryService(AnkiDbContext db, ISettingsService settingsService)
 {
     public async Task<ICollection<CardWithState>> GetCards(ReviewSessionMode sessionMode, CancellationToken cancellationToken = default)
     {
@@ -28,7 +28,11 @@ public class CardService(AnkiDbContext db, ISettingsService settingsService)
             {
                 if (card.UserCardState == null)
                 {
-                    card.UserCardState = new Infrastructure.Data.Model.UserCardState();
+                    await db.UserCardStates.AddAsync(new Infrastructure.Data.Model.UserCardState()
+                    {
+                        CardId = card.Id,
+                        UserId = Infrastructure.Data.Model.User.Default.Id,
+                    });
                 }
             }
             await db.SaveChangesAsync();
@@ -43,18 +47,12 @@ public class CardService(AnkiDbContext db, ISettingsService settingsService)
         {
             Card = new Card
             {
-                DifficultyLevel = DifficultyLevelExtensions.FromString(
-                    x.Meaning.Tags.FirstOrDefault(x => x.Type == TagTypes.Difficulty).Name
-                ), 
+                DifficultyLevel = DifficultyLevelExtensions.FromString(x.Meaning.DifficultyLevel), 
                 NativeSentence = x.NativeSentence.ToDomain(),
                 Tags = x.Meaning.Tags.Select(t => t.ToDomain()).ToList(),
                 TargetSentence = x.TargetSentence.ToDomain(),
             },
-            State = x.UserCardState?.ToDomain() ?? new Infrastructure.Data.Model.UserCardState
-            {
-                CardId = x.UserCardState.Id,
-                Repetitions = 0
-            }.ToDomain()
+            State = x.UserCardState?.ToDomain()
         }).OrderBy(c => c.Card.NativeSentence.Text.Length).ToList();
 
         var userDifficulty = (await settingsService.LoadAsync())?.DifficultyLevel ?? DifficultyLevel.Advanced;
@@ -80,22 +78,42 @@ public class CardService(AnkiDbContext db, ISettingsService settingsService)
 
         return sessionCards.ToList();
     }
-    public async Task UpdateUserCardState(UserCardState userCardState,CancellationToken cancellationToken = default)
+    public async Task UpdateUserCardState(UserCardState userCardState, int earnedExp, CancellationToken cancellationToken = default)
     {
-        var oldState = await db.UserCardStates.FindAsync(userCardState.Id);
-
-        if (oldState == null)
+        try
         {
-            oldState = new Infrastructure.Data.Model.UserCardState();
+            var oldState = await db.UserCardStates.FindAsync(userCardState.Id);
+
+            var user = await db.Users.FindAsync(userCardState.UserId);
+            if (user != null) {
+                user.Exp += earnedExp;
+            }
+
+            if (oldState == null)
+            {
+                oldState = new Infrastructure.Data.Model.UserCardState() {
+                    CardId = userCardState.CardId,
+                    UserId = userCardState.UserId
+                };
+                db.Add(oldState);
+            }
+
+            oldState.Interval = userCardState.Interval;
+            oldState.NextReview = userCardState.NextReview;
+            oldState.LastReviewed = userCardState.LastReviewed;
+            oldState.EaseFactor = userCardState.EaseFactor;
+            oldState.Repetitions = userCardState.Repetitions;
+
+            await db.SaveChangesAsync();
         }
-
-        oldState.Interval = userCardState.Interval;
-        oldState.NextReview = userCardState.NextReview;
-        oldState.LastReviewed = userCardState.LastReviewed;
-        oldState.EaseFactor = userCardState.EaseFactor;
-        oldState.Repetitions = userCardState.Repetitions;
-
-        db.Update(oldState);
-        await db.SaveChangesAsync();
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+    public async Task<int> GetUserExpAsync()
+    {
+        var user = await db.Users.FindAsync(Infrastructure.Data.Model.User.Default.Id);
+        return user.Exp;
     }
 }
