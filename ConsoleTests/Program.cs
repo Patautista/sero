@@ -17,9 +17,7 @@ class Program
     static string GeminiFlash = "gemini-2.5-flash";
     static async Task Main()
     {
-        for (int i = 0; i < 4; i++) {
-            await RunAITagging("tatoeba-summarized.json");
-        }
+        Normalize();
     }
     static async Task NormalizeTatoeba()
     {
@@ -113,6 +111,22 @@ class Program
             .ToList();
 
         var json = JsonSerializer.Serialize(result, options: options);
+
+        File.WriteAllText($"C:\\\\Users\\\\caleb\\\\source\\\\repos\\\\AspireApp1\\\\ConsoleTests\\\\etl\\\\1 normalized\\\\tatoeba-summarized.json", json);
+    }
+    static void JoinTaggedBatches()
+    {
+        var batchPath = "C:\\Users\\caleb\\source\\repos\\AspireApp1\\ConsoleTests\\etl\\2 tagged";
+        var files = Directory
+                .EnumerateFiles(batchPath, $"{TaggingService.Prefix}*.json", SearchOption.TopDirectoryOnly).ToList();
+
+        var cards = new List<Card>();
+        foreach (var file in files) {
+            var batchResult = JsonSerializer.Deserialize<TaggingBatchResult>(File.ReadAllText(file));
+            cards.AddRange(batchResult.Cards);
+        }
+        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, WriteIndented = true };
+        var json = JsonSerializer.Serialize(cards, options: options);
 
         File.WriteAllText($"C:\\\\Users\\\\caleb\\\\source\\\\repos\\\\AspireApp1\\\\ConsoleTests\\\\etl\\\\1 normalized\\\\tatoeba-summarized.json", json);
     }

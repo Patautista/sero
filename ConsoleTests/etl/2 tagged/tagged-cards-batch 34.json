@@ -1,21 +1,53 @@
 {
-  "Schema": "",
+  "Schema": "anki-tagging-v1",
   "Status": "complete",
-  "FinishTime": "0001-01-01T00:00:00",
-  "DurationMs": 0,
+  "FinishTime": "2025-08-31T13:39:25.2075309Z",
+  "DurationMs": 1974251,
   "BatchSize": 30,
   "Cards": [
     {
       "NativeSentence": {
-        "MeaningId": 56,
+        "MeaningId": 4679,
         "Id": 0,
-        "Text": "Para onde voc\u00EA est\u00E1 indo?",
+        "Text": "Certo. O que eu posso fazer?",
         "Language": "pt"
       },
       "TargetSentence": {
-        "MeaningId": 56,
+        "MeaningId": 4679,
         "Id": 0,
-        "Text": "Dove vai?",
+        "Text": "Certamente. Che posso fare?",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "question",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "can",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4681,
+        "Id": 0,
+        "Text": "Todos sabem que n\u00E3o fui eu.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4681,
+        "Id": 0,
+        "Text": "Tutti sanno che non ero io.",
         "Language": "it"
       },
       "Tags": [
@@ -25,13 +57,18 @@
           "Cards": []
         },
         {
-          "type": "difficulty",
-          "name": "beginner",
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "negation",
           "Cards": []
         },
         {
           "type": "generalTopic",
-          "name": "language",
+          "name": "dailyLife",
           "Cards": []
         },
         {
@@ -41,177 +78,103 @@
         },
         {
           "type": "learningTopic",
-          "name": "present",
-          "Cards": []
-        },
-        {
-          "type": "learningTopic",
-          "name": "question",
-          "Cards": []
-        }
-      ],
-      "DifficultyLevel": 0
-    },
-    {
-      "NativeSentence": {
-        "MeaningId": 57,
-        "Id": 0,
-        "Text": "Onde voc\u00EA est\u00E1?",
-        "Language": "pt"
-      },
-      "TargetSentence": {
-        "MeaningId": 57,
-        "Id": 0,
-        "Text": "Dove sei?",
-        "Language": "it"
-      },
-      "Tags": [
-        {
-          "type": "difficulty",
-          "name": "beginner",
-          "Cards": []
-        },
-        {
-          "type": "generalTopic",
-          "name": "language",
-          "Cards": []
-        },
-        {
-          "type": "learningTopic",
-          "name": "present",
-          "Cards": []
-        },
-        {
-          "type": "learningTopic",
-          "name": "question",
-          "Cards": []
-        }
-      ],
-      "DifficultyLevel": 0
-    },
-    {
-      "NativeSentence": {
-        "MeaningId": 58,
-        "Id": 0,
-        "Text": "Eu sei de tudo.",
-        "Language": "pt"
-      },
-      "TargetSentence": {
-        "MeaningId": 58,
-        "Id": 0,
-        "Text": "So tutto.",
-        "Language": "it"
-      },
-      "Tags": [
-        {
-          "type": "difficulty",
-          "name": "beginner",
-          "Cards": []
-        },
-        {
-          "type": "learningTopic",
           "name": "fact",
           "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4682,
+        "Id": 0,
+        "Text": "Eu penso que voc\u00EAs s\u00E3o ciumentas.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4682,
+        "Id": 0,
+        "Text": "Penso che voi siate gelose.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
         },
         {
           "type": "learningTopic",
-          "name": "present",
-          "Cards": []
-        }
-      ],
-      "DifficultyLevel": 0
-    },
-    {
-      "NativeSentence": {
-        "MeaningId": 59,
-        "Id": 0,
-        "Text": "De nada.",
-        "Language": "pt"
-      },
-      "TargetSentence": {
-        "MeaningId": 59,
-        "Id": 0,
-        "Text": "Di nulla.",
-        "Language": "it"
-      },
-      "Tags": [
-        {
-          "type": "difficulty",
-          "name": "beginner",
-          "Cards": []
-        },
-        {
-          "type": "generalTopic",
-          "name": "language",
-          "Cards": []
-        },
-        {
-          "type": "generalTopic",
-          "name": "travel",
-          "Cards": []
-        }
-      ],
-      "DifficultyLevel": 0
-    },
-    {
-      "NativeSentence": {
-        "MeaningId": 60,
-        "Id": 0,
-        "Text": "Eu come\u00E7o.",
-        "Language": "pt"
-      },
-      "TargetSentence": {
-        "MeaningId": 60,
-        "Id": 0,
-        "Text": "Comincio.",
-        "Language": "it"
-      },
-      "Tags": [
-        {
-          "type": "difficulty",
-          "name": "beginner",
-          "Cards": []
-        },
-        {
-          "type": "generalTopic",
-          "name": "language",
+          "name": "second person singular subject",
           "Cards": []
         },
         {
           "type": "learningTopic",
           "name": "present",
           "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
         }
       ],
-      "DifficultyLevel": 0
+      "DifficultyLevel": 1
     },
     {
       "NativeSentence": {
-        "MeaningId": 61,
+        "MeaningId": 4683,
         "Id": 0,
-        "Text": "Ele n\u00E3o fuma.",
+        "Text": "Eu penso que voc\u00EAs s\u00E3o ciumentos.",
         "Language": "pt"
       },
       "TargetSentence": {
-        "MeaningId": 61,
+        "MeaningId": 4683,
         "Id": 0,
-        "Text": "Non fuma.",
+        "Text": "Penso che voi siate gelosi.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4684,
+        "Id": 0,
+        "Text": "N\u00E3o mande aquela carta.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4684,
+        "Id": 0,
+        "Text": "Non spedire quella lettera.",
         "Language": "it"
       },
       "Tags": [
         {
           "type": null,
-          "name": "presente",
+          "name": "imperativo presente",
           "Cards": []
         },
         {
           "type": "learningTopic",
-          "name": "habit",
-          "Cards": []
-        },
-        {
-          "type": "generalTopic",
-          "name": "health",
+          "name": "possessive pronoun/qualifier",
           "Cards": []
         },
         {
@@ -221,81 +184,39 @@
         },
         {
           "type": "learningTopic",
-          "name": "present",
+          "name": "imperative",
           "Cards": []
         }
       ],
-      "DifficultyLevel": 0
+      "DifficultyLevel": 1
     },
     {
       "NativeSentence": {
-        "MeaningId": 62,
+        "MeaningId": 4685,
         "Id": 0,
-        "Text": "Eu gosto dele.",
+        "Text": "Eu o conheci recentemente.",
         "Language": "pt"
       },
       "TargetSentence": {
-        "MeaningId": 62,
+        "MeaningId": 4685,
         "Id": 0,
-        "Text": "Mi piace.",
+        "Text": "L\u0027ho conosciuto di recente.",
         "Language": "it"
       },
       "Tags": [
         {
           "type": null,
-          "name": "presente",
+          "name": "passato prossimo",
           "Cards": []
         },
         {
           "type": "learningTopic",
-          "name": "emotion",
-          "Cards": []
-        },
-        {
-          "type": "generalTopic",
-          "name": "feelings",
-          "Cards": []
-        },
-        {
-          "type": "generalTopic",
-          "name": "language",
-          "Cards": []
-        },
-        {
-          "type": "generalTopic",
-          "name": "like",
+          "name": "first person singular subject",
           "Cards": []
         },
         {
           "type": "learningTopic",
-          "name": "present",
-          "Cards": []
-        }
-      ],
-      "DifficultyLevel": 0
-    },
-    {
-      "NativeSentence": {
-        "MeaningId": 63,
-        "Id": 0,
-        "Text": "Ele atirou em mim.",
-        "Language": "pt"
-      },
-      "TargetSentence": {
-        "MeaningId": 63,
-        "Id": 0,
-        "Text": "Mi spar\u00F2.",
-        "Language": "it"
-      },
-      "Tags": [
-        {
-          "type": null,
-          "name": "passato remoto",
-          "Cards": []
-        },
-        {
-          "type": "learningTopic",
-          "name": "fact",
+          "name": "frequency adverb",
           "Cards": []
         },
         {
@@ -304,51 +225,19 @@
           "Cards": []
         }
       ],
-      "DifficultyLevel": 0
+      "DifficultyLevel": 1
     },
     {
       "NativeSentence": {
-        "MeaningId": 64,
+        "MeaningId": 4686,
         "Id": 0,
-        "Text": "Odeio Tom.",
+        "Text": "Os elfos s\u00E3os muito maus.",
         "Language": "pt"
       },
       "TargetSentence": {
-        "MeaningId": 64,
+        "MeaningId": 4686,
         "Id": 0,
-        "Text": "Odio Tom.",
-        "Language": "it"
-      },
-      "Tags": [
-        {
-          "type": "learningTopic",
-          "name": "emotion",
-          "Cards": []
-        },
-        {
-          "type": "generalTopic",
-          "name": "feelings",
-          "Cards": []
-        },
-        {
-          "type": "learningTopic",
-          "name": "present",
-          "Cards": []
-        }
-      ],
-      "DifficultyLevel": 0
-    },
-    {
-      "NativeSentence": {
-        "MeaningId": 65,
-        "Id": 0,
-        "Text": "Tenho calor.",
-        "Language": "pt"
-      },
-      "TargetSentence": {
-        "MeaningId": 65,
-        "Id": 0,
-        "Text": "Ho caldo.",
+        "Text": "Gli elfi sono molto miseri.",
         "Language": "it"
       },
       "Tags": [
@@ -358,118 +247,98 @@
           "Cards": []
         },
         {
-          "type": "difficulty",
-          "name": "beginner",
-          "Cards": []
-        },
-        {
           "type": "learningTopic",
-          "name": "fact",
-          "Cards": []
-        },
-        {
-          "type": "generalTopic",
-          "name": "feelings",
-          "Cards": []
-        },
-        {
-          "type": "generalTopic",
-          "name": "language",
+          "name": "possessive pronoun/qualifier",
           "Cards": []
         },
         {
           "type": "learningTopic",
           "name": "present",
           "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
         }
       ],
-      "DifficultyLevel": 0
+      "DifficultyLevel": 1
     },
     {
       "NativeSentence": {
-        "MeaningId": 66,
+        "MeaningId": 4687,
         "Id": 0,
-        "Text": "Sou Tom.",
+        "Text": "Tem algum hospital aqui perto?",
         "Language": "pt"
       },
       "TargetSentence": {
-        "MeaningId": 66,
+        "MeaningId": 4687,
         "Id": 0,
-        "Text": "Sono Tom.",
+        "Text": "C\u0027\u00E8 un ospedale qua vicino?",
         "Language": "it"
       },
       "Tags": [
         {
-          "type": null,
-          "name": "male name",
-          "Cards": []
-        },
-        {
-          "type": null,
-          "name": "presente",
-          "Cards": []
-        },
-        {
-          "type": "difficulty",
-          "name": "beginner",
+          "type": "learningTopic",
+          "name": "have/possess",
           "Cards": []
         },
         {
           "type": "learningTopic",
-          "name": "fact",
+          "name": "negation",
           "Cards": []
         },
-        {
-          "type": "generalTopic",
-          "name": "language",
-          "Cards": []
-        },
-        {
-          "type": "learningTopic",
-          "name": "present",
-          "Cards": []
-        }
-      ],
-      "DifficultyLevel": 0
-    },
-    {
-      "NativeSentence": {
-        "MeaningId": 68,
-        "Id": 0,
-        "Text": "E ent\u00E3o?",
-        "Language": "pt"
-      },
-      "TargetSentence": {
-        "MeaningId": 68,
-        "Id": 0,
-        "Text": "E allora?",
-        "Language": "it"
-      },
-      "Tags": [
         {
           "type": "learningTopic",
           "name": "question",
           "Cards": []
-        },
-        {
-          "type": "generalTopic",
-          "name": "time",
-          "Cards": []
         }
       ],
-      "DifficultyLevel": 0
+      "DifficultyLevel": 1
     },
     {
       "NativeSentence": {
-        "MeaningId": 69,
+        "MeaningId": 4688,
         "Id": 0,
-        "Text": "Ele mora aqui?",
+        "Text": "Voc\u00EAs ficaram em casa sozinhas?",
         "Language": "pt"
       },
       "TargetSentence": {
-        "MeaningId": 69,
+        "MeaningId": 4688,
         "Id": 0,
-        "Text": "Vive qui?",
+        "Text": "Siete state a casa da sole?",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "generalTopic",
+          "name": "home",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "dailyLife",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4689,
+        "Id": 0,
+        "Text": "Voc\u00EAs ficaram em casa sozinhos?",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4689,
+        "Id": 0,
+        "Text": "Siete stati a casa da soli?",
         "Language": "it"
       },
       "Tags": [
@@ -480,6 +349,122 @@
         },
         {
           "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "past",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4691,
+        "Id": 0,
+        "Text": "A pata do cachorro \u00E9 grande.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4691,
+        "Id": 0,
+        "Text": "La zampa del cane \u00E8 grande.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "possessive pronoun/qualifier",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4692,
+        "Id": 0,
+        "Text": "As crian\u00E7as gostam de iogurte.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4692,
+        "Id": 0,
+        "Text": "Ai bambini piace lo yogurt.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": null,
+          "name": "food",
+          "Cards": []
+        },
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "like",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4694,
+        "Id": 0,
+        "Text": "Tom est\u00E1 pronto para fazer isso, certo?",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4694,
+        "Id": 0,
+        "Text": "Tom \u00E8 pronto a farlo, vero?",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": null,
+          "name": "male name",
+          "Cards": []
+        },
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        },
+        {
+          "type": null,
+          "name": "infinito presente",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "want",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
           "name": "present",
           "Cards": []
         },
@@ -487,195 +472,101 @@
           "type": "learningTopic",
           "name": "question",
           "Cards": []
-        }
-      ],
-      "DifficultyLevel": 0
-    },
-    {
-      "NativeSentence": {
-        "MeaningId": 70,
-        "Id": 0,
-        "Text": "\u00C9 melhor.",
-        "Language": "pt"
-      },
-      "TargetSentence": {
-        "MeaningId": 70,
-        "Id": 0,
-        "Text": "\u00C8 meglio.",
-        "Language": "it"
-      },
-      "Tags": [
+        },
         {
           "type": "learningTopic",
           "name": "adjective",
           "Cards": []
-        },
-        {
-          "type": "difficulty",
-          "name": "beginner",
-          "Cards": []
-        },
-        {
-          "type": "learningTopic",
-          "name": "fact",
-          "Cards": []
-        },
-        {
-          "type": "generalTopic",
-          "name": "language",
-          "Cards": []
-        },
-        {
-          "type": "generalTopic",
-          "name": "like",
-          "Cards": []
-        },
-        {
-          "type": "learningTopic",
-          "name": "present",
-          "Cards": []
         }
       ],
-      "DifficultyLevel": 0
+      "DifficultyLevel": 1
     },
     {
       "NativeSentence": {
-        "MeaningId": 71,
+        "MeaningId": 4695,
         "Id": 0,
-        "Text": "\u00C9 t\u00EDpico.",
+        "Text": "Eu consertei um rel\u00F3gio.",
         "Language": "pt"
       },
       "TargetSentence": {
-        "MeaningId": 71,
+        "MeaningId": 4695,
         "Id": 0,
-        "Text": "\u00C8 tipico.",
+        "Text": "Io ho riparato un orologio.",
         "Language": "it"
       },
       "Tags": [
         {
-          "type": null,
-          "name": "presente",
+          "type": "learningTopic",
+          "name": "numbers",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "past",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4696,
+        "Id": 0,
+        "Text": "Voc\u00EAs s\u00E3o al\u00E9rgicas ao trabalho?",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4696,
+        "Id": 0,
+        "Text": "Siete allergiche al lavoro?",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "question",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "work",
           "Cards": []
         },
         {
           "type": "learningTopic",
           "name": "adjective",
           "Cards": []
-        },
-        {
-          "type": "difficulty",
-          "name": "beginner",
-          "Cards": []
-        },
-        {
-          "type": "generalTopic",
-          "name": "culture",
-          "Cards": []
-        },
-        {
-          "type": "learningTopic",
-          "name": "fact",
-          "Cards": []
-        },
-        {
-          "type": "learningTopic",
-          "name": "habit",
-          "Cards": []
-        },
-        {
-          "type": "learningTopic",
-          "name": "present",
-          "Cards": []
         }
       ],
-      "DifficultyLevel": 0
+      "DifficultyLevel": 1
     },
     {
       "NativeSentence": {
-        "MeaningId": 73,
+        "MeaningId": 4698,
         "Id": 0,
-        "Text": "\u00C9 s\u00E1bado.",
+        "Text": "Por que ela estava chorando?",
         "Language": "pt"
       },
       "TargetSentence": {
-        "MeaningId": 73,
+        "MeaningId": 4698,
         "Id": 0,
-        "Text": "\u00C8 sabato.",
-        "Language": "it"
-      },
-      "Tags": [
-        {
-          "type": null,
-          "name": "presente",
-          "Cards": []
-        },
-        {
-          "type": "difficulty",
-          "name": "beginner",
-          "Cards": []
-        },
-        {
-          "type": "learningTopic",
-          "name": "present",
-          "Cards": []
-        },
-        {
-          "type": "generalTopic",
-          "name": "time",
-          "Cards": []
-        }
-      ],
-      "DifficultyLevel": 0
-    },
-    {
-      "NativeSentence": {
-        "MeaningId": 74,
-        "Id": 0,
-        "Text": "\u00C9 celibat\u00E1rio.",
-        "Language": "pt"
-      },
-      "TargetSentence": {
-        "MeaningId": 74,
-        "Id": 0,
-        "Text": "\u00C8 celibe.",
+        "Text": "Perch\u00E9 lei stava piangendo?",
         "Language": "it"
       },
       "Tags": [
         {
           "type": "learningTopic",
-          "name": "adjective",
+          "name": "third person singular subject",
           "Cards": []
         },
         {
           "type": "learningTopic",
-          "name": "fact",
-          "Cards": []
-        },
-        {
-          "type": "learningTopic",
-          "name": "present",
-          "Cards": []
-        }
-      ],
-      "DifficultyLevel": 0
-    },
-    {
-      "NativeSentence": {
-        "MeaningId": 75,
-        "Id": 0,
-        "Text": "Ela gosta.",
-        "Language": "pt"
-      },
-      "TargetSentence": {
-        "MeaningId": 75,
-        "Id": 0,
-        "Text": "Le piace.",
-        "Language": "it"
-      },
-      "Tags": [
-        {
-          "type": "difficulty",
-          "name": "beginner",
+          "name": "question",
           "Cards": []
         },
         {
@@ -684,45 +575,67 @@
           "Cards": []
         },
         {
-          "type": "generalTopic",
-          "name": "like",
-          "Cards": []
-        },
-        {
           "type": "learningTopic",
-          "name": "present",
+          "name": "past",
           "Cards": []
         }
       ],
-      "DifficultyLevel": 0
+      "DifficultyLevel": 1
     },
     {
       "NativeSentence": {
-        "MeaningId": 77,
+        "MeaningId": 4699,
         "Id": 0,
-        "Text": "O Tom terminou.",
+        "Text": "Eu n\u00E3o quero falar com ela.",
         "Language": "pt"
       },
       "TargetSentence": {
-        "MeaningId": 77,
+        "MeaningId": 4699,
         "Id": 0,
-        "Text": "Tom fin\u00EC.",
+        "Text": "Non voglio parlare con lei.",
         "Language": "it"
       },
       "Tags": [
         {
-          "type": null,
-          "name": "passato remoto",
-          "Cards": []
-        },
-        {
-          "type": null,
-          "name": "male name",
+          "type": "learningTopic",
+          "name": "possessive pronoun/qualifier",
           "Cards": []
         },
         {
           "type": "learningTopic",
-          "name": "fact",
+          "name": "first person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "negation",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4700,
+        "Id": 0,
+        "Text": "N\u00E3o entramos no trem.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4700,
+        "Id": 0,
+        "Text": "Non siamo salite sul treno.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "negation",
           "Cards": []
         },
         {
@@ -732,139 +645,97 @@
         },
         {
           "type": "generalTopic",
-          "name": "time",
+          "name": "transport",
           "Cards": []
         }
       ],
-      "DifficultyLevel": 0
+      "DifficultyLevel": 1
     },
     {
       "NativeSentence": {
-        "MeaningId": 78,
+        "MeaningId": 4701,
         "Id": 0,
-        "Text": "Eu vejo o Tom.",
+        "Text": "Eu n\u00E3o vou assistir mais a CNN.",
         "Language": "pt"
       },
       "TargetSentence": {
-        "MeaningId": 78,
+        "MeaningId": 4701,
         "Id": 0,
-        "Text": "Vedo Tom.",
+        "Text": "Io non guarder\u00F2 pi\u00F9 la CNN.",
         "Language": "it"
       },
       "Tags": [
         {
-          "type": "difficulty",
-          "name": "beginner",
-          "Cards": []
-        },
-        {
-          "type": "generalTopic",
-          "name": "language",
+          "type": "learningTopic",
+          "name": "first person singular subject",
           "Cards": []
         },
         {
           "type": "learningTopic",
-          "name": "present",
-          "Cards": []
-        }
-      ],
-      "DifficultyLevel": 0
-    },
-    {
-      "NativeSentence": {
-        "MeaningId": 80,
-        "Id": 0,
-        "Text": "Eu vou bem.",
-        "Language": "pt"
-      },
-      "TargetSentence": {
-        "MeaningId": 80,
-        "Id": 0,
-        "Text": "Sto bene.",
-        "Language": "it"
-      },
-      "Tags": [
-        {
-          "type": null,
-          "name": "presente",
-          "Cards": []
-        },
-        {
-          "type": "difficulty",
-          "name": "beginner",
-          "Cards": []
-        },
-        {
-          "type": "generalTopic",
-          "name": "feelings",
+          "name": "negation",
           "Cards": []
         },
         {
           "type": "learningTopic",
-          "name": "present",
-          "Cards": []
-        }
-      ],
-      "DifficultyLevel": 0
-    },
-    {
-      "NativeSentence": {
-        "MeaningId": 81,
-        "Id": 0,
-        "Text": "Assim seja!",
-        "Language": "pt"
-      },
-      "TargetSentence": {
-        "MeaningId": 81,
-        "Id": 0,
-        "Text": "Cos\u00EC sia!",
-        "Language": "it"
-      },
-      "Tags": [
-        {
-          "type": "generalTopic",
-          "name": "culture",
-          "Cards": []
-        },
-        {
-          "type": "learningTopic",
-          "name": "fact",
+          "name": "frequency adverb",
           "Cards": []
         },
         {
           "type": "learningTopic",
           "name": "future",
           "Cards": []
-        },
-        {
-          "type": "generalTopic",
-          "name": "language",
-          "Cards": []
-        },
-        {
-          "type": "generalTopic",
-          "name": "philosophy",
-          "Cards": []
-        },
-        {
-          "type": "mood",
-          "name": "poetic",
-          "Cards": []
         }
       ],
-      "DifficultyLevel": 0
+      "DifficultyLevel": 1
     },
     {
       "NativeSentence": {
-        "MeaningId": 83,
+        "MeaningId": 4702,
         "Id": 0,
-        "Text": "Amemos uns aos outros.",
+        "Text": "A que horas chega o \u00F4nibus?",
         "Language": "pt"
       },
       "TargetSentence": {
-        "MeaningId": 83,
+        "MeaningId": 4702,
         "Id": 0,
-        "Text": "Amiamoci.",
+        "Text": "A che ora arriva l\u0027autobus?",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "question",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "time",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "directions/where",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "transport",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4703,
+        "Id": 0,
+        "Text": "\u0022Obrigado!\u0022 \u0022N\u00E3o h\u00E1 de qu\u00EA!\u0022",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4703,
+        "Id": 0,
+        "Text": "\u0022Grazie!\u0022 \u0022Non c\u2019\u00E8 di che!\u0022",
         "Language": "it"
       },
       "Tags": [
@@ -872,79 +743,69 @@
           "type": "learningTopic",
           "name": "emotion",
           "Cards": []
-        },
-        {
-          "type": "generalTopic",
-          "name": "feelings",
-          "Cards": []
-        },
-        {
-          "type": "generalTopic",
-          "name": "philosophy",
-          "Cards": []
-        },
-        {
-          "type": "learningTopic",
-          "name": "present",
-          "Cards": []
         }
       ],
-      "DifficultyLevel": 0
+      "DifficultyLevel": 1
     },
     {
       "NativeSentence": {
-        "MeaningId": 84,
+        "MeaningId": 4705,
         "Id": 0,
-        "Text": "Eles sabem?",
+        "Text": "Tom saiu sem chap\u00E9u.",
         "Language": "pt"
       },
       "TargetSentence": {
-        "MeaningId": 84,
+        "MeaningId": 4705,
         "Id": 0,
-        "Text": "Lo sanno?",
+        "Text": "Tom usc\u00EC senza un cappello.",
         "Language": "it"
       },
       "Tags": [
         {
-          "type": "difficulty",
-          "name": "beginner",
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "negation",
           "Cards": []
         },
         {
           "type": "generalTopic",
-          "name": "language",
+          "name": "family",
           "Cards": []
         },
         {
           "type": "learningTopic",
-          "name": "present",
-          "Cards": []
-        },
-        {
-          "type": "learningTopic",
-          "name": "question",
+          "name": "past",
           "Cards": []
         }
       ],
-      "DifficultyLevel": 0
+      "DifficultyLevel": 1
     },
     {
       "NativeSentence": {
-        "MeaningId": 85,
+        "MeaningId": 4706,
         "Id": 0,
-        "Text": "Que ideia!",
+        "Text": "Gosto muito de gatos.",
         "Language": "pt"
       },
       "TargetSentence": {
-        "MeaningId": 85,
+        "MeaningId": 4706,
         "Id": 0,
-        "Text": "Che idea!",
+        "Text": "Mi piacciono molto i gatti.",
         "Language": "it"
       },
       "Tags": [
         {
-          "type": "difficulty",
-          "name": "beginner",
+          "type": "generalTopic",
+          "name": "animals",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "manner adverb",
           "Cards": []
         },
         {
@@ -953,59 +814,27 @@
           "Cards": []
         }
       ],
-      "DifficultyLevel": 0
+      "DifficultyLevel": 1
     },
     {
       "NativeSentence": {
-        "MeaningId": 86,
+        "MeaningId": 4707,
         "Id": 0,
-        "Text": "Voc\u00EA \u00E9 maduro.",
+        "Text": "Voc\u00EA \u00E9 muito importante para n\u00F3s.",
         "Language": "pt"
       },
       "TargetSentence": {
-        "MeaningId": 86,
+        "MeaningId": 4707,
         "Id": 0,
-        "Text": "\u00C8 maturo.",
+        "Text": "\u00C8 molto importante per noi.",
         "Language": "it"
       },
       "Tags": [
         {
           "type": "learningTopic",
-          "name": "adjective",
+          "name": "second person singular subject",
           "Cards": []
         },
-        {
-          "type": "difficulty",
-          "name": "beginner",
-          "Cards": []
-        },
-        {
-          "type": "learningTopic",
-          "name": "fact",
-          "Cards": []
-        },
-        {
-          "type": "learningTopic",
-          "name": "present",
-          "Cards": []
-        }
-      ],
-      "DifficultyLevel": 0
-    },
-    {
-      "NativeSentence": {
-        "MeaningId": 87,
-        "Id": 0,
-        "Text": "Voc\u00EA \u00E9 madura.",
-        "Language": "pt"
-      },
-      "TargetSentence": {
-        "MeaningId": 87,
-        "Id": 0,
-        "Text": "\u00C8 matura.",
-        "Language": "it"
-      },
-      "Tags": [
         {
           "type": "learningTopic",
           "name": "adjective",
@@ -1013,76 +842,29 @@
         },
         {
           "type": "learningTopic",
-          "name": "present",
-          "Cards": []
-        }
-      ],
-      "DifficultyLevel": 0
-    },
-    {
-      "NativeSentence": {
-        "MeaningId": 88,
-        "Id": 0,
-        "Text": "Tenho tudo.",
-        "Language": "pt"
-      },
-      "TargetSentence": {
-        "MeaningId": 88,
-        "Id": 0,
-        "Text": "Ho tutto.",
-        "Language": "it"
-      },
-      "Tags": [
-        {
-          "type": "difficulty",
-          "name": "beginner",
-          "Cards": []
-        },
-        {
-          "type": "learningTopic",
           "name": "fact",
           "Cards": []
-        },
-        {
-          "type": "generalTopic",
-          "name": "feelings",
-          "Cards": []
-        },
-        {
-          "type": "learningTopic",
-          "name": "present",
-          "Cards": []
         }
       ],
-      "DifficultyLevel": 0
+      "DifficultyLevel": 1
     },
     {
       "NativeSentence": {
-        "MeaningId": 91,
+        "MeaningId": 4708,
         "Id": 0,
-        "Text": "O que \u00E9 isto?",
+        "Text": "Eles respeitam a autoridade.",
         "Language": "pt"
       },
       "TargetSentence": {
-        "MeaningId": 91,
+        "MeaningId": 4708,
         "Id": 0,
-        "Text": "Che cos\u0027\u00E8?",
+        "Text": "Loro rispettano l\u0027autorit\u00E0.",
         "Language": "it"
       },
       "Tags": [
         {
-          "type": null,
-          "name": "presente",
-          "Cards": []
-        },
-        {
-          "type": "difficulty",
-          "name": "beginner",
-          "Cards": []
-        },
-        {
-          "type": "generalTopic",
-          "name": "language",
+          "type": "learningTopic",
+          "name": "third person singular subject",
           "Cards": []
         },
         {
@@ -1090,35 +872,183 @@
           "name": "present",
           "Cards": []
         },
+        {
+          "type": "generalTopic",
+          "name": "dailyLife",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4709,
+        "Id": 0,
+        "Text": "Voc\u00EA pode tocar um instrumento.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4709,
+        "Id": 0,
+        "Text": "Puoi suonare uno strumento.",
+        "Language": "it"
+      },
+      "Tags": [
         {
           "type": "learningTopic",
           "name": "question",
           "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "may",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "can",
+          "Cards": []
         }
       ],
-      "DifficultyLevel": 0
+      "DifficultyLevel": 1
     },
     {
       "NativeSentence": {
-        "MeaningId": 92,
+        "MeaningId": 4710,
         "Id": 0,
-        "Text": "Sinto sua falta.",
+        "Text": "Tom n\u00E3o parecia otimista.",
         "Language": "pt"
       },
       "TargetSentence": {
-        "MeaningId": 92,
+        "MeaningId": 4710,
         "Id": 0,
-        "Text": "Mi manchi.",
+        "Text": "Tom non sembrava ottimista.",
         "Language": "it"
       },
       "Tags": [
         {
-          "type": null,
-          "name": "presente",
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "negation",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "past",
           "Cards": []
         }
       ],
-      "DifficultyLevel": 0
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4711,
+        "Id": 0,
+        "Text": "Voc\u00EA quer ser a minha namorada?",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4711,
+        "Id": 0,
+        "Text": "Vuoi essere la mia ragazza?",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "possessive pronoun/qualifier",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "want",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4712,
+        "Id": 0,
+        "Text": "O Tom \u00E9 s\u00F3 um iniciante.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4712,
+        "Id": 0,
+        "Text": "Tom \u00E8 solo un principiante.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4713,
+        "Id": 0,
+        "Text": "Voc\u00EA deve criar coragem.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4713,
+        "Id": 0,
+        "Text": "Tu devi acquisire coraggio.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "must",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
     }
   ]
 }

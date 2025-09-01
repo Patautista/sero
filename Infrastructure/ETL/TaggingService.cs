@@ -15,7 +15,7 @@ namespace Infrastructure.ETL
     {
         private readonly IPromptClient _api;
         private readonly string _defaultModel;
-        private const string Prefix = "tagged-cards-batch";
+        public static string Prefix = "tagged-cards-batch";
 
         public TaggingService(string defaultModel, IPromptClient api)
         {
