@@ -10,5 +10,6 @@ namespace Infrastructure.Data.Model
     {
         public int Id { get; set; }
         public int Exp { get; set; }
+        public static User Default { get; set; } = new User { Exp = 0 , Id = 1};
     }
 }
