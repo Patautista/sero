@@ -17,7 +17,7 @@ class Program
     static string GeminiFlash = "gemini-2.5-flash";
     static async Task Main()
     {
-        Normalize();
+        JoinTaggedBatches();
     }
     static async Task NormalizeTatoeba()
     {
@@ -128,6 +128,6 @@ class Program
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, WriteIndented = true };
         var json = JsonSerializer.Serialize(cards, options: options);
 
-        File.WriteAllText($"C:\\\\Users\\\\caleb\\\\source\\\\repos\\\\AspireApp1\\\\ConsoleTests\\\\etl\\\\1 normalized\\\\tatoeba-summarized.json", json);
+        File.WriteAllText($"C:\\\\Users\\\\caleb\\\\source\\\\repos\\\\AspireApp1\\\\ConsoleTests\\\\etl\\\\3 joined\\\\tatoeba-tagged-joined.json", json);
     }
 }

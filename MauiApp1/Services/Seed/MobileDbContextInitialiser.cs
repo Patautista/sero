@@ -65,11 +65,11 @@ namespace MauiApp1.Services.Seed
 
         public async Task TrySeedAsync()
         {
-            var json = await SeedHelper.LoadMauiAsset("sentences_it-pt.json");
+            var json = await SeedHelper.LoadMauiAsset("backup_it-pt.json");
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-            var sentences = JsonSerializer.Deserialize<List<SentenceSeed>>(json, options) ?? new();
+            var sentences = JsonSerializer.Deserialize<List<Domain.Card>>(json, options) ?? new();
 
-            var grouped = sentences.GroupBy(s => s.MeaningId);
+            var grouped = sentences.GroupBy(card => card.NativeSentence.MeaningId);
 
             foreach (var group in grouped)
             {
@@ -80,10 +80,15 @@ namespace MauiApp1.Services.Seed
                 {
                     meaning.Sentences.Add(new Sentence
                     {
-                        Id = s.Id,
                         Meaning = meaning,
-                        Text = s.Text,
-                        Language = s.Language
+                        Text = s.NativeSentence.Text,
+                        Language = s.NativeSentence.Language,
+                    });
+                    meaning.Sentences.Add(new Sentence
+                    {
+                        Meaning = meaning,
+                        Text = s.TargetSentence.Text,
+                        Language = s.TargetSentence.Language,
                     });
                 }
 
@@ -104,7 +109,6 @@ namespace MauiApp1.Services.Seed
 
                 _context.Meanings.Add(meaning);
 
-                // Optional: build PT->IT card
                 var pt = meaning.Sentences.FirstOrDefault(s => s.Language == "pt");
                 var it = meaning.Sentences.FirstOrDefault(s => s.Language == "it");
 
