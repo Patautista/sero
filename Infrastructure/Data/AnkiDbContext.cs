@@ -14,6 +14,8 @@ namespace Infrastructure.Data
     {
         public AnkiDbContext(DbContextOptions<AnkiDbContext> options) : base(options) { }
         public DbSet<CardTable> Cards { get; set; }
+        public DbSet<CurriculumTable> Curricula { get; set; }
+        public DbSet<CurriculumSectionTable> CurriculumSections { get; set; }
         public DbSet<UserTable> Users { get; set; }
         public DbSet<UserCardStateTable> UserCardStates { get; set; }
         public DbSet<SentenceTable> Sentences { get; set; }

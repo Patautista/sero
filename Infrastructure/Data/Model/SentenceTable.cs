@@ -13,7 +13,7 @@ namespace Infrastructure.Data.Model
     public record SentenceTable
     {
         public int Id { get; set; }
-        [ForeignKey($"{nameof(Meaning)}s")]
+        [ForeignKey(nameof(AnkiDbContext.Meanings))]
         public MeaningTable? Meaning { get; set; }
         public int MeaningId { get; set; }
         public string Text { get; set; }

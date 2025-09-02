@@ -18,7 +18,7 @@ class Program
     static string GeminiFlash = "gemini-2.5-flash";
     static async Task Main()
     {
-        var spec = new PropertySpecificationDto("Id", Operator.Equals, 1);
+        var spec = new PropertySpecificationDto(nameof(User.Id), Operator.Equals, 1);
         var json = JsonSerializer.Serialize(spec);
         Console.WriteLine(json);
 
