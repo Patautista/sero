@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Data.Model
 {
-    public class UserCardState
+    public class UserCardStateTable
     {
         public int Id { get; set;  }
-        [ForeignKey($"{nameof(User)}s")]
+        [ForeignKey($"{nameof(UserTable)}s")]
         public int UserId { get; set; }          // link to the user
-        [ForeignKey($"{nameof(Card)}s")]
+        [ForeignKey($"{nameof(CardTable)}s")]
         public int CardId { get; set; }          // link to the card
         public int Repetitions { get; set; } = 0;
         public double EaseFactor { get; set; } = 2.5;

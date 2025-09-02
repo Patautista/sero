@@ -8,19 +8,19 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Data.Model
 {
-    public class Card
+    public class CardTable
     {
         public int Id { get; set; }
         [ForeignKey($"{nameof(Meaning)}s")]
         public int MeaningId { get; set; }
-        public Meaning Meaning { get; set; }
+        public MeaningTable Meaning { get; set; }
         // Native sentence (e.g. Portuguese)
         public int NativeSentenceId { get; set; }
-        public Sentence NativeSentence { get; set; } = null!;
+        public SentenceTable NativeSentence { get; set; } = null!;
 
         // Target sentence (e.g. English)
         public int TargetSentenceId { get; set; }
-        public Sentence TargetSentence { get; set; } = null!;
-        public UserCardState? UserCardState { get; set; }
+        public SentenceTable TargetSentence { get; set; } = null!;
+        public UserCardStateTable? UserCardState { get; set; }
     }
 }

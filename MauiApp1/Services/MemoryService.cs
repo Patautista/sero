@@ -2,7 +2,7 @@ using AppLogic.Web;
 using Business;
 using Business.Model;
 using Business.ViewModel;
-using Domain;
+using Domain.Entity;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Net.Http.Json;
@@ -13,7 +13,7 @@ public class MemoryService(AnkiDbContext db, ISettingsService settingsService)
 {
     public async Task<ICollection<CardWithState>> GetCards(ReviewSessionMode sessionMode, CancellationToken cancellationToken = default)
     {
-        var cards = new List<Infrastructure.Data.Model.Card>();
+        var cards = new List<Infrastructure.Data.Model.CardTable>();
 
         try
         {
@@ -28,10 +28,10 @@ public class MemoryService(AnkiDbContext db, ISettingsService settingsService)
             {
                 if (card.UserCardState == null)
                 {
-                    await db.UserCardStates.AddAsync(new Infrastructure.Data.Model.UserCardState()
+                    await db.UserCardStates.AddAsync(new Infrastructure.Data.Model.UserCardStateTable()
                     {
                         CardId = card.Id,
-                        UserId = Infrastructure.Data.Model.User.Default.Id,
+                        UserId = Infrastructure.Data.Model.UserTable.Default.Id,
                     });
                 }
             }
@@ -91,7 +91,7 @@ public class MemoryService(AnkiDbContext db, ISettingsService settingsService)
 
             if (oldState == null)
             {
-                oldState = new Infrastructure.Data.Model.UserCardState() {
+                oldState = new Infrastructure.Data.Model.UserCardStateTable() {
                     CardId = userCardState.CardId,
                     UserId = userCardState.UserId
                 };
@@ -113,7 +113,7 @@ public class MemoryService(AnkiDbContext db, ISettingsService settingsService)
     }
     public async Task<int> GetUserExpAsync()
     {
-        var user = await db.Users.FindAsync(Infrastructure.Data.Model.User.Default.Id);
+        var user = await db.Users.FindAsync(Infrastructure.Data.Model.UserTable.Default.Id);
         return user.Exp;
     }
 }

@@ -1,10 +1,11 @@
-﻿
-using Domain;
+﻿using Domain.Entity;
+using Domain.Entity.Specification;
 using Infrastructure;
 using Infrastructure.AI;
 using Infrastructure.ETL;
 using Infrastructure.Parsing;
 using Microsoft.Extensions.Options;
+using System;
 using System.Text;
 using System.Text.Json;
 
@@ -17,7 +18,14 @@ class Program
     static string GeminiFlash = "gemini-2.5-flash";
     static async Task Main()
     {
-        JoinTaggedBatches();
+        var spec = new PropertySpecificationDto("Id", "Equals", "1");
+        var json = JsonSerializer.Serialize(spec);
+        Console.WriteLine(json);
+
+        var expr = SpecificationExpressionFactory.ToExpression<User>(spec);
+        var predicate = expr.Compile();
+        var matches = predicate(new User { Id = 1 });
+        Console.WriteLine($"Matches? {matches}"); // True
     }
     static async Task NormalizeTatoeba()
     {

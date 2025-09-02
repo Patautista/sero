@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Data.Model
+namespace Domain.Entity
 {
     public class User
     {
         public int Id { get; set; }
-        public int Exp { get; set; }
-        public static User Default { get; set; } = new User { Exp = 0 , Id = 1};
+        public int Exp {  get; set; }
     }
 }

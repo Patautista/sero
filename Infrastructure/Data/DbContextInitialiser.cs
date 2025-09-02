@@ -72,12 +72,12 @@ namespace Infrastructure.Data
 
             foreach (var group in grouped)
             {
-                var meaning = new Meaning { Id = group.Key };
+                var meaning = new MeaningTable { Id = group.Key };
 
                 // Sentences
                 foreach (var s in group)
                 {
-                    meaning.Sentences.Add(new Sentence
+                    meaning.Sentences.Add(new SentenceTable
                     {
                         Id = s.Id,
                         Meaning = meaning,
@@ -94,7 +94,7 @@ namespace Infrastructure.Data
                     var tag = await _context.Tags.FindAsync(tagSeed.Name);
                     if (tag == null)
                     {
-                        tag = new Tag { Name = tagSeed.Name, Type = tagSeed.Type };
+                        tag = new TagTable { Name = tagSeed.Name, Type = tagSeed.Type };
                         _context.Tags.Add(tag);
                     }
 
@@ -109,7 +109,7 @@ namespace Infrastructure.Data
 
                 if (pt != null && it != null)
                 {
-                    _context.Cards.Add(new Card
+                    _context.Cards.Add(new CardTable
                     {
                         Meaning = meaning,
                         NativeSentence = pt,

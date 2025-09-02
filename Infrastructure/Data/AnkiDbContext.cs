@@ -13,31 +13,31 @@ namespace Infrastructure.Data
     public class AnkiDbContext : DbContext
     {
         public AnkiDbContext(DbContextOptions<AnkiDbContext> options) : base(options) { }
-        public DbSet<Card> Cards { get; set; }
-        public DbSet<User> Users { get; set; }
-        public DbSet<UserCardState> UserCardStates { get; set; }
-        public DbSet<Sentence> Sentences { get; set; }
-        public DbSet<Tag> Tags { get; set; }
-        public DbSet<Meaning> Meanings { get; set; }
+        public DbSet<CardTable> Cards { get; set; }
+        public DbSet<UserTable> Users { get; set; }
+        public DbSet<UserCardStateTable> UserCardStates { get; set; }
+        public DbSet<SentenceTable> Sentences { get; set; }
+        public DbSet<TagTable> Tags { get; set; }
+        public DbSet<MeaningTable> Meanings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Card>()
+            modelBuilder.Entity<CardTable>()
                     .HasOne(c => c.NativeSentence)
                     .WithMany() // sentence doesn’t need to know about cards
                     .HasForeignKey(c => c.NativeSentenceId)
                     .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Card>()
+            modelBuilder.Entity<CardTable>()
                         .HasOne(c => c.TargetSentence)
                         .WithMany()
                         .HasForeignKey(c => c.TargetSentenceId)
                         .OnDelete(DeleteBehavior.Restrict);
 
             // Tag primary key is Name
-            modelBuilder.Entity<Tag>(e =>
+            modelBuilder.Entity<TagTable>(e =>
             {
                 e.HasKey(t => t.Name);
                 e.Property(t => t.Name).HasMaxLength(128).IsRequired();
@@ -46,20 +46,20 @@ namespace Infrastructure.Data
             });
 
             // Many-to-many Card <-> Tag with explicit join table using Tag.Name as principal key
-            modelBuilder.Entity<Meaning>()
+            modelBuilder.Entity<MeaningTable>()
                 .HasMany(c => c.Tags)
                 .WithMany(t => t.Meanings)
                 .UsingEntity<Dictionary<string, object>>(
                     "MeaningTag",
-                    r => r.HasOne<Tag>()
+                    r => r.HasOne<TagTable>()
                           .WithMany()
                           .HasForeignKey("TagName")
-                          .HasPrincipalKey(nameof(Tag.Name))
+                          .HasPrincipalKey(nameof(TagTable.Name))
                           .OnDelete(DeleteBehavior.Cascade),
-                    l => l.HasOne<Meaning>()
+                    l => l.HasOne<MeaningTable>()
                           .WithMany()
                           .HasForeignKey("MeaningId")
-                          .HasPrincipalKey(nameof(Meaning.Id))
+                          .HasPrincipalKey(nameof(MeaningTable.Id))
                           .OnDelete(DeleteBehavior.Cascade),
                     j =>
                     {

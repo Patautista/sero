@@ -1,4 +1,4 @@
-﻿using Domain;
+﻿using Domain.Entity;
 using Infrastructure.AI;
 using System;
 using System.Collections.Generic;

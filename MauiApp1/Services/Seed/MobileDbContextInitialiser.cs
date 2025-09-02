@@ -1,4 +1,5 @@
-﻿using Infrastructure.Data;
+﻿using Domain.Entity;
+using Infrastructure.Data;
 using Infrastructure.Data.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -67,26 +68,26 @@ namespace MauiApp1.Services.Seed
         {
             var json = await SeedHelper.LoadMauiAsset("backup_it-pt.json");
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-            var cards = JsonSerializer.Deserialize<List<Domain.Card>>(json, options) ?? new();
+            var cards = JsonSerializer.Deserialize<List<Card>>(json, options) ?? new();
 
             var grouped = cards.GroupBy(card => card.NativeSentence.MeaningId);
 
-            await _context.Users.AddAsync(User.Default);
+            await _context.Users.AddAsync(UserTable.Default);
 
             foreach (var group in grouped)
             {
-                var meaning = new Meaning { Id = group.Key, DifficultyLevel = group.First().DifficultyLevel.ToString() };
+                var meaning = new MeaningTable { Id = group.Key, DifficultyLevel = group.First().DifficultyLevel.ToString() };
 
                 // Sentences
                 foreach (var s in group)
                 {
-                    meaning.Sentences.Add(new Sentence
+                    meaning.Sentences.Add(new SentenceTable
                     {
                         Meaning = meaning,
                         Text = s.NativeSentence.Text,
                         Language = s.NativeSentence.Language,
                     });
-                    meaning.Sentences.Add(new Sentence
+                    meaning.Sentences.Add(new SentenceTable
                     {
                         Meaning = meaning,
                         Text = s.TargetSentence.Text,
@@ -102,7 +103,7 @@ namespace MauiApp1.Services.Seed
                     var tag = await _context.Tags.FindAsync(tagSeed.Name);
                     if (tag == null)
                     {
-                        tag = new Tag { Name = tagSeed.Name, Type = tagSeed.Type ?? "learningTopic" };
+                        tag = new TagTable { Name = tagSeed.Name, Type = tagSeed.Type ?? "learningTopic" };
                         _context.Tags.Add(tag);
                     }
 
@@ -116,7 +117,7 @@ namespace MauiApp1.Services.Seed
 
                 if (pt != null && it != null)
                 {
-                    _context.Cards.Add(new Card
+                    _context.Cards.Add(new CardTable
                     {
                         Meaning = meaning,
                         NativeSentence = pt,
