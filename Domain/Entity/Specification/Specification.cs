@@ -69,7 +69,7 @@ namespace Domain.Entity.Specification
         Contains
     }
 
-    public record PropertySpecificationDto(string PropertyPath, Operator Operator, string Value) : SpecificationDto
+    public record PropertySpecificationDto(string PropertyPath, Operator Operator, object? Value) : SpecificationDto
     {
 
     }
