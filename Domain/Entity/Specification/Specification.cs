@@ -45,8 +45,8 @@ namespace Domain.Entity.Specification
 
             return dto.Operator switch
             {
-                "Equals" => Expression.Equal(prop, constant),
-                "Contains" => Expression.Call(prop, nameof(string.Contains), Type.EmptyTypes, constant),
+                Operator.Equals => Expression.Equal(prop, constant),
+                Operator.Contains => Expression.Call(prop, nameof(string.Contains), Type.EmptyTypes, constant),
                 _ => throw new NotSupportedException($"Operator {dto.Operator} not supported")
             };
         }
@@ -62,8 +62,14 @@ namespace Domain.Entity.Specification
         public OrSpecificationDto Or(SpecificationDto right) => new(this, right);
         public NotSpecificationDto Not() => new(this);
     }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum Operator
+    {
+        Equals,
+        Contains
+    }
 
-    public record PropertySpecificationDto(string PropertyPath, string Operator, string Value) : SpecificationDto
+    public record PropertySpecificationDto(string PropertyPath, Operator Operator, string Value) : SpecificationDto
     {
 
     }
