@@ -26,6 +26,16 @@ namespace Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                Console.WriteLine($"Entity: {entityType.Name}");
+            }
+
+            modelBuilder.Ignore<Domain.Entity.Card>();
+            modelBuilder.Ignore<Domain.Entity.CurriculumSection>();
+            modelBuilder.Ignore<Domain.Entity.Sentence>();
+            modelBuilder.Ignore<Domain.Entity.Tag>();
+
             modelBuilder.Entity<CardTable>()
                     .HasOne(c => c.NativeSentence)
                     .WithMany() // sentence doesn’t need to know about cards
@@ -80,24 +90,10 @@ namespace Infrastructure.Data
             string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development";
             Console.WriteLine($"Environment detected: {environment}");
 
-            string connectionString = ParseConnectionStringFromCommandLine(args);
             var builder = new DbContextOptionsBuilder<AnkiDbContext>();
             builder.UseSqlite("Data Source = localdb.db");
 
             return new AnkiDbContext(builder.Options);
-        }
-        private string ParseConnectionStringFromCommandLine(string[] args)
-        {
-            foreach (var arg in args)
-            {
-                if (arg.StartsWith("--connection="))
-                {
-                    return arg.Substring("--connection=".Length);
-                }
-            }
-            Console.WriteLine(JsonSerializer.Serialize(args));
-
-            throw new ArgumentException("Connection string not found in command-line arguments. Expected format: dotnet ef database update -- --connection=<CONNECTION_STRING>");
         }
     }
 }

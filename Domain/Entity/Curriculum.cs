@@ -12,7 +12,7 @@ namespace Domain.Entity
         public string Name { get; private set; }
         public IReadOnlyList<CurriculumSection> Sections { get; private set; }
 
-        public Curriculum(Guid id, string name, IEnumerable<CurriculumSection> sections)
+        public Curriculum(int id, string name, IEnumerable<CurriculumSection> sections)
         {
             Id = id;
             Name = name;
