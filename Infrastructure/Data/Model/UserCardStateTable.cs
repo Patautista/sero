@@ -26,6 +26,7 @@ namespace Infrastructure.Data.Model
         {
             return new Business.Model.UserCardState
             {
+                Id = Id,
                 UserId = UserId,
                 CardId = CardId,
                 Repetitions = Repetitions,
