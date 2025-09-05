@@ -166,27 +166,40 @@ namespace MauiApp1.Services.Seed
                 new CurriculumSectionTable
                 {
                     CurriculumId = 0,
-                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "time").ToJson(),
-                    Title = "Tempo",
-                    RequiredExp = ExpCalculator.ExpForLevel(4)
+                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "family").ToJson(),
+                    DifficultySpecificationJson =
+                        new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Beginner")
+                        .ToJson(),
+                    Title = "Família 1",
+                    RequiredExp = ExpCalculator.ExpForLevel(2)
                 },
                 new CurriculumSectionTable
                 {
                     CurriculumId = 0,
                     TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "food").ToJson(),
-                    Title = "Comida",
-                    RequiredExp = ExpCalculator.ExpForLevel(3)
+                    DifficultySpecificationJson =
+                        new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Beginner").ToJson(),
+                    Title = "Comida 1",
+                    RequiredExp = ExpCalculator.ExpForLevel(5)
                 },
                 new CurriculumSectionTable
                 {
                     CurriculumId = 0,
-                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "family").ToJson(),
+                    TagsSpecificationJson = 
+                        new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "time").ToJson(),
                     DifficultySpecificationJson =
-                        new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Beginner")
-                        .Or(new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Intermediate"))
-                        .ToJson(),
-                    Title = "Família 1",
-                    RequiredExp = ExpCalculator.ExpForLevel(2)
+                        new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Beginner").ToJson(),
+                    Title = "Tempo 1",
+                    RequiredExp = ExpCalculator.ExpForLevel(8)
+                },
+                new CurriculumSectionTable
+                {
+                    CurriculumId = 0,
+                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "like").ToJson(),
+                    DifficultySpecificationJson =
+                        new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Beginner").ToJson(),
+                    Title = "Gostar 1",
+                    RequiredExp = ExpCalculator.ExpForLevel(10)
                 },
                 new CurriculumSectionTable
                 {
@@ -195,13 +208,7 @@ namespace MauiApp1.Services.Seed
                     Title = "Querer",
                     RequiredExp = ExpCalculator.ExpForLevel(10)
                 },
-                new CurriculumSectionTable
-                {
-                    CurriculumId = 0,
-                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "like").ToJson(),
-                    Title = "Gostar",
-                    RequiredExp = ExpCalculator.ExpForLevel(7)
-                },
+                
                 new CurriculumSectionTable
                 {
                     CurriculumId = 0,

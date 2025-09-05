@@ -9,7 +9,7 @@
 
 @if (config == null)
 {
-    <p><em>Loading...</em></p>
+    <p><em>Carregando...</em></p>
 }
 else
 {
@@ -39,7 +39,7 @@ else
                         </select>
                     </div>
 
-                    <button class="btn btn-primary" type="submit">Save</button>
+                    <button class="btn btn-primary" type="submit">Salvar</button>
                 </EditForm>
                 </RadzenAccordionItem>
                 <RadzenAccordionItem Text="Sistema" Icon="bug_report" CollapseTitle="Collapse employees."
@@ -97,6 +97,5 @@ else
 
         await dbContext.Database.EnsureDeletedAsync();
         await SettingsService.SaveStudyConfigAsync(null);
-        Nav.NavigateTo("/");
     }
 }
