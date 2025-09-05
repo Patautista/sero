@@ -60,12 +60,12 @@ namespace Infrastructure.Migrations
                     b.Property<int?>("CurriculumTableId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("RequiredExp")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("SentenceSpecificationJson")
+                    b.Property<string>("DifficultySpecificationJson")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("RequiredExp")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("TagsSpecificationJson")
                         .IsRequired()

@@ -11,7 +11,7 @@
                 </div>
                 <div class="section-info">
                     <h3 class="font-semibold text-lg">@curriculumSection.Title</h3>
-                    @if(curriculumSection.RequiredExp > userExp){
+                    @if(curriculumSection.RequiredExp > UserExp){
                         <p class="text-sm text-gray-600">Nível @ExpCalculator.GetLevel(curriculumSection.RequiredExp)</p>
                     }
                 </div>
@@ -40,23 +40,7 @@
                         {
                             @foreach (var card in selectedSection.Cards)
                             {
-                                <div class="card shadow-md rounded-lg overflow-hidden bg-gray-50 transition-all duration-200 transform hover:translate-y-[-5px]">
-                                    <div class="p-4">
-                                        <p class="text-sm text-gray-500 mb-2">
-                                            <span class="font-medium text-gray-700">@card.NativeSentence.Language.ToUpper():</span> @card.NativeSentence.Text
-                                        </p>
-                                        <p class="text-lg font-bold mb-2 text-indigo-800">
-                                            <span class="font-medium text-gray-700">@card.TargetSentence.Language.ToUpper():</span> @card.TargetSentence.Text
-                                        </p>
-                                        <div class="flex flex-wrap gap-1">
-                                            @foreach (var tag in card.Tags)
-                                            {
-                                                <span class="badge bg-indigo-200 text-black-800 px-2 py-1 rounded-full text-xs font-medium">@tag.Name</span>
-                                            }
-                                            <span class="badge bg-green-200 text-green-800 px-2 py-1 rounded-full text-xs font-medium">@card.DifficultyLevel</span>
-                                        </div>
-                                    </div>
-                                </div>
+                                <CardSummary Card="card"></CardSummary>
                             }
                         }
                         else
@@ -74,15 +58,17 @@
 }
 
 @code {
+    [Parameter]
+    public int UserExp { get; set; }
+
     private Curriculum curriculum = new();
-    private int userExp;
     private CurriculumSection? selectedSection;
     private bool showModal = false;
 
     protected async override Task OnInitializedAsync()
     {
         // Sample data to make the component runnable
-        userExp = await DatabaseService.GetUserExpAsync();
+        UserExp = await DatabaseService.GetUserExpAsync();
         curriculum = await DatabaseService.GetCurriculumAsync(); 
     }
 

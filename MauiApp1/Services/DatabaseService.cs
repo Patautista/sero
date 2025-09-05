@@ -166,35 +166,35 @@ public class DatabaseService(AnkiDbContext db, ISettingsService settingsService)
                 new CurriculumSectionTable
                 {
                     CurriculumId = 0,
-                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, JsonSerializer.SerializeToElement("want")).ToJson(),
+                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "want").ToJson(),
                     Title = "Querer",
                     RequiredExp = ExpCalculator.ExpForLevel(10)
                 },
                 new CurriculumSectionTable
                 {
                     CurriculumId = 0,
-                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, JsonSerializer.SerializeToElement("like")).ToJson(),
+                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "like").ToJson(),
                     Title = "Gostar",
                     RequiredExp = ExpCalculator.ExpForLevel(7)
                 },
                 new CurriculumSectionTable
                 {
                     CurriculumId = 0,
-                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, JsonSerializer.SerializeToElement("need")).ToJson(),
+                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "need").ToJson(),
                     Title = "Precisar",
                     RequiredExp = ExpCalculator.ExpForLevel(9)
                 },
                 new CurriculumSectionTable
                 {
                     CurriculumId = 0,
-                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, JsonSerializer.SerializeToElement("past")).ToJson(),
+                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "past").ToJson(),
                     Title = "Passado",
                     RequiredExp = ExpCalculator.ExpForLevel(14)
                 },
                 new CurriculumSectionTable
                 {
                     CurriculumId = 0,
-                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, JsonSerializer.SerializeToElement("future")).ToJson(),
+                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "future").ToJson(),
                     Title = "Futuro",
                     RequiredExp = ExpCalculator.ExpForLevel(18)
                 },

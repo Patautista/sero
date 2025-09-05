@@ -46,7 +46,6 @@ namespace MauiApp1
                 if (init != null)
                 {
                     init.InitialiseAsync().Wait();
-                    init.SeedAsync().Wait();
                 }
             }
 
