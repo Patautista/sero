@@ -8,15 +8,9 @@ namespace Domain.Entity
 {
     public class Curriculum
     {
-        public int Id { get; private set; }
-        public string Name { get; private set; }
-        public IReadOnlyList<CurriculumSection> Sections { get; private set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public ICollection<CurriculumSection> Sections { get; set; }
 
-        public Curriculum(int id, string name, IEnumerable<CurriculumSection> sections)
-        {
-            Id = id;
-            Name = name;
-            Sections = sections.ToList().AsReadOnly();
-        }
     }
 }

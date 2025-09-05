@@ -10428,11 +10428,6 @@
       },
       {
         "type": "learningTopic",
-        "name": "introduction",
-        "Cards": []
-      },
-      {
-        "type": "learningTopic",
         "name": "numbers",
         "Cards": []
       },
@@ -21135,17 +21130,7 @@
       },
       {
         "type": "learningTopic",
-        "name": "introduction",
-        "Cards": []
-      },
-      {
-        "type": "learningTopic",
         "name": "possessive pronoun/qualifier",
-        "Cards": []
-      },
-      {
-        "type": "learningTopic",
-        "name": "have/possess",
         "Cards": []
       },
       {
@@ -32235,11 +32220,6 @@
         "Cards": []
       },
       {
-        "type": "generalTopic",
-        "name": "family",
-        "Cards": []
-      },
-      {
         "type": "learningTopic",
         "name": "should",
         "Cards": []
@@ -37980,7 +37960,7 @@
     "Tags": [
       {
         "type": "generalTopic",
-        "name": "family",
+        "name": "nature",
         "Cards": []
       },
       {
@@ -43028,11 +43008,7 @@
       "Language": "it"
     },
     "Tags": [
-      {
-        "type": "learningTopic",
-        "name": "introduction",
-        "Cards": []
-      }
+
     ],
     "DifficultyLevel": 2
   },

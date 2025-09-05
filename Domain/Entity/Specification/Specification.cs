@@ -14,12 +14,42 @@ namespace Domain.Entity.Specification
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
+    [JsonDerivedType(typeof(AndSpecificationDto), "And")]
+    [JsonDerivedType(typeof(OrSpecificationDto), "Or")]
+    [JsonDerivedType(typeof(NotSpecificationDto), "Not")]
+    [JsonDerivedType(typeof(PropertySpecificationDto), "Property")]
+    
+    public abstract record SpecificationDto
+    {
+        public string ToJson() => JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true });
+        public AndSpecificationDto And(SpecificationDto right) => new(this, right);
+        public OrSpecificationDto Or(SpecificationDto right) => new(this, right);
+        public NotSpecificationDto Not() => new(this);
+    }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum MatchOperator
+    {
+        Equals,
+        Contains,
+        GreaterThan,
+        GreaterOrEqual,
+        LesserThan,
+        LesserOrEqual
+    }
+
+    public record PropertySpecificationDto(string PropertyPath, MatchOperator Operator, JsonElement Value) : SpecificationDto;
+
+    public record AndSpecificationDto(SpecificationDto Left, SpecificationDto Right) : SpecificationDto;
+    public record Tautology() : SpecificationDto;
+    public record OrSpecificationDto(SpecificationDto Left, SpecificationDto Right) : SpecificationDto;
+    public record NotSpecificationDto(SpecificationDto Inner) : SpecificationDto;
+
     public static class SpecificationExpressionFactory
     {
-        public static Expression<Func<T, bool>> FromJson<T, P>(string json)
+        public static Expression<Func<T, bool>> FromJson<T>(string json)
         {
-            var spec = JsonSerializer.Deserialize<PropertySpecificationDto<P>>(json);
-            return ToExpression<T>(spec.ToGeneric());
+            var spec = JsonSerializer.Deserialize<PropertySpecificationDto>(json);
+            return ToExpression<T>(spec);
         }
         public static Expression<Func<T, bool>> ToExpression<T>(SpecificationDto dto)
         {
@@ -32,143 +62,74 @@ namespace Domain.Entity.Specification
         {
             return dto switch
             {
-                UntypedPropertySpecificationDto p => BuildPropertyExpression(param, p),
+                PropertySpecificationDto p => BuildPropertyExpression(param, p),
                 AndSpecificationDto a => Expression.AndAlso(BuildBody(param, a.Left), BuildBody(param, a.Right)),
                 OrSpecificationDto o => Expression.OrElse(BuildBody(param, o.Left), BuildBody(param, o.Right)),
                 NotSpecificationDto n => Expression.Not(BuildBody(param, n.Inner)),
+                Tautology n => Expression.Constant(true),
                 _ => throw new NotSupportedException($"Unsupported DTO: {dto.GetType().Name}")
             };
         }
 
-        private static Expression BuildPropertyExpression(ParameterExpression param, UntypedPropertySpecificationDto dto)
+        private static Expression BuildPropertyExpression(ParameterExpression param, PropertySpecificationDto dto)
         {
             // Navigate nested property path
             Expression prop = param;
             foreach (var part in dto.PropertyPath.Split('.'))
                 prop = Expression.Property(prop, part);
 
-            /*
-                 ParameterExpression parameter = Expression.Parameter(typeof(Product), "p");
-                MemberExpression property = Expression.Property(parameter, "Price");
-                ConstantExpression value = Expression.Constant(100m, typeof(decimal));
-                BinaryExpression greaterThan = Expression.GreaterThan(property, value);
-                Expression<Func<Product, bool>> predicate = Expression.Lambda<Func<Product, bool>>(greaterThan, parameter);
-             */
+            object convertedValue = null;
+
+            switch (dto.Value.ValueKind)
+            {
+                case JsonValueKind.String:
+                    // Attempt to convert the string to the original type (e.g., DateTime, Guid)
+                    convertedValue = Convert.ChangeType(dto.Value.GetString(), typeof(string));
+                    break;
+
+                case JsonValueKind.Number:
+                    // Check if the number has a fractional part.
+                    // GetDouble() is used because it can represent both integers and decimals.
+                    double doubleValue = dto.Value.GetDouble();
+
+                    // Use a small epsilon for floating-point comparisons to avoid precision issues
+                    if (Math.Abs(doubleValue - Math.Truncate(doubleValue)) < 0.000001)
+                    {
+                        // If the number is an integer (no fractional part), we can use Int64 to avoid overflow.
+                        convertedValue = Convert.ChangeType(dto.Value.GetInt32(), typeof(Int32));
+                    }
+                    else
+                    {
+                        // If the number has a fractional part, it's a double.
+                        convertedValue = Convert.ChangeType(dto.Value.GetDouble(), typeof(Double));
+                    }
+                    break;
+
+                case JsonValueKind.True:
+                case JsonValueKind.False:
+                    convertedValue = dto.Value.GetBoolean();
+                    break;
+
+                case JsonValueKind.Null:
+                    convertedValue = null;
+                    break;
+
+                // Add cases for Object, Array, etc.
+                default:
+                    throw new InvalidOperationException("Unsupported JsonValueKind.");
+            }
 
             // Futuro: Passar tipo do JsonElement aqui
-            var constant = Expression.Constant(dto.Value);
+            var constant = Expression.Constant(convertedValue);
 
             return dto.Operator switch
             {
-                Operator.Equals => Expression.Equal(prop, constant),
-                Operator.Contains => Expression.Call(prop, nameof(string.Contains), Type.EmptyTypes, constant),
+                MatchOperator.Equals => Expression.Equal(prop, constant),
+                MatchOperator.Contains => Expression.Call(prop, nameof(string.Contains), Type.EmptyTypes, constant),
+                MatchOperator.GreaterThan => Expression.GreaterThan(prop, constant),
+                MatchOperator.LesserThan => Expression.LessThan(prop, constant),
                 _ => throw new NotSupportedException($"Operator {dto.Operator} not supported")
             };
         }
     }
-
-    [JsonDerivedType(typeof(AndSpecificationDto), "And")]
-    [JsonDerivedType(typeof(OrSpecificationDto), "Or")]
-    [JsonDerivedType(typeof(NotSpecificationDto), "Not")]
-    [JsonDerivedType(typeof(UntypedPropertySpecificationDto), "Property")]
-    public abstract record SpecificationDto
-    {
-        public AndSpecificationDto And(SpecificationDto right) => new(this, right);
-        public OrSpecificationDto Or(SpecificationDto right) => new(this, right);
-        public NotSpecificationDto Not() => new(this);
-    }
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum Operator
-    {
-        Equals,
-        Contains,
-        GreaterThan,
-        GreaterOrEqual,
-        LesserThan,
-        LesserOrEqual
-    }
-
-    // Used only for serialization
-    public record UntypedPropertySpecificationDto(string PropertyPath, Operator Operator, object? Value) : SpecificationDto
-    {
-        public string ToJson() => JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true});
-    }
-
-    // Used only for de-serialization
-    public record PropertySpecificationDto<T>(string PropertyPath, Operator Operator, T Value){
-        public AndSpecificationDto And(SpecificationDto right) => new(this.ToGeneric(), right);
-        public OrSpecificationDto Or(SpecificationDto right) => new(this.ToGeneric(), right);
-        public NotSpecificationDto Not() => new(this.ToGeneric());
-        public string ToJson() => ToGeneric().ToJson();
-        public UntypedPropertySpecificationDto ToGeneric()
-        {
-            return new UntypedPropertySpecificationDto(PropertyPath, Operator, Value);
-        }
-        public (string sql, GenericDbParameter[] parameters) ToSQL()
-        {
-            var sqlBuilder = new StringBuilder();
-            var parameters = new List<GenericDbParameter>();
-
-            // This is a placeholder for the actual parameter name.
-            // It's good practice to generate unique names to avoid collisions.
-            var paramName = $"@p_{parameters.Count}";
-
-            // The PropertyPath needs to be sanitized to prevent SQL injection.
-            // For simplicity, this example assumes PropertyPath is a safe column name.
-            // In a real-world scenario, you'd need a robust way to map PropertyPath to a valid column name.
-            string sanitizedPath = PropertyPath;
-
-            sqlBuilder.Append($"{sanitizedPath} ");
-
-            object? value = Value;
-
-            switch (Operator)
-            {
-                case Operator.Equals:
-                    sqlBuilder.Append($"= {paramName}");
-                    break;
-                case Operator.Contains:
-                    // Note: The '%' is part of the value, not the SQL string.
-                    // This is important for proper parameterization.
-                    sqlBuilder.Append($"LIKE {paramName}");
-                    value = (T)(object)$"%{Value}%";
-                    break;
-                case Operator.GreaterThan:
-                    sqlBuilder.Append($"> {paramName}");
-                    break;
-                case Operator.GreaterOrEqual:
-                    sqlBuilder.Append($">= {paramName}");
-                    break;
-                case Operator.LesserThan:
-                    sqlBuilder.Append($"< {paramName}");
-                    break;
-                case Operator.LesserOrEqual:
-                    sqlBuilder.Append($"<= {paramName}");
-                    break;
-                default:
-                    throw new ArgumentException("Unsupported MatchOperator", nameof(Operator));
-            }
-
-            // Add the parameter. The DbParameter class is abstract, so you'd need a specific implementation like SqliteParameter or SqlParameter.
-            // For a generic solution, using DbParameter is fine, but you'll need to create the concrete type in the calling code.
-            parameters.Add(new GenericDbParameter(paramName, value));
-
-            return (sqlBuilder.ToString(), parameters.ToArray());
-        }
-    }
-    public class GenericDbParameter
-    {
-        public string Name { get; set; }
-        public object? Value { get; set; }
-        public GenericDbParameter(string Name, object? Value)
-        {
-            
-        }
-    }
-
-    public record AndSpecificationDto(SpecificationDto Left, SpecificationDto Right) : SpecificationDto;
-    public record OrSpecificationDto(SpecificationDto Left, SpecificationDto Right) : SpecificationDto;
-    public record NotSpecificationDto(SpecificationDto Inner) : SpecificationDto;
-
-
 }

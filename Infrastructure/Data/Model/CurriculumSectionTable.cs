@@ -1,4 +1,5 @@
 ﻿using Domain.Entity;
+using Domain.Entity.Specification;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
@@ -15,8 +16,8 @@ namespace Infrastructure.Data.Model
         [ForeignKey(nameof(AnkiDbContext.Curricula))]
         public int CurriculumId { get; set; }
         public string Title { get; set; }
-        public string TagsSpecificationJson { get; set; }
-        public string SentenceSpecificationJson { get; set; }
+        public string TagsSpecificationJson { get; set; } = new Tautology().ToJson();
+        public string DifficultySpecificationJson { get; set; } = new Tautology().ToJson();
         public int RequiredExp { get; set; }
     }
 }

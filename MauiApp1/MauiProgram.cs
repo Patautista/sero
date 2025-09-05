@@ -23,7 +23,7 @@ namespace MauiApp1
             builder.Services.AddBlazorBootstrap();  
 
             builder.Services.AddMauiBlazorWebView();
-            builder.Services.AddScoped<MemoryService>();
+            builder.Services.AddScoped<DatabaseService>();
             builder.Services.AddSingleton<ISettingsService, SettingsService>();
 
 #if DEBUG

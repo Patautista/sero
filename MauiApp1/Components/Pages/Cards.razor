@@ -9,7 +9,7 @@
 @using MauiApp1.Services
 @attribute [StreamRendering(true)]
 
-@inject MemoryService Api
+@inject DatabaseService Api
 
 <PageTitle>Frases Anki</PageTitle>
 
@@ -132,7 +132,7 @@ else
         }
 
         totalExp = await Api.GetUserExpAsync();
-        cards = await Api.GetCards(ReviewSessionMode);
+        cards = await Api.GetDueCards(ReviewSessionMode);
 
         // Calculate counters
         newCount = cards.Count(c => c.State.Repetitions == 0);
