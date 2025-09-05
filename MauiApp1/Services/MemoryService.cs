@@ -129,17 +129,17 @@ public class MemoryService(AnkiDbContext db, ISettingsService settingsService)
                 new CurriculumSectionTable
                 {
                     CurriculumId = 0,
-                    TagsSpecificationJson = new UntypedPropertySpecificationDto(nameof(TagTable.Name), Operator.Equals, "food").ToJson(),
+                    TagsSpecificationJson = new PropertySpecificationDto<string>(nameof(TagTable.Name), Operator.Equals, "food").ToGeneric().ToJson(),
                     Title = "Comida",
                 }
             }
         };
         var specJson = curriculumTable.Sections.First().TagsSpecificationJson;
+        var sentenceSpec = new PropertySpecificationDto<string>(nameof(Sentence.Text), Operator.Contains, "food");
         var tagPredicate = SpecificationExpressionFactory.FromJson<TagTable, string>(specJson);
 
-        var dynamicQuery = db.Cards.Include(c => c.Meaning.Tags).SelectMany(c => c.Meaning.Tags).Where(tagPredicate).ToList();
-        var regularQuery = db.Cards.Include(c => c.Meaning.Tags).SelectMany(c => c.Meaning.Tags).Where(t => t.Name == "food").ToList();
-        var results = dynamicQuery.ToList();
+        var dynamicQuery2 = db.Tags.Where(tagPredicate).SelectMany(t => t.Meanings).SelectMany(m => m.Cards).Include(c => c.NativeSentence).Include(c => c.TargetSentence).ToList();
+        var regularQuery = db.Cards.Include(c => c.Meaning.Tags).Where(c => c.Meaning.Tags.Any(t => t.Name == "food")).ToList();
 
         Console.WriteLine();
     }

@@ -18,6 +18,7 @@ namespace Infrastructure.Data.Model
         public string Name { get; set; }
         public ICollection<MeaningTable>? Meanings { get; set; } = new HashSet<MeaningTable>();
 
+
         public Tag ToDomain()
         {
             return new Domain.Entity.Tag
