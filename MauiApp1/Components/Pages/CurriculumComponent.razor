@@ -82,8 +82,8 @@
     protected async override Task OnInitializedAsync()
     {
         // Sample data to make the component runnable
-        userExp = await MemoryService.GetUserExpAsync();
-        curriculum = await MemoryService.GetCurriculumAsync(); 
+        userExp = await DatabaseService.GetUserExpAsync();
+        curriculum = await DatabaseService.GetCurriculumAsync(); 
     }
 
     private void OpenModal(CurriculumSection section)

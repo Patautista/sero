@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
+using System.Linq.Expressions;
+using System.Reflection.Metadata;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Domain.Entity.Specification
 {
-    using System;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using System.Linq.Expressions;
-    using System.Reflection.Metadata;
-    using System.Text.Json;
-    using System.Text.Json.Serialization;
 
     [JsonDerivedType(typeof(AndSpecificationDto), "And")]
     [JsonDerivedType(typeof(OrSpecificationDto), "Or")]
@@ -38,7 +33,10 @@ namespace Domain.Entity.Specification
         LesserOrEqual
     }
 
-    public record PropertySpecificationDto(string PropertyPath, MatchOperator Operator, JsonElement Value) : SpecificationDto;
+    public record PropertySpecificationDto(string PropertyPath, MatchOperator Operator, object Value) : SpecificationDto
+    {
+
+    }
 
     public record AndSpecificationDto(SpecificationDto Left, SpecificationDto Right) : SpecificationDto;
     public record TautologySpecification() : SpecificationDto;
@@ -81,34 +79,36 @@ namespace Domain.Entity.Specification
 
             object convertedValue = null;
 
-            switch (dto.Value.ValueKind)
+            var jsonElementValue = JsonSerializer.SerializeToElement(dto.Value);
+
+            switch (jsonElementValue.ValueKind)
             {
                 case JsonValueKind.String:
                     // Attempt to convert the string to the original type (e.g., DateTime, Guid)
-                    convertedValue = Convert.ChangeType(dto.Value.GetString(), typeof(string));
+                    convertedValue = Convert.ChangeType(jsonElementValue.GetString(), typeof(string));
                     break;
 
                 case JsonValueKind.Number:
                     // Check if the number has a fractional part.
                     // GetDouble() is used because it can represent both integers and decimals.
-                    double doubleValue = dto.Value.GetDouble();
+                    double doubleValue = jsonElementValue.GetDouble();
 
                     // Use a small epsilon for floating-point comparisons to avoid precision issues
                     if (Math.Abs(doubleValue - Math.Truncate(doubleValue)) < 0.000001)
                     {
                         // If the number is an integer (no fractional part), we can use Int64 to avoid overflow.
-                        convertedValue = Convert.ChangeType(dto.Value.GetInt32(), typeof(Int32));
+                        convertedValue = Convert.ChangeType(jsonElementValue.GetInt32(), typeof(Int32));
                     }
                     else
                     {
                         // If the number has a fractional part, it's a double.
-                        convertedValue = Convert.ChangeType(dto.Value.GetDouble(), typeof(Double));
+                        convertedValue = Convert.ChangeType(jsonElementValue.GetDouble(), typeof(Double));
                     }
                     break;
 
                 case JsonValueKind.True:
                 case JsonValueKind.False:
-                    convertedValue = dto.Value.GetBoolean();
+                    convertedValue = jsonElementValue.GetBoolean();
                     break;
 
                 case JsonValueKind.Null:

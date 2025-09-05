@@ -126,7 +126,7 @@ public class DatabaseService(AnkiDbContext db, ISettingsService settingsService)
     {
         var curriculum = new Curriculum
         {
-            Name = "Trilha de Maiara",
+            Name = "A sua trilha",
             Sections = new List<CurriculumSection>()
         };
         var curriculumTable = new CurriculumTable { Id = 0, Name = "it-pt", 
@@ -134,30 +134,32 @@ public class DatabaseService(AnkiDbContext db, ISettingsService settingsService)
                 new CurriculumSectionTable
                 {
                     CurriculumId = 0,
-                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, JsonSerializer.SerializeToElement("introduction")).ToJson(),
+                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "introduction").ToJson(),
                     Title = "Apresentações",
                     RequiredExp = ExpCalculator.ExpForLevel(1)
                 },
                 new CurriculumSectionTable
                 {
                     CurriculumId = 0,
-                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, JsonSerializer.SerializeToElement("time")).ToJson(),
+                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "time").ToJson(),
                     Title = "Tempo",
                     RequiredExp = ExpCalculator.ExpForLevel(4)
                 },
                 new CurriculumSectionTable
                 {
                     CurriculumId = 0,
-                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, JsonSerializer.SerializeToElement("food")).ToJson(),
+                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "food").ToJson(),
                     Title = "Comida",
                     RequiredExp = ExpCalculator.ExpForLevel(3)
                 },
                 new CurriculumSectionTable
                 {
                     CurriculumId = 0,
-                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, JsonSerializer.SerializeToElement("family")).ToJson(),
-                    DifficultySpecificationJson = new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, JsonSerializer.SerializeToElement("Beginner"))
-                    .Or(new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, JsonSerializer.SerializeToElement("Intermediate"))).ToJson(),
+                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "family").ToJson(),
+                    DifficultySpecificationJson = 
+                        new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Beginner")
+                        .Or(new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Intermediate"))
+                        .ToJson(),
                     Title = "Família 1",
                     RequiredExp = ExpCalculator.ExpForLevel(2)
                 },
