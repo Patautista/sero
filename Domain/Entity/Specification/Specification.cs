@@ -47,6 +47,15 @@ namespace Domain.Entity.Specification
             foreach (var part in dto.PropertyPath.Split('.'))
                 prop = Expression.Property(prop, part);
 
+            /*
+                 ParameterExpression parameter = Expression.Parameter(typeof(Product), "p");
+                MemberExpression property = Expression.Property(parameter, "Price");
+                ConstantExpression value = Expression.Constant(100m, typeof(decimal));
+                BinaryExpression greaterThan = Expression.GreaterThan(property, value);
+                Expression<Func<Product, bool>> predicate = Expression.Lambda<Func<Product, bool>>(greaterThan, parameter);
+             */
+
+            // Futuro: Passar tipo do JsonElement aqui
             var constant = Expression.Constant(dto.Value);
 
             return dto.Operator switch
@@ -90,6 +99,7 @@ namespace Domain.Entity.Specification
         public AndSpecificationDto And(SpecificationDto right) => new(this.ToGeneric(), right);
         public OrSpecificationDto Or(SpecificationDto right) => new(this.ToGeneric(), right);
         public NotSpecificationDto Not() => new(this.ToGeneric());
+        public string ToJson() => ToGeneric().ToJson();
         public UntypedPropertySpecificationDto ToGeneric()
         {
             return new UntypedPropertySpecificationDto(PropertyPath, Operator, Value);

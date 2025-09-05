@@ -129,7 +129,7 @@ public class MemoryService(AnkiDbContext db, ISettingsService settingsService)
                 new CurriculumSectionTable
                 {
                     CurriculumId = 0,
-                    TagsSpecificationJson = new PropertySpecificationDto<string>(nameof(TagTable.Name), Operator.Equals, "food").ToGeneric().ToJson(),
+                    TagsSpecificationJson = new PropertySpecificationDto<string>(nameof(TagTable.Name), Operator.Equals, "food").ToJson(),
                     Title = "Comida",
                 }
             }
