@@ -134,22 +134,13 @@ public class MemoryService(AnkiDbContext db, ISettingsService settingsService)
                 }
             }
         };
-        var tagsSpec = JsonSerializer.Deserialize<PropertySpecificationDto<string>>(curriculumTable.Sections.First().TagsSpecificationJson);
-        var tagExp = SpecificationExpressionFactory.ToExpression<TagTable>(tagsSpec.ToGeneric()).Compile();
-        var cards = await db.Cards.Include(c => c.Meaning.Tags).ToListAsync();
+        var specJson = curriculumTable.Sections.First().TagsSpecificationJson;
+        var tagPredicate = SpecificationExpressionFactory.FromJson<TagTable, string>(specJson);
 
-        cards = cards.AsParallel().Where(c => c.Meaning.Tags.Any(t => tagExp(t))).ToList();
-
-
-        ParameterExpression parameter = Expression.Parameter(typeof(CardTable), "c");
-        MemberExpression property = Expression.Property(parameter, nameof(CardTable.Meaning.DifficultyLevel));
-        ConstantExpression value = Expression.Constant("beginner", typeof(string));
-        BinaryExpression greaterThan = Expression.Equal(property, value);
-        Expression<Func<CardTable, bool>> predicate = Expression.Lambda<Func<CardTable, bool>>(greaterThan, parameter);
-
-        var dynamicQuery = db.Cards.Where(predicate);
+        var dynamicQuery = db.Cards.Include(c => c.Meaning.Tags).SelectMany(c => c.Meaning.Tags).Where(tagPredicate).ToList();
+        var regularQuery = db.Cards.Include(c => c.Meaning.Tags).SelectMany(c => c.Meaning.Tags).Where(t => t.Name == "food").ToList();
         var results = dynamicQuery.ToList();
 
-        Console.WriteLine(cards);
+        Console.WriteLine();
     }
 }

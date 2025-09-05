@@ -16,6 +16,11 @@ namespace Domain.Entity.Specification
 
     public static class SpecificationExpressionFactory
     {
+        public static Expression<Func<T, bool>> FromJson<T, P>(string json)
+        {
+            var spec = JsonSerializer.Deserialize<PropertySpecificationDto<P>>(json);
+            return ToExpression<T>(spec.ToGeneric());
+        }
         public static Expression<Func<T, bool>> ToExpression<T>(SpecificationDto dto)
         {
             var param = Expression.Parameter(typeof(T), "x");
@@ -81,7 +86,10 @@ namespace Domain.Entity.Specification
     }
 
     // Used only for de-serialization
-    public record PropertySpecificationDto<T>(string PropertyPath, Operator Operator, T Value){ 
+    public record PropertySpecificationDto<T>(string PropertyPath, Operator Operator, T Value){
+        public AndSpecificationDto And(SpecificationDto right) => new(this.ToGeneric(), right);
+        public OrSpecificationDto Or(SpecificationDto right) => new(this.ToGeneric(), right);
+        public NotSpecificationDto Not() => new(this.ToGeneric());
         public UntypedPropertySpecificationDto ToGeneric()
         {
             return new UntypedPropertySpecificationDto(PropertyPath, Operator, Value);
