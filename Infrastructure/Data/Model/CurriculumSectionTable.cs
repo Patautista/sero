@@ -16,8 +16,8 @@ namespace Infrastructure.Data.Model
         [ForeignKey(nameof(AnkiDbContext.Curricula))]
         public int CurriculumId { get; set; }
         public string Title { get; set; }
-        public string TagsSpecificationJson { get; set; } = new Tautology().ToJson();
-        public string DifficultySpecificationJson { get; set; } = new Tautology().ToJson();
+        public string TagsSpecificationJson { get; set; } = new TautologySpecification().ToJson();
+        public string DifficultySpecificationJson { get; set; } = new TautologySpecification().ToJson();
         public int RequiredExp { get; set; }
     }
 }

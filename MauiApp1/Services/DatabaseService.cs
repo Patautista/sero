@@ -207,6 +207,7 @@ public class DatabaseService(AnkiDbContext db, ISettingsService settingsService)
 
             var cards = db.Tags.Where(tagPredicate)
                 .SelectMany(t => t.Meanings)
+                .Where(meaningPredicate)
                 .SelectMany(m => m.Cards)
                 .Include(c => c.Meaning.Tags)
                 .Include(c => c.NativeSentence)

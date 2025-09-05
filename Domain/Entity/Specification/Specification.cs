@@ -17,6 +17,7 @@ namespace Domain.Entity.Specification
     [JsonDerivedType(typeof(AndSpecificationDto), "And")]
     [JsonDerivedType(typeof(OrSpecificationDto), "Or")]
     [JsonDerivedType(typeof(NotSpecificationDto), "Not")]
+    [JsonDerivedType(typeof(TautologySpecification), "Tautology")]
     [JsonDerivedType(typeof(PropertySpecificationDto), "Property")]
     
     public abstract record SpecificationDto
@@ -40,7 +41,7 @@ namespace Domain.Entity.Specification
     public record PropertySpecificationDto(string PropertyPath, MatchOperator Operator, JsonElement Value) : SpecificationDto;
 
     public record AndSpecificationDto(SpecificationDto Left, SpecificationDto Right) : SpecificationDto;
-    public record Tautology() : SpecificationDto;
+    public record TautologySpecification() : SpecificationDto;
     public record OrSpecificationDto(SpecificationDto Left, SpecificationDto Right) : SpecificationDto;
     public record NotSpecificationDto(SpecificationDto Inner) : SpecificationDto;
 
@@ -48,7 +49,7 @@ namespace Domain.Entity.Specification
     {
         public static Expression<Func<T, bool>> FromJson<T>(string json)
         {
-            var spec = JsonSerializer.Deserialize<PropertySpecificationDto>(json);
+            var spec = JsonSerializer.Deserialize<SpecificationDto>(json);
             return ToExpression<T>(spec);
         }
         public static Expression<Func<T, bool>> ToExpression<T>(SpecificationDto dto)
@@ -66,7 +67,7 @@ namespace Domain.Entity.Specification
                 AndSpecificationDto a => Expression.AndAlso(BuildBody(param, a.Left), BuildBody(param, a.Right)),
                 OrSpecificationDto o => Expression.OrElse(BuildBody(param, o.Left), BuildBody(param, o.Right)),
                 NotSpecificationDto n => Expression.Not(BuildBody(param, n.Inner)),
-                Tautology n => Expression.Constant(true),
+                TautologySpecification n => Expression.Constant(true),
                 _ => throw new NotSupportedException($"Unsupported DTO: {dto.GetType().Name}")
             };
         }
