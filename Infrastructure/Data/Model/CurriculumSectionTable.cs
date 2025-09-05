@@ -15,7 +15,8 @@ namespace Infrastructure.Data.Model
         [ForeignKey(nameof(AnkiDbContext.Curricula))]
         public int CurriculumId { get; set; }
         public string Title { get; set; }
-        public string PropertySpecificationJson { get; set; }
+        public string TagsSpecificationJson { get; set; }
+        public string SentenceSpecificationJson { get; set; }
         public int RequiredExp { get; set; }
     }
 }

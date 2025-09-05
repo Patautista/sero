@@ -3,9 +3,14 @@ using Business;
 using Business.Model;
 using Business.ViewModel;
 using Domain.Entity;
+using Domain.Entity.Specification;
 using Infrastructure.Data;
+using Infrastructure.Data.Model;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace MauiApp1.Services;
 
@@ -28,11 +33,12 @@ public class MemoryService(AnkiDbContext db, ISettingsService settingsService)
             {
                 if (card.UserCardState == null)
                 {
-                    await db.UserCardStates.AddAsync(new Infrastructure.Data.Model.UserCardStateTable()
+                    card.UserCardState = new Infrastructure.Data.Model.UserCardStateTable()
                     {
                         CardId = card.Id,
                         UserId = Infrastructure.Data.Model.UserTable.Default.Id,
-                    });
+                    };
+                    await db.UserCardStates.AddAsync(card.UserCardState);
                 }
             }
             await db.SaveChangesAsync();
@@ -52,7 +58,7 @@ public class MemoryService(AnkiDbContext db, ISettingsService settingsService)
                 Tags = x.Meaning.Tags.Select(t => t.ToDomain()).ToList(),
                 TargetSentence = x.TargetSentence.ToDomain(),
             },
-            State = x.UserCardState?.ToDomain()
+            State = x.UserCardState.ToDomain()
         }).OrderBy(c => c.Card.NativeSentence.Text.Length).ToList();
 
         var userDifficulty = (await settingsService.LoadAsync())?.DifficultyLevel ?? DifficultyLevel.Advanced;
@@ -115,5 +121,35 @@ public class MemoryService(AnkiDbContext db, ISettingsService settingsService)
     {
         var user = await db.Users.FindAsync(Infrastructure.Data.Model.UserTable.Default.Id);
         return user.Exp;
+    }
+    public async Task GetCurriculumAsync()
+    {
+        var curriculumTable = new CurriculumTable { Id = 0, Name = "it-pt", 
+            Sections = new List<CurriculumSectionTable> {
+                new CurriculumSectionTable
+                {
+                    CurriculumId = 0,
+                    TagsSpecificationJson = new UntypedPropertySpecificationDto(nameof(TagTable.Name), Operator.Equals, "food").ToJson(),
+                    Title = "Comida",
+                }
+            }
+        };
+        var tagsSpec = JsonSerializer.Deserialize<PropertySpecificationDto<string>>(curriculumTable.Sections.First().TagsSpecificationJson);
+        var tagExp = SpecificationExpressionFactory.ToExpression<TagTable>(tagsSpec.ToGeneric()).Compile();
+        var cards = await db.Cards.Include(c => c.Meaning.Tags).ToListAsync();
+
+        cards = cards.AsParallel().Where(c => c.Meaning.Tags.Any(t => tagExp(t))).ToList();
+
+
+        ParameterExpression parameter = Expression.Parameter(typeof(CardTable), "c");
+        MemberExpression property = Expression.Property(parameter, nameof(CardTable.Meaning.DifficultyLevel));
+        ConstantExpression value = Expression.Constant("beginner", typeof(string));
+        BinaryExpression greaterThan = Expression.Equal(property, value);
+        Expression<Func<CardTable, bool>> predicate = Expression.Lambda<Func<CardTable, bool>>(greaterThan, parameter);
+
+        var dynamicQuery = db.Cards.Where(predicate);
+        var results = dynamicQuery.ToList();
+
+        Console.WriteLine(cards);
     }
 }

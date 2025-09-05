@@ -9,9 +9,10 @@ namespace Domain.Entity.Specification
     using System;
     using System.Linq;
     using System.Linq.Expressions;
-    using System.Text.Json.Serialization;
-
     using System.Linq.Expressions;
+    using System.Reflection.Metadata;
+    using System.Text.Json;
+    using System.Text.Json.Serialization;
 
     public static class SpecificationExpressionFactory
     {
@@ -26,7 +27,7 @@ namespace Domain.Entity.Specification
         {
             return dto switch
             {
-                PropertySpecificationDto p => BuildPropertyExpression(param, p),
+                UntypedPropertySpecificationDto p => BuildPropertyExpression(param, p),
                 AndSpecificationDto a => Expression.AndAlso(BuildBody(param, a.Left), BuildBody(param, a.Right)),
                 OrSpecificationDto o => Expression.OrElse(BuildBody(param, o.Left), BuildBody(param, o.Right)),
                 NotSpecificationDto n => Expression.Not(BuildBody(param, n.Inner)),
@@ -34,7 +35,7 @@ namespace Domain.Entity.Specification
             };
         }
 
-        private static Expression BuildPropertyExpression(ParameterExpression param, PropertySpecificationDto dto)
+        private static Expression BuildPropertyExpression(ParameterExpression param, UntypedPropertySpecificationDto dto)
         {
             // Navigate nested property path
             Expression prop = param;
@@ -55,7 +56,7 @@ namespace Domain.Entity.Specification
     [JsonDerivedType(typeof(AndSpecificationDto), "And")]
     [JsonDerivedType(typeof(OrSpecificationDto), "Or")]
     [JsonDerivedType(typeof(NotSpecificationDto), "Not")]
-    [JsonDerivedType(typeof(PropertySpecificationDto), "Property")]
+    [JsonDerivedType(typeof(UntypedPropertySpecificationDto), "Property")]
     public abstract record SpecificationDto
     {
         public AndSpecificationDto And(SpecificationDto right) => new(this, right);
@@ -66,12 +67,85 @@ namespace Domain.Entity.Specification
     public enum Operator
     {
         Equals,
-        Contains
+        Contains,
+        GreaterThan,
+        GreaterOrEqual,
+        LesserThan,
+        LesserOrEqual
     }
 
-    public record PropertySpecificationDto(string PropertyPath, Operator Operator, object? Value) : SpecificationDto
+    // Used only for serialization
+    public record UntypedPropertySpecificationDto(string PropertyPath, Operator Operator, object? Value) : SpecificationDto
     {
+        public string ToJson() => JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true});
+    }
 
+    // Used only for de-serialization
+    public record PropertySpecificationDto<T>(string PropertyPath, Operator Operator, T Value){ 
+        public UntypedPropertySpecificationDto ToGeneric()
+        {
+            return new UntypedPropertySpecificationDto(PropertyPath, Operator, Value);
+        }
+        public (string sql, GenericDbParameter[] parameters) ToSQL()
+        {
+            var sqlBuilder = new StringBuilder();
+            var parameters = new List<GenericDbParameter>();
+
+            // This is a placeholder for the actual parameter name.
+            // It's good practice to generate unique names to avoid collisions.
+            var paramName = $"@p_{parameters.Count}";
+
+            // The PropertyPath needs to be sanitized to prevent SQL injection.
+            // For simplicity, this example assumes PropertyPath is a safe column name.
+            // In a real-world scenario, you'd need a robust way to map PropertyPath to a valid column name.
+            string sanitizedPath = PropertyPath;
+
+            sqlBuilder.Append($"{sanitizedPath} ");
+
+            object? value = Value;
+
+            switch (Operator)
+            {
+                case Operator.Equals:
+                    sqlBuilder.Append($"= {paramName}");
+                    break;
+                case Operator.Contains:
+                    // Note: The '%' is part of the value, not the SQL string.
+                    // This is important for proper parameterization.
+                    sqlBuilder.Append($"LIKE {paramName}");
+                    value = (T)(object)$"%{Value}%";
+                    break;
+                case Operator.GreaterThan:
+                    sqlBuilder.Append($"> {paramName}");
+                    break;
+                case Operator.GreaterOrEqual:
+                    sqlBuilder.Append($">= {paramName}");
+                    break;
+                case Operator.LesserThan:
+                    sqlBuilder.Append($"< {paramName}");
+                    break;
+                case Operator.LesserOrEqual:
+                    sqlBuilder.Append($"<= {paramName}");
+                    break;
+                default:
+                    throw new ArgumentException("Unsupported MatchOperator", nameof(Operator));
+            }
+
+            // Add the parameter. The DbParameter class is abstract, so you'd need a specific implementation like SqliteParameter or SqlParameter.
+            // For a generic solution, using DbParameter is fine, but you'll need to create the concrete type in the calling code.
+            parameters.Add(new GenericDbParameter(paramName, value));
+
+            return (sqlBuilder.ToString(), parameters.ToArray());
+        }
+    }
+    public class GenericDbParameter
+    {
+        public string Name { get; set; }
+        public object? Value { get; set; }
+        public GenericDbParameter(string Name, object? Value)
+        {
+            
+        }
     }
 
     public record AndSpecificationDto(SpecificationDto Left, SpecificationDto Right) : SpecificationDto;

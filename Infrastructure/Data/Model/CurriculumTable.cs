@@ -11,6 +11,6 @@ namespace Infrastructure.Data.Model
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public IReadOnlyList<CurriculumSection> Sections { get; set; }
+        public ICollection<CurriculumSectionTable> Sections { get; set; }
     }
 }

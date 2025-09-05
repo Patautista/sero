@@ -1,13 +1,16 @@
 ﻿@page "/"
+@using MauiApp1.Services
 
 @code {
     [Inject] private ISettingsService SettingsService { get; set; }
     [Inject] private NavigationManager Nav { get; set; }
+    [Inject] private MemoryService MemoryService { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         //await SettingsService.SaveAsync(null);
         var cfg = await SettingsService.LoadAsync();
+        await MemoryService.GetCurriculumAsync();
 
         if (cfg == null)
         {
