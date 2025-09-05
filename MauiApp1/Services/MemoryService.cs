@@ -134,12 +134,20 @@ public class MemoryService(AnkiDbContext db, ISettingsService settingsService)
                 }
             }
         };
-        var specJson = curriculumTable.Sections.First().TagsSpecificationJson;
-        var sentenceSpec = new PropertySpecificationDto<string>(nameof(Sentence.Text), Operator.Contains, "food");
-        var tagPredicate = SpecificationExpressionFactory.FromJson<TagTable, string>(specJson);
+        foreach(var sectionTable in curriculumTable.Sections){
+            var specJson = sectionTable.TagsSpecificationJson;
+            var tagPredicate = SpecificationExpressionFactory.FromJson<TagTable, string>(specJson);
+            //var sentenceSpec = new PropertySpecificationDto<string>(nameof(Sentence.Text), Operator.Contains, "food");
 
-        var dynamicQuery2 = db.Tags.Where(tagPredicate).SelectMany(t => t.Meanings).SelectMany(m => m.Cards).Include(c => c.NativeSentence).Include(c => c.TargetSentence).ToList();
-        var regularQuery = db.Cards.Include(c => c.Meaning.Tags).Where(c => c.Meaning.Tags.Any(t => t.Name == "food")).ToList();
+            var cards = db.Tags.Where(tagPredicate)
+                .SelectMany(t => t.Meanings)
+                .SelectMany(m => m.Cards)
+                .Include(c => c.NativeSentence)
+                .Include(c => c.TargetSentence)
+                .ToList();
+
+            var section = new CurriculumSection { Cards =  cards.Select(c => new Card { }).ToList() };
+        }
 
         Console.WriteLine();
     }
