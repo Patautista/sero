@@ -16,18 +16,33 @@ namespace MauiApp1.Services;
 
 public class DatabaseService(AnkiDbContext db, ISettingsService settingsService)
 {
-    public async Task<ICollection<CardWithState>> GetDueCards(ReviewSessionMode sessionMode, CancellationToken cancellationToken = default)
+    public async Task<ICollection<CardWithState>> GetDueCards(ReviewSessionMode sessionMode, int exp, CancellationToken cancellationToken = default)
     {
         var cards = new List<Infrastructure.Data.Model.CardTable>();
 
         try
         {
-            cards = await db.Cards
-                .Include(c => c.NativeSentence)
-                .Include(c => c.TargetSentence)
-                .Include(c => c.Meaning).ThenInclude(m => m.Tags)
-                .Include(c => c.UserCardState)
-                .ToListAsync();
+            var unlockedSections = db.CurriculumSections.Where(s => s.RequiredExp <= exp).ToList();
+            foreach (var sectionTable in unlockedSections)
+            {
+                var tagSpecJson = sectionTable.TagsSpecificationJson;
+                var tagPredicate = SpecificationExpressionFactory.FromJson<TagTable>(tagSpecJson);
+
+                var meaningSpecJson = sectionTable.DifficultySpecificationJson;
+                var meaningPredicate = SpecificationExpressionFactory.FromJson<MeaningTable>(meaningSpecJson);
+
+                var sectionCards = db.Tags.Where(tagPredicate)
+                    .SelectMany(t => t.Meanings)
+                    .Where(meaningPredicate)
+                    .SelectMany(m => m.Cards)
+                    .Include(c => c.Meaning.Tags)
+                    .Include(c => c.NativeSentence)
+                    .Include(c => c.TargetSentence)
+                    .Include(c => c.UserCardState)
+                    .ToList();
+
+                cards.AddRange(sectionCards);
+            }
 
             foreach (var card in cards)
             {
@@ -129,78 +144,15 @@ public class DatabaseService(AnkiDbContext db, ISettingsService settingsService)
             Name = "A sua trilha",
             Sections = new List<CurriculumSection>()
         };
-        var curriculumTable = new CurriculumTable { Id = 0, Name = "it-pt", 
-            Sections = new List<CurriculumSectionTable> {
-                new CurriculumSectionTable
-                {
-                    CurriculumId = 0,
-                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "introduction").ToJson(),
-                    Title = "Apresentações",
-                    RequiredExp = ExpCalculator.ExpForLevel(1)
-                },
-                new CurriculumSectionTable
-                {
-                    CurriculumId = 0,
-                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "time").ToJson(),
-                    Title = "Tempo",
-                    RequiredExp = ExpCalculator.ExpForLevel(4)
-                },
-                new CurriculumSectionTable
-                {
-                    CurriculumId = 0,
-                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "food").ToJson(),
-                    Title = "Comida",
-                    RequiredExp = ExpCalculator.ExpForLevel(3)
-                },
-                new CurriculumSectionTable
-                {
-                    CurriculumId = 0,
-                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "family").ToJson(),
-                    DifficultySpecificationJson = 
-                        new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Beginner")
-                        .Or(new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Intermediate"))
-                        .ToJson(),
-                    Title = "Família 1",
-                    RequiredExp = ExpCalculator.ExpForLevel(2)
-                },
-                new CurriculumSectionTable
-                {
-                    CurriculumId = 0,
-                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "want").ToJson(),
-                    Title = "Querer",
-                    RequiredExp = ExpCalculator.ExpForLevel(10)
-                },
-                new CurriculumSectionTable
-                {
-                    CurriculumId = 0,
-                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "like").ToJson(),
-                    Title = "Gostar",
-                    RequiredExp = ExpCalculator.ExpForLevel(7)
-                },
-                new CurriculumSectionTable
-                {
-                    CurriculumId = 0,
-                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "need").ToJson(),
-                    Title = "Precisar",
-                    RequiredExp = ExpCalculator.ExpForLevel(9)
-                },
-                new CurriculumSectionTable
-                {
-                    CurriculumId = 0,
-                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "past").ToJson(),
-                    Title = "Passado",
-                    RequiredExp = ExpCalculator.ExpForLevel(14)
-                },
-                new CurriculumSectionTable
-                {
-                    CurriculumId = 0,
-                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "future").ToJson(),
-                    Title = "Futuro",
-                    RequiredExp = ExpCalculator.ExpForLevel(18)
-                },
-            }
-        };
-        foreach(var sectionTable in curriculumTable.Sections){
+
+        var curriculumTable = db.Curricula.Include(c => c.Sections).FirstOrDefault();
+
+        if(curriculumTable == null)
+        {
+            return curriculum;
+        }
+
+        foreach (var sectionTable in curriculumTable.Sections){
             var tagSpecJson = sectionTable.TagsSpecificationJson;
             var tagPredicate = SpecificationExpressionFactory.FromJson<TagTable>(tagSpecJson);
 

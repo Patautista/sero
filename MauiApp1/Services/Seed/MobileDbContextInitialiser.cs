@@ -1,4 +1,6 @@
-﻿using Domain.Entity;
+﻿using Business;
+using Domain.Entity;
+using Domain.Entity.Specification;
 using Infrastructure.Data;
 using Infrastructure.Data.Model;
 using Microsoft.EntityFrameworkCore;
@@ -147,6 +149,82 @@ namespace MauiApp1.Services.Seed
             if (newTags.Count > 0)
                 await _context.Tags.AddRangeAsync(newTags);
 
+            await _context.SaveChangesAsync();
+
+            var curriculumTable = new CurriculumTable
+            {
+                Id = 0,
+                Name = "it-pt",
+                Sections = new List<CurriculumSectionTable> {
+                new CurriculumSectionTable
+                {
+                    CurriculumId = 0,
+                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "introduction").ToJson(),
+                    Title = "Apresentações",
+                    RequiredExp = ExpCalculator.ExpForLevel(1)
+                },
+                new CurriculumSectionTable
+                {
+                    CurriculumId = 0,
+                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "time").ToJson(),
+                    Title = "Tempo",
+                    RequiredExp = ExpCalculator.ExpForLevel(4)
+                },
+                new CurriculumSectionTable
+                {
+                    CurriculumId = 0,
+                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "food").ToJson(),
+                    Title = "Comida",
+                    RequiredExp = ExpCalculator.ExpForLevel(3)
+                },
+                new CurriculumSectionTable
+                {
+                    CurriculumId = 0,
+                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "family").ToJson(),
+                    DifficultySpecificationJson =
+                        new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Beginner")
+                        .Or(new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Intermediate"))
+                        .ToJson(),
+                    Title = "Família 1",
+                    RequiredExp = ExpCalculator.ExpForLevel(2)
+                },
+                new CurriculumSectionTable
+                {
+                    CurriculumId = 0,
+                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "want").ToJson(),
+                    Title = "Querer",
+                    RequiredExp = ExpCalculator.ExpForLevel(10)
+                },
+                new CurriculumSectionTable
+                {
+                    CurriculumId = 0,
+                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "like").ToJson(),
+                    Title = "Gostar",
+                    RequiredExp = ExpCalculator.ExpForLevel(7)
+                },
+                new CurriculumSectionTable
+                {
+                    CurriculumId = 0,
+                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "need").ToJson(),
+                    Title = "Precisar",
+                    RequiredExp = ExpCalculator.ExpForLevel(9)
+                },
+                new CurriculumSectionTable
+                {
+                    CurriculumId = 0,
+                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "past").ToJson(),
+                    Title = "Passado",
+                    RequiredExp = ExpCalculator.ExpForLevel(14)
+                },
+                new CurriculumSectionTable
+                {
+                    CurriculumId = 0,
+                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "future").ToJson(),
+                    Title = "Futuro",
+                    RequiredExp = ExpCalculator.ExpForLevel(18)
+                },
+            }};
+            _context.Curricula.Add(curriculumTable);
             await _context.SaveChangesAsync();
         }
 

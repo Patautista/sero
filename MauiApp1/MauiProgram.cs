@@ -1,10 +1,11 @@
-﻿using Business;
-using AppLogic.Web;
+﻿using AppLogic.Web;
+using Business;
 using Infrastructure.Data;
+using MauiApp1.Services;
 using MauiApp1.Services.Seed;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using MauiApp1.Services;
+using Radzen;
 
 namespace MauiApp1
 {
@@ -20,7 +21,7 @@ namespace MauiApp1
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
 
-            builder.Services.AddBlazorBootstrap();  
+            builder.Services.AddRadzenComponents();
 
             builder.Services.AddMauiBlazorWebView();
             builder.Services.AddScoped<DatabaseService>();

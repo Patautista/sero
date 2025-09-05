@@ -132,7 +132,7 @@ else
         }
 
         totalExp = await Api.GetUserExpAsync();
-        cards = await Api.GetDueCards(ReviewSessionMode);
+        cards = await Api.GetDueCards(ReviewSessionMode, totalExp);
 
         // Calculate counters
         newCount = cards.Count(c => c.State.Repetitions == 0);
