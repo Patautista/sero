@@ -1,5 +1,6 @@
 ﻿using Domain.Entity;
 using Infrastructure.AI;
+using Infrastructure.ETL.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -23,7 +24,7 @@ namespace Infrastructure.ETL
             _defaultModel = defaultModel;
         }
 
-        public async Task RunAITagging(string batchPath, List<Tag> tags, List<Card> cards)
+        public async Task RunAITagging(string batchPath, List<Tag> tags, List<CardSeed> cards)
         {
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, WriteIndented = true };
 
@@ -40,7 +41,7 @@ namespace Infrastructure.ETL
                 latestBatch = JsonSerializer.Deserialize<TaggingBatchResult>(content, options);
             }
 
-            List<Card> cardBatch;
+            List<CardSeed> cardBatch;
 
             if (latestBatch != null && latestBatch.Status.Equals("incomplete", StringComparison.OrdinalIgnoreCase))
             {
@@ -61,7 +62,7 @@ namespace Infrastructure.ETL
 
                 // pick next 30 cards
                 cardBatch = cards
-                    .Where(c => c.NativeSample.Text.Split(" ").Length > 1)
+                    .Where(c => c.NativeSentence.Text.Split(" ").Length > 1)
                     .Skip(completeCount * 30)
                     .Take(30)
                     .ToList();
@@ -144,13 +145,13 @@ namespace Infrastructure.ETL
                 sb.AppendLine("Think briefly (max 3–4 steps) before answering.");
                 sb.AppendLine("Ignore the sentence's language; just match tags literally.");
                 sb.AppendLine();
-                sb.AppendLine($"Sentence: \"{card.NativeSample.Text}\"");
+                sb.AppendLine($"Sentence: \"{card.NativeSentence.Text}\"");
             }
             else if (_api is GeminiClient)
             {
                 sb.AppendLine($"Return only relevant tags to the highlighted sentence from this tag pool: {string.Join(", ", tags.Select(t => t.Name))}.");
                 sb.AppendLine();
-                sb.AppendLine($"Sentence: \"{card.NativeSample.Text}\"");
+                sb.AppendLine($"Sentence: \"{card.NativeSentence.Text}\"");
                 sb.AppendLine();
                 sb.AppendLine("Give no more explanation.");
             }
@@ -173,7 +174,7 @@ namespace Infrastructure.ETL
             }
         }
 
-        public List<Tag> FilterRelevantTags(List<Tag> tags, Card card)
+        public List<Tag> FilterRelevantTags(List<Tag> tags, CardSeed card)
         {
             var cardlimitIndex = tags.IndexOf(new Tag { Name = (card.DifficultyLevel + 1).ToString().ToLower() });
             if (card.DifficultyLevel == DifficultyLevel.Advanced)
@@ -198,6 +199,6 @@ namespace Infrastructure.ETL
         public DateTime FinishTime { get; set; }
         public long DurationMs { get; set; }
         public int BatchSize { get; set; }
-        public List<Card> Cards { get; set; } = new();
+        public List<CardSeed> Cards { get; set; } = new();
     }
 }
