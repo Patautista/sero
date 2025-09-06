@@ -11,6 +11,8 @@ namespace Domain.Entity
     {
         public List<Sentence> SentencesInNativeLanguage { get; set; }
         public List<Sentence> SentencesInTargetLanguage { get; set; }
+        public Sentence NativeSample { get => SentencesInNativeLanguage.First(); }
+        public Sentence TargetSample { get => SentencesInNativeLanguage.First(); }
 
         public ICollection<Tag> Tags { get; set; }
         public DifficultyLevel DifficultyLevel { get; set; }

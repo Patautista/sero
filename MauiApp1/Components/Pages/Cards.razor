@@ -55,13 +55,13 @@ else if (currentCard != null)
                 {
                     <div class="bg-sky-100 border-l-4 border-sky-500 text-sky-800 p-3 rounded-lg shadow-md mb-4" role="alert">
                         <p class="mb-0 text-sm font-medium">
-                            Novo card! Resposta: <strong class="font-semibold">@currentCard.Card.SentencesInTargetLanguage.First().Text</strong>
+                            Novo card! Resposta: <strong class="font-semibold">@currentCard.Card.TargetSample.Text</strong>
                         </p>
                     </div>
                 }
             </div>
 
-            <p class="w-fit mb-5 mt-3 text-gray-950 animated-underline">@currentCard.Card.SentencesInNativeLanguage.First().Text</p>
+            <p class="w-fit mb-5 mt-3 text-gray-950 animated-underline">@currentCard.Card.NativeSample.Text</p>
             <input class="w-full form-control mb-2 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all" @bind="userAnswer" placeholder="Resposta" @onfocus="() => isInputFocused = true" @onblur="() => isInputFocused = false" />
 
             <div class="card-buttons transition-all duration-300 ease-in-out" style="filter: blur(@(isInputFocused ? "2px" : "0")); transform: scale(@(isInputFocused ? "0.95" : "1"));">
@@ -170,7 +170,7 @@ else
         // Calculate answer time
         answerTime = DateTime.UtcNow - cardShownAt;
 
-        var possibleAnswers = new List<string> { currentCard.Card.SentencesInTargetLanguage.First().Text };
+        var possibleAnswers = currentCard.Card.SentencesInTargetLanguage.Select(c => c.Text).ToList();
         var evaluation = AnswerEvaluator.Evaluate(userAnswer, possibleAnswers);
 
         isCorrect = evaluation.Quality != AnswerQuality.Wrong;

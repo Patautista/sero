@@ -3,6 +3,7 @@ using Domain.Entity;
 using Domain.Entity.Specification;
 using Infrastructure.Data;
 using Infrastructure.Data.Model;
+using Infrastructure.ETL.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -249,22 +250,5 @@ namespace MauiApp1.Services.Seed
     {
         public string Name { get; set; } = "";
         public string Type { get; set; } = "";
-    }
-    public record CardSeed
-    {
-        public Sentence NativeSentence { get; set; }
-        public Sentence TargetSentence { get; set; }
-
-        public ICollection<Tag> Tags { get; set; }
-        public DifficultyLevel DifficultyLevel { get; set; }
-
-        public bool HasTag(string name)
-        {
-            return Tags.Any(t => t.Name == name.ToLower());
-        }
-        public bool SuitsDifficulty(DifficultyLevel difficultyLevel)
-        {
-            return DifficultyLevel <= difficultyLevel;
-        }
     }
 }
