@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AnkiDbContext))]
-    partial class AnkiAppContextModelSnapshot : ModelSnapshot
+    [Migration("20250902144832_AddTables_Curricula_And_CurriculumSection")]
+    partial class AddTables_Curricula_And_CurriculumSection
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
@@ -26,12 +29,22 @@ namespace Infrastructure.Migrations
                     b.Property<int>("MeaningId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("NativeSentenceId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TargetSentenceId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int?>("UserCardStateId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
                     b.HasIndex("MeaningId");
+
+                    b.HasIndex("NativeSentenceId");
+
+                    b.HasIndex("TargetSentenceId");
 
                     b.HasIndex("UserCardStateId");
 
@@ -47,27 +60,18 @@ namespace Infrastructure.Migrations
                     b.Property<int>("CurriculumId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("CurriculumTableId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("DifficultySpecificationJson")
+                    b.Property<string>("PropertySpecificationJson")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("RequiredExp")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("TagsSpecificationJson")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CurriculumTableId");
 
                     b.ToTable("CurriculumSections");
                 });
@@ -217,20 +221,29 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Infrastructure.Data.Model.SentenceTable", "NativeSentence")
+                        .WithMany()
+                        .HasForeignKey("NativeSentenceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Infrastructure.Data.Model.SentenceTable", "TargetSentence")
+                        .WithMany()
+                        .HasForeignKey("TargetSentenceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Infrastructure.Data.Model.UserCardStateTable", "UserCardState")
                         .WithMany()
                         .HasForeignKey("UserCardStateId");
 
                     b.Navigation("Meaning");
 
-                    b.Navigation("UserCardState");
-                });
+                    b.Navigation("NativeSentence");
 
-            modelBuilder.Entity("Infrastructure.Data.Model.CurriculumSectionTable", b =>
-                {
-                    b.HasOne("Infrastructure.Data.Model.CurriculumTable", null)
-                        .WithMany("Sections")
-                        .HasForeignKey("CurriculumTableId");
+                    b.Navigation("TargetSentence");
+
+                    b.Navigation("UserCardState");
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Model.SentenceTable", b =>
@@ -255,11 +268,6 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("TagName")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Infrastructure.Data.Model.CurriculumTable", b =>
-                {
-                    b.Navigation("Sections");
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Model.MeaningTable", b =>

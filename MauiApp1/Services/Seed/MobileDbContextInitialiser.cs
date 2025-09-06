@@ -1,5 +1,9 @@
-﻿using Infrastructure.Data;
+﻿using Business;
+using Domain.Entity;
+using Domain.Entity.Specification;
+using Infrastructure.Data;
 using Infrastructure.Data.Model;
+using Infrastructure.ETL.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -67,41 +71,60 @@ namespace MauiApp1.Services.Seed
         {
             var json = await SeedHelper.LoadMauiAsset("backup_it-pt.json");
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-            var sentences = JsonSerializer.Deserialize<List<Domain.Card>>(json, options) ?? new();
+            var cards = JsonSerializer.Deserialize<List<CardSeed>>(json, options) ?? new();
 
-            var grouped = sentences.GroupBy(card => card.NativeSentence.MeaningId);
+            // Group by meaning
+            var grouped = cards.GroupBy(c => c.NativeSentence.MeaningId);
+
+            // Ensure default user
+            await _context.Users.AddAsync(UserTable.Default);
+
+            // Collect all unique tag names upfront
+            var allTagSeeds = cards.SelectMany(c => c.Tags).DistinctBy(t => t.Name).ToList();
+            var existingTags = await _context.Tags
+                .Where(t => allTagSeeds.Select(s => s.Name).Contains(t.Name))
+                .ToDictionaryAsync(t => t.Name);
+
+            var newTags = new List<TagTable>();
 
             foreach (var group in grouped)
             {
-                var meaning = new Meaning { Id = group.Key };
+                var meaning = new MeaningTable
+                {
+                    Id = group.Key,
+                    DifficultyLevel = group.First().DifficultyLevel.ToString()
+                };
 
-                // Sentences
+                // Sentences (native + target)
                 foreach (var s in group)
                 {
-                    meaning.Sentences.Add(new Sentence
+                    meaning.Sentences.Add(new SentenceTable
                     {
                         Meaning = meaning,
                         Text = s.NativeSentence.Text,
-                        Language = s.NativeSentence.Language,
+                        Language = s.NativeSentence.Language
                     });
-                    meaning.Sentences.Add(new Sentence
+
+                    meaning.Sentences.Add(new SentenceTable
                     {
                         Meaning = meaning,
                         Text = s.TargetSentence.Text,
-                        Language = s.TargetSentence.Language,
+                        Language = s.TargetSentence.Language
                     });
                 }
 
-                // Tags (attach existing or create new)
-                var tagNames = group.SelectMany(s => s.Tags).DistinctBy(t => t.Name);
-
-                foreach (var tagSeed in tagNames)
+                // Tags
+                foreach (var tagSeed in group.SelectMany(s => s.Tags).DistinctBy(t => t.Name))
                 {
-                    var tag = await _context.Tags.FindAsync(tagSeed.Name);
-                    if (tag == null)
+                    if (!existingTags.TryGetValue(tagSeed.Name, out var tag))
                     {
-                        tag = new Tag { Name = tagSeed.Name, Type = tagSeed.Type };
-                        _context.Tags.Add(tag);
+                        tag = new TagTable
+                        {
+                            Name = tagSeed.Name,
+                            Type = tagSeed.Type ?? "learningTopic"
+                        };
+                        newTags.Add(tag);
+                        existingTags[tag.Name] = tag; // cache for reuse
                     }
 
                     meaning.Tags.Add(tag);
@@ -109,20 +132,106 @@ namespace MauiApp1.Services.Seed
 
                 _context.Meanings.Add(meaning);
 
-                var pt = meaning.Sentences.FirstOrDefault(s => s.Language == "pt");
-                var it = meaning.Sentences.FirstOrDefault(s => s.Language == "it");
-
-                if (pt != null && it != null)
+                _context.Cards.Add(new CardTable
                 {
-                    _context.Cards.Add(new Card
-                    {
-                        Meaning = meaning,
-                        NativeSentence = pt,
-                        TargetSentence = it
-                    });
-                }
+                    Meaning = meaning
+                });
             }
 
+            if (newTags.Count > 0)
+                await _context.Tags.AddRangeAsync(newTags);
+
+            await _context.SaveChangesAsync();
+
+            var curriculumTable = new CurriculumTable
+            {
+                Id = 0,
+                Name = "it-pt",
+                Sections = new List<CurriculumSectionTable> {
+                new CurriculumSectionTable
+                {
+                    CurriculumId = 0,
+                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "introduction").ToJson(),
+                    Title = "Apresentações",
+                    RequiredExp = ExpCalculator.ExpForLevel(1)
+                },
+                new CurriculumSectionTable
+                {
+                    CurriculumId = 0,
+                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "family").ToJson(),
+                    DifficultySpecificationJson =
+                        new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Beginner")
+                        .ToJson(),
+                    Title = "Família 1",
+                    RequiredExp = ExpCalculator.ExpForLevel(2)
+                },
+                new CurriculumSectionTable
+                {
+                    CurriculumId = 0,
+                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "food").ToJson(),
+                    DifficultySpecificationJson =
+                        new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Beginner").ToJson(),
+                    Title = "Comida 1",
+                    RequiredExp = ExpCalculator.ExpForLevel(5)
+                },
+                new CurriculumSectionTable
+                {
+                    CurriculumId = 0,
+                    TagsSpecificationJson = 
+                        new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "time").ToJson(),
+                    DifficultySpecificationJson =
+                        new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Beginner").ToJson(),
+                    Title = "Tempo 1",
+                    RequiredExp = ExpCalculator.ExpForLevel(8)
+                },
+                new CurriculumSectionTable
+                {
+                    CurriculumId = 0,
+                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "like").ToJson(),
+                    DifficultySpecificationJson =
+                        new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Beginner").ToJson(),
+                    Title = "Gostar 1",
+                    RequiredExp = ExpCalculator.ExpForLevel(10)
+                },
+                new CurriculumSectionTable
+                {
+                    CurriculumId = 0,
+                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "want").ToJson(),
+                    DifficultySpecificationJson =
+                        new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Beginner").ToJson(),
+                    Title = "Querer 1",
+                    RequiredExp = ExpCalculator.ExpForLevel(10)
+                },
+                
+                new CurriculumSectionTable
+                {
+                    CurriculumId = 0,
+                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "need").ToJson(),
+                    DifficultySpecificationJson =
+                        new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Beginner").ToJson(),
+                    Title = "Precisar 1",
+                    RequiredExp = ExpCalculator.ExpForLevel(9)
+                },
+                new CurriculumSectionTable
+                {
+                    CurriculumId = 0,
+                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "past").ToJson(),
+                    DifficultySpecificationJson =
+                        new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Beginner").ToJson(),
+                    Title = "Passado 1",
+                    RequiredExp = ExpCalculator.ExpForLevel(14)
+                },
+                new CurriculumSectionTable
+                {
+                    CurriculumId = 0,
+                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "future").ToJson(),
+                    DifficultySpecificationJson =
+                        new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Beginner").ToJson(),
+                    Title = "Futuro 1",
+                    RequiredExp = ExpCalculator.ExpForLevel(18)
+                },
+            }};
+            _context.Curricula.Add(curriculumTable);
             await _context.SaveChangesAsync();
         }
 
@@ -142,5 +251,4 @@ namespace MauiApp1.Services.Seed
         public string Name { get; set; } = "";
         public string Type { get; set; } = "";
     }
-
 }

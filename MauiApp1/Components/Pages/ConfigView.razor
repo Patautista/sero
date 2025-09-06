@@ -1,39 +1,58 @@
 ﻿@page "/settings"
+@using Domain.Entity
+@using Infrastructure.Data
 
 @inject ISettingsService SettingsService
 @inject NavigationManager Nav
+@inject AnkiDbContext dbContext
 
-<h3>Study Configuration</h3>
 
 @if (config == null)
 {
-    <p><em>Loading...</em></p>
+    <LoadingSpinner></LoadingSpinner>
 }
 else
 {
-    <EditForm Model="@config" OnValidSubmit="SaveConfig">
-        <div class="mb-3">
-            <label class="form-label">Select Language</label>
-            <select class="form-select" @bind="selectedLanguageCode">
-                @foreach (var pair in AvailableLanguages)
-                {
-                    <option value="@pair.Code">@pair.DisplayName</option>
-                }
-            </select>
-        </div>
+       <RadzenAccordion>
+            <Items>
+                <RadzenAccordionItem Text="Configurações de Estudo" Icon="book" CollapseTitle="Collapse orders."
+                                     ExpandTitle="Expand orders." CollapseAriaLabel="Collapse the order details."
+                                     ExpandAriaLabel="Expand the order details.">
+                    <EditForm Model="@config" OnValidSubmit="ApplyStudyConfig">
+                    <div class="mb-3">
+                        <label class="form-label">Escolha o Idioma</label>
+                        <select class="form-select" @bind="selectedLanguageCode">
+                            @foreach (var pair in AvailableLanguages)
+                            {
+                                <option value="@pair.Code">@pair.DisplayName</option>
+                            }
+                        </select>
+                    </div>
 
-        <div class="mb-3">
-            <label class="form-label">Initial Difficulty</label>
-            <select class="form-select" @bind="config.DifficultyLevel">
-                @foreach (var level in Enum.GetValues<DifficultyLevel>())
-                {
-                    <option value="@level">@level</option>
-                }
-            </select>
-        </div>
+                    <div class="mb-3">
+                        <label class="form-label">Dificuldade Inicial</label>
+                        <select class="form-select" @bind="config.DifficultyLevel">
+                            @foreach (var level in Enum.GetValues<DifficultyLevel>())
+                            {
+                                <option value="@level">@level</option>
+                            }
+                        </select>
+                    </div>
 
-        <button class="btn btn-primary" type="submit">Save</button>
-    </EditForm>
+                    <button class="btn btn-primary" type="submit">Salvar</button>
+                </EditForm>
+                </RadzenAccordionItem>
+                <RadzenAccordionItem Text="Sistema" Icon="bug_report" CollapseTitle="Collapse employees."
+                                     ExpandTitle="Expand employees." CollapseAriaLabel="Collapse the employee details."
+                                     ExpandAriaLabel="Expand the employee details.">
+                     <EditForm Model="@config" OnValidSubmit="ResetSystemConfig">
+                        <button class="btn btn-primary" type="submit">Resetar</button>
+                    </EditForm>
+                </RadzenAccordionItem>
+
+            </Items>
+        </RadzenAccordion>
+
 }
 
 @code {
@@ -60,7 +79,7 @@ else
         selectedLanguageCode = code;
     }
 
-    private async Task SaveConfig()
+    private async Task ApplyStudyConfig()
     {
         // Map dropdown code back to LanguagePair
         var lang = AvailableLanguages.FirstOrDefault(l => l.Code == selectedLanguageCode);
@@ -70,7 +89,14 @@ else
             Target = new(lang.Target)
         };
 
-        await SettingsService.SaveAsync(config);
+        await SettingsService.SaveStudyConfigAsync(config);
         Nav.NavigateTo("/");
+    }
+    private async Task ResetSystemConfig()
+    {
+
+        await dbContext.Database.EnsureDeletedAsync();
+        await SettingsService.SaveStudyConfigAsync(null);
+        new Startup();
     }
 }

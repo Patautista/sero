@@ -1,5 +1,6 @@
-﻿using Domain;
+﻿using Domain.Entity;
 using Infrastructure.AI;
+using Infrastructure.ETL.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -23,7 +24,7 @@ namespace Infrastructure.ETL
             _defaultModel = defaultModel;
         }
 
-        public async Task RunAITagging(string batchPath, List<Tag> tags, List<Card> cards)
+        public async Task RunAITagging(string batchPath, List<Tag> tags, List<CardSeed> cards)
         {
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, WriteIndented = true };
 
@@ -40,7 +41,7 @@ namespace Infrastructure.ETL
                 latestBatch = JsonSerializer.Deserialize<TaggingBatchResult>(content, options);
             }
 
-            List<Card> cardBatch;
+            List<CardSeed> cardBatch;
 
             if (latestBatch != null && latestBatch.Status.Equals("incomplete", StringComparison.OrdinalIgnoreCase))
             {
@@ -127,7 +128,7 @@ namespace Infrastructure.ETL
         /// <summary>
         /// Tags a single card using the LLM.
         /// </summary>
-        public async Task<bool> TagCard(Card card, List<Tag> tags)
+        public async Task<bool> TagCard(CardSeed card, List<Tag> tags)
         {
             var sb = new StringBuilder();
             tags = FilterRelevantTags(tags, card);
@@ -173,7 +174,7 @@ namespace Infrastructure.ETL
             }
         }
 
-        public List<Tag> FilterRelevantTags(List<Tag> tags, Card card)
+        public List<Tag> FilterRelevantTags(List<Tag> tags, CardSeed card)
         {
             var cardlimitIndex = tags.IndexOf(new Tag { Name = (card.DifficultyLevel + 1).ToString().ToLower() });
             if (card.DifficultyLevel == DifficultyLevel.Advanced)
@@ -198,6 +199,6 @@ namespace Infrastructure.ETL
         public DateTime FinishTime { get; set; }
         public long DurationMs { get; set; }
         public int BatchSize { get; set; }
-        public List<Card> Cards { get; set; } = new();
+        public List<CardSeed> Cards { get; set; } = new();
     }
 }

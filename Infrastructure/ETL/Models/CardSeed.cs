@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Domain.Entity;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain
+namespace Infrastructure.ETL.Models
 {
-    public record Card
+    public record CardSeed
     {
         public Sentence NativeSentence { get; set; }
         public Sentence TargetSentence { get; set; }
@@ -21,9 +21,7 @@ namespace Domain
         }
         public bool SuitsDifficulty(DifficultyLevel difficultyLevel)
         {
-            var tag = Tags.First(t => t.Type == TagTypes.Difficulty);
-            var cardDifficulty = DifficultyLevelExtensions.FromString(tag.Name);
-            return cardDifficulty <= difficultyLevel;
+            return DifficultyLevel <= difficultyLevel;
         }
     }
 }

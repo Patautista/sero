@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Entity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -9,18 +10,18 @@ using System.Threading.Tasks;
 namespace Infrastructure.Data.Model
 
 {
-    public record Sentence
+    public record SentenceTable
     {
         public int Id { get; set; }
-        [ForeignKey($"{nameof(Meaning)}s")]
-        public Meaning? Meaning { get; set; }
+        [ForeignKey(nameof(AnkiDbContext.Meanings))]
+        public MeaningTable? Meaning { get; set; }
         public int MeaningId { get; set; }
         public string Text { get; set; }
         public string Language { get; set; } = "pt";
 
-        public Domain.Sentence ToDomain()
+        public Sentence ToDomain()
         {
-            return new Domain.Sentence
+            return new Domain.Entity.Sentence
             {
                 Id = Id,
                 Language = Language,

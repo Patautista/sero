@@ -45,7 +45,7 @@ app.MapGet("/cards", async () =>
     {
         var db = scope.ServiceProvider.GetService<AnkiDbContext>();
 
-        var cards = new List<Infrastructure.Data.Model.Card>();
+        var cards = new List<Infrastructure.Data.Model.CardTable>();
 
         try
         {
@@ -60,7 +60,7 @@ app.MapGet("/cards", async () =>
             {
                 if(card.UserCardState == null)
                 {
-                    card.UserCardState = new UserCardState();
+                    card.UserCardState = new UserCardStateTable();
                 }
             }
             await db.SaveChangesAsync();
@@ -79,7 +79,7 @@ app.MapGet("/cards", async () =>
                 Tags = x.Meaning.Tags.Select(t => t.ToDomain()).ToList(),
                 TargetSentence = x.TargetSentence.ToDomain(),
             },
-            State = x.UserCardState?.ToDomain() ?? new UserCardState
+            State = x.UserCardState?.ToDomain() ?? new UserCardStateTable
             {
                 CardId = x.UserCardState.Id,
                 Repetitions = 0
@@ -92,7 +92,7 @@ app.MapGet("/cards", async () =>
 })
 .WithName("GetCards");
 
-app.MapPut("/cards", async (UserCardState request) =>
+app.MapPut("/cards", async (UserCardStateTable request) =>
 {
     using (var scope = app.Services.CreateScope())
     {
