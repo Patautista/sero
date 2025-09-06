@@ -15,13 +15,13 @@
 
 @if (cards == null)
 {
-    <p><em>Carregando...</em></p>
+   <LoadingSpinner></LoadingSpinner>
 }
 else if (currentCard != null)
 {
     <div class="anki-container">
         <div class="anki-top-section transition-all duration-300 ease-in-out" style="filter: blur(@(isInputFocused ? "2px" : "0")); transform: scale(@(isInputFocused ? "0.95" : "1"));">
-            <div class="mb-3 flex columns-3 gap-4 justify-between">
+            <div class="mb-3 flex columns-3 gap-4 justify-between items-center">
                 <div>
                     <span class="badge bg-gradient-to-r from-indigo-500 to-indigo-700">Novos: @newCount</span>
                     <span class="badge bg-gradient-to-r from-green-500 to-green-700 text">Revisões: @reviewCount</span>
@@ -32,18 +32,7 @@ else if (currentCard != null)
                 {
                     var (level, expInto, expNeeded) = ExpCalculator.GetLevelProgress(totalExp);
 
-                    <div class="flex text-end align-middle gap-2">
-                        <div class="progress" style="width: 120px; height: 10px; margin-top: 4px;">
-                            <div class="progress-bar bg-success"
-                                 role="progressbar"
-                                 style="width:@((expInto * 100 / expNeeded))%"
-                                 aria-valuenow="@expInto"
-                                 aria-valuemin="0"
-                                 aria-valuemax="@expNeeded">
-                            </div>
-                        </div>
-                        <span class="badge bg-warning text-dark">Lv. @level</span>
-                    </div>
+                    <LevelIndicator ExpNeeded="expNeeded" ExpInto="expInto" Level="level"></LevelIndicator>
                 }
             </div>
         </div>

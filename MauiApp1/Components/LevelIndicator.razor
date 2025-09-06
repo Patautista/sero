@@ -1,0 +1,27 @@
+﻿<div class="flex items-center gap-2 h-fit">
+    <!-- Progress Bar -->
+    <div class="w-20 max-w-xs h-2 bg-gray-200 rounded-full overflow-hidden shadow-inner">
+        <div class="h-full bg-green-500 rounded-full transition-all duration-300 ease-out"
+             style="width:@((ExpInto * 100 / ExpNeeded))%"
+             role="progressbar"
+             aria-valuenow="@ExpInto"
+             aria-valuemin="0"
+             aria-valuemax="@ExpNeeded">
+        </div>
+    </div>
+    <!-- Level Badge -->
+    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-500 text-white shadow-sm">
+        Lv. @Level
+    </span>
+</div>
+
+@code {
+    [Parameter]
+    public int Level { get; set; }
+
+    [Parameter]
+    public int ExpInto { get; set; }
+
+    [Parameter]
+    public int ExpNeeded { get; set; }
+}

@@ -1,0 +1,40 @@
+﻿<div class="flex flex-col items-center justify-center p-8 bg-white rounded-xl shadow-lg">
+    <!-- Spinner -->
+    <div class="spinner-border animate-spin inline-block w-12 h-12 border-4 rounded-full" role="status">
+        <span class="visually-hidden">Carregando...</span>
+    </div>
+
+    <!-- Loading text -->
+    <p class="mt-4 text-gray-600 font-medium">Carregando...</p>
+</div>
+
+<style>
+    .spinner-border {
+        border-color: rgba(79, 70, 229, 0.2); /* indigo-600 with 20% opacity */
+        border-top-color: #4f46e5; /* indigo-600 */
+    }
+
+    /* Keyframes for the spinner animation */
+    @@keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .animate-spin {
+        animation: spin 1s linear infinite;
+    }
+
+    /* Utility classes for screen readers, similar to Bootstrap's .visually-hidden */
+    .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
+    }
+</style>
