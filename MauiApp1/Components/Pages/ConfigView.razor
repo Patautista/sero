@@ -97,5 +97,6 @@ else
 
         await dbContext.Database.EnsureDeletedAsync();
         await SettingsService.SaveStudyConfigAsync(null);
+        new Startup();
     }
 }

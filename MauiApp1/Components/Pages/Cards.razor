@@ -185,7 +185,7 @@ else
         }
 
         Srs.Review(currentCard.State, (int)evaluation.Quality);
-        validationMessage = BuildFeedbackMessage(evaluation);
+        validationMessage = AnswerEvaluator.BuildFeedbackMessage(evaluation, userAnswer);
 
         await Api.UpdateUserCardState(currentCard.State, expEarned ?? 0);
 
@@ -193,7 +193,7 @@ else
         newCount = cards.Count(c => c.State.Repetitions == 0);
         reviewCount = cards.Count(c => c.State.Repetitions > 0);
 
-        StartCountdown(3);
+        StartCountdown(5);
     }
 
     private void StartCountdown(int seconds)
@@ -225,18 +225,4 @@ else
         Navigation.NavigateTo(Routes.SessionSelect);
     }
 
-    private string BuildFeedbackMessage(AnswerEvaluation evaluation)
-    {
-        var sb = new StringBuilder();
-
-        if (evaluation.Quality > AnswerQuality.Wrong)
-            sb.Append("✅ Correto!");
-        else if (evaluation.Quality == AnswerQuality.Wrong)
-            sb.Append("❌ Tente de novo.");
-
-        if (evaluation.Quality < AnswerQuality.Perfect)
-            sb.Append($" Resposta mais próxima: {evaluation.ClosestMatch}");
-
-        return sb.ToString();
-    }
 }

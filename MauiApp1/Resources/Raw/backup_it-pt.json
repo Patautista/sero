@@ -5767,6 +5767,11 @@
         "Cards": []
       },
       {
+        "type": "learningTopic",
+        "name": "future",
+        "Cards": []
+      },
+      {
         "type": "generalTopic",
         "name": "family",
         "Cards": []
@@ -17836,11 +17841,6 @@
       },
       {
         "type": "learningTopic",
-        "name": "need",
-        "Cards": []
-      },
-      {
-        "type": "learningTopic",
         "name": "past",
         "Cards": []
       }
@@ -18132,17 +18132,7 @@
       },
       {
         "type": "learningTopic",
-        "name": "possessive pronoun/qualifier",
-        "Cards": []
-      },
-      {
-        "type": "learningTopic",
         "name": "second person singular subject",
-        "Cards": []
-      },
-      {
-        "type": "learningTopic",
-        "name": "need",
         "Cards": []
       },
       {

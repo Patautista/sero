@@ -205,7 +205,9 @@ namespace MauiApp1.Services.Seed
                 {
                     CurriculumId = 0,
                     TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "want").ToJson(),
-                    Title = "Querer",
+                    DifficultySpecificationJson =
+                        new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Beginner").ToJson(),
+                    Title = "Querer 1",
                     RequiredExp = ExpCalculator.ExpForLevel(10)
                 },
                 
@@ -213,21 +215,27 @@ namespace MauiApp1.Services.Seed
                 {
                     CurriculumId = 0,
                     TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "need").ToJson(),
-                    Title = "Precisar",
+                    DifficultySpecificationJson =
+                        new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Beginner").ToJson(),
+                    Title = "Precisar 1",
                     RequiredExp = ExpCalculator.ExpForLevel(9)
                 },
                 new CurriculumSectionTable
                 {
                     CurriculumId = 0,
                     TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "past").ToJson(),
-                    Title = "Passado",
+                    DifficultySpecificationJson =
+                        new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Beginner").ToJson(),
+                    Title = "Passado 1",
                     RequiredExp = ExpCalculator.ExpForLevel(14)
                 },
                 new CurriculumSectionTable
                 {
                     CurriculumId = 0,
                     TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "future").ToJson(),
-                    Title = "Futuro",
+                    DifficultySpecificationJson =
+                        new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Beginner").ToJson(),
+                    Title = "Futuro 1",
                     RequiredExp = ExpCalculator.ExpForLevel(18)
                 },
             }};

@@ -16,7 +16,7 @@ namespace Business
             // --- 1. Repetition factor (slower decay) ---
             // Use an exponential decay with gentle slope
             // 1st repetition → ~1.0, 5th → ~0.67, 10th → ~0.45
-            double k = 0.05; // decay rate, tweakable
+            double k = 1.0; // decay rate, tweakable
             double repetitionFactor = Math.Exp(-k * (repetitions - 1));
 
             // --- 2. Difficulty factor ---
@@ -32,7 +32,7 @@ namespace Business
             double lengthFactor = Math.Log(card.TargetSentence.Text.Length + 1, 2); // log scaling
 
             // --- Base EXP ---
-            double baseExp = 5;
+            double baseExp = 7;
 
             double totalExp = baseExp * repetitionFactor * difficultyFactor * lengthFactor;
 
