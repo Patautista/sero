@@ -3,10 +3,10 @@
 
 
 
-<div class="flex flex-col items-center mb-5">
+<div class="card flex flex-col items-center mb-5 p-3">
     <h2 class="text-2xl text-3xl font-bold mb-8 text-center text-indigo-700">Nível atual: <b>@ExpCalculator.GetLevel(userExp)</b></h2>
 
-    <h3>Escolha sua sessão de treino</h3>
+    <h3 class ="mb-3">Escolha sua sessão de treino</h3>
     <div class="d-flex flex-column gap-2 mt-lg-1" style="max-width: 250px;">
         <button class="btn btn-success" @onclick="() => StartSession(ReviewSessionMode.Quick)">
             ⚡ Rápida (5 novos, 15 revisados)
@@ -24,10 +24,14 @@
 
 <CurriculumComponent UserExp="userExp"></CurriculumComponent>
 
-<div class="mb-5 mt-5">
-    <DictCcSearch></DictCcSearch>
+<div class="mb-5 mt-5 gap-2">
+    <div  class="card p-3 mb-2">
+        <DictCcSearch></DictCcSearch>
+    </div>
+    <div  class="card p-3 mb-2">
+        <ConjugationLookup></ConjugationLookup>
+    </div>
 </div>
-<ConjugationLookup></ConjugationLookup>
 
 
 @code {

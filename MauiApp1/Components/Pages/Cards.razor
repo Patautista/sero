@@ -19,21 +19,18 @@
 }
 else if (currentCard != null)
 {
-    <div class="mb-3">
-        <span class="badge bg-success">Novos: @newCount</span>
-        <span class="badge bg-info text-dark">Revisões: @reviewCount</span>
-    </div>
+    <div class="mb-3 flex columns-3 gap-4 justify-between">
+        <div>
+            <span class="badge bg-gradient-to-r from-indigo-500 to-indigo-700">Novos: @newCount</span>
+            <span class="badge bg-gradient-to-r from-green-500 to-green-700 text">Revisões: @reviewCount</span>
+        </div>
 
-    <div class="card p-4 mb-3" style="max-width: 600px; position: relative">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-            <h5>Traduza para o Italiano:</h5>
-
-            <!-- Level display -->
+         <!-- Level display -->
             @if (totalExp >= 0)
             {
                 var (level, expInto, expNeeded) = ExpCalculator.GetLevelProgress(totalExp);
-                <div class="text-end">
-                    <span class="badge bg-warning text-dark">Lv. @level</span>
+
+                <div class="flex text-end align-middle gap-2">
                     <div class="progress" style="width: 120px; height: 10px; margin-top: 4px;">
                         <div class="progress-bar bg-success"
                              role="progressbar"
@@ -43,8 +40,14 @@ else if (currentCard != null)
                              aria-valuemax="@expNeeded">
                         </div>
                     </div>
+                    <span class="badge bg-warning text-dark">Lv. @level</span>
                 </div>
             }
+    </div>
+
+    <div class="card p-4 mb-3" style="max-width: 600px; position: relative">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h1 class="text-xl font-medium">Traduza para o Italiano</h1>
 
             <!-- Floating EXP badge -->
             @if (expEarned.HasValue)
@@ -55,24 +58,23 @@ else if (currentCard != null)
             }
         </div>
 
-        <p class="mb-3"><strong>@currentCard.Card.NativeSentence.Text</strong></p>
-
-        @if (currentCard.Card.Tags != null && currentCard.Card.Tags.Any())
-        {
-            <p class="mb-3 text-muted">
-                Tags: @string.Join(", ", currentCard.Card.Tags.Select(t => t.Name))
-            </p>
-        }
+        <p class="w-fit mb-5 mt-3 text-gray-950 animated-underline">@currentCard.Card.NativeSentence.Text</p>
 
         @if (currentCard.State.Repetitions == 0)
         {
-            <p class="alert alert-info">
-                Novo card! Resposta: <strong>@currentCard.Card.TargetSentence.Text</strong>
-            </p>
+            <div class="bg-sky-100 border-l-4 border-sky-500 text-sky-800 p-3 rounded-lg shadow-md mb-4" role="alert">
+                <p class="mb-0 text-sm font-medium">
+                    Novo card! Resposta: <strong class="font-semibold">@currentCard.Card.TargetSentence.Text</strong>
+                </p>
+            </div>
         }
+        
+        <input class="w-full form-control mb-2 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all" @bind="userAnswer" placeholder="Resposta" />
 
-        <input class="form-control mb-2" @bind="userAnswer" placeholder="Type your answer" />
-        <button class="btn btn-primary mb-2" @onclick="CheckAnswer">Conferir</button>
+        <div class="flex justify-between">
+            <button class="btn btn-secondary" @onclick="NextCard">Pular</button>
+           <button class="btn btn-primary py-2 px-6 rounded-lg font-bold text-white shadow-lg bg-gradient-to-r from-indigo-500 to-indigo-700 hover:from-indigo-600 hover:to-indigo-800 transition-all duration-200" @onclick="CheckAnswer">Conferir</button>
+        </div>
 
         @if (validationMessage != null)
         {
@@ -88,12 +90,6 @@ else if (currentCard != null)
             <p class="text-muted">Próxima frase em @countdown...</p>
         }
 
-        <button class="btn btn-secondary mt-2" @onclick="NextCard">Próxima frase</button>
-
-        <div style="margin-top: 5vh">
-            <DictCcSearch></DictCcSearch>
-            <ConjugationLookup></ConjugationLookup>
-        </div>
     </div>
 }
 else

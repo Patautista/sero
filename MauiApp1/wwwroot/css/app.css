@@ -36,6 +36,28 @@ h1:focus {
     color: #e50000;
 }
 
+.animated-underline {
+    position: relative;
+    display: inline-block;
+}
+
+    .animated-underline::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: #4f46e5;
+        animation: draw-underline 0.8s ease-out forwards;
+    }
+
+@keyframes draw-underline {
+    to {
+        width: 100%;
+    }
+}
+
 #blazor-error-ui {
     background: lightyellow;
     bottom: 0;
