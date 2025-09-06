@@ -1,6 +1,10 @@
 ﻿html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
+:root {
+    --bs-table-striped-bg: #e6f2ff; 
+    --bs-table-striped-color: #000;
+}
 
 a, .btn-link {
     color: #006bb7;
