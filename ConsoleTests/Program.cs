@@ -59,13 +59,13 @@ class Program
 
         var cards = sentenceMatrix.AsParallel().Select((l, index) => new Card
         {
-            TargetSentence = new Sentence
+            SentencesInTargetLanguage = new Sentence
             {
                 MeaningId = lastMeaningId + index + 1,
                 Language = "it",
                 Text = l[1]
             },
-            NativeSentence = new Sentence
+            SentencesInNativeLanguage = new Sentence
             {
                 MeaningId = lastMeaningId + index + 1,
                 Language = "pt",
@@ -99,7 +99,7 @@ class Program
     {
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, WriteIndented = true };
         var cards = JsonSerializer.Deserialize<List<Card>>(File.ReadAllText("C:\\Users\\caleb\\source\\repos\\AspireApp1\\ConsoleTests\\etl\\1 normalized\\tatoeba-full.json"), options: options) ?? new List<Card>();
-        cards = cards.Where(c => c.NativeSentence.Text.Split(" ").Count() > 1)
+        cards = cards.Where(c => c.SentencesInNativeLanguage.Text.Split(" ").Count() > 1)
             .DistinctBy(c => c.NativeSentence.Text)
             .DistinctBy(c => c.TargetSentence.Text).ToList();
         var beginner = cards

@@ -9,8 +9,8 @@ namespace Domain.Entity
 {
     public record Card
     {
-        public Sentence NativeSentence { get; set; }
-        public Sentence TargetSentence { get; set; }
+        public List<Sentence> SentencesInNativeLanguage { get; set; }
+        public List<Sentence> SentencesInTargetLanguage { get; set; }
 
         public ICollection<Tag> Tags { get; set; }
         public DifficultyLevel DifficultyLevel { get; set; }

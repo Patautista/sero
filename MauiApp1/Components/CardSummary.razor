@@ -1,10 +1,10 @@
 ﻿<div class="card shadow-md rounded-lg overflow-hidden bg-gray-50 transition-all duration-200 transform hover:translate-y-[-5px]">
     <div class="p-4">
         <p class="text-sm text-gray-500 mb-2">
-            <span class="font-medium text-gray-700">@Card.NativeSentence.Language.ToUpper():</span> @Card.NativeSentence.Text
+            <span class="font-medium text-gray-700">@Card.SentencesInNativeLanguage.First()Language.ToUpper():</span> @Card.SentencesInNativeLanguage.First().Text
         </p>
         <p class="text-lg font-bold mb-2 text-indigo-800">
-            <span class="font-medium text-gray-700">@Card.TargetSentence.Language.ToUpper():</span> @Card.TargetSentence.Text
+            <span class="font-medium text-gray-700">@Card.SentencesInTargetLanguage.First().Language.ToUpper():</span> @Card.SentencesInTargetLanguage.First().Text
         </p>
         <div class="flex flex-wrap gap-1">
             @foreach (var tag in Card.Tags)

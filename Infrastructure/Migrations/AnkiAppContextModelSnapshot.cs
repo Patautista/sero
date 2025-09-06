@@ -26,22 +26,12 @@ namespace Infrastructure.Migrations
                     b.Property<int>("MeaningId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("NativeSentenceId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("TargetSentenceId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int?>("UserCardStateId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
                     b.HasIndex("MeaningId");
-
-                    b.HasIndex("NativeSentenceId");
-
-                    b.HasIndex("TargetSentenceId");
 
                     b.HasIndex("UserCardStateId");
 
@@ -227,27 +217,11 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Data.Model.SentenceTable", "NativeSentence")
-                        .WithMany()
-                        .HasForeignKey("NativeSentenceId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Infrastructure.Data.Model.SentenceTable", "TargetSentence")
-                        .WithMany()
-                        .HasForeignKey("TargetSentenceId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Infrastructure.Data.Model.UserCardStateTable", "UserCardState")
                         .WithMany()
                         .HasForeignKey("UserCardStateId");
 
                     b.Navigation("Meaning");
-
-                    b.Navigation("NativeSentence");
-
-                    b.Navigation("TargetSentence");
 
                     b.Navigation("UserCardState");
                 });

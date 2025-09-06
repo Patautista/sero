@@ -29,7 +29,7 @@ namespace Business
             };
 
             // --- 3. Length factor ---
-            double lengthFactor = Math.Log(card.TargetSentence.Text.Length + 1, 2); // log scaling
+            double lengthFactor = Math.Log(card.SentencesInTargetLanguage.First().Text.Length + 1, 2); // log scaling
 
             // --- Base EXP ---
             double baseExp = 7;

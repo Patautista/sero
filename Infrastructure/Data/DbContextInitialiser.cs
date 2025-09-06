@@ -102,20 +102,6 @@ namespace Infrastructure.Data
                 }
 
                 _context.Meanings.Add(meaning);
-
-                // Optional: build PT->IT card
-                var pt = meaning.Sentences.FirstOrDefault(s => s.Language == "pt");
-                var it = meaning.Sentences.FirstOrDefault(s => s.Language == "it");
-
-                if (pt != null && it != null)
-                {
-                    _context.Cards.Add(new CardTable
-                    {
-                        Meaning = meaning,
-                        NativeSentence = pt,
-                        TargetSentence = it
-                    });
-                }
             }
 
             await _context.SaveChangesAsync();

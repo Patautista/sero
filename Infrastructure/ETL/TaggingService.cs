@@ -61,7 +61,7 @@ namespace Infrastructure.ETL
 
                 // pick next 30 cards
                 cardBatch = cards
-                    .Where(c => c.NativeSentence.Text.Split(" ").Length > 1)
+                    .Where(c => c.SentencesInNativeLanguage.First().Text.Split(" ").Length > 1)
                     .Skip(completeCount * 30)
                     .Take(30)
                     .ToList();
@@ -144,13 +144,13 @@ namespace Infrastructure.ETL
                 sb.AppendLine("Think briefly (max 3–4 steps) before answering.");
                 sb.AppendLine("Ignore the sentence's language; just match tags literally.");
                 sb.AppendLine();
-                sb.AppendLine($"Sentence: \"{card.NativeSentence.Text}\"");
+                sb.AppendLine($"Sentence: \"{card.SentencesInNativeLanguage.First().Text}\"");
             }
             else if (_api is GeminiClient)
             {
                 sb.AppendLine($"Return only relevant tags to the highlighted sentence from this tag pool: {string.Join(", ", tags.Select(t => t.Name))}.");
                 sb.AppendLine();
-                sb.AppendLine($"Sentence: \"{card.NativeSentence.Text}\"");
+                sb.AppendLine($"Sentence: \"{card.SentencesInNativeLanguage.First().Text}\"");
                 sb.AppendLine();
                 sb.AppendLine("Give no more explanation.");
             }

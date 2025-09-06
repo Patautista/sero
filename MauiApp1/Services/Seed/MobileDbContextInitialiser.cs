@@ -70,7 +70,7 @@ namespace MauiApp1.Services.Seed
         {
             var json = await SeedHelper.LoadMauiAsset("backup_it-pt.json");
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-            var cards = JsonSerializer.Deserialize<List<Card>>(json, options) ?? new();
+            var cards = JsonSerializer.Deserialize<List<CardSeed>>(json, options) ?? new();
 
             // Group by meaning
             var grouped = cards.GroupBy(c => c.NativeSentence.MeaningId);
@@ -131,19 +131,10 @@ namespace MauiApp1.Services.Seed
 
                 _context.Meanings.Add(meaning);
 
-                // Card linking
-                var pt = meaning.Sentences.FirstOrDefault(s => s.Language == "pt");
-                var it = meaning.Sentences.FirstOrDefault(s => s.Language == "it");
-
-                if (pt != null && it != null)
+                _context.Cards.Add(new CardTable
                 {
-                    _context.Cards.Add(new CardTable
-                    {
-                        Meaning = meaning,
-                        NativeSentence = pt,
-                        TargetSentence = it
-                    });
-                }
+                    Meaning = meaning
+                });
             }
 
             if (newTags.Count > 0)
@@ -259,5 +250,21 @@ namespace MauiApp1.Services.Seed
         public string Name { get; set; } = "";
         public string Type { get; set; } = "";
     }
+    public record CardSeed
+    {
+        public Sentence NativeSentence { get; set; }
+        public Sentence TargetSentence { get; set; }
 
+        public ICollection<Tag> Tags { get; set; }
+        public DifficultyLevel DifficultyLevel { get; set; }
+
+        public bool HasTag(string name)
+        {
+            return Tags.Any(t => t.Name == name.ToLower());
+        }
+        public bool SuitsDifficulty(DifficultyLevel difficultyLevel)
+        {
+            return DifficultyLevel <= difficultyLevel;
+        }
+    }
 }

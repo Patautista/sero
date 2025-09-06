@@ -36,18 +36,6 @@ namespace Infrastructure.Data
             modelBuilder.Ignore<Domain.Entity.Sentence>();
             modelBuilder.Ignore<Domain.Entity.Tag>();
 
-            modelBuilder.Entity<CardTable>()
-                    .HasOne(c => c.NativeSentence)
-                    .WithMany() // sentence doesn’t need to know about cards
-                    .HasForeignKey(c => c.NativeSentenceId)
-                    .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<CardTable>()
-                        .HasOne(c => c.TargetSentence)
-                        .WithMany()
-                        .HasForeignKey(c => c.TargetSentenceId)
-                        .OnDelete(DeleteBehavior.Restrict);
-
             // Tag primary key is Name
             modelBuilder.Entity<TagTable>(e =>
             {

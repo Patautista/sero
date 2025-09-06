@@ -36,8 +36,7 @@ public class DatabaseService(AnkiDbContext db, ISettingsService settingsService)
                     .Where(meaningPredicate)
                     .SelectMany(m => m.Cards)
                     .Include(c => c.Meaning.Tags)
-                    .Include(c => c.NativeSentence)
-                    .Include(c => c.TargetSentence)
+                    .Include(c => c.Meaning.Sentences)
                     .Include(c => c.UserCardState)
                     .ToList();
 
@@ -69,12 +68,12 @@ public class DatabaseService(AnkiDbContext db, ISettingsService settingsService)
             Card = new Card
             {
                 DifficultyLevel = DifficultyLevelExtensions.FromString(x.Meaning.DifficultyLevel), 
-                NativeSentence = x.NativeSentence.ToDomain(),
+                SentencesInNativeLanguage = x.Meaning.Sentences.Where(s => s.Language == "pt").Select(s => s.ToDomain()).ToList(),
+                SentencesInTargetLanguage = x.Meaning.Sentences.Where(s => s.Language == "it").Select(s => s.ToDomain()).ToList(),
                 Tags = x.Meaning.Tags.Select(t => t.ToDomain()).ToList(),
-                TargetSentence = x.TargetSentence.ToDomain(),
             },
             State = x.UserCardState.ToDomain()
-        }).OrderBy(c => c.Card.NativeSentence.Text.Length).ToList();
+        }).OrderBy(c => c.Card.DifficultyLevel).ToList();
 
         var userDifficulty = (await settingsService.LoadAsync())?.DifficultyLevel ?? DifficultyLevel.Advanced;
         var filtered = cardWithStates.Where(c => c.Card.SuitsDifficulty(userDifficulty)).ToList();
@@ -164,16 +163,15 @@ public class DatabaseService(AnkiDbContext db, ISettingsService settingsService)
                 .Where(meaningPredicate)
                 .SelectMany(m => m.Cards)
                 .Include(c => c.Meaning.Tags)
-                .Include(c => c.NativeSentence)
-                .Include(c => c.TargetSentence)
+                .Include(c => c.Meaning.Sentences)
                 .ToList();
 
             var section = new CurriculumSection { 
                 Cards =  cards.Select(c => 
                 new Card { 
                     DifficultyLevel = Enum.Parse<DifficultyLevel>(c.Meaning.DifficultyLevel),
-                    NativeSentence = c.NativeSentence.ToDomain(),
-                    TargetSentence = c.TargetSentence.ToDomain(),
+                    SentencesInNativeLanguage = c.Meaning.Sentences.Where(s => s.Language == "pt").Select(s => s.ToDomain()).ToList(),
+                    SentencesInTargetLanguage = c.Meaning.Sentences.Where(s => s.Language == "it").Select(s => s.ToDomain()).ToList(),
                     Tags = c.Meaning.Tags.Where(t => t.Type != null && t.Type != Domain.Entity.TagTypes.Difficulty).Select(t => t.ToDomain()).ToList()
                 }).ToList(),
                 Title = sectionTable.Title,
