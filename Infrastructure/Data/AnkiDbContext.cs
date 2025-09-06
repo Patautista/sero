@@ -13,31 +13,31 @@ namespace Infrastructure.Data
     public class AnkiDbContext : DbContext
     {
         public AnkiDbContext(DbContextOptions<AnkiDbContext> options) : base(options) { }
-        public DbSet<Card> Cards { get; set; }
-        public DbSet<User> Users { get; set; }
-        public DbSet<UserCardState> UserCardStates { get; set; }
-        public DbSet<Sentence> Sentences { get; set; }
-        public DbSet<Tag> Tags { get; set; }
-        public DbSet<Meaning> Meanings { get; set; }
+        public DbSet<CardTable> Cards { get; set; }
+        public DbSet<CurriculumTable> Curricula { get; set; }
+        public DbSet<CurriculumSectionTable> CurriculumSections { get; set; }
+        public DbSet<UserTable> Users { get; set; }
+        public DbSet<UserCardStateTable> UserCardStates { get; set; }
+        public DbSet<SentenceTable> Sentences { get; set; }
+        public DbSet<TagTable> Tags { get; set; }
+        public DbSet<MeaningTable> Meanings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Card>()
-                    .HasOne(c => c.NativeSentence)
-                    .WithMany() // sentence doesn’t need to know about cards
-                    .HasForeignKey(c => c.NativeSentenceId)
-                    .OnDelete(DeleteBehavior.Restrict);
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                Console.WriteLine($"Entity: {entityType.Name}");
+            }
 
-            modelBuilder.Entity<Card>()
-                        .HasOne(c => c.TargetSentence)
-                        .WithMany()
-                        .HasForeignKey(c => c.TargetSentenceId)
-                        .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Ignore<Domain.Entity.Card>();
+            modelBuilder.Ignore<Domain.Entity.CurriculumSection>();
+            modelBuilder.Ignore<Domain.Entity.Sentence>();
+            modelBuilder.Ignore<Domain.Entity.Tag>();
 
             // Tag primary key is Name
-            modelBuilder.Entity<Tag>(e =>
+            modelBuilder.Entity<TagTable>(e =>
             {
                 e.HasKey(t => t.Name);
                 e.Property(t => t.Name).HasMaxLength(128).IsRequired();
@@ -46,20 +46,20 @@ namespace Infrastructure.Data
             });
 
             // Many-to-many Card <-> Tag with explicit join table using Tag.Name as principal key
-            modelBuilder.Entity<Meaning>()
+            modelBuilder.Entity<MeaningTable>()
                 .HasMany(c => c.Tags)
                 .WithMany(t => t.Meanings)
                 .UsingEntity<Dictionary<string, object>>(
                     "MeaningTag",
-                    r => r.HasOne<Tag>()
+                    r => r.HasOne<TagTable>()
                           .WithMany()
                           .HasForeignKey("TagName")
-                          .HasPrincipalKey(nameof(Tag.Name))
+                          .HasPrincipalKey(nameof(TagTable.Name))
                           .OnDelete(DeleteBehavior.Cascade),
-                    l => l.HasOne<Meaning>()
+                    l => l.HasOne<MeaningTable>()
                           .WithMany()
                           .HasForeignKey("MeaningId")
-                          .HasPrincipalKey(nameof(Meaning.Id))
+                          .HasPrincipalKey(nameof(MeaningTable.Id))
                           .OnDelete(DeleteBehavior.Cascade),
                     j =>
                     {
@@ -78,24 +78,10 @@ namespace Infrastructure.Data
             string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development";
             Console.WriteLine($"Environment detected: {environment}");
 
-            string connectionString = ParseConnectionStringFromCommandLine(args);
             var builder = new DbContextOptionsBuilder<AnkiDbContext>();
             builder.UseSqlite("Data Source = localdb.db");
 
             return new AnkiDbContext(builder.Options);
-        }
-        private string ParseConnectionStringFromCommandLine(string[] args)
-        {
-            foreach (var arg in args)
-            {
-                if (arg.StartsWith("--connection="))
-                {
-                    return arg.Substring("--connection=".Length);
-                }
-            }
-            Console.WriteLine(JsonSerializer.Serialize(args));
-
-            throw new ArgumentException("Connection string not found in command-line arguments. Expected format: dotnet ef database update -- --connection=<CONNECTION_STRING>");
         }
     }
 }

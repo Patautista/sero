@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Data.Model
 {
-    public class UserCardState
+    public class UserCardStateTable
     {
         public int Id { get; set;  }
-        [ForeignKey($"{nameof(User)}s")]
+        [ForeignKey(nameof(AnkiDbContext.Users))]
         public int UserId { get; set; }          // link to the user
-        [ForeignKey($"{nameof(Card)}s")]
+        [ForeignKey(nameof(AnkiDbContext.Cards))]
         public int CardId { get; set; }          // link to the card
         public int Repetitions { get; set; } = 0;
         public double EaseFactor { get; set; } = 2.5;
@@ -26,6 +26,7 @@ namespace Infrastructure.Data.Model
         {
             return new Business.Model.UserCardState
             {
+                Id = Id,
                 UserId = UserId,
                 CardId = CardId,
                 Repetitions = Repetitions,

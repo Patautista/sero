@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Entity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,16 +11,17 @@ using static System.Net.Mime.MediaTypeNames;
 namespace Infrastructure.Data.Model
 
 {
-    public record Tag
+    public record TagTable
     {
         public string Type { get; set; }
         [Key]
         public string Name { get; set; }
-        public ICollection<Meaning>? Meanings { get; set; } = new HashSet<Meaning>();
+        public ICollection<MeaningTable>? Meanings { get; set; } = new HashSet<MeaningTable>();
 
-        public Domain.Tag ToDomain()
+
+        public Tag ToDomain()
         {
-            return new Domain.Tag
+            return new Domain.Entity.Tag
             {
                 Type = Type,
                 Name = Name,

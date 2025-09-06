@@ -9,94 +9,92 @@
 @using MauiApp1.Services
 @attribute [StreamRendering(true)]
 
-@inject CardService Api
+@inject DatabaseService Api
 
 <PageTitle>Frases Anki</PageTitle>
 
 @if (cards == null)
 {
-    <p><em>Loading...</em></p>
+   <LoadingSpinner></LoadingSpinner>
 }
 else if (currentCard != null)
 {
-    <div class="mb-3">
-        <span class="badge bg-success">Novos: @newCount</span>
-        <span class="badge bg-info text-dark">Revisões: @reviewCount</span>
-    </div>
-
-    <div class="card p-4 mb-3" style="max-width: 600px; position: relative">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-            <h5>Traduza para o Italiano:</h5>
-
-            <!-- Level display -->
-            @if (totalExp >= 0)
-            {
-                var (level, expInto, expNeeded) = ExpCalculator.GetLevelProgress(totalExp);
-                <div class="text-end">
-                    <span class="badge bg-warning text-dark">Lv. @level</span>
-                    <div class="progress" style="width: 120px; height: 10px; margin-top: 4px;">
-                        <div class="progress-bar bg-success"
-                             role="progressbar"
-                             style="width:@((expInto * 100 / expNeeded))%"
-                             aria-valuenow="@expInto"
-                             aria-valuemin="0"
-                             aria-valuemax="@expNeeded">
-                        </div>
-                    </div>
+    <div class="anki-container">
+        <div class="anki-top-section transition-all duration-300 ease-in-out" style="filter: blur(@(isInputFocused ? "2px" : "0")); transform: scale(@(isInputFocused ? "0.95" : "1"));">
+            <div class="mb-3 flex columns-3 gap-4 justify-between items-center">
+                <div>
+                    <span class="badge bg-gradient-to-r from-indigo-500 to-indigo-700">Novos: @newCount</span>
+                    <span class="badge bg-gradient-to-r from-green-500 to-green-700 text">Revisões: @reviewCount</span>
                 </div>
-            }
 
-            <!-- Floating EXP badge -->
-            @if (expEarned.HasValue)
-            {
-                <div class="exp-badge">
-                    +@expEarned EXP
-                </div>
-            }
+                <!-- Level display -->
+                @if (totalExp >= 0)
+                {
+                    var (level, expInto, expNeeded) = ExpCalculator.GetLevelProgress(totalExp);
+
+                    <LevelIndicator ExpNeeded="expNeeded" ExpInto="expInto" Level="level"></LevelIndicator>
+                }
+            </div>
         </div>
 
-        <p class="mb-3"><strong>@currentCard.Card.NativeSentence.Text</strong></p>
+        <div class="card p-4 mb-3" style="max-width: 600px; position: relative">
+            <div class="card-content transition-all duration-300 ease-in-out" style="filter: blur(@(isInputFocused ? "2px" : "0")); transform: scale(@(isInputFocused ? "0.95" : "1"));">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h1 class="text-xl font-medium">Traduza para o Italiano</h1>
 
-        @if (currentCard.Card.Tags != null && currentCard.Card.Tags.Any())
-        {
-            <p class="mb-3 text-muted">
-                Tags: @string.Join(", ", currentCard.Card.Tags.Select(t => t.Name))
-            </p>
-        }
+                    <!-- Floating EXP badge -->
+                    @if (expEarned.HasValue)
+                    {
+                        <div class="exp-badge">
+                            +@expEarned EXP
+                        </div>
+                    }
+                </div>
+                
+                @if (currentCard.State.Repetitions == 0)
+                {
+                    <div class="bg-sky-100 border-l-4 border-sky-500 text-sky-800 p-3 rounded-lg shadow-md mb-4" role="alert">
+                        <p class="mb-0 text-sm font-medium">
+                            Novo card! Resposta: <strong class="font-semibold">@currentCard.Card.TargetSample.Text</strong>
+                        </p>
+                    </div>
+                }
+            </div>
 
-        @if (currentCard.State.Repetitions == 0)
-        {
-            <p class="alert alert-info">
-                Novo card! Resposta: <strong>@currentCard.Card.TargetSentence.Text</strong>
-            </p>
-        }
+            <p class="w-fit mb-5 mt-3 text-gray-950 animated-underline">@currentCard.Card.NativeSample.Text</p>
+            <input class="w-full form-control mb-2 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all" @bind="userAnswer" placeholder="Resposta" @onfocus="() => isInputFocused = true" @onblur="() => isInputFocused = false" />
 
-        <input class="form-control mb-2" @bind="userAnswer" placeholder="Type your answer" />
-        <button class="btn btn-primary mb-2" @onclick="CheckAnswer">Conferir</button>
+            <div class="card-buttons transition-all duration-300 ease-in-out" style="filter: blur(@(isInputFocused ? "2px" : "0")); transform: scale(@(isInputFocused ? "0.95" : "1"));">
+                <div class="flex justify-between">
+                    <button class="btn btn-secondary" @onclick="NextCard">Pular</button>
+                    <button class="btn btn-primary py-2 px-6 rounded-lg font-bold text-white shadow-lg bg-gradient-to-r from-indigo-500 to-indigo-700 hover:from-indigo-600 hover:to-indigo-800 transition-all duration-200" @onclick="CheckAnswer">Conferir</button>
+                </div>
 
-        @if (validationMessage != null)
-        {
-            <p class="mt-2" style="color:@(isCorrect ? "green" : "red")">
-                @validationMessage
-                <br />
-                <small>Tempo da resposta: @answerTime.TotalSeconds.ToString("0.00") s</small>
-            </p>
-        }
+                @if (validationMessage != null)
+                {
+                    <p class="mt-2" style="color:@(isCorrect ? "green" : "red")">
+                        @validationMessage
+                        <br />
+                        <small>Tempo da resposta: @answerTime.TotalSeconds.ToString("0.00") s</small>
+                    </p>
+                }
 
-        @if (countdown > 0)
-        {
-            <p class="text-muted">Próxima frase em @countdown...</p>
-        }
-
-        <button class="btn btn-secondary mt-2" @onclick="NextSentence">Próxima frase</button>
-
-        <div style="margin-top: 5vh">
-            <DictCcSearch></DictCcSearch>
-            <ConjugationLookup></ConjugationLookup>
+                @if (countdown > 0)
+                {
+                    <p class="text-muted">Próxima frase em @countdown...</p>
+                }
+            </div>
         </div>
     </div>
 }
-
+else
+{
+    <div class="card p-4 mb-3 text-center" style="max-width: 600px;">
+        <h3>🎉 Sessão concluída!</h3>
+        <p>Você revisou todos os cards de hoje.</p>
+        <button class="btn btn-primary" @onclick="ReturnToReview">Retornar à tela de seleção</button>
+    </div>
+}
 @code {
     [Parameter] public ReviewSessionMode ReviewSessionMode { get; set; } = ReviewSessionMode.Regular;
     private ICollection<CardWithState> cards;
@@ -110,6 +108,7 @@ else if (currentCard != null)
     private int? expEarned;
     private int totalExp;
     private System.Timers.Timer countdownTimer;
+    private bool isInputFocused = false;
 
     private DateTime cardShownAt;
     private TimeSpan answerTime;
@@ -124,36 +123,43 @@ else if (currentCard != null)
             ReviewSessionMode = mode;
         }
 
-
-        cards = await Api.GetCards(ReviewSessionMode);
+        totalExp = await Api.GetUserExpAsync();
+        cards = await Api.GetDueCards(ReviewSessionMode, totalExp);
 
         // Calculate counters
         newCount = cards.Count(c => c.State.Repetitions == 0);
         reviewCount = cards.Count(c => c.State.Repetitions > 0);
 
-        NextSentence();
+        NextCard();
     }
 
-    private void NextSentence()
+    private void NextCard()
     {
-        if (cards == null || !cards.Any()) return;
+        if (cards == null || !cards.Any())
+        {
+            currentCard = null; // nothing left → trigger completion screen
+            StateHasChanged();
+            return;
+        }
 
-        // Stop any running timer
+        // Stop timer
         countdownTimer?.Stop();
         countdown = 0;
 
-        // Pick a random card
+        // Pick random card
         var rnd = new Random();
         currentCard = cards.ElementAt(rnd.Next(cards.Count));
+
+        // Remove it from the pool once shown
+        cards.Remove(currentCard);
+
         userAnswer = string.Empty;
         validationMessage = null;
         isCorrect = false;
         answerTime = TimeSpan.Zero;
         expEarned = null;
 
-        // Record when this card is shown
         cardShownAt = DateTime.UtcNow;
-
         StateHasChanged();
     }
 
@@ -164,17 +170,13 @@ else if (currentCard != null)
         // Calculate answer time
         answerTime = DateTime.UtcNow - cardShownAt;
 
-        var possibleAnswers = new List<string> { currentCard.Card.TargetSentence.Text };
+        var possibleAnswers = currentCard.Card.SentencesInTargetLanguage.Select(c => c.Text).ToList();
         var evaluation = AnswerEvaluator.Evaluate(userAnswer, possibleAnswers);
 
         isCorrect = evaluation.Quality != AnswerQuality.Wrong;
         if (isCorrect)
         {
-            expEarned = ExpCalculator.CalculateEarnedExp(
-                currentCard.Card,
-                currentCard.State.Repetitions
-            );
-
+            expEarned = ExpCalculator.CalculateEarnedExp(currentCard.Card, currentCard.State.Repetitions);
             totalExp += expEarned.Value;
         }
         else
@@ -183,18 +185,15 @@ else if (currentCard != null)
         }
 
         Srs.Review(currentCard.State, (int)evaluation.Quality);
+        validationMessage = AnswerEvaluator.BuildFeedbackMessage(evaluation, userAnswer);
 
-        validationMessage = BuildFeedbackMessage(evaluation);
-
-        // Save state
-        await Api.UpdateUserCardState(currentCard.State);
+        await Api.UpdateUserCardState(currentCard.State, expEarned ?? 0);
 
         // Update counters
         newCount = cards.Count(c => c.State.Repetitions == 0);
         reviewCount = cards.Count(c => c.State.Repetitions > 0);
 
-        // Start countdown for auto-advance
-        StartCountdown(3);
+        StartCountdown(5);
     }
 
     private void StartCountdown(int seconds)
@@ -210,24 +209,20 @@ else if (currentCard != null)
             if (countdown <= 0)
             {
                 countdownTimer.Stop();
-                InvokeAsync(NextSentence);
+                InvokeAsync(NextCard);
             }
         };
         countdownTimer.Start();
     }
 
-    private string BuildFeedbackMessage(AnswerEvaluation evaluation)
+    private void RestartSession()
     {
-        var sb = new StringBuilder();
-
-        if (evaluation.Quality > AnswerQuality.Wrong)
-            sb.Append("✅ Correto!");
-        else if (evaluation.Quality == AnswerQuality.Wrong)
-            sb.Append("❌ Tente de novo.");
-
-        if (evaluation.Quality < AnswerQuality.Perfect)
-            sb.Append($" Resposta mais próxima: {evaluation.ClosestMatch}");
-
-        return sb.ToString();
+        // reload everything fresh
+        Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
     }
+    private void ReturnToReview()
+    {
+        Navigation.NavigateTo(Routes.SessionSelect);
+    }
+
 }

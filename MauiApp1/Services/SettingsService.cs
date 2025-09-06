@@ -12,28 +12,28 @@ namespace AppLogic.Web
     public interface ISettingsService
     {
         Task<StudyConfig?> LoadAsync();
-        Task SaveAsync(StudyConfig config);
+        Task SaveStudyConfigAsync(StudyConfig config);
     }
 
     public class SettingsService : ISettingsService
     {
-        private const string ConfigKey = "StudyConfig";
+        private const string StudySectionKey = "StudyConfig";
 
         public async Task<StudyConfig?> LoadAsync()
         {
-            if (!Preferences.ContainsKey(ConfigKey))
+            if (!Preferences.ContainsKey(StudySectionKey))
                 return null;
 
-            var json = Preferences.Get(ConfigKey, string.Empty);
+            var json = Preferences.Get(StudySectionKey, string.Empty);
             return string.IsNullOrEmpty(json)
                 ? null
                 : JsonSerializer.Deserialize<StudyConfig>(json);
         }
 
-        public async Task SaveAsync(StudyConfig config)
+        public async Task SaveStudyConfigAsync(StudyConfig config)
         {
             var json = JsonSerializer.Serialize(config);
-            Preferences.Set(ConfigKey, json);
+            Preferences.Set(StudySectionKey, json);
         }
     }
 

@@ -1,25 +1,47 @@
 ﻿@page "/session-select"
 @inject NavigationManager Navigation
 
-<h3>Choose your session</h3>
 
-<div class="d-flex flex-column gap-2" style="max-width: 250px;">
-    <button class="btn btn-success" @onclick="() => StartSession(ReviewSessionMode.Quick)">
-        ⚡ Quick (5 new, 15 review)
-    </button>
 
-    <button class="btn btn-primary" @onclick="() => StartSession(ReviewSessionMode.Regular)">
-        📘 Regular (10 new, 30 review)
-    </button>
+<div class="card flex flex-col items-center mb-5 p-3">
+    <h2 class="text-2xl text-3xl font-bold mb-8 text-center text-indigo-700">Nível atual: <b>@ExpCalculator.GetLevel(userExp)</b></h2>
 
-    <button class="btn btn-danger" @onclick="() => StartSession(ReviewSessionMode.Grind)">
-        💪 Grind (20 new, 60 review)
-    </button>
+    <h3 class ="mb-3">Escolha sua sessão de treino</h3>
+    <div class="d-flex flex-column gap-2 mt-lg-1" style="max-width: 250px;">
+        <button class="btn btn-primary py-2 px-6 rounded-lg font-bold text-white shadow-lg bg-gradient-to-r from-indigo-500 to-indigo-700 hover:from-indigo-600 hover:to-indigo-800 transition-all duration-200" @onclick="() => StartSession(ReviewSessionMode.Quick)">
+            <p class="text-white font-medium">⚡ Rápida (5 novos, 15 revisados)</p>
+        </button>
+
+        <button class="btn btn-primary py-2 px-6 rounded-lg font-bold text-white shadow-lg bg-gradient-to-r from-indigo-500 to-indigo-700 hover:from-indigo-600 hover:to-indigo-800 transition-all duration-200" @onclick="() => StartSession(ReviewSessionMode.Regular)">
+            <p class="text-white font-medium">📘 Normal (10 novos, 30 revisados)</p>
+        </button>
+
+        <button class="btn btn-primary py-2 px-6 rounded-lg font-bold text-white shadow-lg bg-gradient-to-r from-indigo-500 to-indigo-700 hover:from-indigo-600 hover:to-indigo-800 transition-all duration-200" @onclick="() => StartSession(ReviewSessionMode.Grind)">
+            <p class="text-white font-medium">💪 Foco (20 novos, 60 revisados)</p>
+        </button>
+    </div>
 </div>
 
+<CurriculumComponent UserExp="userExp"></CurriculumComponent>
+
+<div class="mb-5 mt-5 gap-2">
+    <div  class="card p-3 mb-2">
+        <DictCcSearch></DictCcSearch>
+    </div>
+    <div  class="card p-3 mb-2">
+        <ConjugationLookup></ConjugationLookup>
+    </div>
+</div>
+
+
 @code {
+    private int userExp;
     private void StartSession(ReviewSessionMode mode)
     {
         Navigation.NavigateTo($"{Routes.CardsReview}?mode={mode}");
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        userExp = await DatabaseService.GetUserExpAsync();
     }
 }

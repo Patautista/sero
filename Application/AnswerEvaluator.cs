@@ -2,32 +2,116 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Business
 {
     public class AnswerEvaluator
     {
-        
-        public static AnswerEvaluation Evaluate(string answer, ICollection<string> possibleAnswers)
+
+        public static AnswerEvaluation Evaluate(string userAnswer, ICollection<string> possibleAnswers)
         {
-            // Determine correctness (fuzzy match)
-            var isCorrect = possibleAnswers.Any(ans => FuzzyMatch(answer, ans));
-            var isPerfect = possibleAnswers.Any(ans => LevenshteinDistance(answer, ans) == 0);
+            // Normalize the user's answer
+            var normalizedUserAnswer = NormalizeString(userAnswer);
 
+            // Find the best possible match based on the normalized strings
+            var bestMatch = possibleAnswers
+                .Select(ans => new { Answer = ans, Normalized = NormalizeString(ans) })
+                .OrderBy(match => LevenshteinDistance(normalizedUserAnswer, match.Normalized))
+                .First();
 
-            if (isPerfect) {
+            var distance = LevenshteinDistance(normalizedUserAnswer, bestMatch.Normalized);
+            var isPerfect = distance == 0;
+            var isCorrect = FuzzyMatch(normalizedUserAnswer, bestMatch.Normalized);
+
+            if (isPerfect)
+            {
                 return new AnswerEvaluation(AnswerQuality.Perfect);
             }
-            else if (isCorrect) {
-                var closestMatch = possibleAnswers.OrderBy(ans => LevenshteinDistance(answer, ans)).First();
-                return new AnswerEvaluation(AnswerQuality.Ok, closestMatch);
+            else if (isCorrect)
+            {
+                return new AnswerEvaluation(AnswerQuality.Ok, bestMatch.Answer);
             }
             else
             {
-                var closestMatch = possibleAnswers.OrderBy(ans => LevenshteinDistance(answer, ans)).First();
-                return new AnswerEvaluation(AnswerQuality.Wrong, closestMatch);
+                return new AnswerEvaluation(AnswerQuality.Wrong, bestMatch.Answer);
             }
+        }
+
+        // --- Helper Functions ---
+
+        public static string BuildFeedbackMessage(AnswerEvaluation evaluation, string userAnswer)
+        {
+            var sb = new StringBuilder();
+
+            if (evaluation.Quality == AnswerQuality.Perfect)
+                sb.Append("✅ Correto!");
+            else if (evaluation.Quality == AnswerQuality.Ok)
+                sb.Append("✅ Correto, mas com pequenos erros. ");
+            else if (evaluation.Quality == AnswerQuality.Wrong)
+                sb.Append("❌ Tente de novo.");
+
+            if (evaluation.Quality < AnswerQuality.Perfect)
+            {
+                sb.Append($"\nResposta esperada: {evaluation.ClosestMatch}");
+
+                // Optional: Provide detailed feedback
+                var userMistake = FindDifferences(userAnswer, evaluation.ClosestMatch);
+                sb.Append($"\n\nDica: {userMistake}");
+            }
+
+            return sb.ToString();
+        }
+
+        private static string NormalizeString(string input)
+        {
+            // Remove punctuation and extra whitespace, and convert to lowercase
+            var sb = new StringBuilder();
+            foreach (char c in input)
+            {
+                if (char.IsLetterOrDigit(c) || char.IsWhiteSpace(c))
+                {
+                    sb.Append(char.ToLower(c));
+                }
+            }
+            return Regex.Replace(sb.ToString(), @"\s+", " ").Trim();
+        }
+
+        private static string FindDifferences(string userAnswer, string closestMatch)
+        {
+            // This is a more complex implementation.
+            // It's not a single function call, but a trace back through the Levenshtein matrix
+            // to identify insertions, deletions, and substitutions.
+            // Example: For "cat" vs "cot", it would highlight 'a' vs 'o'.
+            // This requires modifying the LevenshteinDistance algorithm to store the matrix.
+            // A simpler, but less precise, approach is to find the first differing word or character.
+
+            // Let's implement a word-based diff for clarity.
+            var userWords = NormalizeString(userAnswer).Split(' ');
+            var correctWords = NormalizeString(closestMatch).Split(' ');
+
+            var diff = new StringBuilder();
+            int maxLen = Math.Max(userWords.Length, correctWords.Length);
+
+            for (int i = 0; i < maxLen; i++)
+            {
+                var userWord = i < userWords.Length ? userWords[i] : "";
+                var correctWord = i < correctWords.Length ? correctWords[i] : "";
+
+                if (userWord != correctWord)
+                {
+                    if (userWord == "")
+                        diff.Append($"(Faltou '{correctWord}')");
+                    else if (correctWord == "")
+                        diff.Append($"(Extra '{userWord}')");
+                    else
+                        diff.Append($"('{userWord}' deveria ser '{correctWord}')");
+
+                    return diff.ToString(); // Return the first significant difference
+                }
+            }
+            return "Nenhum erro significativo encontrado.";
         }
         // Simple fuzzy matching based on Levenshtein distance
         private static bool FuzzyMatch(string a, string b, double threshold = 0.7)

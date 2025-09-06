@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AnkiDbContext))]
-    partial class AnkiAppContextModelSnapshot : ModelSnapshot
+    [Migration("20250905003909_ChangedType_OfTable_CurriculumSections")]
+    partial class ChangedType_OfTable_CurriculumSections
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
@@ -26,12 +29,22 @@ namespace Infrastructure.Migrations
                     b.Property<int>("MeaningId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("NativeSentenceId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TargetSentenceId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int?>("UserCardStateId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
                     b.HasIndex("MeaningId");
+
+                    b.HasIndex("NativeSentenceId");
+
+                    b.HasIndex("TargetSentenceId");
 
                     b.HasIndex("UserCardStateId");
 
@@ -50,12 +63,12 @@ namespace Infrastructure.Migrations
                     b.Property<int?>("CurriculumTableId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("DifficultySpecificationJson")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("RequiredExp")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("SentenceSpecificationJson")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("TagsSpecificationJson")
                         .IsRequired()
@@ -217,11 +230,27 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Infrastructure.Data.Model.SentenceTable", "NativeSentence")
+                        .WithMany()
+                        .HasForeignKey("NativeSentenceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Infrastructure.Data.Model.SentenceTable", "TargetSentence")
+                        .WithMany()
+                        .HasForeignKey("TargetSentenceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Infrastructure.Data.Model.UserCardStateTable", "UserCardState")
                         .WithMany()
                         .HasForeignKey("UserCardStateId");
 
                     b.Navigation("Meaning");
+
+                    b.Navigation("NativeSentence");
+
+                    b.Navigation("TargetSentence");
 
                     b.Navigation("UserCardState");
                 });

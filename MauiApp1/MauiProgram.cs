@@ -1,10 +1,11 @@
-﻿using Business;
-using AppLogic.Web;
+﻿using AppLogic.Web;
+using Business;
 using Infrastructure.Data;
+using MauiApp1.Services;
 using MauiApp1.Services.Seed;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using MauiApp1.Services;
+using Radzen;
 
 namespace MauiApp1
 {
@@ -20,8 +21,10 @@ namespace MauiApp1
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
 
+            builder.Services.AddRadzenComponents();
+
             builder.Services.AddMauiBlazorWebView();
-            builder.Services.AddScoped<CardService>();
+            builder.Services.AddScoped<DatabaseService>();
             builder.Services.AddSingleton<ISettingsService, SettingsService>();
 
 #if DEBUG
@@ -44,7 +47,6 @@ namespace MauiApp1
                 if (init != null)
                 {
                     init.InitialiseAsync().Wait();
-                    init.SeedAsync().Wait();
                 }
             }
 

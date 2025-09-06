@@ -1,12 +1,15 @@
 ﻿@page "/"
+@using MauiApp1.Services
+@using MauiApp1.Services.Seed
 
 @code {
     [Inject] private ISettingsService SettingsService { get; set; }
     [Inject] private NavigationManager Nav { get; set; }
+    [Inject] private MobileDbContextInitialiser Init { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        //await SettingsService.SaveAsync(null);
+        await Init.SeedAsync();
         var cfg = await SettingsService.LoadAsync();
 
         if (cfg == null)
