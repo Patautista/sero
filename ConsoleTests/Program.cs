@@ -24,8 +24,20 @@ class Program
         var fileDLService = new FileDatalakeService(
             "C:\\Users\\caleb\\source\\repos\\AspireApp1\\ConsoleTests\\etl\\tatoeba",
             "C:\\Users\\caleb\\source\\repos\\AspireApp1\\ConsoleTests\\etl\\tatoeba\\3 joined\\tatoeba-tagged-joined-cleaned.json");
-        var stage = new GenerateAlternativeSentences(fileDLService, new OllamaClient());
-        await stage.ExecuteAsync();
+        var stage = new GenerateAlternativeSentences(fileDLService, new GeminiClient("AIzaSyD_cIyYXmvyyCGtLJLNVHvpZ3-0JZh5cA0"));
+        var test = new CardSeed
+        {
+            NativeSentence = new Sentence { Text = "Eu sou francês." },
+            TargetSentence = new Sentence { Text = "Sono francese." },
+        };
+        var final = new List<string>();
+        for (var i = 0; i < 3; i++)
+        {
+            var res = await stage.GenerateWithTranslator(test);
+            test.TargetSentence.Text += $", {res}";
+            final.Add(res);
+        }
+        Console.WriteLine(final);
     }
     static async Task NormalizeTatoeba()
     {
