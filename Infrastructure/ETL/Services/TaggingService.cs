@@ -24,7 +24,7 @@ namespace Infrastructure.ETL.Services
             _defaultModel = defaultModel;
         }
 
-        public async Task RunAITagging(string batchPath, List<Tag> tags, List<CardSeed> cards)
+        public async Task RunAITagging(string batchPath, List<Tag> tags, List<CardSeed1> cards)
         {
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, WriteIndented = true };
 
@@ -41,7 +41,7 @@ namespace Infrastructure.ETL.Services
                 latestBatch = JsonSerializer.Deserialize<TaggingBatchResult>(content, options);
             }
 
-            List<CardSeed> cardBatch;
+            List<CardSeed1> cardBatch;
 
             if (latestBatch != null && latestBatch.Status.Equals("incomplete", StringComparison.OrdinalIgnoreCase))
             {
@@ -128,7 +128,7 @@ namespace Infrastructure.ETL.Services
         /// <summary>
         /// Tags a single card using the LLM.
         /// </summary>
-        public async Task<bool> TagCard(CardSeed card, List<Tag> tags)
+        public async Task<bool> TagCard(CardSeed1 card, List<Tag> tags)
         {
             var sb = new StringBuilder();
             tags = FilterRelevantTags(tags, card);
@@ -174,7 +174,7 @@ namespace Infrastructure.ETL.Services
             }
         }
 
-        public List<Tag> FilterRelevantTags(List<Tag> tags, CardSeed card)
+        public List<Tag> FilterRelevantTags(List<Tag> tags, CardSeed1 card)
         {
             var cardlimitIndex = tags.IndexOf(new Tag { Name = (card.DifficultyLevel + 1).ToString().ToLower() });
             if (card.DifficultyLevel == DifficultyLevel.Advanced)
@@ -199,6 +199,6 @@ namespace Infrastructure.ETL.Services
         public DateTime FinishTime { get; set; }
         public long DurationMs { get; set; }
         public int BatchSize { get; set; }
-        public List<CardSeed> Cards { get; set; } = new();
+        public List<CardSeed1> Cards { get; set; } = new();
     }
 }

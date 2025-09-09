@@ -25,8 +25,9 @@ namespace Infrastructure.ETL.Pipelines
     }
     public class GenerateAlternativeSentences : PipelineStage
     {
-        private readonly FileDatalakeService _fileDatalakeService;
+        private readonly FileDatalakeService _datalakeService;
         private readonly IPromptClient _promptClient;
+        private readonly int _batchSize = 30;
         private string promptTemplate =
             "You are a precise flashcard assistant.\n" +
             "Your task is to generate ONE alternative valid translation in Italian for the following sentence in Portuguese.\n" +
@@ -42,24 +43,57 @@ namespace Infrastructure.ETL.Pipelines
         public GenerateAlternativeSentences(FileDatalakeService fileDatalakeService, IPromptClient promptClient)
         {
             Name = nameof(GenerateAlternativeSentences);
-            _fileDatalakeService = fileDatalakeService;
-            _fileDatalakeService.Configure(this);
+            _datalakeService = fileDatalakeService;
+            _datalakeService.Configure(this);
             _promptClient = promptClient;
         }
         public override async Task ExecuteAsync()
         {
-            var cards = _fileDatalakeService.GetData<List<CardSeed>>();
-            foreach (var card in cards) {
-
-                for(var i = 0; i < 3; i++)
+            var cards = _datalakeService.GetData<List<CardSeed1>>();
+            var count = _datalakeService.BatchCount();
+            var batch = new BatchResult { BatchSize = _batchSize, Schema = "", StartTime = DateTime.Now };
+            var data = new List<Card>();
+            try
+            {
+                foreach (var cardSeed in cards.Skip(count * _batchSize).Take(_batchSize))
                 {
-                    var res = await GenerateWithTranslator(card);
-                    Console.WriteLine(res);
+
+                    var card = cardSeed.ToDomain();
+                    if (card.NativeSample.Text.Split(" ").Length > 2)
+                    {
+                        var newSentence = await GenerateWithAI(cardSeed);
+                        if (!card.SentencesInTargetLanguage.Select(s => s.Text).Contains(newSentence))
+                        {
+                            card.SentencesInTargetLanguage.Add(
+                                new Sentence
+                                {
+                                    Language = card.TargetSample.Language,
+                                    MeaningId = card.TargetSample.MeaningId,
+                                    Text = newSentence.Replace("\n", "").Replace("\r", "")
+                                });
+                        }
+                    }
+                    data.Add(card);
                 }
             }
-            throw new NotImplementedException();
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                if (data.Count() < _batchSize)
+                {
+                    batch.MarkAsIncomplete(data);
+                }
+                else
+                {
+                    batch.MarkAsComplete(data);
+                }
+                _datalakeService.SaveBatch(batch);
+            }
         }
-        public async Task<string> GenerateWithAI(CardSeed cardSeed)
+        public async Task<string> GenerateWithAI(CardSeed1 cardSeed)
         {
             var prompt = promptTemplate
                     .Replace("%SENTENCE%", cardSeed.NativeSentence.Text)
@@ -67,16 +101,6 @@ namespace Infrastructure.ETL.Pipelines
 
             var res = await _promptClient.GenerateAsync(prompt);
             return res;
-        }
-        public async Task<string> GenerateWithTranslator(CardSeed cardSeed)
-        {
-            var client = new DeepLClient("");
-            var translatedText = await client.TranslateTextAsync(
-                cardSeed.TargetSentence.Text,
-                null,
-                LanguageCode.PortugueseBrazilian);
-
-            return translatedText.Text;
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Domain.Entity
@@ -11,7 +12,9 @@ namespace Domain.Entity
     {
         public List<Sentence> SentencesInNativeLanguage { get; set; }
         public List<Sentence> SentencesInTargetLanguage { get; set; }
+        [JsonIgnore]
         public Sentence NativeSample { get => SentencesInNativeLanguage.First(); }
+        [JsonIgnore]
         public Sentence TargetSample { get => SentencesInTargetLanguage.First(); }
 
         public ICollection<Tag> Tags { get; set; }

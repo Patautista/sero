@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.ETL.Models
 {
-    public record CardSeed
+    public record CardSeed1
     {
         public Sentence NativeSentence { get; set; }
         public Sentence TargetSentence { get; set; }
@@ -22,6 +22,16 @@ namespace Infrastructure.ETL.Models
         public bool SuitsDifficulty(DifficultyLevel difficultyLevel)
         {
             return DifficultyLevel <= difficultyLevel;
+        }
+        public Card ToDomain()
+        {
+            return new Card
+            {
+                DifficultyLevel = DifficultyLevel,
+                SentencesInNativeLanguage = new List<Sentence> { NativeSentence },
+                SentencesInTargetLanguage = new List<Sentence> { TargetSentence },
+                Tags = Tags
+            };
         }
     }
 }
