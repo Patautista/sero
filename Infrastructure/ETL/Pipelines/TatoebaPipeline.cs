@@ -50,8 +50,9 @@ namespace Infrastructure.ETL.Pipelines
         public override async Task ExecuteAsync()
         {
             var cards = _datalakeService.GetData<List<CardSeed1>>();
-            var count = _datalakeService.BatchCount();
             var batch = new BatchResult { BatchSize = _batchSize, Schema = "", StartTime = DateTime.Now };
+            var count = _datalakeService.BatchCount();
+            batch.Id += $"_{count + 1}";
             var data = new List<Card>();
             try
             {

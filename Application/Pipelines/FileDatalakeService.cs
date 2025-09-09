@@ -35,7 +35,7 @@ namespace Business.Pipelines
         public void SaveBatch(BatchResult result)
         {
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, WriteIndented = true };
-            var json = JsonSerializer.Serialize(result.Data, options);
+            var json = JsonSerializer.Serialize(result, options);
             File.WriteAllText($"{Path.Combine(_basePath, result.Id)}.json", json);
         }
         public string GetStagePath(PipelineDefinition pipeline, int index) {
