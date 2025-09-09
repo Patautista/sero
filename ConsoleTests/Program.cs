@@ -1,9 +1,11 @@
-﻿using Domain.Entity;
+﻿using Business.Pipelines;
+using Domain.Entity;
 using Domain.Entity.Specification;
 using Infrastructure;
 using Infrastructure.AI;
-using Infrastructure.ETL;
 using Infrastructure.ETL.Models;
+using Infrastructure.ETL.Pipelines;
+using Infrastructure.ETL.Services;
 using Infrastructure.Parsing;
 using Microsoft.Extensions.Options;
 using System;
@@ -19,14 +21,11 @@ class Program
     static string GeminiFlash = "gemini-2.5-flash";
     static async Task Main()
     {
-        var spec = new PropertySpecificationDto(nameof(User.Id), MatchOperator.Equals, 1);
-        var json = JsonSerializer.Serialize(spec);
-        Console.WriteLine(json);
-
-        var expr = SpecificationExpressionFactory.ToExpression<User>(spec);
-        var predicate = expr.Compile();
-        var matches = predicate(new User { Id = 1 });
-        Console.WriteLine($"Matches? {matches}"); // True
+        var fileDLService = new FileDatalakeService(
+            "C:\\Users\\caleb\\source\\repos\\AspireApp1\\ConsoleTests\\etl\\tatoeba",
+            "C:\\Users\\caleb\\source\\repos\\AspireApp1\\ConsoleTests\\etl\\tatoeba\\3 joined\\tatoeba-tagged-joined-cleaned.json");
+        var stage = new GenerateAlternativeSentences(fileDLService, new OllamaClient());
+        await stage.ExecuteAsync();
     }
     static async Task NormalizeTatoeba()
     {

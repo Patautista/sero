@@ -10,7 +10,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Infrastructure.ETL
+namespace Infrastructure.ETL.Services
 {
     public class TaggingService
     {
