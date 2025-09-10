@@ -1,0 +1,1219 @@
+{
+  "Schema": "anki-tagging-v1",
+  "Status": "complete",
+  "FinishTime": "2025-08-30T14:39:37.1285653Z",
+  "DurationMs": 300193,
+  "BatchSize": 30,
+  "Cards": [
+    {
+      "NativeSentence": {
+        "MeaningId": 738,
+        "Id": 0,
+        "Text": "Al\u00E1 \u00E9 grande!",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 738,
+        "Id": 0,
+        "Text": "Allah \u00E8 grande!",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 739,
+        "Id": 0,
+        "Text": "Estamos quase l\u00E1.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 739,
+        "Id": 0,
+        "Text": "Ci siamo quasi.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "movement",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 740,
+        "Id": 0,
+        "Text": "\u00C9 um detalhe.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 740,
+        "Id": 0,
+        "Text": "\u00C8 un dettaglio.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 741,
+        "Id": 0,
+        "Text": "Voc\u00EA vai voltar amanh\u00E3?",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 741,
+        "Id": 0,
+        "Text": "Ritorni domani?",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "question",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "time",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "future",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 742,
+        "Id": 0,
+        "Text": "Nem uma palavra!",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 742,
+        "Id": 0,
+        "Text": "Non dire nulla!",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "numbers",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "negation",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "imperative",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 743,
+        "Id": 0,
+        "Text": "Eu estou com tosse.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 743,
+        "Id": 0,
+        "Text": "Io ho la tosse.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "have/possess",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 744,
+        "Id": 0,
+        "Text": "Eu tenho o v\u00EDdeo.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 744,
+        "Id": 0,
+        "Text": "Io ho il video.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "have/possess",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 745,
+        "Id": 0,
+        "Text": "Quero dan\u00E7ar.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 745,
+        "Id": 0,
+        "Text": "Voglio ballare.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "want",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "movement",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 747,
+        "Id": 0,
+        "Text": "\u00C9 muito estranho!",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 747,
+        "Id": 0,
+        "Text": "\u00C8 molto strano!",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "feelings",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "emotion",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 748,
+        "Id": 0,
+        "Text": "Ele \u00E9 italiano.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 748,
+        "Id": 0,
+        "Text": "Lui \u00E8 italiano.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": null,
+          "name": "nationality",
+          "Cards": []
+        },
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 749,
+        "Id": 0,
+        "Text": "N\u00E3o \u00E9 um peixe.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 749,
+        "Id": 0,
+        "Text": "Non \u00E8 un pesce.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "negation",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "animals",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 750,
+        "Id": 0,
+        "Text": "Temo que n\u00E3o.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 750,
+        "Id": 0,
+        "Text": "Ho paura di no.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "negation",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "feelings",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "emotion",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 751,
+        "Id": 0,
+        "Text": "Que pessimismo!",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 751,
+        "Id": 0,
+        "Text": "Che pessimismo!",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "feelings",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "emotion",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 752,
+        "Id": 0,
+        "Text": "Toc, toc. Quem est\u00E1 a\u00ED?",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 752,
+        "Id": 0,
+        "Text": "Toc toc. Chi \u00E8?",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "question",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "home",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "dailyLife",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 753,
+        "Id": 0,
+        "Text": "Voc\u00EA tem um cachorro?",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 753,
+        "Id": 0,
+        "Text": "Tu hai un cane?",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "have/possess",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "question",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "animals",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 755,
+        "Id": 0,
+        "Text": "Tudo \u00E9 l\u00F3gico.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 755,
+        "Id": 0,
+        "Text": "Tutto \u00E8 logico.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 756,
+        "Id": 0,
+        "Text": "N\u00E3o tenho dormido.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 756,
+        "Id": 0,
+        "Text": "Non ho dormito.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "have/possess",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "negation",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "dailyLife",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "time",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "past",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 757,
+        "Id": 0,
+        "Text": "N\u00E3o tentei.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 757,
+        "Id": 0,
+        "Text": "Non ho provato.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": null,
+          "name": "passato prossimo",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "negation",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "past",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 758,
+        "Id": 0,
+        "Text": "Ela est\u00E1 no banheiro.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 758,
+        "Id": 0,
+        "Text": "Lei \u00E8 in bagno.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "home",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "dailyLife",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 760,
+        "Id": 0,
+        "Text": "Consegue faz\u00EA-lo?",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 760,
+        "Id": 0,
+        "Text": "Riesce a farlo?",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "question",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "can",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 761,
+        "Id": 0,
+        "Text": "Voc\u00EA quer tomar uma cerveja?",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 761,
+        "Id": 0,
+        "Text": "Vuoi una birra?",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "want",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "question",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "food",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 762,
+        "Id": 0,
+        "Text": "Vendem sapatos.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 762,
+        "Id": 0,
+        "Text": "Vendono scarpe.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "work",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 763,
+        "Id": 0,
+        "Text": "Voc\u00EAs vendem sapatos.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 763,
+        "Id": 0,
+        "Text": "Vendete scarpe.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "work",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 764,
+        "Id": 0,
+        "Text": "Eu li um livro.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 764,
+        "Id": 0,
+        "Text": "Lessi un libro.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": null,
+          "name": "passato remoto",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "dailyLife",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "past",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 765,
+        "Id": 0,
+        "Text": "Primeiro as damas.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 765,
+        "Id": 0,
+        "Text": "Prima le donne.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "numbers",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "dailyLife",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "time",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "manner adverb",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "should",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "habit",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 766,
+        "Id": 0,
+        "Text": "Isso n\u00E3o \u00E9 perfeito?",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 766,
+        "Id": 0,
+        "Text": "Non \u00E8 perfetto?",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "negation",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "question",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 767,
+        "Id": 0,
+        "Text": "Desculpe o desabafo!",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 767,
+        "Id": 0,
+        "Text": "Scusa lo sfogo!",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "feelings",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "imperative",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "emotion",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 768,
+        "Id": 0,
+        "Text": "Que espet\u00E1culo!",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 768,
+        "Id": 0,
+        "Text": "Che spettacolo!",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "feelings",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "emotion",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 769,
+        "Id": 0,
+        "Text": "Mas est\u00E1 faltando voc\u00EA!",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 769,
+        "Id": 0,
+        "Text": "Per\u00F2 manchi tu!",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "need",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "presentContinuous",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "emotion",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "contrast",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 770,
+        "Id": 0,
+        "Text": "Mais uma vez, queira desculpar!",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 770,
+        "Id": 0,
+        "Text": "Scusate ancora!",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "time",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "imperative",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "frequency adverb",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "emotion",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    }
+  ]
+}

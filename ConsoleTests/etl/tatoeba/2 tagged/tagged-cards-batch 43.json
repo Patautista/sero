@@ -1,0 +1,1069 @@
+{
+  "Schema": "anki-tagging-v1",
+  "Status": "complete",
+  "FinishTime": "2025-08-31T22:01:32.2370045Z",
+  "DurationMs": 2344150,
+  "BatchSize": 30,
+  "Cards": [
+    {
+      "NativeSentence": {
+        "MeaningId": 10153,
+        "Id": 0,
+        "Text": "No universo infinito brilham incont\u00E1veis estrelas.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 10153,
+        "Id": 0,
+        "Text": "Nell\u0027universo infinito brillano innumerevoli stelle.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "nature",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 2
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 10154,
+        "Id": 0,
+        "Text": "As conchas dos carac\u00F3is marinhos s\u00E3o verdadeiras obras de arte.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 10154,
+        "Id": 0,
+        "Text": "I gusci delle lumache marine sono vere opere d\u0027arte.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "animals",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 2
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 10155,
+        "Id": 0,
+        "Text": "Pare de se preocupar com o que os outros v\u00E3o pensar.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 10155,
+        "Id": 0,
+        "Text": "Smetti di preoccuparti di cosa penseranno gli altri.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "generalTopic",
+          "name": "feelings",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "imperative",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 2
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 10156,
+        "Id": 0,
+        "Text": "Embora tivesse estudado, ele n\u00E3o fez um bom exame.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 10156,
+        "Id": 0,
+        "Text": "Sebbene avesse studiato, non ha fatto un buon esame.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "have/possess",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "negation",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "past",
+          "Cards": []
+        },
+        {
+          "type": "leaningTopic",
+          "name": "past perfect",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 2
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 10157,
+        "Id": 0,
+        "Text": "\u00C9 um pouco tarde e ainda n\u00E3o fizemos a li\u00E7\u00E3o de casa.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 10157,
+        "Id": 0,
+        "Text": "\u00C8 un po\u0027 tardi e ancora non abbiamo fatto i compiti.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "negation",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "home",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "time",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 2
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 10158,
+        "Id": 0,
+        "Text": "A perda da colheita deixou o agricultor entristecido.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 10158,
+        "Id": 0,
+        "Text": "La perdita del raccolto ha rattristato il contadino.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "generalTopic",
+          "name": "feelings",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "dailyLife",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "work",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "past",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 2
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 10159,
+        "Id": 0,
+        "Text": "Ele foi acusado de ter premeditado o crime.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 10159,
+        "Id": 0,
+        "Text": "Lui \u00E8 stato accusato di aver premeditato il crimine.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "past",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 2
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 10160,
+        "Id": 0,
+        "Text": "Eu gostaria de agradecer a voc\u00EA antecipadamente pela informa\u00E7\u00E3o.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 10160,
+        "Id": 0,
+        "Text": "Vorrei ringraziarti in anticipo per le informazioni.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "want",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "dailyLife",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "past",
+          "Cards": []
+        },
+        {
+          "type": "leaningTopic",
+          "name": "past perfect",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 2
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 10161,
+        "Id": 0,
+        "Text": "Tom est\u00E1 f\u00EDsica e mentalmente ainda muito ativo.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 10161,
+        "Id": 0,
+        "Text": "Tom \u00E8 fisicamente e mentalmente ancora molto attivo.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 2
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 10162,
+        "Id": 0,
+        "Text": "Acho que preciso de aparelho auditivo.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 10162,
+        "Id": 0,
+        "Text": "Io penso di aver bisogno di un apparecchio acustico.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "need",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "health",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 2
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 10163,
+        "Id": 0,
+        "Text": "O Tom precisava achar algum lugar para morar.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 10163,
+        "Id": 0,
+        "Text": "Tom aveva bisogno di trovare un posto in cui vivere.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "need",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "home",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "dailyLife",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 2
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 10164,
+        "Id": 0,
+        "Text": "Eu sei que o Tom est\u00E1 escondendo alguma coisa, mas eu n\u00E3o sei o qu\u00EA.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 10164,
+        "Id": 0,
+        "Text": "So che Tom sta nascondendo qualcosa, ma non so cosa.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "presentContinuous",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "negation",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 2
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 10165,
+        "Id": 0,
+        "Text": "\u0022Qual era a nacionalidade dos nossos av\u00F3s?\u0022 \u0022Russa.\u0022",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 10165,
+        "Id": 0,
+        "Text": "\u0022Di che nazionalit\u00E0 erano le nostre nonne?\u0022 \u0022Russa.\u0022",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "question",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "family",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 2
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 10166,
+        "Id": 0,
+        "Text": "Quando eu crescer, quero ser bombeiro.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 10166,
+        "Id": 0,
+        "Text": "Quando sar\u00F2 grande, voglio fare la vigile del fuoco.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "want",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "work",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "conditional",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 2
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 10167,
+        "Id": 0,
+        "Text": "Voc\u00EA roubou minha bicicleta e agora eu vou quebrar sua cara.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 10167,
+        "Id": 0,
+        "Text": "Mi hai rubato la bici, e ora ti spaccher\u00F2 la faccia.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "possessive pronoun/qualifier",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "future",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 2
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 10168,
+        "Id": 0,
+        "Text": "\u0022Qual era a nacionalidade dos seus alunos?\u0022 \u0022B\u00FAlgara.\u0022",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 10168,
+        "Id": 0,
+        "Text": "\u0022Di che nazionalit\u00E0 erano le tue alunne?\u0022 \u0022Bulgara.\u0022",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "question",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 2
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 10169,
+        "Id": 0,
+        "Text": "Dessa forma, ela n\u00E3o precisar\u00E1 pedir nada a ningu\u00E9m.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 10169,
+        "Id": 0,
+        "Text": "In questo modo, non dovr\u00E0 chiedere niente a nessuno.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "need",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "negation",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "future",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 2
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 10170,
+        "Id": 0,
+        "Text": "O imbecil cai de costas e esfola o nariz.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 10170,
+        "Id": 0,
+        "Text": "L\u0027imbecille cade sulla schiena e si sbuccia il naso.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": null,
+          "name": "proverb",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "possessive pronoun/qualifier",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "have/possess",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "past",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "health",
+          "Cards": []
+        },
+        {
+          "type": "leaningTopic",
+          "name": "past perfect",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 2
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 10171,
+        "Id": 0,
+        "Text": "Gonzalo est\u00E1 passando desodorante nas axilas.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 10171,
+        "Id": 0,
+        "Text": "Gonzalo si sta mettendo il deodorante sulle ascelle.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "presentContinuous",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "dailyLife",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 2
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 10172,
+        "Id": 0,
+        "Text": "N\u00E3o h\u00E1 pris\u00E3o que nos encarcere o pensamento.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 10172,
+        "Id": 0,
+        "Text": "Non c\u0027\u00E8 prigione per imprigionare i nostri pensieri.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "have/possess",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "negation",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 2
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 10173,
+        "Id": 0,
+        "Text": "Quem n\u00E3o conhece a f\u00E1bula da cigarra e a formiga?",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 10173,
+        "Id": 0,
+        "Text": "Chi non conosce la favola della cicala e la formica?",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "negation",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 2
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 10174,
+        "Id": 0,
+        "Text": "O raio feriu uma \u00E1rvore alta, ateando-lhe fogo.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 10174,
+        "Id": 0,
+        "Text": "Il fulmine ha colpito un albero alto, incendiandolo.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "possessive pronoun/qualifier",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "past",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "nature",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 2
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 10175,
+        "Id": 0,
+        "Text": "Ela disse estar muito ocupada neste momento.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 10175,
+        "Id": 0,
+        "Text": "Ha detto di essere molto occupata in questo momento.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 2
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 10176,
+        "Id": 0,
+        "Text": "Compare suas respostas com as do professor.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 10176,
+        "Id": 0,
+        "Text": "Confronta le tue risposte con quelle del professore.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "possessive pronoun/qualifier",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "comparison",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 2
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 10177,
+        "Id": 0,
+        "Text": "A l\u00EDngua vai ficando mais bonita na medida em que a vamos aprendendo.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 10177,
+        "Id": 0,
+        "Text": "La lingua diventa pi\u00F9 bella quanto pi\u00F9 la si impara.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "presentContinuous",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "future",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "language",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "conditional",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 2
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 10178,
+        "Id": 0,
+        "Text": "Este \u00E9 o maior peixe que eu j\u00E1 peguei.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 10178,
+        "Id": 0,
+        "Text": "Questo \u00E8 il pesce pi\u00F9 grande che io abbia mai preso.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "animals",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "past",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 2
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 10179,
+        "Id": 0,
+        "Text": "Sua transi\u00E7\u00E3o de homem para mulher est\u00E1 se processando bem.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 10179,
+        "Id": 0,
+        "Text": "La sua transizione da uomo a donna sta andando bene.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "possessive pronoun/qualifier",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "feelings",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 2
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 10180,
+        "Id": 0,
+        "Text": "Esta tradu\u00E7\u00E3o est\u00E1 correta, mas \u00E9 literal demais.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 10180,
+        "Id": 0,
+        "Text": "Questa traduzione \u00E8 corretta, ma \u00E8 troppo letterale.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "possessive pronoun/qualifier",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "language",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "contrast",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 2
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 10181,
+        "Id": 0,
+        "Text": "Se queres casar-te bem, casa-te com algu\u00E9m de igual condi\u00E7\u00E3o.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 10181,
+        "Id": 0,
+        "Text": "Se vuoi sposarti bene, sposa qualcuno di pari rango.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "want",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "comparison",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "conditional",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 2
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 10182,
+        "Id": 0,
+        "Text": "\u0022Ser\u00E1 que o mundo foi criado por acaso?\u0022 \u0022Certamente n\u00E3o.\u0022",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 10182,
+        "Id": 0,
+        "Text": "\u0022Il mondo \u00E8 stato creato per caso?\u0022 \u0022Certamente no\u0022.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "negation",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "question",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "future",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 2
+    }
+  ]
+}

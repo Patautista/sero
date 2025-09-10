@@ -1,0 +1,853 @@
+{
+  "Schema": "anki-tagging-v1",
+  "Status": "complete",
+  "FinishTime": "2025-08-31T04:30:03.5594109Z",
+  "DurationMs": 1983076,
+  "BatchSize": 30,
+  "Cards": [
+    {
+      "NativeSentence": {
+        "MeaningId": 4332,
+        "Id": 0,
+        "Text": "Estou lendo seus livros.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4332,
+        "Id": 0,
+        "Text": "Sto leggendo i suoi libri.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        },
+        {
+          "type": null,
+          "name": "gerundio presente",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "possessive pronoun/qualifier",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "presentContinuous",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "dailyLife",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4334,
+        "Id": 0,
+        "Text": "Voc\u00EA conhece o Sr. Jackson?",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4334,
+        "Id": 0,
+        "Text": "Conosci il signor Jackson?",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": null,
+          "name": "family name",
+          "Cards": []
+        },
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "question",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "family",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4335,
+        "Id": 0,
+        "Text": "Eu n\u00E3o quero ser diferente.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4335,
+        "Id": 0,
+        "Text": "Non voglio essere diverso.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "want",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "negation",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4337,
+        "Id": 0,
+        "Text": "Eu vou te encontrar mais tarde.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4337,
+        "Id": 0,
+        "Text": "Ci incontreremo pi\u00F9 tardi.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "possessive pronoun/qualifier",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "time",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "future",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4338,
+        "Id": 0,
+        "Text": "Eu preciso de mais cobertores.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4338,
+        "Id": 0,
+        "Text": "Ho bisogno di pi\u00F9 coperte.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "need",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4339,
+        "Id": 0,
+        "Text": "Por que voc\u00EA odeia tanto o Tom?",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4339,
+        "Id": 0,
+        "Text": "Perch\u00E9 odi cos\u00EC tanto Tom?",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "question",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "frequency adverb",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "emotion",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4340,
+        "Id": 0,
+        "Text": "Eu n\u00E3o quero ver ningu\u00E9m.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4340,
+        "Id": 0,
+        "Text": "Non voglio vedere nessuno.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "want",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "negation",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "dailyLife",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4342,
+        "Id": 0,
+        "Text": "Falo com Tom todos os dias.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4342,
+        "Id": 0,
+        "Text": "Parlo con Tom ogni giorno.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "possessive pronoun/qualifier",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "frequency adverb",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4344,
+        "Id": 0,
+        "Text": "A filha do Tom est\u00E1 doente.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4344,
+        "Id": 0,
+        "Text": "La figlia di Tom \u00E8 malata.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "possessive pronoun/qualifier",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "have/possess",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "feelings",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4345,
+        "Id": 0,
+        "Text": "Bilal \u00E9 mais alto do que Karam.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4345,
+        "Id": 0,
+        "Text": "Bilal \u00E8 pi\u00F9 alto di Karam.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": null,
+          "name": "comparison",
+          "Cards": []
+        },
+        {
+          "type": null,
+          "name": "male name",
+          "Cards": []
+        },
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "family",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4346,
+        "Id": 0,
+        "Text": "H\u00E1 um telefone na cozinha.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4346,
+        "Id": 0,
+        "Text": "C\u0027\u00E8 un telefono in cucina.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "numbers",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "have/possess",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "home",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "dailyLife",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4347,
+        "Id": 0,
+        "Text": "Perdeste teu telefone?",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4347,
+        "Id": 0,
+        "Text": "Hai perso il tuo telefono?",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "possessive pronoun/qualifier",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "question",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "past",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4348,
+        "Id": 0,
+        "Text": "Eu moro perto do aterro.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4348,
+        "Id": 0,
+        "Text": "Io vivo vicino all\u0027argine.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "directions/where",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4349,
+        "Id": 0,
+        "Text": "Ou\u00E7a, Tom, n\u00E3o \u00E9 s\u00E9rio.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4349,
+        "Id": 0,
+        "Text": "Ascolta, Tom, non \u00E8 serio.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "negation",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "imperative",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4351,
+        "Id": 0,
+        "Text": "O Tom \u00E9 ainda um novato.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4351,
+        "Id": 0,
+        "Text": "Tom \u00E8 ancora un novellino.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "have/possess",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "frequency adverb",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4352,
+        "Id": 0,
+        "Text": "Voc\u00EA viu as minhas mensagens?",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4352,
+        "Id": 0,
+        "Text": "Hai visto i miei messaggi?",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": null,
+          "name": "passato prossimo",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "possessive pronoun/qualifier",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "past",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4353,
+        "Id": 0,
+        "Text": "Ele sabe que pode confiar na gente.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4353,
+        "Id": 0,
+        "Text": "Sa che pu\u00F2 fidarsi di noi.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "have/possess",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "can",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4355,
+        "Id": 0,
+        "Text": "Ele adora pensar na vida.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4355,
+        "Id": 0,
+        "Text": "Lui ama pensare alla vita.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "feelings",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "dailyLife",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4356,
+        "Id": 0,
+        "Text": "Tom mora perto do parque.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4356,
+        "Id": 0,
+        "Text": "Tom abita vicino al parco.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": null,
+          "name": "male name",
+          "Cards": []
+        },
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "possessive pronoun/qualifier",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "dailyLife",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "directions/where",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4357,
+        "Id": 0,
+        "Text": "Eu acho que vou levar esse aqui.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4357,
+        "Id": 0,
+        "Text": "Penso che prender\u00F2 questo.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "possessive pronoun/qualifier",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "have/possess",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "movement",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "future",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4358,
+        "Id": 0,
+        "Text": "Tom tamb\u00E9m viu.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4358,
+        "Id": 0,
+        "Text": "Anche Tom ha visto questo.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": null,
+          "name": "male name",
+          "Cards": []
+        },
+        {
+          "type": null,
+          "name": "passato prossimo",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "past",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4359,
+        "Id": 0,
+        "Text": "N\u00E3o encontrei ningu\u00E9m.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4359,
+        "Id": 0,
+        "Text": "Non ho incontrato nessuno.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": null,
+          "name": "passato prossimo",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "negation",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "past",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    }
+  ]
+}

@@ -1,0 +1,1319 @@
+{
+  "Schema": "",
+  "Status": "complete",
+  "StartTime": "2025-09-09T10:52:09.7321186-03:00",
+  "FinishTime": "2025-09-09T11:05:33.6591697-03:00",
+  "BatchSize": 30,
+  "Data": [
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 56,
+          "Id": 0,
+          "Text": "Para onde voc\u00EA est\u00E1 indo?",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 56,
+          "Id": 0,
+          "Text": "Dove vai?",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 56,
+          "Id": 0,
+          "Text": "Dove sta andando?",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "difficulty",
+          "name": "beginner",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "language",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "movement",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "question",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 57,
+          "Id": 0,
+          "Text": "Onde voc\u00EA est\u00E1?",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 57,
+          "Id": 0,
+          "Text": "Dove sei?",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 57,
+          "Id": 0,
+          "Text": "Dove ti trovi?",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "difficulty",
+          "name": "beginner",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "language",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "question",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 58,
+          "Id": 0,
+          "Text": "Eu sei de tudo.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 58,
+          "Id": 0,
+          "Text": "So tutto.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 58,
+          "Id": 0,
+          "Text": "Sono al corrente di tutto.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "difficulty",
+          "name": "beginner",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 59,
+          "Id": 0,
+          "Text": "De nada.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 59,
+          "Id": 0,
+          "Text": "Di nulla.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "difficulty",
+          "name": "beginner",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "language",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "travel",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 60,
+          "Id": 0,
+          "Text": "Eu come\u00E7o.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 60,
+          "Id": 0,
+          "Text": "Comincio.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "difficulty",
+          "name": "beginner",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "language",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 61,
+          "Id": 0,
+          "Text": "Ele n\u00E3o fuma.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 61,
+          "Id": 0,
+          "Text": "Non fuma.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 61,
+          "Id": 0,
+          "Text": "Lui non fuma.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "habit",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "health",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "negation",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 62,
+          "Id": 0,
+          "Text": "Eu gosto dele.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 62,
+          "Id": 0,
+          "Text": "Mi piace.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 62,
+          "Id": 0,
+          "Text": "Lui mi sta simpatico.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "emotion",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "feelings",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "like",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 63,
+          "Id": 0,
+          "Text": "Ele atirou em mim.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 63,
+          "Id": 0,
+          "Text": "Mi spar\u00F2.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 63,
+          "Id": 0,
+          "Text": "Ha sparato a me.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": null,
+          "name": "passato remoto",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "past",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 64,
+          "Id": 0,
+          "Text": "Odeio Tom.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 64,
+          "Id": 0,
+          "Text": "Odio Tom.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "emotion",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "feelings",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 65,
+          "Id": 0,
+          "Text": "Tenho calor.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 65,
+          "Id": 0,
+          "Text": "Ho caldo.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        },
+        {
+          "type": "difficulty",
+          "name": "beginner",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "feelings",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "language",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 66,
+          "Id": 0,
+          "Text": "Sou Tom.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 66,
+          "Id": 0,
+          "Text": "Sono Tom.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": null,
+          "name": "male name",
+          "Cards": []
+        },
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        },
+        {
+          "type": "difficulty",
+          "name": "beginner",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "language",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 68,
+          "Id": 0,
+          "Text": "E ent\u00E3o?",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 68,
+          "Id": 0,
+          "Text": "E allora?",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "question",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "time",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 69,
+          "Id": 0,
+          "Text": "Ele mora aqui?",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 69,
+          "Id": 0,
+          "Text": "Vive qui?",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 69,
+          "Id": 0,
+          "Text": "Abita qui?",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "generalTopic",
+          "name": "home",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "question",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 70,
+          "Id": 0,
+          "Text": "\u00C9 melhor.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 70,
+          "Id": 0,
+          "Text": "\u00C8 meglio.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "difficulty",
+          "name": "beginner",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "language",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "like",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 71,
+          "Id": 0,
+          "Text": "\u00C9 t\u00EDpico.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 71,
+          "Id": 0,
+          "Text": "\u00C8 tipico.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "difficulty",
+          "name": "beginner",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "culture",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "habit",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 73,
+          "Id": 0,
+          "Text": "\u00C9 s\u00E1bado.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 73,
+          "Id": 0,
+          "Text": "\u00C8 sabato.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        },
+        {
+          "type": "difficulty",
+          "name": "beginner",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "time",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 74,
+          "Id": 0,
+          "Text": "\u00C9 celibat\u00E1rio.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 74,
+          "Id": 0,
+          "Text": "\u00C8 celibe.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 75,
+          "Id": 0,
+          "Text": "Ela gosta.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 75,
+          "Id": 0,
+          "Text": "Le piace.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "difficulty",
+          "name": "beginner",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "feelings",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "like",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 77,
+          "Id": 0,
+          "Text": "O Tom terminou.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 77,
+          "Id": 0,
+          "Text": "Tom fin\u00EC.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 77,
+          "Id": 0,
+          "Text": "Tom ha chiuso.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": null,
+          "name": "passato remoto",
+          "Cards": []
+        },
+        {
+          "type": null,
+          "name": "male name",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "past",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "time",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 78,
+          "Id": 0,
+          "Text": "Eu vejo o Tom.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 78,
+          "Id": 0,
+          "Text": "Vedo Tom.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 78,
+          "Id": 0,
+          "Text": "Io vedo Tom.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "difficulty",
+          "name": "beginner",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "language",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 80,
+          "Id": 0,
+          "Text": "Eu vou bem.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 80,
+          "Id": 0,
+          "Text": "Sto bene.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 80,
+          "Id": 0,
+          "Text": "Io sto bene.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        },
+        {
+          "type": "difficulty",
+          "name": "beginner",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "feelings",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 81,
+          "Id": 0,
+          "Text": "Assim seja!",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 81,
+          "Id": 0,
+          "Text": "Cos\u00EC sia!",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "generalTopic",
+          "name": "culture",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "future",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "language",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "philosophy",
+          "Cards": []
+        },
+        {
+          "type": "mood",
+          "name": "poetic",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 83,
+          "Id": 0,
+          "Text": "Amemos uns aos outros.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 83,
+          "Id": 0,
+          "Text": "Amiamoci.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 83,
+          "Id": 0,
+          "Text": "Vogliamoci bene.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "emotion",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "feelings",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "philosophy",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 84,
+          "Id": 0,
+          "Text": "Eles sabem?",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 84,
+          "Id": 0,
+          "Text": "Lo sanno?",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "difficulty",
+          "name": "beginner",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "language",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "question",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 85,
+          "Id": 0,
+          "Text": "Que ideia!",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 85,
+          "Id": 0,
+          "Text": "Che idea!",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "difficulty",
+          "name": "beginner",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "emotion",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 86,
+          "Id": 0,
+          "Text": "Voc\u00EA \u00E9 maduro.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 86,
+          "Id": 0,
+          "Text": "\u00C8 maturo.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 86,
+          "Id": 0,
+          "Text": "Sei maturo.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "difficulty",
+          "name": "beginner",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 87,
+          "Id": 0,
+          "Text": "Voc\u00EA \u00E9 madura.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 87,
+          "Id": 0,
+          "Text": "\u00C8 matura.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 87,
+          "Id": 0,
+          "Text": "Sei matura.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 88,
+          "Id": 0,
+          "Text": "Tenho tudo.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 88,
+          "Id": 0,
+          "Text": "Ho tutto.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "difficulty",
+          "name": "beginner",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "feelings",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 91,
+          "Id": 0,
+          "Text": "O que \u00E9 isto?",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 91,
+          "Id": 0,
+          "Text": "Che cos\u0027\u00E8?",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 91,
+          "Id": 0,
+          "Text": "Cos\u0027\u00E8 questo?",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        },
+        {
+          "type": "difficulty",
+          "name": "beginner",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "language",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "question",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 92,
+          "Id": 0,
+          "Text": "Sinto sua falta.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 92,
+          "Id": 0,
+          "Text": "Mi manchi.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 92,
+          "Id": 0,
+          "Text": "Mi manca la tua presenza.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    }
+  ]
+}
