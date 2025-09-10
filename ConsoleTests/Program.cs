@@ -19,13 +19,19 @@ class Program
     static string DeepSeek14B_Pure = "deepseek-r1:14b";
     static string DeepSeek8B = "deepseek-r1:8b";
     static string GeminiFlash = "gemini-2.5-flash";
-    static async Task Main()
+    static async Task Main(string[] args)
     {
-        var fileDLService = new FileDatalakeService(
-            "C:\\Users\\caleb\\source\\repos\\AspireApp1\\ConsoleTests\\etl\\tatoeba",
-            "C:\\Users\\caleb\\source\\repos\\AspireApp1\\ConsoleTests\\etl\\tatoeba\\3 joined\\tatoeba-tagged-joined-cleaned.json");
-        var stage = new GenerateAlternativeSentences(fileDLService, new GeminiClient("AIzaSyD_cIyYXmvyyCGtLJLNVHvpZ3-0JZh5cA0"));
-        await stage.ExecuteAsync();
+        var pipeline = args.FirstOrDefault();
+
+        switch (pipeline)
+        {
+            case nameof(GenerateAlternativeSentences):
+                await GenerateAlternativeSentences();
+                break;
+            default:
+                Console.WriteLine("Pipeline não especificado");
+                break;
+        }
     }
     static async Task NormalizeTatoeba()
     {
@@ -77,6 +83,18 @@ class Program
 
         var json = JsonSerializer.Serialize(cards, options: new JsonSerializerOptions { WriteIndented = true, PropertyNameCaseInsensitive = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
         File.WriteAllText("tatoeba-cards.json", json);
+    }
+    static async Task GenerateAlternativeSentences()
+    {
+        var fileDLService = new FileDatalakeService(
+            "C:\\Users\\caleb\\source\\repos\\AspireApp1\\ConsoleTests\\etl\\tatoeba",
+            "C:\\Users\\caleb\\source\\repos\\AspireApp1\\ConsoleTests\\etl\\tatoeba\\3 joined\\tatoeba-tagged-joined-cleaned.json");
+        var stage = new GenerateAlternativeSentences(fileDLService, new GeminiClient("AIzaSyD_cIyYXmvyyCGtLJLNVHvpZ3-0JZh5cA0"));
+        for (int i = 0; i < 10; i++)
+        {
+            await stage.ExecuteAsync();
+            await Task.Delay(TimeSpan.FromMinutes(10));
+        }
     }
     static async Task RunAITagging(string dataset)
     {

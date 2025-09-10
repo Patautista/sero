@@ -1,0 +1,1193 @@
+{
+  "Schema": "",
+  "Status": "complete",
+  "StartTime": "2025-09-09T12:06:28.7276118-03:00",
+  "FinishTime": "2025-09-09T12:08:50.0951579-03:00",
+  "BatchSize": 30,
+  "Data": [
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 470,
+          "Id": 0,
+          "Text": "Tu \u00E9s pat\u00E9tico.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 470,
+          "Id": 0,
+          "Text": "Sei patetico.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 470,
+          "Id": 0,
+          "Text": "Fai pena.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 471,
+          "Id": 0,
+          "Text": "Tu \u00E9s en\u00E9rgica.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 471,
+          "Id": 0,
+          "Text": "Sei energica.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 471,
+          "Id": 0,
+          "Text": "Tu hai energia da vendere.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 472,
+          "Id": 0,
+          "Text": "Tu \u00E9s en\u00E9rgico.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 472,
+          "Id": 0,
+          "Text": "Sei energico.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 472,
+          "Id": 0,
+          "Text": "Tu sei energico.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 473,
+          "Id": 0,
+          "Text": "Tu \u00E9s fabuloso.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 473,
+          "Id": 0,
+          "Text": "Sei favoloso.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 473,
+          "Id": 0,
+          "Text": "Sei fantastico.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 474,
+          "Id": 0,
+          "Text": "Tu \u00E9s fabulosa.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 474,
+          "Id": 0,
+          "Text": "Sei favolosa.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 474,
+          "Id": 0,
+          "Text": "Sei fantastica.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 475,
+          "Id": 0,
+          "Text": "Tu \u00E9s generosa.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 475,
+          "Id": 0,
+          "Text": "Sei generosa.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 475,
+          "Id": 0,
+          "Text": "Tu sei generosa.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 476,
+          "Id": 0,
+          "Text": "Tu \u00E9s generoso.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 476,
+          "Id": 0,
+          "Text": "Sei generoso.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 476,
+          "Id": 0,
+          "Text": "Tu sei generoso.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 477,
+          "Id": 0,
+          "Text": "Tu \u00E9s boa.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 477,
+          "Id": 0,
+          "Text": "Tu sei buona.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 477,
+          "Id": 0,
+          "Text": "Sei brava.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 478,
+          "Id": 0,
+          "Text": "Tu \u00E9s bom.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 478,
+          "Id": 0,
+          "Text": "Tu sei buono.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 478,
+          "Id": 0,
+          "Text": "Sei bravo.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 479,
+          "Id": 0,
+          "Text": "Tu \u00E9s met\u00F3dica.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 479,
+          "Id": 0,
+          "Text": "Sei metodica.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 479,
+          "Id": 0,
+          "Text": "Sei una persona metodica.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 480,
+          "Id": 0,
+          "Text": "Tu \u00E9s met\u00F3dico.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 480,
+          "Id": 0,
+          "Text": "Sei metodico.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 480,
+          "Id": 0,
+          "Text": "Hai un metodo.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 481,
+          "Id": 0,
+          "Text": "Tu \u00E9s pregui\u00E7osa.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 481,
+          "Id": 0,
+          "Text": "Tu sei pigra.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 481,
+          "Id": 0,
+          "Text": "Sei pigra.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 482,
+          "Id": 0,
+          "Text": "Tu \u00E9s pregui\u00E7oso.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 482,
+          "Id": 0,
+          "Text": "Tu sei pigro.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 482,
+          "Id": 0,
+          "Text": "Sei una persona pigra.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 483,
+          "Id": 0,
+          "Text": "Tu est\u00E1s perdida.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 483,
+          "Id": 0,
+          "Text": "Tu sei persa.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 483,
+          "Id": 0,
+          "Text": "Ti sei persa.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 484,
+          "Id": 0,
+          "Text": "Tu est\u00E1s perdido.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 484,
+          "Id": 0,
+          "Text": "Tu sei perso.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 484,
+          "Id": 0,
+          "Text": "Ti sei perso.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "presentContinuous",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 485,
+          "Id": 0,
+          "Text": "Voc\u00EA \u00E9 maduro.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 485,
+          "Id": 0,
+          "Text": "Lei \u00E8 maturo.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 485,
+          "Id": 0,
+          "Text": "Sei maturo.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 486,
+          "Id": 0,
+          "Text": "Voc\u00EA \u00E9 madura.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 486,
+          "Id": 0,
+          "Text": "Lei \u00E8 matura.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 486,
+          "Id": 0,
+          "Text": "Sei matura.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 487,
+          "Id": 0,
+          "Text": "Voc\u00EAs s\u00E3o maduros.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 487,
+          "Id": 0,
+          "Text": "Siete maturi.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 487,
+          "Id": 0,
+          "Text": "Voi siete persone mature.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "second person plural subject",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 488,
+          "Id": 0,
+          "Text": "Voc\u00EAs s\u00E3o maduras.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 488,
+          "Id": 0,
+          "Text": "Siete mature.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 488,
+          "Id": 0,
+          "Text": "Voi siete mature.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "second person plural subject",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 489,
+          "Id": 0,
+          "Text": "Tu \u00E9s rid\u00EDculo.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 489,
+          "Id": 0,
+          "Text": "Sei ridicolo.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 489,
+          "Id": 0,
+          "Text": "Fai ridere.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 490,
+          "Id": 0,
+          "Text": "Tu est\u00E1s arruinada.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 490,
+          "Id": 0,
+          "Text": "Sei rovinata.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 490,
+          "Id": 0,
+          "Text": "Sei al verde.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 491,
+          "Id": 0,
+          "Text": "Tu est\u00E1s arruinado.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 491,
+          "Id": 0,
+          "Text": "Sei rovinato.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 491,
+          "Id": 0,
+          "Text": "Sei squattrinato.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 492,
+          "Id": 0,
+          "Text": "Voc\u00EA \u00E9 sarc\u00E1stico.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 492,
+          "Id": 0,
+          "Text": "\u00C8 sarcastico.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 492,
+          "Id": 0,
+          "Text": "Sei sarcastico.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "emotion",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 493,
+          "Id": 0,
+          "Text": "Tu \u00E9s forte.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 493,
+          "Id": 0,
+          "Text": "Tu sei forte.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 493,
+          "Id": 0,
+          "Text": "Sei forte.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 494,
+          "Id": 0,
+          "Text": "Tu \u00E9s injusto.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 494,
+          "Id": 0,
+          "Text": "Sei ingiusto.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 494,
+          "Id": 0,
+          "Text": "Non sei giusto.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 495,
+          "Id": 0,
+          "Text": "Tu \u00E9s injusta.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 495,
+          "Id": 0,
+          "Text": "Sei ingiusta.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 495,
+          "Id": 0,
+          "Text": "Sei scorretta.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 496,
+          "Id": 0,
+          "Text": "Voc\u00EA est\u00E1 fugindo.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 496,
+          "Id": 0,
+          "Text": "Sta fuggendo.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 496,
+          "Id": 0,
+          "Text": "Stai scappando.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "presentContinuous",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 497,
+          "Id": 0,
+          "Text": "Est\u00E1 assustado.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 497,
+          "Id": 0,
+          "Text": "\u00C8 spaventato.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 498,
+          "Id": 0,
+          "Text": "Voc\u00EA n\u00E3o se sente inspirado?",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 498,
+          "Id": 0,
+          "Text": "Non ispirato?",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 498,
+          "Id": 0,
+          "Text": "Non ti senti ispirato?",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "negation",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    },
+    {
+      "SentencesInNativeLanguage": [
+        {
+          "MeaningId": 499,
+          "Id": 0,
+          "Text": "N\u00F3s estamos tristes.",
+          "Language": "pt"
+        }
+      ],
+      "SentencesInTargetLanguage": [
+        {
+          "MeaningId": 499,
+          "Id": 0,
+          "Text": "Siamo tristi.",
+          "Language": "it"
+        },
+        {
+          "MeaningId": 499,
+          "Id": 0,
+          "Text": "Noi siamo tristi.",
+          "Language": "it"
+        }
+      ],
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "first person plural subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "presentContinuous",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 0
+    }
+  ]
+}

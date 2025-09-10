@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Triolingo", "MauiApp1\Triolingo.csproj", "{6BCFC3D0-DD3B-4F8D-BE4E-6B95709FFA6D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SupportServer", "SupportServer\SupportServer.csproj", "{2836DC27-C43C-4CE5-97F2-A9AA5A43F091}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{6BCFC3D0-DD3B-4F8D-BE4E-6B95709FFA6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BCFC3D0-DD3B-4F8D-BE4E-6B95709FFA6D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6BCFC3D0-DD3B-4F8D-BE4E-6B95709FFA6D}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{2836DC27-C43C-4CE5-97F2-A9AA5A43F091}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2836DC27-C43C-4CE5-97F2-A9AA5A43F091}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2836DC27-C43C-4CE5-97F2-A9AA5A43F091}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2836DC27-C43C-4CE5-97F2-A9AA5A43F091}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

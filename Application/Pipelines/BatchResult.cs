@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Business.ETL.Pipelines;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,11 @@ namespace Business.Pipelines
         public DateTime FinishTime { get; set; }
         public int BatchSize { get; set; }
         public object Data { get; set; } = new();
+
+        public void SetId(PipelineStage stage, int order)
+        {
+            Id = $"batch_{DateTime.Now.ToString("dd-MM-yyyy")}_{order}";
+        }
         public void MarkAsComplete(object data)
         {
             this.Data = data;

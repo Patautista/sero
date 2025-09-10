@@ -5767,6 +5767,11 @@
         "Cards": []
       },
       {
+        "type": "learningTopic",
+        "name": "future",
+        "Cards": []
+      },
+      {
         "type": "generalTopic",
         "name": "family",
         "Cards": []
@@ -8544,7 +8549,7 @@
     "TargetSentence": {
       "MeaningId": 547,
       "Id": 0,
-      "Text": "Seguo Charlie.",
+      "Text": "Io sono Charlie.",
       "Language": "it"
     },
     "Tags": [
@@ -10424,11 +10429,6 @@
       {
         "type": "difficulty",
         "name": "beginner",
-        "Cards": []
-      },
-      {
-        "type": "learningTopic",
-        "name": "introduction",
         "Cards": []
       },
       {
@@ -17841,11 +17841,6 @@
       },
       {
         "type": "learningTopic",
-        "name": "need",
-        "Cards": []
-      },
-      {
-        "type": "learningTopic",
         "name": "past",
         "Cards": []
       }
@@ -18137,17 +18132,7 @@
       },
       {
         "type": "learningTopic",
-        "name": "possessive pronoun/qualifier",
-        "Cards": []
-      },
-      {
-        "type": "learningTopic",
         "name": "second person singular subject",
-        "Cards": []
-      },
-      {
-        "type": "learningTopic",
-        "name": "need",
         "Cards": []
       },
       {
@@ -21135,17 +21120,7 @@
       },
       {
         "type": "learningTopic",
-        "name": "introduction",
-        "Cards": []
-      },
-      {
-        "type": "learningTopic",
         "name": "possessive pronoun/qualifier",
-        "Cards": []
-      },
-      {
-        "type": "learningTopic",
-        "name": "have/possess",
         "Cards": []
       },
       {
@@ -32235,11 +32210,6 @@
         "Cards": []
       },
       {
-        "type": "generalTopic",
-        "name": "family",
-        "Cards": []
-      },
-      {
         "type": "learningTopic",
         "name": "should",
         "Cards": []
@@ -37980,7 +37950,7 @@
     "Tags": [
       {
         "type": "generalTopic",
-        "name": "family",
+        "name": "nature",
         "Cards": []
       },
       {
@@ -43028,11 +42998,7 @@
       "Language": "it"
     },
     "Tags": [
-      {
-        "type": "learningTopic",
-        "name": "introduction",
-        "Cards": []
-      }
+
     ],
     "DifficultyLevel": 2
   },

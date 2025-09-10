@@ -49,16 +49,20 @@ namespace Infrastructure.ETL.Pipelines
         }
         public override async Task ExecuteAsync()
         {
+            Console.WriteLine($"Running {Name}...");
             var cards = _datalakeService.GetData<List<CardSeed1>>();
-            var batch = new BatchResult { BatchSize = _batchSize, Schema = "", StartTime = DateTime.Now };
+            var batch = new BatchResult { BatchSize = _batchSize, Schema = ""};
             var count = _datalakeService.BatchCount();
-            batch.Id += $"_{count + 1}";
+            batch.SetId(this, count + 1);
             var data = new List<Card>();
             try
             {
-                foreach (var cardSeed in cards.Skip(count * _batchSize).Take(_batchSize))
+                int index = 1;
+                var processable = cards.Skip(count * _batchSize).Take(_batchSize);
+                var total = processable.Count();
+                foreach (var cardSeed in processable)
                 {
-
+                    Console.WriteLine($"Processing item {index} in {total}");
                     var card = cardSeed.ToDomain();
                     if (card.NativeSample.Text.Split(" ").Length > 2)
                     {
@@ -70,11 +74,12 @@ namespace Infrastructure.ETL.Pipelines
                                 {
                                     Language = card.TargetSample.Language,
                                     MeaningId = card.TargetSample.MeaningId,
-                                    Text = newSentence.Replace("\n", "").Replace("\r", "")
+                                    Text = newSentence
                                 });
                         }
                     }
                     data.Add(card);
+                    index++;
                 }
             }
             catch(Exception ex)
@@ -100,7 +105,21 @@ namespace Infrastructure.ETL.Pipelines
                     .Replace("%SENTENCE%", cardSeed.NativeSentence.Text)
                     .Replace("%TRANSLATIONS%", cardSeed.TargetSentence.Text);
 
+            Console.WriteLine(prompt);
+
             var res = await _promptClient.GenerateAsync(prompt);
+            res = res.Replace("\n", "").Replace("\r", "");
+
+            Console.WriteLine("\n\n");
+
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.BackgroundColor = ConsoleColor.White;
+
+            Console.WriteLine($"AI response: {res}");
+
+            Console.ResetColor();
+            Console.WriteLine("\n\n");
+
             return res;
         }
     }
