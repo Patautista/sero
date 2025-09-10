@@ -24,6 +24,10 @@ namespace Infrastructure.AI
 
         public async Task<string> GenerateAsync(string prompt, string model = "gemini-2.0-flash")
         {
+            if (string.IsNullOrEmpty(model))
+            {
+                model = "gemini-2.0-flash";
+            }
             var requestBody = new
             {
                 contents = new[]

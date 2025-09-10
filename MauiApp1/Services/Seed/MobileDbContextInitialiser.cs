@@ -71,7 +71,7 @@ namespace MauiApp1.Services.Seed
         {
             var json = await SeedHelper.LoadMauiAsset("backup_it-pt.json");
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-            var cards = JsonSerializer.Deserialize<List<CardSeed>>(json, options) ?? new();
+            var cards = JsonSerializer.Deserialize<List<CardSeed1>>(json, options) ?? new();
 
             // Group by meaning
             var grouped = cards.GroupBy(c => c.NativeSentence.MeaningId);

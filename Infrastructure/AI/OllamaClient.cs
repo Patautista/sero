@@ -16,6 +16,10 @@ namespace Infrastructure.AI
     {
         private readonly HttpClient _httpClient;
         private readonly string _baseUrl;
+        static string DeepSeek14BQ = "deepseek-r1:14b-qwen-distill-q4_K_M";
+        static string DeepSeek14Q_LLamaFile = "DeepSeek-R1-Distill-Qwen-14B-Q4_K_M";
+        static string DeepSeek14B_Pure = "deepseek-r1:14b";
+        static string DeepSeek8B = "deepseek-r1:8b";
 
         public OllamaClient(string baseUrl = "http://localhost:11434")
         {
@@ -29,6 +33,10 @@ namespace Infrastructure.AI
         /// </summary>
         public async Task<string> GenerateAsync(string prompt, string model)
         {
+            if (String.IsNullOrEmpty(model))
+            {
+                model = "deepseek-r1:14b-qwen-distill-q4_K_M";
+            }
             var requestBody = new
             {
                 model = model,

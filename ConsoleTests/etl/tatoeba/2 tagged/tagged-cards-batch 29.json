@@ -1,0 +1,974 @@
+{
+  "Schema": "anki-tagging-v1",
+  "Status": "complete",
+  "FinishTime": "2025-08-31T07:42:24.5696575Z",
+  "DurationMs": 1958787,
+  "BatchSize": 30,
+  "Cards": [
+    {
+      "NativeSentence": {
+        "MeaningId": 4509,
+        "Id": 0,
+        "Text": "Ontem foram ao cinema.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4509,
+        "Id": 0,
+        "Text": "Ieri sono andati al cinema.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "generalTopic",
+          "name": "dailyLife",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "movement",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "past",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4510,
+        "Id": 0,
+        "Text": "Ontem elas foram ao cinema.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4510,
+        "Id": 0,
+        "Text": "Ieri sono andate al cinema.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "time",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "movement",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4511,
+        "Id": 0,
+        "Text": "Tenho que responder em ingl\u00EAs?",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4511,
+        "Id": 0,
+        "Text": "Devo rispondere in inglese?",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": null,
+          "name": "language",
+          "Cards": []
+        },
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        },
+        {
+          "type": null,
+          "name": "infinito presente",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "question",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "must",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4512,
+        "Id": 0,
+        "Text": "De quem \u00E9 este dicion\u00E1rio?",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4512,
+        "Id": 0,
+        "Text": "Di chi \u00E8 questo dizionario?",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "have/possess",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "question",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4513,
+        "Id": 0,
+        "Text": "\u00C9 uma falta de respeito.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4513,
+        "Id": 0,
+        "Text": "\u00C8 una mancanza di rispetto.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4514,
+        "Id": 0,
+        "Text": "Ela morreu de tuberculose.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4514,
+        "Id": 0,
+        "Text": "Lei \u00E8 morta di tubercolosi.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "past",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4515,
+        "Id": 0,
+        "Text": "Meus peitos est\u00E3o crescendo.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4515,
+        "Id": 0,
+        "Text": "Mi stan crescendo le tette.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "possessive pronoun/qualifier",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "presentContinuous",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4516,
+        "Id": 0,
+        "Text": "Ela est\u00E1 mesmo em boa forma.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4516,
+        "Id": 0,
+        "Text": "\u00C8 veramente in buona forma.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "dailyLife",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4517,
+        "Id": 0,
+        "Text": "Eles subiram no trem.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4517,
+        "Id": 0,
+        "Text": "Loro sono saliti sul treno.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "past",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "transport",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4518,
+        "Id": 0,
+        "Text": "Ele morreu poucos dias depois.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4518,
+        "Id": 0,
+        "Text": "Lui mor\u00EC pochi giorni dopo.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "past",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4519,
+        "Id": 0,
+        "Text": "Ele parece saud\u00E1vel.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4519,
+        "Id": 0,
+        "Text": "Lui sembra di buona salute.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "seem",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4520,
+        "Id": 0,
+        "Text": "Este \u00E9 o lugar perfeito.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4520,
+        "Id": 0,
+        "Text": "Questo \u00E8 il posto perfetto.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "directions/where",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4521,
+        "Id": 0,
+        "Text": "Estava em S\u00E3o Paulo em fevereiro.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4521,
+        "Id": 0,
+        "Text": "A febbraio ero a San Paolo.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "time",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "directions/where",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "past",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4522,
+        "Id": 0,
+        "Text": "Eu estou com vontade de tomar um banho agora.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4522,
+        "Id": 0,
+        "Text": "Mi va di fare un bagno ora.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "want",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4523,
+        "Id": 0,
+        "Text": "Ele ganha uma bolada de dinheiro.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4523,
+        "Id": 0,
+        "Text": "Guadagna un botto di soldi.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": null,
+          "name": "colloquial",
+          "Cards": []
+        },
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4524,
+        "Id": 0,
+        "Text": "Encontrei o teu amigo.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4524,
+        "Id": 0,
+        "Text": "Ho incontrato il tuo amico.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "possessive pronoun/qualifier",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4525,
+        "Id": 0,
+        "Text": "O vov\u00F4 ficou surdo.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4525,
+        "Id": 0,
+        "Text": "Il nonno \u00E8 diventato sordo.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "past",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4526,
+        "Id": 0,
+        "Text": "Posso confirmar isso.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4526,
+        "Id": 0,
+        "Text": "Questo lo posso confermare.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        },
+        {
+          "type": null,
+          "name": "infinito presente",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "possessive pronoun/qualifier",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "can",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4527,
+        "Id": 0,
+        "Text": "A marca \u0027\u0026\u0027 significa \u0027e\u0027.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4527,
+        "Id": 0,
+        "Text": "Il segno \u0027\u0026\u0027 significa \u0027e\u0027.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4528,
+        "Id": 0,
+        "Text": "Muriel completou 20 anos.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4528,
+        "Id": 0,
+        "Text": "Muriel ha compiuto 20 anni.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "numbers",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "have/possess",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4529,
+        "Id": 0,
+        "Text": "Voc\u00EA deveria ser mais cuidadoso.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4529,
+        "Id": 0,
+        "Text": "Dovresti stare pi\u00F9 attento.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "should",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4530,
+        "Id": 0,
+        "Text": "Faz o papel de Hamlet.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4530,
+        "Id": 0,
+        "Text": "Recito nel ruolo di Amleto.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "generalTopic",
+          "name": "work",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "imperative",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4531,
+        "Id": 0,
+        "Text": "Eu gosto de seus sapatos.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4531,
+        "Id": 0,
+        "Text": "Mi piacciono le tue scarpe.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "possessive pronoun/qualifier",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "like",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4532,
+        "Id": 0,
+        "Text": "A gata est\u00E1 bebendo o leite dela.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4532,
+        "Id": 0,
+        "Text": "La gatta beve il suo latte.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "possessive pronoun/qualifier",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "present",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "presentContinuous",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "animals",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4533,
+        "Id": 0,
+        "Text": "N\u00F3s precisamos de um l\u00EDder.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4533,
+        "Id": 0,
+        "Text": "Abbiamo bisogno di un capo.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "need",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4534,
+        "Id": 0,
+        "Text": "A arte de escrever \u00E9 \u00FAtil.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4534,
+        "Id": 0,
+        "Text": "L\u0027arte di scrivere \u00E8 utile.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "have/possess",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "work",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "fact",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4535,
+        "Id": 0,
+        "Text": "Eu e o Tom somos bons amigos.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4535,
+        "Id": 0,
+        "Text": "Io e Tom siamo buoni amici.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "possessive pronoun/qualifier",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "third person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "family",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4536,
+        "Id": 0,
+        "Text": "Eu tenho um par de sapatos vermelhos.",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4536,
+        "Id": 0,
+        "Text": "Ho un paio di scarpe rosse.",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "numbers",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "first person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "have/possess",
+          "Cards": []
+        },
+        {
+          "type": "generalTopic",
+          "name": "color",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4537,
+        "Id": 0,
+        "Text": "Feliz ano novo ! Idem !",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4537,
+        "Id": 0,
+        "Text": "\u0022Buon anno!\u0022 \u0022Altrettanto!\u0022",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": "learningTopic",
+          "name": "time",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "adjective",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    },
+    {
+      "NativeSentence": {
+        "MeaningId": 4538,
+        "Id": 0,
+        "Text": "Que n\u00FAmero voc\u00EA cal\u00E7a?",
+        "Language": "pt"
+      },
+      "TargetSentence": {
+        "MeaningId": 4538,
+        "Id": 0,
+        "Text": "Che numero di scarpe porta?",
+        "Language": "it"
+      },
+      "Tags": [
+        {
+          "type": null,
+          "name": "presente",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "numbers",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "second person singular subject",
+          "Cards": []
+        },
+        {
+          "type": "learningTopic",
+          "name": "question",
+          "Cards": []
+        }
+      ],
+      "DifficultyLevel": 1
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "GenerateAlternativeSentences": {
+      "commandName": "Project",
+      "commandLineArgs": "GenerateAlternativeSentences"
+    },
+    "PipelineB": {
+      "commandName": "Project",
+      "commandLineArgs": "pipelineB"
+    }
+  }
+}

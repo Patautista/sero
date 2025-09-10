@@ -1,9 +1,11 @@
-﻿using Domain.Entity;
+﻿using Business.Pipelines;
+using Domain.Entity;
 using Domain.Entity.Specification;
 using Infrastructure;
 using Infrastructure.AI;
-using Infrastructure.ETL;
 using Infrastructure.ETL.Models;
+using Infrastructure.ETL.Pipelines;
+using Infrastructure.ETL.Services;
 using Infrastructure.Parsing;
 using Microsoft.Extensions.Options;
 using System;
@@ -17,16 +19,19 @@ class Program
     static string DeepSeek14B_Pure = "deepseek-r1:14b";
     static string DeepSeek8B = "deepseek-r1:8b";
     static string GeminiFlash = "gemini-2.5-flash";
-    static async Task Main()
+    static async Task Main(string[] args)
     {
-        var spec = new PropertySpecificationDto(nameof(User.Id), MatchOperator.Equals, 1);
-        var json = JsonSerializer.Serialize(spec);
-        Console.WriteLine(json);
+        var pipeline = args.FirstOrDefault();
 
-        var expr = SpecificationExpressionFactory.ToExpression<User>(spec);
-        var predicate = expr.Compile();
-        var matches = predicate(new User { Id = 1 });
-        Console.WriteLine($"Matches? {matches}"); // True
+        switch (pipeline)
+        {
+            case nameof(GenerateAlternativeSentences):
+                await GenerateAlternativeSentences();
+                break;
+            default:
+                Console.WriteLine("Pipeline não especificado");
+                break;
+        }
     }
     static async Task NormalizeTatoeba()
     {
@@ -58,7 +63,7 @@ class Program
             }
         };
 
-        var cards = sentenceMatrix.AsParallel().Select((l, index) => new CardSeed
+        var cards = sentenceMatrix.AsParallel().Select((l, index) => new CardSeed1
         {
             TargetSentence = new Sentence
             {
@@ -79,6 +84,18 @@ class Program
         var json = JsonSerializer.Serialize(cards, options: new JsonSerializerOptions { WriteIndented = true, PropertyNameCaseInsensitive = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
         File.WriteAllText("tatoeba-cards.json", json);
     }
+    static async Task GenerateAlternativeSentences()
+    {
+        var fileDLService = new FileDatalakeService(
+            "C:\\Users\\caleb\\source\\repos\\AspireApp1\\ConsoleTests\\etl\\tatoeba",
+            "C:\\Users\\caleb\\source\\repos\\AspireApp1\\ConsoleTests\\etl\\tatoeba\\3 joined\\tatoeba-tagged-joined-cleaned.json");
+        var stage = new GenerateAlternativeSentences(fileDLService, new GeminiClient("AIzaSyD_cIyYXmvyyCGtLJLNVHvpZ3-0JZh5cA0"));
+        for (int i = 0; i < 10; i++)
+        {
+            await stage.ExecuteAsync();
+            await Task.Delay(TimeSpan.FromMinutes(10));
+        }
+    }
     static async Task RunAITagging(string dataset)
     {
         //var api = new GeminiClient("AIzaSyD_cIyYXmvyyCGtLJLNVHvpZ3-0JZh5cA0");
@@ -92,14 +109,14 @@ class Program
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, WriteIndented = true };
 
         var tags = JsonSerializer.Deserialize<List<Tag>>(File.ReadAllText("tags.json"), options: options) ?? new List<Tag>();
-        var cards = JsonSerializer.Deserialize<List<CardSeed>>(File.ReadAllText($"C:\\Users\\caleb\\source\\repos\\AspireApp1\\ConsoleTests\\etl\\1 normalized\\{dataset}"), options: options) ?? new List<CardSeed>();
+        var cards = JsonSerializer.Deserialize<List<CardSeed1>>(File.ReadAllText($"C:\\Users\\caleb\\source\\repos\\AspireApp1\\ConsoleTests\\etl\\1 normalized\\{dataset}"), options: options) ?? new List<CardSeed1>();
 
         await service.RunAITagging(batchPath, tags, cards);
     }
     static void SummarizeTatoebaCards()
     {
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, WriteIndented = true };
-        var cards = JsonSerializer.Deserialize<List<CardSeed>>(File.ReadAllText("C:\\Users\\caleb\\source\\repos\\AspireApp1\\ConsoleTests\\etl\\1 normalized\\tatoeba-full.json"), options: options) ?? new List<CardSeed>();
+        var cards = JsonSerializer.Deserialize<List<CardSeed1>>(File.ReadAllText("C:\\Users\\caleb\\source\\repos\\AspireApp1\\ConsoleTests\\etl\\1 normalized\\tatoeba-full.json"), options: options) ?? new List<CardSeed1>();
         cards = cards.Where(c => c.NativeSentence.Text.Split(" ").Count() > 1)
             .DistinctBy(c => c.NativeSentence.Text)
             .DistinctBy(c => c.TargetSentence.Text).ToList();
@@ -129,7 +146,7 @@ class Program
         var files = Directory
                 .EnumerateFiles(batchPath, $"{TaggingService.Prefix}*.json", SearchOption.TopDirectoryOnly).ToList();
 
-        var cards = new List<CardSeed>();
+        var cards = new List<CardSeed1>();
         foreach (var file in files) {
             var batchResult = JsonSerializer.Deserialize<TaggingBatchResult>(File.ReadAllText(file));
             cards.AddRange(batchResult.Cards);

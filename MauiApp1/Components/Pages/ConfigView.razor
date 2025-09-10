@@ -7,96 +7,17 @@
 @inject AnkiDbContext dbContext
 
 
-@if (config == null)
-{
-    <LoadingSpinner></LoadingSpinner>
-}
-else
-{
-       <RadzenAccordion>
+<RadzenAccordion>
             <Items>
                 <RadzenAccordionItem Text="Configurações de Estudo" Icon="book" CollapseTitle="Collapse orders."
                                      ExpandTitle="Expand orders." CollapseAriaLabel="Collapse the order details."
                                      ExpandAriaLabel="Expand the order details.">
-                    <EditForm Model="@config" OnValidSubmit="ApplyStudyConfig">
-                    <div class="mb-3">
-                        <label class="form-label">Escolha o Idioma</label>
-                        <select class="form-select" @bind="selectedLanguageCode">
-                            @foreach (var pair in AvailableLanguages)
-                            {
-                                <option value="@pair.Code">@pair.DisplayName</option>
-                            }
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Dificuldade Inicial</label>
-                        <select class="form-select" @bind="config.DifficultyLevel">
-                            @foreach (var level in Enum.GetValues<DifficultyLevel>())
-                            {
-                                <option value="@level">@level</option>
-                            }
-                        </select>
-                    </div>
-
-                    <button class="btn btn-primary" type="submit">Salvar</button>
-                </EditForm>
+                    <MauiApp1.Components.Config.StudyConfigComponent></MauiApp1.Components.Config.StudyConfigComponent>
                 </RadzenAccordionItem>
                 <RadzenAccordionItem Text="Sistema" Icon="bug_report" CollapseTitle="Collapse employees."
                                      ExpandTitle="Expand employees." CollapseAriaLabel="Collapse the employee details."
                                      ExpandAriaLabel="Expand the employee details.">
-                     <EditForm Model="@config" OnValidSubmit="ResetSystemConfig">
-                        <button class="btn btn-primary" type="submit">Resetar</button>
-                    </EditForm>
+                    <MauiApp1.Components.Config.SystemConfigComponent></MauiApp1.Components.Config.SystemConfigComponent>
                 </RadzenAccordionItem>
-
             </Items>
-        </RadzenAccordion>
-
-}
-
-@code {
-    private StudyConfig? config;
-    private string selectedLanguageCode;
-
-    private List<(string Code, string DisplayName, string Source, string Target)> AvailableLanguages = new()
-    {
-        ("it-pt", "Italian → Portuguese", "it", "pt"),
-        ("en-pt", "English → Portuguese", "en", "pt")
-    };
-
-    protected override async Task OnInitializedAsync()
-    {
-        config = await SettingsService.LoadAsync()
-                 ?? new StudyConfig
-                 {
-                     SelectedLanguage = new LanguagePair { Source = new("it"), Target = new("pt") },
-                     DifficultyLevel = DifficultyLevel.Beginner
-                 };
-
-        // Sync UI dropdown with current config
-        var code = $"{config.SelectedLanguage.Source.TwoLetterISOLanguageName}-{config.SelectedLanguage.Target.TwoLetterISOLanguageName}";
-        selectedLanguageCode = code;
-    }
-
-    private async Task ApplyStudyConfig()
-    {
-        // Map dropdown code back to LanguagePair
-        var lang = AvailableLanguages.FirstOrDefault(l => l.Code == selectedLanguageCode);
-        config.SelectedLanguage = new LanguagePair
-        {
-            Source = new(lang.Source),
-            Target = new(lang.Target)
-        };
-
-        await SettingsService.SaveStudyConfigAsync(config);
-        Nav.NavigateTo("/");
-    }
-    private async Task ResetSystemConfig()
-    {
-
-        await dbContext.Database.EnsureDeletedAsync();
-        await SettingsService.SaveStudyConfigAsync(null);
-        new Startup();
-    }
-}
+</RadzenAccordion>
