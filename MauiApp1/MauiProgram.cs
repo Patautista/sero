@@ -24,6 +24,7 @@ namespace MauiApp1
             builder.Services.AddRadzenComponents();
 
             builder.Services.AddMauiBlazorWebView();
+            builder.Services.AddApplicationServices(builder.Configuration);
             builder.Services.AddScoped<DatabaseService>();
             builder.Services.AddSingleton<ISettingsService, SettingsService>();
 
