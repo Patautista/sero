@@ -80,13 +80,6 @@ namespace Business
 
         private static string FindDifferences(string userAnswer, string closestMatch)
         {
-            // This is a more complex implementation.
-            // It's not a single function call, but a trace back through the Levenshtein matrix
-            // to identify insertions, deletions, and substitutions.
-            // Example: For "cat" vs "cot", it would highlight 'a' vs 'o'.
-            // This requires modifying the LevenshteinDistance algorithm to store the matrix.
-            // A simpler, but less precise, approach is to find the first differing word or character.
-
             // Let's implement a word-based diff for clarity.
             var userWords = NormalizeString(userAnswer).Split(' ');
             var correctWords = NormalizeString(closestMatch).Split(' ');

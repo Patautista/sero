@@ -17,7 +17,9 @@ namespace Infrastructure.Data
         public DbSet<CurriculumTable> Curricula { get; set; }
         public DbSet<CurriculumSectionTable> CurriculumSections { get; set; }
         public DbSet<UserTable> Users { get; set; }
+        public DbSet<ReviewSessionTable> ReviewSessions { get; set; }
         public DbSet<UserCardStateTable> UserCardStates { get; set; }
+        public DbSet<EventTable> Events { get; set; }
         public DbSet<SentenceTable> Sentences { get; set; }
         public DbSet<TagTable> Tags { get; set; }
         public DbSet<MeaningTable> Meanings { get; set; }
