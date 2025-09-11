@@ -23,6 +23,7 @@ else if (currentCard != null)
 {
     <div class="anki-container">
         <div class="anki-top-section transition-all duration-300 ease-in-out" style="filter: blur(@(isInputFocused ? "2px" : "0")); transform: scale(@(isInputFocused ? "0.95" : "1"));">
+            <!-- Indicadores superiores -->
             <div class="mb-3 flex columns-3 gap-4 justify-between items-center">
                 <div>
                     <span class="badge bg-gradient-to-r from-indigo-500 to-indigo-700">Novos: @newCount</span>
@@ -52,7 +53,8 @@ else if (currentCard != null)
                         </div>
                     }
                 </div>
-                
+
+                <!-- Resposta para card novo -->
                 @if (currentCard.State.Repetitions == 0)
                 {
                     <div class="bg-sky-100 border-l-4 border-sky-500 text-sky-800 p-3 rounded-lg shadow-md mb-4" role="alert">
@@ -63,28 +65,21 @@ else if (currentCard != null)
                 }
             </div>
 
+            <!-- Prompt em língua nativa -->
             <p class="w-fit mb-5 mt-3 text-gray-950 animated-underline">@currentCard.Card.NativeSample.Text</p>
             <input class="w-full form-control mb-2 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all" @bind="userAnswer" placeholder="Resposta" @onfocus="() => isInputFocused = true" @onblur="() => isInputFocused = false" />
 
             <div class="card-buttons transition-all duration-300 ease-in-out" style="filter: blur(@(isInputFocused ? "2px" : "0")); transform: scale(@(isInputFocused ? "0.95" : "1"));">
                 <div class="flex justify-between">
-                    <button class="btn btn-secondary" @onclick="NextCard">Pular</button>
-                    <button class="btn btn-primary py-2 px-6 rounded-lg font-bold text-white shadow-lg bg-gradient-to-r from-indigo-500 to-indigo-700 hover:from-indigo-600 hover:to-indigo-800 transition-all duration-200" @onclick="CheckAnswer">Conferir</button>
+                    <ButtonSecondary OnClick="NextCard">Pular</ButtonSecondary>
+                    <ButtonPrimary OnClick="CheckAnswer">Conferir</ButtonPrimary>
                 </div>
 
-                @if (validationMessage != null)
-                {
-                    <p class="mt-2" style="color:@(isCorrect ? "green" : "red")">
-                        @validationMessage
-                        <br />
-                        <small>Tempo da resposta: @answerTime.TotalSeconds.ToString("0.00") s</small>
-                    </p>
-                }
+                <AnswerValidationMessage ValidationMessage="@validationMessage"
+                                         IsCorrect="@isCorrect"
+                                         AnswerTime="@answerTime" />
 
-                @if (countdown > 0)
-                {
-                    <p class="text-muted">Próxima frase em @countdown...</p>
-                }
+                <NextCardCountdown Countdown="@countdown" />
             </div>
         </div>
     </div>
@@ -204,7 +199,7 @@ else
         newCount = cards.Count(c => c.State.Repetitions == 0);
         reviewCount = cards.Count(c => c.State.Repetitions > 0);
 
-        StartCountdown(5);
+        StartCountdown(isCorrect ? 5 : 10);
     }
 
     private void StartCountdown(int seconds)
