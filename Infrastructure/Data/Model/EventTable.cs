@@ -33,15 +33,19 @@ namespace Infrastructure.Data.Model
     }
     public static class Events
     {
-        public static class Names
+        public static class CardAnswered
         {
-            public static string CardSkipped = nameof(CardSkipped);
-            public static string CardAnswered = nameof(CardAnswered);
+            public static class Schemas
+            {
+                public static string CardAnsweredV1 = nameof(CardAnsweredV1);
+            }
         }
-        public static class Schemas
+        public static class CardSkipped
         {
-            public static string CardSkippedV1 = nameof(CardSkippedV1);
-            public static string CardAnsweredV1 = nameof(CardAnsweredV1);
+            public static class Schemas
+            {
+                public static string CardSkippedV1 = nameof(CardSkippedV1);
+            }
         }
     }
 }

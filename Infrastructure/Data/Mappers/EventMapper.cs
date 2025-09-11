@@ -13,29 +13,22 @@ namespace Infrastructure.Data.Mappers
     {
         public static EventTable ToTable(DomainEvent domainEvent, string schema)
         {
-            var name = domainEvent.GetType().Name; // ex: "CardAnswered"
-
-            return new EventTable
-            {
-                Id = domainEvent.Id,
-                OccurredAtUtc = domainEvent.OccurredAtUtc,
-                Name = name,
-                Schema = schema,
-                DomainEventJson = JsonSerializer.Serialize(domainEvent)
-            };
+            return ToTable(domainEvent, schema, Guid.Empty);
         }
-        public static EventTable ToTable(DomainEvent domainEvent, string schema, Guid sessionId)
+        public static EventTable ToTable(object obj, string schema, Guid sessionId)
         {
-            var name = domainEvent.GetType().Name; // ex: "CardAnswered"
+            var name = obj.GetType().Name;
+            var domainEvent = obj as DomainEvent;
 
             return new EventTable
             {
                 Id = domainEvent.Id,
                 SessionId = sessionId,
+                Description = domainEvent.Description,
                 OccurredAtUtc = domainEvent.OccurredAtUtc,
                 Name = name,
                 Schema = schema,
-                DomainEventJson = JsonSerializer.Serialize(domainEvent)
+                DomainEventJson = JsonSerializer.Serialize(obj)
             };
         }
 
@@ -43,10 +36,10 @@ namespace Infrastructure.Data.Mappers
         {
             return table.Name switch
             {
-                nameof(Events.Names.CardAnswered) =>
+                nameof(CardAnsweredEvent) =>
                     JsonSerializer.Deserialize<CardAnsweredEvent>(table.DomainEventJson)!,
 
-                nameof(Events.Names.CardSkipped) =>
+                nameof(CardSkippedEvent) =>
                     JsonSerializer.Deserialize<CardSkippedEvent>(table.DomainEventJson)!,
 
                 _ => throw new NotSupportedException($"Unknown event type: {table.Name}")
