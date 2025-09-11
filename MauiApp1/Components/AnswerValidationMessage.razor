@@ -1,0 +1,14 @@
+﻿@if (ValidationMessage != null)
+{
+    <p class="mt-2" style="color:@(IsCorrect ? "green" : "red")">
+        @ValidationMessage
+        <br />
+        <small>Tempo da resposta: @AnswerTime.TotalSeconds.ToString("0.00") s</small>
+    </p>
+}
+
+@code {
+    [Parameter] public string? ValidationMessage { get; set; }
+    [Parameter] public bool IsCorrect { get; set; }
+    [Parameter] public TimeSpan AnswerTime { get; set; }
+}
