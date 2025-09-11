@@ -1,5 +1,6 @@
 ﻿@page "/dashboard"
 @using Domain.Events
+@using Radzen
 @inject DatabaseService Database
 
 <h3 class="mb-4">📊 Dashboard de Revisões</h3>
@@ -12,6 +13,7 @@ else
 {
     <div class="grid grid-cols-2 gap-6">
 
+        <!-- Resumo Geral -->
         <div class="p-4 bg-white rounded shadow">
             <h4>⏱️ Tempo médio por resposta</h4>
             <p class="text-xl font-bold">@avgTimeInSeconds.ToString("N2") s</p>
@@ -19,13 +21,65 @@ else
 
         <div class="p-4 bg-white rounded shadow">
             <h4>📉 Taxa de Skips</h4>
-            <p class="text-xl font-bold">@skipRate %</p>
+            <p class="text-xl font-bold">@skipRate.ToString("N1") %</p>
         </div>
 
         <div class="col-span-2 p-4 bg-white rounded shadow">
             <h4>📅 Respostas ao longo do tempo</h4>
-            <LineChart Data="chartData" XAxisLabel="Data" YAxisLabel="Tempo (ms)" />
+            <RadzenChart> 
+                <RadzenLineSeries Smooth="true" Data="@chartData" CategoryProperty="@nameof(ChartPoint.Label)" ValueProperty="@nameof(ChartPoint.Value)" Title="2023" LineType="LineType.Dashed">
+                    <RadzenMarkers Visible="true" MarkerType="MarkerType.Square" /> 
+                    <RadzenSeriesDataLabels Visible="true" /> 
+                </RadzenLineSeries> 
+                <RadzenCategoryAxis Padding="20" /> 
+                <RadzenValueAxis> <RadzenGridLines Visible="true" /> 
+                    <RadzenAxisTitle Text="Cartões respondidos" /> 
+                </RadzenValueAxis> 
+            </RadzenChart>
         </div>
+
+        <!-- Nova seção por Card -->
+        <div class="col-span-2 p-4 bg-white rounded shadow">
+            <h4>🃏 Métricas por Card</h4>
+            <table class="table-auto w-full mt-3 border-collapse">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="px-4 py-2 text-left">CardId</th>
+                        <th class="px-4 py-2 text-right">Tempo Médio (s)</th>
+                        <th class="px-4 py-2 text-right"># Respostas</th>
+                        <th class="px-4 py-2 text-right">Taxa de Acerto (%)</th>
+                        <th class="px-4 py-2 text-right"># Skips</th>
+                        <th class="px-4 py-2 text-right">Taxa de Skip (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var card in cardStats)
+                    {
+                        <tr class="border-t">
+                            <td class="px-4 py-2">@card.CardId</td>
+                            <td class="px-4 py-2 text-right">@card.AvgTimeSeconds.ToString("N2")</td>
+                            <td class="px-4 py-2 text-right">@card.AnswerCount</td>
+                            <td class="px-4 py-2 text-right">@card.CorrectAnswerRate.ToString("N1") %</td>
+                            <td class="px-4 py-2 text-right">@card.SkipCount</td>
+                            <td class="px-4 py-2 text-right">@card.SkipRate.ToString("N1") %</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 📊 Pizza Geral -->
+        <div class="col-span-1 p-4 bg-white rounded shadow">
+            <h4>✅❌ Respostas Gerais</h4>
+            <RadzenChart>
+                <RadzenPieSeries Data="@generalAnswerBreakdown"
+                                 CategoryProperty="Category"
+                                 ValueProperty="Value">
+                    <RadzenSeriesDataLabels Visible="true" />
+                </RadzenPieSeries>
+            </RadzenChart>
+        </div>
+
     </div>
 }
 
@@ -35,12 +89,18 @@ else
     private double avgTimeInSeconds;
     private double skipRate;
     private List<ChartPoint> chartData = new();
+    private List<CardStats> cardStats = new();
+
+    // Dados dos gráficos de pizza
+    private List<PiePoint> generalAnswerBreakdown = new();
+    private List<PiePoint> perCardBreakdown = new();
 
     protected override async Task OnInitializedAsync()
     {
         answeredEvents = await Database.GetCardAnsweredEventsAsync();
         skippedEvents = await Database.GetCardSkippedEventsAsync();
 
+        // ---- Visão Geral ----
         if (answeredEvents.Any())
             avgTimeInSeconds = answeredEvents.Average(a => a.EllapsedMs) / 1000D;
 
@@ -55,11 +115,84 @@ else
                 Value = g.Average(x => x.EllapsedMs)
             })
             .ToList();
+
+        // ---- Métricas por Card ----
+        var skipsByCard = skippedEvents
+            .GroupBy(s => s.CardId)
+            .ToDictionary(g => g.Key, g => g.Count());
+
+        var correctAnswersByCard = answeredEvents
+            .Where(e => e.Correct)
+            .GroupBy(s => s.CardId)
+            .ToDictionary(g => g.Key, g => g.Count());
+
+        cardStats = answeredEvents
+            .GroupBy(a => a.CardId)
+            .Select(g =>
+            {
+                var skipCount = skipsByCard.ContainsKey(g.Key) ? skipsByCard[g.Key] : 0;
+                var correctCount = correctAnswersByCard.ContainsKey(g.Key) ? correctAnswersByCard[g.Key] : 0;
+                var answerCount = g.Count();
+                var totalCount = answerCount + skipCount;
+
+                return new CardStats
+                {
+                    CardId = g.Key,
+                    AvgTimeSeconds = g.Average(x => x.EllapsedMs) / 1000D,
+                    AnswerCount = answerCount,
+                    SkipCount = skipCount,
+                    CorrectAnswerRate = totalCount > 0 ? (correctCount * 100.0 / totalCount) : 0,
+                    SkipRate = totalCount > 0 ? (skipCount * 100.0 / totalCount) : 0
+                };
+            })
+            .OrderByDescending(c => c.AnswerCount + c.SkipCount)
+            .ToList();
+
+        // ---- Gráfico Pizza Geral ----
+        var correct = answeredEvents.Count(e => e.Correct);
+        var incorrect = answeredEvents.Count - correct;
+
+        generalAnswerBreakdown = new List<PiePoint>
+        {
+            new PiePoint { Category = "Corretas", Value = correct },
+            new PiePoint { Category = "Erradas", Value = incorrect }
+        };
+
+        // ---- Gráfico Pizza por Card ---- (mostra o card mais jogado como exemplo)
+        var topCard = cardStats.FirstOrDefault();
+        if (topCard != null)
+        {
+            var cardAnswers = answeredEvents.Where(a => a.CardId == topCard.CardId).ToList();
+            var correctByCard = cardAnswers.Count(e => e.Correct);
+            var incorrectByCard = cardAnswers.Count - correctByCard;
+
+            perCardBreakdown = new List<PiePoint>
+            {
+                new PiePoint { Category = $"Card {topCard.CardId} - Corretas", Value = correctByCard },
+                new PiePoint { Category = $"Card {topCard.CardId} - Erradas", Value = incorrectByCard }
+            };
+        }
     }
 
     public class ChartPoint
     {
         public string Label { get; set; }
         public double Value { get; set; }
+    }
+
+    public class CardStats
+    {
+        public int CardId { get; set; }
+        public double AvgTimeSeconds { get; set; }
+        public int AnswerCount { get; set; }
+        public int SkipCount { get; set; }
+        public double SkipRate { get; set; }
+        public double CorrectAnswerRate { get; set; }
+    }
+
+    public class PiePoint
+    {
+        public string Category { get; set; }
+        public int Value { get; set; }
     }
 }
