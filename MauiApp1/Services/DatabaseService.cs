@@ -147,6 +147,26 @@ public class DatabaseService(AnkiDbContext db, ISettingsService settingsService)
         }
     }
 
+    public async Task AddAlternativeSentence(Sentence domainSentence)
+    {
+        try
+        {
+            var sentence = new SentenceTable
+            {
+                Language = domainSentence.Language,
+                MeaningId = domainSentence.MeaningId,
+                Text = domainSentence.Text
+            };
+            // Should sanitize/tidy first
+            db.Sentences.Add(sentence);
+            await db.SaveChangesAsync();
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
+
     public async Task<Dashboard.Model> GetDashboardModelAsync()
     {
         var cardAnsweredEvents = (await db.Events

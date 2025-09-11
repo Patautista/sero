@@ -17,7 +17,7 @@
 
 @if (cards == null)
 {
-   <LoadingSpinner></LoadingSpinner>
+    <LoadingSpinner></LoadingSpinner>
 }
 else if (currentCard != null)
 {
@@ -71,13 +71,23 @@ else if (currentCard != null)
 
             <div class="card-buttons transition-all duration-300 ease-in-out" style="filter: blur(@(isInputFocused ? "2px" : "0")); transform: scale(@(isInputFocused ? "0.95" : "1"));">
                 <div class="flex justify-between">
-                    <ButtonSecondary OnClick="NextCard">Pular</ButtonSecondary>
+                    <ButtonSecondary OnClick="SkipCard">Pular</ButtonSecondary>
                     <ButtonPrimary OnClick="CheckAnswer">Conferir</ButtonPrimary>
                 </div>
 
                 <AnswerValidationMessage ValidationMessage="@_challengeState.ValidationMessage"
                                          IsCorrect="@_challengeState.IsCorrect"
                                          AnswerTime="@_challengeState.AnswerTime" />
+
+                @if (_challengeState.ShowCorrectionOption)
+                {
+                    <div class="mt-4 text-center">
+                        <p class="text-sm text-gray-600 mb-2">Sua resposta estava correta?</p>
+                        <button class="btn btn-sm btn-outline-success" @onclick="ForceCorrectAnswer">
+                            Sim, aceitar como resposta correta
+                        </button>
+                    </div>
+                }
 
                 <NextCardCountdown Countdown="@_challengeState.Countdown" />
             </div>
@@ -101,6 +111,7 @@ else
         public string UserAnswer;
         public string ValidationMessage;
         public bool IsCorrect;
+        public bool ShowCorrectionOption = false; // Estado para mostrar o botão de correção
         public int Countdown;
         public int? ExpEarned;
         public DateTime CardShownAt;
@@ -134,6 +145,18 @@ else
         NextCard();
     }
 
+    private async Task SkipCard()
+    {
+        var evt = new CardSkippedEvent(
+            Guid.NewGuid(),
+            currentCard.State.CardId
+        );
+
+        await Database.SaveCardSkippedAsync(evt);
+
+        NextCard();
+    }
+
     private void NextCard()
     {
         if (cards == null || !cards.Any())
@@ -157,6 +180,7 @@ else
         _challengeState.UserAnswer = string.Empty;
         _challengeState.ValidationMessage = null;
         _challengeState.IsCorrect = false;
+        _challengeState.ShowCorrectionOption = false;
         _challengeState.AnswerTime = TimeSpan.Zero;
         _challengeState.ExpEarned = null;
 
@@ -175,35 +199,89 @@ else
         var evaluation = AnswerEvaluator.Evaluate(_challengeState.UserAnswer, possibleAnswers);
 
         _challengeState.IsCorrect = evaluation.Quality != AnswerQuality.Wrong;
+        _challengeState.ShowCorrectionOption = !_challengeState.IsCorrect;
+
         if (_challengeState.IsCorrect)
         {
             _challengeState.ExpEarned = ExpCalculator.CalculateEarnedExp(currentCard.Card, currentCard.State.Repetitions);
             totalExp += _challengeState.ExpEarned.Value;
+
+            Srs.Review(currentCard.State, (int)evaluation.Quality);
+            _challengeState.ValidationMessage = AnswerEvaluator.BuildFeedbackMessage(evaluation, _challengeState.UserAnswer);
+
+            await Database.UpdateUserCardState(currentCard.State, _challengeState.ExpEarned ?? 0);
+
+            var evt = new CardAnsweredEvent(
+                Guid.NewGuid(),
+                currentCard.State.CardId,
+                (int)_challengeState.AnswerTime.TotalMilliseconds,
+                Correct: _challengeState.IsCorrect
+            );
+
+            await Database.SaveCardAnsweredAsync(evt);
+
+            StartCountdown(5);
         }
         else
         {
             _challengeState.ExpEarned = null;
+            Srs.Review(currentCard.State, (int)evaluation.Quality);
+            _challengeState.ValidationMessage = "❌ Tente de novo. Resposta esperada: " + currentCard.Card.TargetSample.Text;
+
+            await Database.UpdateUserCardState(currentCard.State, 0);
+
+            var evt = new CardAnsweredEvent(
+                Guid.NewGuid(),
+                currentCard.State.CardId,
+                (int)_challengeState.AnswerTime.TotalMilliseconds,
+                Correct: _challengeState.IsCorrect
+            );
+
+            await Database.SaveCardAnsweredAsync(evt);
+
+            // A contagem regressiva só começa após uma resposta correta ou se o usuário força a correção.
         }
-
-        Srs.Review(currentCard.State, (int)evaluation.Quality);
-        _challengeState.ValidationMessage = AnswerEvaluator.BuildFeedbackMessage(evaluation, _challengeState.UserAnswer);
-
-        await Database.UpdateUserCardState(currentCard.State, _challengeState.ExpEarned ?? 0);
-
-        var evt = new CardAnsweredEvent(
-            Guid.NewGuid(), 
-            currentCard.State.CardId,
-            (int) _challengeState.AnswerTime.TotalMilliseconds,
-            Correct: _challengeState.IsCorrect
-        );
-
-        await Database.SaveCardAnsweredAsync(evt);
 
         // Update counters
         newCount = cards.Count(c => c.State.Repetitions == 0);
         reviewCount = cards.Count(c => c.State.Repetitions > 0);
 
-        StartCountdown(_challengeState.IsCorrect ? 5 : 10);
+        StateHasChanged();
+    }
+
+    private async Task ForceCorrectAnswer()
+    {
+        // Add the user's answer as a new alternative sentence
+        var newSentence = new Sentence
+        {
+            MeaningId = currentCard.Card.NativeSample.MeaningId,
+            Text = _challengeState.UserAnswer,
+            Language = currentCard.Card.TargetSample.Language
+        };
+        await Database.AddAlternativeSentence(newSentence);
+
+        // Treat as a correct answer from now on
+        _challengeState.IsCorrect = true;
+        _challengeState.ExpEarned = ExpCalculator.CalculateEarnedExp(currentCard.Card, currentCard.State.Repetitions);
+        totalExp += _challengeState.ExpEarned.Value;
+
+        // Review the card with a "correct" quality (e.g., Hard)
+        Srs.Review(currentCard.State, (int)AnswerQuality.Hard);
+        _challengeState.ValidationMessage = "✅ Correto! Sua resposta foi adicionada como alternativa.";
+
+        await Database.UpdateUserCardState(currentCard.State, _challengeState.ExpEarned ?? 0);
+
+        var evt = new CardAnsweredEvent(
+            Guid.NewGuid(),
+            currentCard.State.CardId,
+            (int)_challengeState.AnswerTime.TotalMilliseconds,
+            Correct: true
+        );
+        await Database.SaveCardAnsweredAsync(evt);
+
+        // Hide correction option and start countdown for next card
+        _challengeState.ShowCorrectionOption = false;
+        StartCountdown(5);
     }
 
     private void StartCountdown(int seconds)
