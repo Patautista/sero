@@ -12,18 +12,16 @@ namespace Domain.Events
         public DateTime OccurredAtUtc { get; init; } = DateTime.UtcNow;
     }
 
-    public record CardAnswered(
+    public record CardAnsweredEvent(
         Guid ReviewSessionId,
         int CardId,
         int ElapsedMs,
-        int AnswerAttempt,
         bool Correct
     ) : DomainEvent;
 
-    public record CardSkipped(
+    public record CardSkippedEvent(
         Guid ReviewSessionId,
-        int CardId,
-        int AnswerAttempt
+        int CardId
     ) : DomainEvent;
 }
 

@@ -50,7 +50,7 @@ namespace Business
             else if (evaluation.Quality == AnswerQuality.Ok)
                 sb.Append("✅ Correto, mas com pequenos erros. ");
             else if (evaluation.Quality == AnswerQuality.Wrong)
-                sb.Append("❌ Tente de novo.");
+                sb.Append("❌ Incorreto.");
 
             if (evaluation.Quality < AnswerQuality.Perfect)
             {

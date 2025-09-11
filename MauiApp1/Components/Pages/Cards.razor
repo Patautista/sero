@@ -3,13 +3,14 @@
 @using System.Text
 @using Business.ViewModel
 @using Domain
+@using Domain.Events
 @using Microsoft.AspNetCore.WebUtilities;
 
 @inject NavigationManager Navigation
 @using MauiApp1.Services
 @attribute [StreamRendering(true)]
 
-@inject DatabaseService Api
+@inject DatabaseService Database
 
 <PageTitle>Frases Anki</PageTitle>
 
@@ -123,8 +124,8 @@ else
             ReviewSessionMode = mode;
         }
 
-        totalExp = await Api.GetUserExpAsync();
-        cards = await Api.GetDueCards(ReviewSessionMode, totalExp);
+        totalExp = await Database.GetUserExpAsync();
+        cards = await Database.GetDueCards(ReviewSessionMode, totalExp);
 
         // Calculate counters
         newCount = cards.Count(c => c.State.Repetitions == 0);
@@ -187,7 +188,16 @@ else
         Srs.Review(currentCard.State, (int)evaluation.Quality);
         validationMessage = AnswerEvaluator.BuildFeedbackMessage(evaluation, userAnswer);
 
-        await Api.UpdateUserCardState(currentCard.State, expEarned ?? 0);
+        await Database.UpdateUserCardState(currentCard.State, expEarned ?? 0);
+
+        var evt = new CardAnsweredEvent(
+            Guid.NewGuid(), 
+            currentCard.State.CardId,
+            (int) answerTime.TotalMilliseconds,
+            Correct: isCorrect
+        );
+
+        await Database.SaveCardAnsweredAsync(evt);
 
         // Update counters
         newCount = cards.Count(c => c.State.Repetitions == 0);
