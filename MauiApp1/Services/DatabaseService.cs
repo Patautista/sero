@@ -8,6 +8,7 @@ using Domain.Events;
 using Infrastructure.Data;
 using Infrastructure.Data.Mappers;
 using Infrastructure.Data.Model;
+using MauiApp1.Components.Pages;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Linq.Expressions;
@@ -146,26 +147,32 @@ public class DatabaseService(AnkiDbContext db, ISettingsService settingsService)
         }
     }
 
-    public async Task<List<CardAnsweredEvent?>> GetCardAnsweredEventsAsync()
+    public async Task<Dashboard.Model> GetDashboardModelAsync()
     {
-        var allEvents = await db.Events
-            .Where(e => e.Name == nameof(CardAnsweredEvent)).ToListAsync();
-        var mapped = allEvents
+        var cardAnsweredEvents = (await db.Events
+            .Where(e => e.Name == nameof(CardAnsweredEvent)).ToListAsync())
             .Select(e => JsonSerializer.Deserialize<CardAnsweredEvent>(e.DomainEventJson))
+            .Join(db.Cards.Include(c => c.Meaning.Sentences), e => e.CardId, c => c.Id, (cardEvent, card) => new { cardEvent, card })
+            .Select(x => new Dashboard.Model.CardAnswered( 
+                ReviewSessionId: Guid.Empty,
+                CardId: x.card.Id, 
+                CardNativeText: x.card.Meaning.Sentences.First().Text,
+                EllapsedMs: x.cardEvent.EllapsedMs,
+                Correct: x.cardEvent.Correct))
             .Where(e => e != null)
             .ToList();
-        return mapped;
-    }
-
-    public async Task<List<CardSkippedEvent?>> GetCardSkippedEventsAsync()
-    {
-        var allEvents = await db.Events
-            .Where(e => e.Name == nameof(CardSkippedEvent)).ToListAsync();
-        var mapped = allEvents
+        var cardSkippedEvents = (await db.Events
+            .Where(e => e.Name == nameof(CardSkippedEvent)).ToListAsync())
             .Select(e => JsonSerializer.Deserialize<CardSkippedEvent>(e.DomainEventJson))
+            .Join(db.Cards.Include(c => c.Meaning.Sentences), e => e.CardId, c => c.Id, (cardEvent, card) => new { cardEvent , card })
+            .Select(x => new Dashboard.Model.CardSkipped(x.cardEvent.Id, x.card.Meaning.Sentences.First().Text, x.card.Id))
             .Where(e => e != null)
             .ToList();
-        return mapped;
+
+        var model = new Dashboard.Model();
+        model.CardAnsweredData = cardAnsweredEvents;
+        model.CardSkippedData = cardSkippedEvents;
+        return model;
     }
 
     public async Task SaveCardSkippedAsync(CardSkippedEvent domainEvent)
