@@ -1,122 +1,147 @@
 ﻿@page "/dashboard"
 @using Domain.Events
+@using MauiApp1.Services
 @using Radzen
 @inject DatabaseService Database
 
 <h3 class="mb-4">📊 Dashboard de Revisões</h3>
 
-@if (answeredEvents == null)
+@if (_model == null)
 {
     <LoadingSpinner></LoadingSpinner>
 }
 else
 {
     <div class="p-6 md:p-8 bg-gray-100 min-h-screen">
-    <h2 class="text-3xl font-bold text-indigo-700 mb-6 text-center">Your Progress Dashboard</h2>
 
-    <!-- Responsive Grid Container -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+        <!-- Responsive Grid Container -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
 
-        <!-- Stat Card 1: Average Time -->
-        <div class="bg-white rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-2xl hover:scale-105">
-            <h4 class="text-lg font-semibold text-gray-700 mb-2">⏱️ Average Time per Answer</h4>
-            <p class="text-3xl font-bold text-indigo-600">@avgTimeInSeconds.ToString("N2") s</p>
-        </div>
+            <!-- Stat Card 1: Average Time -->
+            <div class="bg-white rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-2xl hover:scale-105">
+                <h4 class="text-lg font-semibold text-gray-700 mb-2">⏱️ Tempo Médio por Resposta</h4>
+                <p class="text-3xl font-bold text-indigo-600">@globalAvgTimeInSeconds.ToString("N2") s</p>
+            </div>
 
-        <!-- Stat Card 2: Skip Rate -->
-        <div class="bg-white rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-2xl hover:scale-105">
-            <h4 class="text-lg font-semibold text-gray-700 mb-2">📉 Skip Rate</h4>
-            <p class="text-3xl font-bold text-indigo-600">@skipRate.ToString("N1") %</p>
-        </div>
+            <!-- Stat Card 2: Skip Rate -->
+            <div class="bg-white rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-2xl hover:scale-105">
+                <h4 class="text-lg font-semibold text-gray-700 mb-2">📉 Taxa de Skip</h4>
+                <p class="text-3xl font-bold text-indigo-600">@globalSkipRate.ToString("N1") %</p>
+            </div>
 
-        <!-- Chart Section -->
-        <div class="col-span-1 md:col-span-2 bg-white rounded-xl shadow-lg p-6">
-            <h4 class="text-lg font-semibold text-gray-700 mb-4">📅 Answers Over Time</h4>
-            <RadzenChart>
-                <RadzenLineSeries Smooth="true" Data="@chartData" CategoryProperty="@nameof(ChartPoint.Label)" ValueProperty="@nameof(ChartPoint.Value)" Title="2023" LineType="LineType.Dashed">
-                    <RadzenMarkers Visible="true" MarkerType="MarkerType.Square" />
-                    <RadzenSeriesDataLabels Visible="true" />
-                </RadzenLineSeries>
-                <RadzenCategoryAxis Padding="20" />
-                <RadzenValueAxis>
-                    <RadzenGridLines Visible="true" />
-                    <RadzenAxisTitle Text="Cards Answered" />
-                </RadzenValueAxis>
-            </RadzenChart>
-        </div>
-
-        <!-- Metrics Table -->
-        <div class="col-span-1 md:col-span-2 bg-white rounded-xl shadow-lg p-6">
-            <h4 class="text-lg font-semibold text-gray-700 mb-4">🃏 Card Metrics</h4>
-            <div class="overflow-x-auto">
-                <!-- Mobile Card View -->
-                <div class="block md:hidden">
-                    @foreach (var card in cardStats)
-                    {
-                        <div class="bg-gray-50 rounded-lg shadow-sm p-4 mb-4">
-                            <h5 class="text-sm font-bold text-gray-900 mb-2">Card ID: @card.CardId</h5>
-                            <ul class="text-sm text-gray-700 space-y-1">
-                                <li><strong>Tempo médio de resposta (s):</strong> @card.AvgTimeSeconds.ToString("N2")</li>
-                                <li><strong># Respostas:</strong> @card.AnswerCount</li>
-                                <li><strong>Taxa de acerto (%):</strong> @card.CorrectAnswerRate.ToString("N1") %</li>
-                                <li><strong># Skips:</strong> @card.SkipCount</li>
-                                <li><strong>Taxa de skip (%):</strong> @card.SkipRate.ToString("N1") %</li>
-                            </ul>
-                        </div>
-                    }
-                </div>
-
-                <!-- Desktop Table View -->
-                <table class="w-full table-auto mt-3 border-collapse hidden md:table">
-                    <thead class="bg-indigo-100 text-indigo-800">
-                        <tr>
-                            <th class="px-4 py-2 text-left rounded-tl-lg">CardId</th>
-                            <th class="px-4 py-2 text-right">Tempo médio de resposta (s)</th>
-                            <th class="px-4 py-2 text-right"># Respostas</th>
-                            <th class="px-4 py-2 text-right">Taxa de acerto (%)</th>
-                            <th class="px-4 py-2 text-right"># Skips</th>
-                            <th class="px-4 py-2 text-right rounded-tr-lg">Taxa de skip (%)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+            <!-- Metrics Table -->
+            <div class="col-span-1 md:col-span-2 bg-white rounded-xl shadow-lg p-6">
+                <h4 class="text-lg font-semibold text-gray-700 mb-4">🃏 Métricas de Card</h4>
+                <div class="overflow-x-auto">
+                    <!-- Mobile Card View -->
+                    <div class="block md:hidden">
                         @foreach (var card in cardStats)
                         {
-                            <tr class="border-t border-gray-200 hover:bg-gray-50 transition-colors duration-150">
-                                <td class="px-4 py-2">@card.CardId</td>
-                                <td class="px-4 py-2 text-right">@card.AvgTimeSeconds.ToString("N2")</td>
-                                <td class="px-4 py-2 text-right">@card.AnswerCount</td>
-                                <td class="px-4 py-2 text-right">@card.CorrectAnswerRate.ToString("N1") %</td>
-                                <td class="px-4 py-2 text-right">@card.SkipCount</td>
-                                <td class="px-4 py-2 text-right">@card.SkipRate.ToString("N1") %</td>
-                            </tr>
+                            <div class="bg-gray-50 rounded-lg shadow-sm p-4 mb-4">
+                                <h5 class="text-sm font-bold text-gray-900 mb-2">ID: @card.CardId</h5>
+                                <h5 class="text-sm font-bold text-gray-900 mb-2">@card.CardText</h5>
+
+                                <ul class="text-sm text-gray-700 space-y-1">
+                                    <li><strong>Tempo médio de resposta (s):</strong> @card.AvgTimeSeconds.ToString("N2")</li>
+                                    <li><strong># Respostas:</strong> @card.AnswerCount</li>
+                                    <li><strong>Taxa de acerto (%):</strong> @card.CorrectAnswerRate.ToString("N1") %</li>
+                                    <li><strong># Skips:</strong> @card.SkipCount</li>
+                                    <li><strong>Taxa de skip (%):</strong> @card.SkipRate.ToString("N1") %</li>
+                                </ul>
+                            </div>
                         }
-                    </tbody>
-                </table>
+                    </div>
+
+                    <!-- Desktop Table View -->
+                    <table class="w-full table-auto mt-3 border-collapse hidden md:table">
+                        <thead class="bg-indigo-100 text-indigo-800">
+                            <tr>
+                                <th class="px-4 py-2 text-left rounded-tl-lg">ID</th>
+                                <th class="px-4 py-2 text-left">Frase</th>
+                                <th class="px-4 py-2 text-right">Tempo médio de resposta (s)</th>
+                                <th class="px-4 py-2 text-right"># Respostas</th>
+                                <th class="px-4 py-2 text-right">Taxa de acerto (%)</th>
+                                <th class="px-4 py-2 text-right"># Skips</th>
+                                <th class="px-4 py-2 text-right rounded-tr-lg">Taxa de skip (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var cardStat in cardStats)
+                            {
+                                <tr class="border-t border-gray-200 hover:bg-gray-50 transition-colors duration-150">
+                                    <td class="px-4 py-2">@cardStat.CardId</td>
+                                    <td class="px-4 py-2">@cardStat.CardText</td>
+                                    <td class="px-4 py-2 text-right">@cardStat.AvgTimeSeconds.ToString("N2")</td>
+                                    <td class="px-4 py-2 text-right">@cardStat.AnswerCount</td>
+                                    <td class="px-4 py-2 text-right">@cardStat.CorrectAnswerRate.ToString("N1") %</td>
+                                    <td class="px-4 py-2 text-right">@cardStat.SkipCount</td>
+                                    <td class="px-4 py-2 text-right">@cardStat.SkipRate.ToString("N1") %</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
 
-        <!-- Pie Chart Section -->
-        <div class="col-span-1 md:col-span-2 bg-white rounded-xl shadow-lg p-6">
-            <h4 class="text-lg font-semibold text-gray-700 mb-4">✅❌ General Answers</h4>
-            <RadzenChart>
-                <RadzenPieSeries Data="@generalAnswerBreakdown"
-                                 CategoryProperty="Category"
-                                 ValueProperty="Value">
-                    <RadzenSeriesDataLabels Visible="true" />
-                </RadzenPieSeries>
-            </RadzenChart>
-        </div>
+            <!-- Chart Section -->
+            <div class="col-span-1 md:col-span-2 bg-white rounded-xl shadow-lg p-6">
+                <h4 class="text-lg font-semibold text-gray-700 mb-4">📅 Respostas ao longo do tempo</h4>
+                <RadzenChart>
+                    <RadzenLineSeries Smooth="true" Data="@chartData" CategoryProperty="@nameof(ChartPoint.Label)" ValueProperty="@nameof(ChartPoint.Value)" Title="2023" LineType="LineType.Dashed">
+                        <RadzenMarkers Visible="true" MarkerType="MarkerType.Square" />
+                        <RadzenSeriesDataLabels Visible="true" />
+                    </RadzenLineSeries>
+                    <RadzenCategoryAxis Padding="20" />
+                    <RadzenValueAxis>
+                        <RadzenGridLines Visible="true" />
+                        <RadzenAxisTitle Text="Cards Answered" />
+                    </RadzenValueAxis>
+                </RadzenChart>
+            </div>
 
+            <!-- Pie Chart Section -->
+            <div class="col-span-1 md:col-span-2 bg-white rounded-xl shadow-lg p-6">
+                <h4 class="text-lg font-semibold text-gray-700 mb-4">✅❌ Total de respostas</h4>
+                <RadzenChart>
+                    <RadzenPieSeries Data="@generalAnswerBreakdown"
+                                     CategoryProperty="Category"
+                                     ValueProperty="Value">
+                        <RadzenSeriesDataLabels Visible="true" />
+                    </RadzenPieSeries>
+                </RadzenChart>
+            </div>
+
+        </div>
     </div>
-</div>
 
 }
 
 @code {
-    private List<CardAnsweredEvent> answeredEvents;
-    private List<CardSkippedEvent> skippedEvents;
-    private double avgTimeInSeconds;
-    private double skipRate;
+    public class Model
+    {
+        public record CardAnswered(
+        Guid ReviewSessionId,
+        int CardId,
+        string CardNativeText,
+        int EllapsedMs,
+        bool Correct
+    ) : DomainEvent;
+
+        public record CardSkipped(
+            Guid ReviewSessionId,
+            string CardNativeText,
+            int CardId
+        ) : DomainEvent;
+
+        public ICollection<CardAnswered> CardAnsweredData { get; set; }
+        public ICollection<CardSkipped> CardSkippedData { get; set; }
+    }
+
+    private Model _model { get; set; }
+
+    private double globalAvgTimeInSeconds;
+    private double globalSkipRate
+    ;
     private List<ChartPoint> chartData = new();
     private List<CardStats> cardStats = new();
 
@@ -126,17 +151,18 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        answeredEvents = await Database.GetCardAnsweredEventsAsync();
-        skippedEvents = await Database.GetCardSkippedEventsAsync();
+
+        _model = await DatabaseService.GetDashboardModelAsync();
+
 
         // ---- Visão Geral ----
-        if (answeredEvents.Any())
-            avgTimeInSeconds = answeredEvents.Average(a => a.EllapsedMs) / 1000D;
+        if (_model.CardAnsweredData.Any())
+            globalAvgTimeInSeconds = _model.CardAnsweredData.Average(a => a.EllapsedMs) / 1000D;
 
-        var total = answeredEvents.Count + skippedEvents.Count;
-        skipRate = total > 0 ? skippedEvents.Count * 100.0 / total : 0;
+        var total = _model.CardAnsweredData.Count + _model.CardAnsweredData.Count;
+        globalSkipRate = total > 0 ? _model.CardSkippedData.Count * 100.0 / total : 0;
 
-        chartData = answeredEvents
+        chartData = _model.CardAnsweredData
             .GroupBy(a => a.OccurredAtUtc.Date)
             .Select(g => new ChartPoint
             {
@@ -146,16 +172,16 @@ else
             .ToList();
 
         // ---- Métricas por Card ----
-        var skipsByCard = skippedEvents
+        var skipsByCard = _model.CardSkippedData
             .GroupBy(s => s.CardId)
             .ToDictionary(g => g.Key, g => g.Count());
 
-        var correctAnswersByCard = answeredEvents
+        var correctAnswersByCard = _model.CardAnsweredData
             .Where(e => e.Correct)
             .GroupBy(s => s.CardId)
             .ToDictionary(g => g.Key, g => g.Count());
 
-        cardStats = answeredEvents
+        cardStats = _model.CardAnsweredData
             .GroupBy(a => a.CardId)
             .Select(g =>
             {
@@ -167,6 +193,7 @@ else
                 return new CardStats
                 {
                     CardId = g.Key,
+                    CardText = g.First()?.CardNativeText ?? "Card sem texto",
                     AvgTimeSeconds = g.Average(x => x.EllapsedMs) / 1000D,
                     AnswerCount = answerCount,
                     SkipCount = skipCount,
@@ -178,8 +205,8 @@ else
             .ToList();
 
         // ---- Gráfico Pizza Geral ----
-        var correct = answeredEvents.Count(e => e.Correct);
-        var incorrect = answeredEvents.Count - correct;
+        var correct = _model.CardAnsweredData.Count(e => e.Correct);
+        var incorrect = _model.CardAnsweredData.Count - correct;
 
         generalAnswerBreakdown = new List<PiePoint>
         {
@@ -197,6 +224,7 @@ else
     public class CardStats
     {
         public int CardId { get; set; }
+        public string CardText { get; set; }
         public double AvgTimeSeconds { get; set; }
         public int AnswerCount { get; set; }
         public int SkipCount { get; set; }
