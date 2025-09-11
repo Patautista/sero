@@ -135,14 +135,42 @@ public class DatabaseService(AnkiDbContext db, ISettingsService settingsService)
     }
     public async Task SaveCardAnsweredAsync(CardAnsweredEvent domainEvent)
     {
-        var evt = EventMapper.ToTable(domainEvent, Events.Schemas.CardAnsweredV1);
-        db.Events.Add(evt);
-        await db.SaveChangesAsync();
+        try
+        {
+            var evt = EventMapper.ToTable(domainEvent, Events.CardAnswered.Schemas.CardAnsweredV1);
+            db.Events.Add(evt);
+            await db.SaveChangesAsync();
+        }
+        catch (Exception ex) { 
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    public async Task<List<CardAnsweredEvent?>> GetCardAnsweredEventsAsync()
+    {
+        var allEvents = await db.Events
+            .Where(e => e.Name == nameof(CardAnsweredEvent)).ToListAsync();
+        var mapped = allEvents
+            .Select(e => JsonSerializer.Deserialize<CardAnsweredEvent>(e.DomainEventJson))
+            .Where(e => e != null)
+            .ToList();
+        return mapped;
+    }
+
+    public async Task<List<CardSkippedEvent?>> GetCardSkippedEventsAsync()
+    {
+        var allEvents = await db.Events
+            .Where(e => e.Name == nameof(CardSkippedEvent)).ToListAsync();
+        var mapped = allEvents
+            .Select(e => JsonSerializer.Deserialize<CardSkippedEvent>(e.DomainEventJson))
+            .Where(e => e != null)
+            .ToList();
+        return mapped;
     }
 
     public async Task SaveCardSkippedAsync(CardSkippedEvent domainEvent)
     {
-        var evt = EventMapper.ToTable(domainEvent, Events.Schemas.CardSkippedV1);
+        var evt = EventMapper.ToTable(domainEvent, Infrastructure.Data.Model.Events.CardSkipped.Schemas.CardSkippedV1);
         db.Events.Add(evt);
         await db.SaveChangesAsync();
     }

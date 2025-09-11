@@ -10,12 +10,13 @@ namespace Domain.Events
     {
         public Guid Id { get; init; } = Guid.NewGuid();
         public DateTime OccurredAtUtc { get; init; } = DateTime.UtcNow;
+        public string Description { get; init; } = "Just another event.";
     }
 
     public record CardAnsweredEvent(
         Guid ReviewSessionId,
         int CardId,
-        int ElapsedMs,
+        int EllapsedMs,
         bool Correct
     ) : DomainEvent;
 
