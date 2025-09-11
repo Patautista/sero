@@ -81,6 +81,7 @@ namespace Infrastructure.Data
                     {
                         Id = s.Id,
                         Meaning = meaning,
+                        MeaningId = meaning.Id,
                         Text = s.Text,
                         Language = s.Language
                     });
