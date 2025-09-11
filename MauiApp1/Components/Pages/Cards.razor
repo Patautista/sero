@@ -46,10 +46,10 @@ else if (currentCard != null)
                     <h1 class="text-xl font-medium">Traduza para o Italiano</h1>
 
                     <!-- Floating EXP badge -->
-                    @if (expEarned.HasValue)
+                    @if (_challengeState.ExpEarned.HasValue)
                     {
                         <div class="exp-badge">
-                            +@expEarned EXP
+                            +@_challengeState.ExpEarned EXP
                         </div>
                     }
                 </div>
@@ -67,7 +67,7 @@ else if (currentCard != null)
 
             <!-- Prompt em língua nativa -->
             <p class="w-fit mb-5 mt-3 text-gray-950 animated-underline">@currentCard.Card.NativeSample.Text</p>
-            <input class="w-full form-control mb-2 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all" @bind="userAnswer" placeholder="Resposta" @onfocus="() => isInputFocused = true" @onblur="() => isInputFocused = false" />
+            <input class="w-full form-control mb-2 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all" @bind="_challengeState.UserAnswer" placeholder="Resposta" @onfocus="() => isInputFocused = true" @onblur="() => isInputFocused = false" />
 
             <div class="card-buttons transition-all duration-300 ease-in-out" style="filter: blur(@(isInputFocused ? "2px" : "0")); transform: scale(@(isInputFocused ? "0.95" : "1"));">
                 <div class="flex justify-between">
@@ -75,11 +75,11 @@ else if (currentCard != null)
                     <ButtonPrimary OnClick="CheckAnswer">Conferir</ButtonPrimary>
                 </div>
 
-                <AnswerValidationMessage ValidationMessage="@validationMessage"
-                                         IsCorrect="@isCorrect"
-                                         AnswerTime="@answerTime" />
+                <AnswerValidationMessage ValidationMessage="@_challengeState.ValidationMessage"
+                                         IsCorrect="@_challengeState.IsCorrect"
+                                         AnswerTime="@_challengeState.AnswerTime" />
 
-                <NextCardCountdown Countdown="@countdown" />
+                <NextCardCountdown Countdown="@_challengeState.Countdown" />
             </div>
         </div>
     </div>
@@ -96,19 +96,23 @@ else
     [Parameter] public ReviewSessionMode ReviewSessionMode { get; set; } = ReviewSessionMode.Regular;
     private ICollection<CardWithState> cards;
     private CardWithState currentCard;
-    private string userAnswer;
-    private string validationMessage;
-    private bool isCorrect;
-    private int countdown;
+    private class ChallengeState
+    {
+        public string UserAnswer;
+        public string ValidationMessage;
+        public bool IsCorrect;
+        public int Countdown;
+        public int? ExpEarned;
+        public DateTime CardShownAt;
+        public TimeSpan AnswerTime;
+    }
+    private ChallengeState _challengeState = new();
     private int newCount;
     private int reviewCount;
-    private int? expEarned;
     private int totalExp;
     private System.Timers.Timer countdownTimer;
     private bool isInputFocused = false;
 
-    private DateTime cardShownAt;
-    private TimeSpan answerTime;
 
     protected override async Task OnInitializedAsync()
     {
@@ -141,7 +145,7 @@ else
 
         // Stop timer
         countdownTimer?.Stop();
-        countdown = 0;
+        _challengeState.Countdown = 0;
 
         // Pick random card
         var rnd = new Random();
@@ -150,47 +154,47 @@ else
         // Remove it from the pool once shown
         cards.Remove(currentCard);
 
-        userAnswer = string.Empty;
-        validationMessage = null;
-        isCorrect = false;
-        answerTime = TimeSpan.Zero;
-        expEarned = null;
+        _challengeState.UserAnswer = string.Empty;
+        _challengeState.ValidationMessage = null;
+        _challengeState.IsCorrect = false;
+        _challengeState.AnswerTime = TimeSpan.Zero;
+        _challengeState.ExpEarned = null;
 
-        cardShownAt = DateTime.UtcNow;
+        _challengeState.CardShownAt = DateTime.UtcNow;
         StateHasChanged();
     }
 
     private async Task CheckAnswer()
     {
-        if (string.IsNullOrWhiteSpace(userAnswer)) return;
+        if (string.IsNullOrWhiteSpace(_challengeState.UserAnswer)) return;
 
         // Calculate answer time
-        answerTime = DateTime.UtcNow - cardShownAt;
+        _challengeState.AnswerTime = DateTime.UtcNow - _challengeState.CardShownAt;
 
         var possibleAnswers = currentCard.Card.SentencesInTargetLanguage.Select(c => c.Text).ToList();
-        var evaluation = AnswerEvaluator.Evaluate(userAnswer, possibleAnswers);
+        var evaluation = AnswerEvaluator.Evaluate(_challengeState.UserAnswer, possibleAnswers);
 
-        isCorrect = evaluation.Quality != AnswerQuality.Wrong;
-        if (isCorrect)
+        _challengeState.IsCorrect = evaluation.Quality != AnswerQuality.Wrong;
+        if (_challengeState.IsCorrect)
         {
-            expEarned = ExpCalculator.CalculateEarnedExp(currentCard.Card, currentCard.State.Repetitions);
-            totalExp += expEarned.Value;
+            _challengeState.ExpEarned = ExpCalculator.CalculateEarnedExp(currentCard.Card, currentCard.State.Repetitions);
+            totalExp += _challengeState.ExpEarned.Value;
         }
         else
         {
-            expEarned = null;
+            _challengeState.ExpEarned = null;
         }
 
         Srs.Review(currentCard.State, (int)evaluation.Quality);
-        validationMessage = AnswerEvaluator.BuildFeedbackMessage(evaluation, userAnswer);
+        _challengeState.ValidationMessage = AnswerEvaluator.BuildFeedbackMessage(evaluation, _challengeState.UserAnswer);
 
-        await Database.UpdateUserCardState(currentCard.State, expEarned ?? 0);
+        await Database.UpdateUserCardState(currentCard.State, _challengeState.ExpEarned ?? 0);
 
         var evt = new CardAnsweredEvent(
             Guid.NewGuid(), 
             currentCard.State.CardId,
-            (int) answerTime.TotalMilliseconds,
-            Correct: isCorrect
+            (int) _challengeState.AnswerTime.TotalMilliseconds,
+            Correct: _challengeState.IsCorrect
         );
 
         await Database.SaveCardAnsweredAsync(evt);
@@ -199,20 +203,20 @@ else
         newCount = cards.Count(c => c.State.Repetitions == 0);
         reviewCount = cards.Count(c => c.State.Repetitions > 0);
 
-        StartCountdown(isCorrect ? 5 : 10);
+        StartCountdown(_challengeState.IsCorrect ? 5 : 10);
     }
 
     private void StartCountdown(int seconds)
     {
-        countdown = seconds;
+        _challengeState.Countdown = seconds;
 
         countdownTimer = new System.Timers.Timer(1000); // 1 second
         countdownTimer.Elapsed += (s, e) =>
         {
-            countdown--;
+            _challengeState.Countdown--;
             InvokeAsync(StateHasChanged);
 
-            if (countdown <= 0)
+            if (_challengeState.Countdown <= 0)
             {
                 countdownTimer.Stop();
                 InvokeAsync(NextCard);
