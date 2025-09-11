@@ -1,0 +1,65 @@
+﻿@page "/dashboard"
+@using Domain.Events
+@inject DatabaseService Database
+
+<h3 class="mb-4">📊 Dashboard de Revisões</h3>
+
+@if (answeredEvents == null)
+{
+    <p>Carregando...</p>
+}
+else
+{
+    <div class="grid grid-cols-2 gap-6">
+
+        <div class="p-4 bg-white rounded shadow">
+            <h4>⏱️ Tempo médio por resposta</h4>
+            <p class="text-xl font-bold">@avgTimeInSeconds.ToString("N2") s</p>
+        </div>
+
+        <div class="p-4 bg-white rounded shadow">
+            <h4>📉 Taxa de Skips</h4>
+            <p class="text-xl font-bold">@skipRate %</p>
+        </div>
+
+        <div class="col-span-2 p-4 bg-white rounded shadow">
+            <h4>📅 Respostas ao longo do tempo</h4>
+            <LineChart Data="chartData" XAxisLabel="Data" YAxisLabel="Tempo (ms)" />
+        </div>
+    </div>
+}
+
+@code {
+    private List<CardAnsweredEvent> answeredEvents;
+    private List<CardSkippedEvent> skippedEvents;
+    private double avgTimeInSeconds;
+    private double skipRate;
+    private List<ChartPoint> chartData = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        answeredEvents = await Database.GetCardAnsweredEventsAsync();
+        skippedEvents = await Database.GetCardSkippedEventsAsync();
+
+        if (answeredEvents.Any())
+            avgTimeInSeconds = answeredEvents.Average(a => a.EllapsedMs) / 1000D;
+
+        var total = answeredEvents.Count + skippedEvents.Count;
+        skipRate = total > 0 ? skippedEvents.Count * 100.0 / total : 0;
+
+        chartData = answeredEvents
+            .GroupBy(a => a.OccurredAtUtc.Date)
+            .Select(g => new ChartPoint
+            {
+                Label = g.Key.ToShortDateString(),
+                Value = g.Average(x => x.EllapsedMs)
+            })
+            .ToList();
+    }
+
+    public class ChartPoint
+    {
+        public string Label { get; set; }
+        public double Value { get; set; }
+    }
+}
