@@ -4,7 +4,9 @@ using Business.Model;
 using Business.ViewModel;
 using Domain.Entity;
 using Domain.Entity.Specification;
+using Domain.Events;
 using Infrastructure.Data;
+using Infrastructure.Data.Mappers;
 using Infrastructure.Data.Model;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -130,6 +132,19 @@ public class DatabaseService(AnkiDbContext db, ISettingsService settingsService)
         {
             Console.WriteLine(ex.Message);
         }
+    }
+    public async Task SaveCardAnsweredAsync(CardAnsweredEvent domainEvent)
+    {
+        var evt = EventMapper.ToTable(domainEvent, Events.Schemas.CardAnsweredV1);
+        db.Events.Add(evt);
+        await db.SaveChangesAsync();
+    }
+
+    public async Task SaveCardSkippedAsync(CardSkippedEvent domainEvent)
+    {
+        var evt = EventMapper.ToTable(domainEvent, Events.Schemas.CardSkippedV1);
+        db.Events.Add(evt);
+        await db.SaveChangesAsync();
     }
     public async Task<int> GetUserExpAsync()
     {

@@ -15,9 +15,9 @@ namespace Infrastructure.Data.Model
         public string Name { get; set; }
         public string Description { get; set; }
         /// <summary>
-        /// Propriedades específicas em JSON (ex.: serialização de CardAnsweredEventProperties)
+        /// Propriedades específicas em JSON
         /// </summary>
-        public string PropertiesJson { get; set; } = null!;
+        public string DomainEventJson { get; set; } = null!;
         /// <summary>
         /// Esquema ou versão do evento, ex.: "CardAnswered.v1"
         /// </summary>
@@ -43,19 +43,5 @@ namespace Infrastructure.Data.Model
             public static string CardSkippedV1 = nameof(CardSkippedV1);
             public static string CardAnsweredV1 = nameof(CardAnsweredV1);
         }
-    }
-    public class CardAnsweredEventProperties : ReviewSessionEventProperties
-    {
-        public int EllapsedMs { get; set; }
-        public int AnswerAttempt { get; set; }
-    }
-    public class CardSkippedEventProperties : ReviewSessionEventProperties
-    {
-        public int AnswerAttempt { get; set; }
-    }
-    public abstract class ReviewSessionEventProperties
-    {
-        public Guid ReviewSessionId { get; set; }
-        public int CardId { get; set; }
     }
 }
