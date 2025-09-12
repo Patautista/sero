@@ -221,7 +221,7 @@ else
 
         await Database.SaveCardAnsweredAsync(evt);
 
-        StartCountdown(5);
+        StartCountdown(_challengeState.AnswerQuality == AnswerQuality.Perfect ? 3 : 7);
 
         // Update counters
         newCount = cards.Count(c => c.State.Repetitions == 0);
@@ -265,7 +265,6 @@ else
 
         // Hide correction option and start countdown for next card
         _challengeState.AnswerQuality = AnswerQuality.Perfect;
-        StartCountdown(5);
     }
 
     private void StartCountdown(int seconds)
