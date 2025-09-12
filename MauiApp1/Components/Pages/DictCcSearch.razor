@@ -1,8 +1,11 @@
 ﻿@page "/dict"
 @using Infrastructure.Lookup
 
-<input @bind="searchWord" placeholder="Enter a word" />
-<button @onclick="Search">Lookup term (Dict.cc)</button>
+<div class="gap-2">
+    <h3>Lookup term (Dict.cc)</h3>
+    <input @bind="searchWord" placeholder="Enter a word" />
+    <ButtonPrimary OnClick="Search">Search</ButtonPrimary>
+</div>
 
 @if (showModal)
 {

@@ -1,11 +1,14 @@
 ﻿using HtmlAgilityPack;
+using Microsoft.EntityFrameworkCore.Update.Internal;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Infrastructure.Lookup
 {
@@ -38,10 +41,10 @@ namespace Infrastructure.Lookup
             _httpClient.DefaultRequestHeaders.Add("User-Agent", _options.UserAgent);
         }
 
-        public async Task<string> GetHtmlVerbInflectionTable(string verb)
+        public async Task<ConjugationData> GetVerbInflectionData(string verb)
         {
             if (_options.EnableCaching && _cache.TryGetValue(verb, out var cached))
-                return cached.FirstOrDefault() ?? string.Empty;
+                return JsonSerializer.Deserialize<ConjugationData>(cached.FirstOrDefault()) ?? new ConjugationData(new List<Mood>(), new List<SpecialMood>());
 
             var url = $"{_options.BaseUrl}{verb}";
             var html = await FetchWithRetryAsync(url);
@@ -53,7 +56,7 @@ namespace Infrastructure.Lookup
             var header = doc.DocumentNode.SelectNodes($"//h2[contains(@id,'{_options.Language}')]").FirstOrDefault();
 
             if (header == null)
-                return string.Empty;
+                return new ConjugationData(new List<Mood>(), new List<SpecialMood>());
 
             // Climb up to <h2> then find the following tables in that section
             var collapsableSection = header.ParentNode.ParentNode;
@@ -62,12 +65,13 @@ namespace Infrastructure.Lookup
                 ?.FirstOrDefault();
 
             var result = ApplyBootstrapStyling(table?.OuterHtml) ?? string.Empty;
-            result = TableRefactor.ConvertTableToMobileLayout(result);
+
+            var data = TableRefactor.ConvertTableToMobileLayout(result);
 
             if (_options.EnableCaching)
-                _cache[verb] = new[] { result };
+                _cache[verb] = new[] { JsonSerializer.Serialize(data) };
 
-            return result;
+            return TableRefactor.ConvertTableToMobileLayout(result);
         }
 
         private async Task<string> FetchWithRetryAsync(string url)
@@ -100,7 +104,7 @@ namespace Infrastructure.Lookup
     }
     public class TableRefactor
     {
-        public static string ConvertTableToMobileLayout(string htmlContent)
+        public static ConjugationData ConvertTableToMobileLayout(string htmlContent)
         {
             // 1. Load the original HTML content into an HtmlDocument.
             var doc = new HtmlDocument();
@@ -110,67 +114,36 @@ namespace Infrastructure.Lookup
             var tableBody = doc.DocumentNode.SelectSingleNode("//table/tbody");
             if (tableBody == null)
             {
-                return string.Empty; // Return an empty string if the table is not found.
+                return new ConjugationData(new List<Mood>(), new List<SpecialMood>()); // Return an empty string if the table is not found.
             }
-
-            var sb = new StringBuilder();
-
-            // 3. Start building the new mobile layout div.
-            sb.AppendLine(@"<div class=""md:hidden p-4 space-y-4 rounded-lg bg-white shadow-xl"">");
 
             // 4. Extract and convert the initial simple rows (infinitive, participles, etc.).
             var rows = tableBody.SelectNodes("tr").ToList();
 
-            // Infinitive row (index 0)
-            var infinitiveRow = rows[0];
-            var infinitiveTitle = infinitiveRow.SelectSingleNode("th").InnerText.Trim();
-            var infinitiveValue = infinitiveRow.SelectSingleNode("td").InnerText.Trim();
-            sb.AppendLine($@"<div class=""bg-gray-50 p-4 rounded-lg shadow-sm"">
-            <div class=""font-semibold text-lg text-gray-800"">{infinitiveTitle}</div>
-            <div class=""text-blue-600 font-bold text-2xl mt-1"">{infinitiveValue}</div>
-        </div>");
+            var specialMoodRows = rows.Take(5);
 
-            // Auxiliary & Gerund row (index 1)
-            var auxRow = rows[1];
-            var auxTitle = auxRow.SelectNodes("th")[0].InnerText.Trim();
-            var auxValue = auxRow.SelectNodes("td")[0].InnerText.Trim();
-            var gerundTitle = auxRow.SelectNodes("th")[1].InnerText.Trim();
-            var gerundValue = auxRow.SelectNodes("td")[1].InnerText.Trim();
-            sb.AppendLine($@"<div class=""bg-gray-50 p-4 rounded-lg shadow-sm grid grid-cols-2 gap-4"">
-            <div>
-                <div class=""font-semibold text-base text-gray-800"">{auxTitle}</div>
-                <div class=""text-blue-600 font-bold"">{auxValue}</div>
-            </div>
-            <div>
-                <div class=""font-semibold text-base text-gray-800"">{gerundTitle}</div>
-                <div class=""text-blue-600 font-bold"">{gerundValue}</div>
-            </div>
-        </div>");
+            var specialMoods = new List<SpecialMood>();
 
-            // Present & Past Participle row (index 2)
-            var participleRow = rows[2];
-            var presentParticipleTitle = participleRow.SelectNodes("th")[0].InnerText.Trim();
-            var presentParticipleValue = participleRow.SelectNodes("td")[0].InnerText.Trim();
-            var pastParticipleTitle = participleRow.SelectNodes("th")[1].InnerText.Trim();
-            var pastParticipleValue = participleRow.SelectNodes("td")[1].InnerText.Trim();
-            sb.AppendLine($@"<div class=""bg-gray-50 p-4 rounded-lg shadow-sm grid grid-cols-2 gap-4"">
-            <div>
-                <div class=""font-semibold text-base text-gray-800"">{presentParticipleTitle}</div>
-                <div class=""text-gray-500 font-bold"">{presentParticipleValue}</div>
-            </div>
-            <div>
-                <div class=""font-semibold text-base text-gray-800"">{pastParticipleTitle}</div>
-                <div class=""text-blue-600 font-bold"">{pastParticipleValue}</div>
-            </div>
-        </div>");
-
-            // 5. Handle the main conjugation blocks (Indicative, Subjunctive, etc.).
-            // Find the first header row for the conjugations (e.g., "indicative" or "congiuntivo").
-            var lastPersonLabelsRow = rows
-                .Last(row => row.ChildNodes.Any(child => child.GetAttributeValue("class", null) == "roa-person-number-header"));
+            foreach(var row in specialMoodRows)
+            {
+                foreach(var block in row.ChildNodes
+                    .Where(c => c.Name == "th" || c.Name == "td")
+                    .Select((value, index) => new { value, index }).GroupBy(x => x.index / 2).ToList())
+                {
+                    if(block.Count() == 2)
+                    {
+                        var title = block.FirstOrDefault(e => e.value.Name == "th")?.value.InnerText?.Trim();
+                        var form = block.FirstOrDefault(e => e.value.Name == "td")?.value.InnerText?.Trim();
+                        if (title != null && form != null)
+                        {
+                            specialMoods.Add(new SpecialMood(title, form));
+                        }
+                    }
+                }
+            }
 
             var dict = new Dictionary<string, List<HtmlNode>>();
-            foreach ( var row in rows.Skip(5))
+            foreach ( var row in rows.SkipWhile(row => !CommonMoods.Any(row.InnerText.Trim().ToLower().Contains)))
             {
                 if (row.ChildNodes.FindFirst("th")?.GetClasses() != null)
                 {
@@ -211,53 +184,43 @@ namespace Infrastructure.Lookup
                 }
             }
 
+            var moods = new List<Mood>();
+
             foreach(var group in dict)
             {
+
                 var list = group.Value;
                 var moodRow = list.First();
                 var personRow = moodRow.SelectNodes("th").Skip(1);
-                var mood = moodRow.ChildNodes.FindFirst("th").InnerText.Trim();
+                var moodName = FirstCharToUpper(moodRow.ChildNodes.FindFirst("th").InnerText.Trim());
 
-                sb.AppendLine($@"<div class=""bg-gray-100 p-4 rounded-lg shadow-md"">
-                    <h3 class=""font-bold text-2xl mb-4 text-center text-gray-900"">{FirstCharToUpper(mood)}</h3>
-                    <div class=""space-y-4"">");
+                var tenseBlocks = list.Skip(1);
+                var tenses = new List<Tense>();
 
-                var tenses = list.Skip(1);
-
-                foreach (var tense in tenses)
+                foreach (var block in tenseBlocks)
                 {
-                    var tenseName = FirstCharToUpper(tense.ChildNodes?.FindFirst("th")?.InnerText?.Trim());
-                    if (!string.IsNullOrEmpty(tenseName))
-                    {
-                        sb.AppendLine($@"
-                        <div>
-                            <div class=""font-bold text-lg mb-1 text-gray-700"">{tenseName}</div>
-                            <div class=""grid grid-cols-2 gap-y-2 text-base"">");
-                        sb.AppendLine($@"
-                            </div>
-                        </div>");
-                    }
+                    var tenseName = FirstCharToUpper(block.ChildNodes?.FindFirst("th")?.InnerText?.Trim());
 
-                    var conjugationElements = tense.SelectNodes("td");
+                    var conjugations = new List<Conjugation>();
+
+                    var conjugationElements = block.SelectNodes("td");
                     int i = 0;
                     foreach (var node in conjugationElements)
                     {
-                        sb.AppendLine($@"
-                                <div class = ""flex flex-row gap-2"">
-                                    <div class=""text-gray-500"">{FirstCharToUpper(personRow.ElementAt(i)?.InnerText?.Trim())}</div>
-                                    <div class=""text-blue-600 font-semibold"">{node.InnerText.Trim()}</div>
-                                </div>");
                         
+                        conjugations.Add(
+                            new Conjugation(
+                                FirstCharToUpper(personRow.ElementAt(i)?.InnerText?.Trim()), 
+                                node.InnerText.Trim()
+                            ));
                         i++;
                     }
-                    
+                    tenses.Add(new Tense(tenseName, conjugations));
                 }
-                sb.AppendLine($@"
-                            </div>
-                        </div>");
+                moods.Add(new Mood(moodName, tenses));
             }
 
-            return sb.ToString();
+            return new ConjugationData(moods, specialMoods);
         }
         public static string FirstCharToUpper(string input)
         {
@@ -267,10 +230,17 @@ namespace Infrastructure.Lookup
             }
             return $"{char.ToUpper(input[0])}{input[1..]}";
         }
+        private static List<string> CommonMoods = new List<string>
+        {
+            "indicative",
+            "subjunctive",
+            "imperative"
+        };
     }
+    public record ConjugationData(ICollection<Mood> Moods, ICollection<SpecialMood> SpecialMoods);
 
-    public record Conjugation(string person, string conjugation);
+    public record Conjugation(string Person, string Form);
     public record Tense(string Name, ICollection<Conjugation> Conjugations);
     public record Mood(string Name, ICollection<Tense> Tenses);
-
+    public record SpecialMood(string Name, string Form);
 }
