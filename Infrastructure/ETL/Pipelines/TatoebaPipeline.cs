@@ -52,6 +52,7 @@ namespace Infrastructure.ETL.Pipelines
             {
                 int index = 1;
                 var processable = cards.Skip(count * _batchSize).Take(_batchSize);
+                var test = cards.FindIndex(0, c => c.TargetSentence.Text == "Ciao nonno.");
                 var total = processable.Count();
                 foreach (var cardSeed in processable)
                 {

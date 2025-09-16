@@ -8,6 +8,7 @@
 @using Microsoft.AspNetCore.WebUtilities;
 
 @inject NavigationManager Navigation
+@inject SoundService SoundService
 @using MauiApp1.Services
 @attribute [StreamRendering(true)]
 
@@ -205,6 +206,7 @@ else
         {
             _challengeState.ExpEarned = ExpCalculator.CalculateEarnedExp(currentCard.Card, currentCard.State.Repetitions);
             totalExp += _challengeState.ExpEarned.Value;
+            SoundService.PlayVoice(currentCard.Card.TargetSample.Text, currentCard.Card.TargetSample.Language);
         }
 
         Srs.Review(currentCard.State, (int)evaluation.Quality);
