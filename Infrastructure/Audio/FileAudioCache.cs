@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -32,6 +33,15 @@ namespace Infrastructure.Audio
         {
             var path = GetPath(key);
             await File.WriteAllBytesAsync(path, data);
+        }
+
+        public string ComputeCacheKey(string text, string lang, VoiceGender voiceGender)
+        {
+            using var sha = SHA256.Create();
+            var hash = Convert.ToHexString(
+                sha.ComputeHash(Encoding.UTF8.GetBytes($"{lang}:{voiceGender}:{text}"))
+            );
+            return hash;
         }
 
         private string GetPath(string key) => Path.Combine(_basePath, $"{key}.mp3");

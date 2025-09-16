@@ -6,9 +6,15 @@ using System.Threading.Tasks;
 
 namespace Business.Audio
 {
+    public enum VoiceGender
+    {
+        Female,
+        Male
+    }
     public interface IAudioCache
     {
         Task<byte[]?> GetAsync(string key);
         Task SetAsync(string key, byte[] data);
+        string ComputeCacheKey(string text, string lang, VoiceGender voiceGender);
     }
 }
