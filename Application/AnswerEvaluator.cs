@@ -27,7 +27,7 @@ namespace Business
 
             if (isPerfect)
             {
-                return new AnswerEvaluation(AnswerQuality.Perfect);
+                return new AnswerEvaluation(AnswerQuality.Perfect, bestMatch.Answer);
             }
             else if (isCorrect)
             {
@@ -144,10 +144,6 @@ namespace Business
     }
     public record AnswerEvaluation
     {
-        public AnswerEvaluation(AnswerQuality quality)
-        {
-            Quality = quality;
-        }
         public AnswerEvaluation(AnswerQuality quality, string closestMatch)
         {
             Quality = quality;
