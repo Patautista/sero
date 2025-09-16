@@ -15,11 +15,6 @@ namespace Infrastructure.Audio
 {
     public class SpeechService
     {
-        public enum VoiceGender
-        {
-            Female,
-            Male
-        }
 
         private readonly ElevenLabsClient _elevenLabsClient;
         private readonly IAudioCache _cache;
@@ -32,7 +27,7 @@ namespace Infrastructure.Audio
 
         public async Task<byte[]> GenerateSpeechAsync(string text, VoiceGender voiceGender, string languageCode = "pt-BR")
         {
-            var cacheKey = GetCacheKey(text, languageCode, voiceGender);
+            var cacheKey = _cache.ComputeCacheKey(text, languageCode, voiceGender);
 
             // ✅ Busca no cache antes
             var cached = await _cache.GetAsync(cacheKey);
@@ -67,15 +62,6 @@ namespace Infrastructure.Audio
                 return "3DPhHWXDY263XJ1d2EPN";
             }
             throw new NotSupportedException($"No voice configured for {lang}-{voiceGender}");
-        }
-
-        private string GetCacheKey(string text, string lang, VoiceGender voiceGender)
-        {
-            using var sha = SHA256.Create();
-            var hash = Convert.ToHexString(
-                sha.ComputeHash(Encoding.UTF8.GetBytes($"{lang}:{voiceGender}:{text}"))
-            );
-            return hash;
         }
     }
 }
