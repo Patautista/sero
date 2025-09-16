@@ -89,3 +89,5 @@ fable_modules/
 EcommerceFrontend/EcommerceFrontend/dist/
 EcommerceFrontend/EcommerceFrontend/localhost-key.pem
 EcommerceFrontend/EcommerceFrontend/localhost.pem
+/ConsoleTests/Program.cs
+/ConsoleTests/Program.cs

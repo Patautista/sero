@@ -4,6 +4,10 @@
       "commandName": "Project",
       "commandLineArgs": "GenerateAlternativeSentences"
     },
+    "GenerateAudioForSentences": {
+      "commandName": "Project",
+      "commandLineArgs": "GenerateAudioForSentences"
+    },
     "PipelineB": {
       "commandName": "Project",
       "commandLineArgs": "pipelineB"
