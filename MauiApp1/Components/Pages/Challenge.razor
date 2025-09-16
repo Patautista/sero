@@ -206,7 +206,7 @@ else
         {
             _challengeState.ExpEarned = ExpCalculator.CalculateEarnedExp(currentCard.Card, currentCard.State.Repetitions);
             totalExp += _challengeState.ExpEarned.Value;
-            SoundService.PlayVoice(currentCard.Card.TargetSample.Text, currentCard.Card.TargetSample.Language);
+            SoundService.PlayVoice(evaluation.ClosestMatch, currentCard.Card.TargetSample.Language);
         }
 
         Srs.Review(currentCard.State, (int)evaluation.Quality);
