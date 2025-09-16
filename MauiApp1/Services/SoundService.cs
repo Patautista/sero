@@ -22,7 +22,7 @@ namespace MauiApp1.Services
             try
             {
                 var key = _audioCache.ComputeCacheKey(text, lang, voiceGender);
-                var player = _audioManager.CreatePlayer(await FileSystem.OpenAppPackageFileAsync($"Sound/voice_cache/{key}.mp3"));
+                var player = _audioManager.CreatePlayer(await FileSystem.OpenAppPackageFileAsync($"Sounds/voice_cache/{key}.mp3"));
                 player.Play();
             }
             catch(Exception ex)
