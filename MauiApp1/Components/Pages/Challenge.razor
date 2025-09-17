@@ -4,6 +4,7 @@
 @using Business.ViewModel
 @using Domain
 @using Domain.Events
+@using CommunityToolkit.Maui.Alerts;
 @using MauiApp1.Components.User
 @using Microsoft.AspNetCore.WebUtilities;
 
@@ -70,9 +71,11 @@ else if (currentCard != null)
             <p class="w-fit mb-5 mt-3 text-gray-950 animated-underline">@currentCard.Card.NativeSample.Text</p>
             <input class="w-full form-control mb-2 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all" @bind="_challengeState.UserAnswer" placeholder="Resposta" @onfocus="() => isInputFocused = true" @onblur="() => isInputFocused = false" />
 
-            <div class="card-buttons transition-all duration-300 ease-in-out" style="filter: blur(@(isInputFocused ? "2px" : "0")); transform: scale(@(isInputFocused ? "0.95" : "1"));">
+            <div class="card-buttons transition-all duration-300 ease-in-out">
                 <div class="flex justify-between">
-                    <ButtonSecondary OnClick="SkipCard">Pular</ButtonSecondary>
+                    <div style="filter: blur(@(isInputFocused ? "2px" : "0")); transform: scale(@(isInputFocused ? "0.95" : "1"));">
+                        <ButtonSecondary OnClick="SkipCard">Pular</ButtonSecondary>
+                    </div>
                     <ButtonPrimary OnClick="CheckAnswer">Conferir</ButtonPrimary>
                 </div>
 
@@ -206,7 +209,7 @@ else
         {
             _challengeState.ExpEarned = ExpCalculator.CalculateEarnedExp(currentCard.Card, currentCard.State.Repetitions);
             totalExp += _challengeState.ExpEarned.Value;
-            SoundService.PlayVoice(evaluation.ClosestMatch, currentCard.Card.TargetSample.Language);
+            await PlayVoice(evaluation.ClosestMatch, currentCard.Card.TargetSample.Language);
         }
 
         Srs.Review(currentCard.State, (int)evaluation.Quality);
@@ -230,6 +233,13 @@ else
         reviewCount = cards.Count(c => c.State.Repetitions > 0);
 
         StateHasChanged();
+    }
+
+    private async Task PlayVoice(string text, string lang)
+    {
+        var toast = Toast.Make("Reproduzindo áudio.", CommunityToolkit.Maui.Core.ToastDuration.Short, 14);
+        await toast.Show(CancellationToken.None);
+        SoundService.PlayVoice(text, currentCard.Card.TargetSample.Language);
     }
 
     private async Task ForceCorrectAnswer()
