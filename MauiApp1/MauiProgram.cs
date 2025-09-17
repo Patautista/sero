@@ -1,6 +1,7 @@
 ﻿using AppLogic.Web;
 using Business;
 using Business.Audio;
+using CommunityToolkit.Maui;
 using Infrastructure.Audio;
 using Infrastructure.Data;
 using MauiApp1.Services;
@@ -18,6 +19,7 @@ namespace MauiApp1
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
