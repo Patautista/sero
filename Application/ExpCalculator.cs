@@ -32,7 +32,7 @@ namespace Business
             double lengthFactor = Math.Log(card.SentencesInTargetLanguage.First().Text.Length + 1, 2); // log scaling
 
             // --- Base EXP ---
-            double baseExp = 7;
+            double baseExp = 10;
 
             double totalExp = baseExp * repetitionFactor * difficultyFactor * lengthFactor;
 
