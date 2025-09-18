@@ -4,6 +4,7 @@
 @using CommunityToolkit.Maui.Alerts;
 @using Domain.Events
 @using MauiApp1.Services
+@using static Business.AnswerEvaluator
 
 @inject SoundService SoundService
 @inject DatabaseService Database
@@ -44,9 +45,26 @@
         <ButtonPrimary OnClick="CheckAnswer">Conferir</ButtonPrimary>
     </div>
 
-    <AnswerValidationMessage ValidationMessage="@_challengeState.ValidationMessage"
-                             IsCorrect="@_challengeState.IsCorrect"
-                             AnswerTime="@_challengeState.AnswerTime" />
+    @if (_challengeState.Feedback is not null)
+    {
+        <div class="mt-4">
+            <div>
+                <span>@_challengeState.Feedback.MainMessage</span>
+            </div>
+            @if (_challengeState.Feedback.ExpectedAnswer is not null)
+            {
+                <div class="text-sm text-gray-700 mt-2">
+                    <strong>Resposta esperada:</strong> @_challengeState.Feedback.ExpectedAnswer
+                </div>
+            }
+            @if (_challengeState.Feedback.Hint is not null)
+            {
+                <div class="text-xs text-gray-500 mt-1">
+                    <strong>Dica:</strong> @_challengeState.Feedback.Hint
+                </div>
+            }
+        </div>
+    }
 
     @if (_challengeState.AnswerQuality != AnswerQuality.Perfect)
     {
@@ -69,7 +87,7 @@
     private class ChallengeState
     {
         public string UserAnswer;
-        public string ValidationMessage;
+        public AnswerFeedback Feedback;
         public bool IsCorrect;
         public AnswerQuality AnswerQuality = AnswerQuality.Perfect;
         public int Countdown;
@@ -115,7 +133,7 @@
         }
 
         Srs.Review(CurrentCard.State, (int)evaluation.Quality);
-        _challengeState.ValidationMessage = AnswerEvaluator.BuildFeedbackMessage(evaluation, _challengeState.UserAnswer);
+        _challengeState.Feedback.MainMessage = AnswerEvaluator.BuildFeedbackMessage(evaluation, _challengeState.UserAnswer);
 
         await Database.UpdateUserCardState(CurrentCard.State, _challengeState.ExpEarned ?? 0);
 
@@ -135,9 +153,18 @@
 
     private async Task PlayVoice(string text, string lang)
     {
-        var toast = Toast.Make("Reproduzindo áudio.", CommunityToolkit.Maui.Core.ToastDuration.Short, 14);
-        await toast.Show(CancellationToken.None);
-        await SoundService.PlayVoiceClip(text, CurrentCard.Card.TargetSample.Language);
+
+        var res = await SoundService.PlayVoiceClip(text, CurrentCard.Card.TargetSample.Language);
+        if (res)
+        {
+            var toast = Toast.Make("Reproduzindo áudio.", CommunityToolkit.Maui.Core.ToastDuration.Short, 14);
+            await toast.Show(CancellationToken.None);
+        }
+        else
+        {
+            var toast = Toast.Make("Falha ao reproduzir áudio.", CommunityToolkit.Maui.Core.ToastDuration.Short, 14);
+            await toast.Show(CancellationToken.None);
+        }
     }
 
     private async Task ForceCorrectAnswer()
@@ -161,8 +188,14 @@
             Srs.Review(CurrentCard.State, (int)AnswerQuality.Ok);
             await Database.UpdateUserCardState(CurrentCard.State, _challengeState.ExpEarned ?? 0);
         }
-        _challengeState.ValidationMessage = "✅ Correto! Sua resposta foi adicionada como alternativa.";
-
+        _challengeState.Feedback = new AnswerFeedback
+        {
+            Quality = AnswerQuality.Perfect,
+            ClosestMatch = _challengeState.UserAnswer,
+            MainMessage = "✅ Correto! Sua resposta foi adicionada como alternativa.",
+            ExpectedAnswer = null,
+            Hint = null
+        };
 
         var evt = new CardAnsweredEvent(
             Guid.NewGuid(),

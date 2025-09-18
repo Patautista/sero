@@ -30,6 +30,7 @@ namespace MauiApp1
             builder.Services.AddMauiBlazorWebView();
             builder.Services.AddApplicationServices(builder.Configuration);
             builder.Services.AddScoped<IAudioCache, MobileAudioCache>();
+            builder.Services.AddHttpClient<SoundService>();
             builder.Services.AddScoped<SoundService>();
             builder.Services.AddScoped<DatabaseService>();
             builder.Services.AddSingleton<ISettingsService, SettingsService>();
