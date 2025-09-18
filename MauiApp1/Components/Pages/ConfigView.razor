@@ -8,13 +8,15 @@
 
 
 <RadzenAccordion>
-            <Items>
-                <RadzenAccordionItem Text="Configurações de Estudo" Icon="book">
-                    <MauiApp1.Components.Config.StudyConfigComponent></MauiApp1.Components.Config.StudyConfigComponent>
-                </RadzenAccordionItem>
-                <RadzenAccordionItem Text="Sistema" Icon="bug_report">
-                    <MauiApp1.Components.Config.ApiConfigComponent></MauiApp1.Components.Config.ApiConfigComponent>
-                    <MauiApp1.Components.Config.SystemConfigComponent></MauiApp1.Components.Config.SystemConfigComponent>
-                </RadzenAccordionItem>
-            </Items>
+    <Items>
+        <RadzenAccordionItem Text="Estudo" Icon="book">
+            <MauiApp1.Components.Config.StudyConfigComponent></MauiApp1.Components.Config.StudyConfigComponent>
+        </RadzenAccordionItem>
+        <RadzenAccordionItem Text="Sistema" Icon="bug_report">
+            <div class="space-y-4">
+                <MauiApp1.Components.Config.ApiConfigComponent></MauiApp1.Components.Config.ApiConfigComponent>
+                <MauiApp1.Components.Config.SystemConfigComponent></MauiApp1.Components.Config.SystemConfigComponent>
+            </div>
+        </RadzenAccordionItem>
+    </Items>
 </RadzenAccordion>

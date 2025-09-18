@@ -1,65 +1,30 @@
 ﻿@inject ISettingsService SettingsService
 @inject NavigationManager Nav
 
-<EditForm Model="@config" OnValidSubmit="ApplyStudyConfig">
-                    <div class="mb-3">
-                        <label class="form-label">Escolha o Idioma</label>
-                        <select class="form-select" @bind="selectedLanguageCode">
-                            @foreach (var pair in AvailableLanguages)
-                            {
-                                <option value="@pair.Code">@pair.DisplayName</option>
-                            }
-                        </select>
-                    </div>
+<EditForm Model="@ApiKey" OnValidSubmit="ApplyConfig">
+    <div class="font-bold">
+        <h3 class="font-bold">Adicione aqui sua chave de api se possuir uma.</h3>
+        <input class="w-1/3 form-control mb-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all" type="text" name="apiKey" value="@ApiKey" />
+    </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Dificuldade Inicial</label>
-                        <select class="form-select" @bind="config.DifficultyLevel">
-                            @foreach (var level in Enum.GetValues<DifficultyLevel>())
-                            {
-                                <option value="@level">@level</option>
-                            }
-                        </select>
-                    </div>
-
-                    <button class="btn btn-primary" type="submit">Salvar</button>
+    <ButtonPrimary Type="submit">Salvar</ButtonPrimary>
 </EditForm>
 
 @code {
-    private StudyConfig? config;
-    private string selectedLanguageCode;
-
-    private List<(string Code, string DisplayName, string Source, string Target)> AvailableLanguages = new()
-    {
-        ("it-pt", "Italian → Portuguese", "it", "pt"),
-        ("en-pt", "English → Portuguese", "en", "pt")
-    };
+    private string? apiKey;
+    public string ApiKey = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        config = SettingsService.StudyConfig.Value
-                 ?? new StudyConfig
-                 {
-                     SelectedLanguage = new LanguagePair { Source = new("it"), Target = new("pt") },
-                     DifficultyLevel = DifficultyLevel.Beginner
-                 };
-
-        // Sync UI dropdown with current config
-        var code = $"{config.SelectedLanguage.Source.TwoLetterISOLanguageName}-{config.SelectedLanguage.Target.TwoLetterISOLanguageName}";
-        selectedLanguageCode = code;
+        apiKey = SettingsService.ApiKey.Value ?? string.Empty;
+        ApiKey = apiKey;
     }
 
-    private async Task ApplyStudyConfig()
+    private async Task ApplyConfig()
     {
-        // Map dropdown code back to LanguagePair
-        var lang = AvailableLanguages.FirstOrDefault(l => l.Code == selectedLanguageCode);
-        config.SelectedLanguage = new LanguagePair
-        {
-            Source = new(lang.Source),
-            Target = new(lang.Target)
-        };
 
-        SettingsService.StudyConfig.Update(config);
+        apiKey = ApiKey.Trim();
+        SettingsService.ApiKey.Update(apiKey);
         Nav.NavigateTo("/");
     }
 }
