@@ -30,9 +30,9 @@ namespace MauiApp1.Services.Seed
     public class MobileDbContextInitialiser
     {
         private readonly ILogger<MobileDbContextInitialiser> _logger;
-        private readonly AnkiDbContext _context;
+        private readonly MobileDbContext _context;
 
-        public MobileDbContextInitialiser(ILogger<MobileDbContextInitialiser> logger, AnkiDbContext context)
+        public MobileDbContextInitialiser(ILogger<MobileDbContextInitialiser> logger, MobileDbContext context)
         {
             _logger = logger;
             _context = context;

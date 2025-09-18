@@ -23,12 +23,12 @@ namespace Infrastructure.Data.Model
         /// </summary>
         public required string Schema { get; set; }
 
-        [ForeignKey(nameof(AnkiDbContext.Users))]
+        [ForeignKey(nameof(MobileDbContext.Users))]
         public int UserId { get; set; }
 
-        [ForeignKey(nameof(AnkiDbContext.ReviewSessions))]
+        [ForeignKey(nameof(MobileDbContext.ReviewSessions))]
         public Guid SessionId { get; set; }
-        [ForeignKey(nameof(AnkiDbContext.Cards))]
+        [ForeignKey(nameof(MobileDbContext.Cards))]
         public int CardId { get; set; }
     }
     public static class Events

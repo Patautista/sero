@@ -17,7 +17,7 @@ using System.Text.Json;
 
 namespace MauiApp1.Services;
 
-public class DatabaseService(AnkiDbContext db, ISettingsService settingsService)
+public class DatabaseService(MobileDbContext db, ISettingsService settingsService)
 {
     public async Task<ICollection<CardWithState>> GetDueCards(ReviewSessionMode sessionMode, int exp, CancellationToken cancellationToken = default)
     {

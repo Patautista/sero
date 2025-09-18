@@ -3,7 +3,7 @@
 
 @inject ISettingsService SettingsService
 @inject NavigationManager Nav
-@inject AnkiDbContext dbContext
+@inject MobileDbContext dbContext
 
 <EditForm Model="@config" OnValidSubmit="ResetSystemConfig">
                         <button class="btn btn-primary" type="submit">Resetar</button>

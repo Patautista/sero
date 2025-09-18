@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Data
 {
-    public class AnkiDbContext : DbContext
+    public class MobileDbContext : DbContext
     {
-        public AnkiDbContext(DbContextOptions<AnkiDbContext> options) : base(options) { }
+        public MobileDbContext(DbContextOptions<MobileDbContext> options) : base(options) { }
         public DbSet<CardTable> Cards { get; set; }
         public DbSet<CurriculumTable> Curricula { get; set; }
         public DbSet<CurriculumSectionTable> CurriculumSections { get; set; }
@@ -72,18 +72,18 @@ namespace Infrastructure.Data
 
     }
 
-    public class AnkiAppDbContextFactory : IDesignTimeDbContextFactory<AnkiDbContext>
+    public class AnkiAppDbContextFactory : IDesignTimeDbContextFactory<MobileDbContext>
     {
-        public AnkiDbContext CreateDbContext(string[] args)
+        public MobileDbContext CreateDbContext(string[] args)
         {
 
             string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development";
             Console.WriteLine($"Environment detected: {environment}");
 
-            var builder = new DbContextOptionsBuilder<AnkiDbContext>();
+            var builder = new DbContextOptionsBuilder<MobileDbContext>();
             builder.UseSqlite("Data Source = localdb.db");
 
-            return new AnkiDbContext(builder.Options);
+            return new MobileDbContext(builder.Options);
         }
     }
 }

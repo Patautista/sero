@@ -40,7 +40,7 @@ namespace MauiApp1
 #endif
 
             var basePath = FileSystem.AppDataDirectory;
-            builder.Services.AddDbContext<AnkiDbContext>(options =>
+            builder.Services.AddDbContext<MobileDbContext>(options =>
                 options.UseSqlite($"Filename={Path.Combine(basePath, "localdb.db")}")
             );
 

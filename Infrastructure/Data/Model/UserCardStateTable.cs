@@ -10,9 +10,9 @@ namespace Infrastructure.Data.Model
     public class UserCardStateTable
     {
         public int Id { get; set;  }
-        [ForeignKey(nameof(AnkiDbContext.Users))]
+        [ForeignKey(nameof(MobileDbContext.Users))]
         public int UserId { get; set; }          // link to the user
-        [ForeignKey(nameof(AnkiDbContext.Cards))]
+        [ForeignKey(nameof(MobileDbContext.Cards))]
         public int CardId { get; set; }          // link to the card
         public int Repetitions { get; set; } = 0;
         public double EaseFactor { get; set; } = 2.5;

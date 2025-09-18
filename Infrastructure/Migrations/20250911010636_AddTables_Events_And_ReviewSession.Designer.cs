@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Migrations
 {
-    [DbContext(typeof(AnkiDbContext))]
+    [DbContext(typeof(MobileDbContext))]
     [Migration("20250911010636_AddTables_Events_And_ReviewSession")]
     partial class AddTables_Events_And_ReviewSession
     {
