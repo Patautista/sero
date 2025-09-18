@@ -3,6 +3,7 @@
            hover:from-indigo-600 hover:to-indigo-800
            transition-all duration-200
            @Class"
+        type="@Type"
         @onclick="OnClick">
     @ChildContent
 </button>
@@ -11,4 +12,5 @@
     [Parameter] public EventCallback OnClick { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public string? Class { get; set; }
+    [Parameter] public string? Type { get; set; } = "button";
 }

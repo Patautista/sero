@@ -6,8 +6,12 @@
 @inject MobileDbContext dbContext
 
 <EditForm Model="@config" OnValidSubmit="ResetSystemConfig">
-                        <button class="btn btn-primary" type="submit">Resetar</button>
-                    </EditForm>
+    <div class="flex flex-col mb-3 w-1/3">
+        <h3 class="font-bold">Resetar Configurações do Sistema</h3>
+        <p>Isso irá apagar todas as configurações e dados do aplicativo, retornando-o ao estado inicial. Use com cautela!</p>
+        <ButtonPrimary Type="submit">Resetar</ButtonPrimary>
+    </div>
+</EditForm>
 
 @code {
     private object config = new { };
