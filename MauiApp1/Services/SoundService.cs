@@ -17,7 +17,7 @@ namespace MauiApp1.Services
         {
             _audioCache = audioCache;
         }
-        public async Task PlayVoice(string text, string lang, VoiceGender voiceGender = VoiceGender.Female)
+        public async Task PlayVoiceClip(string text, string lang, VoiceGender voiceGender = VoiceGender.Female)
         {
             try
             {

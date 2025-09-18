@@ -137,7 +137,7 @@
     {
         var toast = Toast.Make("Reproduzindo áudio.", CommunityToolkit.Maui.Core.ToastDuration.Short, 14);
         await toast.Show(CancellationToken.None);
-        await SoundService.PlayVoice(text, CurrentCard.Card.TargetSample.Language);
+        await SoundService.PlayVoiceClip(text, CurrentCard.Card.TargetSample.Language);
     }
 
     private async Task ForceCorrectAnswer()
