@@ -41,27 +41,42 @@ namespace Business
 
         // --- Helper Functions ---
 
-        public static string BuildFeedbackMessage(AnswerEvaluation evaluation, string userAnswer)
+        public record AnswerFeedback
         {
-            var sb = new StringBuilder();
+            public AnswerQuality Quality { get; init; }
+            public string ClosestMatch { get; init; }
+            public string MainMessage { get; set; }
+            public string? ExpectedAnswer { get; init; }
+            public string? Hint { get; init; }
+        }
+
+        public static AnswerFeedback BuildFeedbackMessage(AnswerEvaluation evaluation, string userAnswer)
+        {
+            string mainMessage;
+            string? expectedAnswer = null;
+            string? hint = null;
 
             if (evaluation.Quality == AnswerQuality.Perfect)
-                sb.Append("✅ Correto!");
+                mainMessage = "✅ Correto!";
             else if (evaluation.Quality == AnswerQuality.Ok)
-                sb.Append("✅ Correto, mas com pequenos erros. ");
-            else if (evaluation.Quality == AnswerQuality.Wrong)
-                sb.Append("❌ Incorreto.");
+                mainMessage = "✅ Correto, mas com pequenos erros.";
+            else
+                mainMessage = "❌ Incorreto.";
 
             if (evaluation.Quality < AnswerQuality.Perfect)
             {
-                sb.Append($"\nResposta esperada: {evaluation.ClosestMatch}");
-
-                // Optional: Provide detailed feedback
-                var userMistake = FindDifferences(userAnswer, evaluation.ClosestMatch);
-                sb.Append($"\n\nDica: {userMistake}");
+                expectedAnswer = evaluation.ClosestMatch;
+                hint = FindDifferences(userAnswer, evaluation.ClosestMatch);
             }
 
-            return sb.ToString();
+            return new AnswerFeedback
+            {
+                Quality = evaluation.Quality,
+                ClosestMatch = evaluation.ClosestMatch,
+                MainMessage = mainMessage,
+                ExpectedAnswer = expectedAnswer,
+                Hint = hint
+            };
         }
 
         private static string NormalizeString(string input)
