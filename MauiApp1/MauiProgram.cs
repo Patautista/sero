@@ -5,6 +5,7 @@ using CommunityToolkit.Maui;
 using Infrastructure.Audio;
 using Infrastructure.Data;
 using MauiApp1.Services;
+using MauiApp1.Services.Audio;
 using MauiApp1.Services.Seed;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -30,8 +31,8 @@ namespace MauiApp1
             builder.Services.AddMauiBlazorWebView();
             builder.Services.AddApplicationServices(builder.Configuration);
             builder.Services.AddScoped<IAudioCache, MobileAudioCache>();
-            builder.Services.AddHttpClient<SoundService>();
-            builder.Services.AddScoped<SoundService>();
+            builder.Services.AddHttpClient<MauiSoundService>();
+            builder.Services.AddScoped<MauiSoundService>();
             builder.Services.AddScoped<DatabaseService>();
             builder.Services.AddSingleton<ISettingsService, SettingsService>();
 
