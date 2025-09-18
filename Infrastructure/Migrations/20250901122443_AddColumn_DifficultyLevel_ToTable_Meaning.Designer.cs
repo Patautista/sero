@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Migrations
 {
-    [DbContext(typeof(AnkiDbContext))]
+    [DbContext(typeof(MobileDbContext))]
     [Migration("20250901122443_AddColumn_DifficultyLevel_ToTable_Meaning")]
     partial class AddColumn_DifficultyLevel_ToTable_Meaning
     {

@@ -25,9 +25,9 @@ namespace Infrastructure.Data
     public class DbContextInitialiser
     {
         private readonly ILogger<DbContextInitialiser> _logger;
-        private readonly AnkiDbContext _context;
+        private readonly MobileDbContext _context;
 
-        public DbContextInitialiser(ILogger<DbContextInitialiser> logger, AnkiDbContext context)
+        public DbContextInitialiser(ILogger<DbContextInitialiser> logger, MobileDbContext context)
         {
             _logger = logger;
             _context = context;

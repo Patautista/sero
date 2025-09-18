@@ -1,6 +1,8 @@
 using Business.Audio;
 using ElevenLabs;
 using Infrastructure.Audio;
+using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,20 @@ builder.Services.AddScoped<ElevenLabsClient>(sp =>
     var apiKey = builder.Configuration.GetSection("ElevenLabs:ApiKey").Value;
     return new ElevenLabsClient(apiKey);
 });
+
+// Add ServerDbContext with environment-specific provider
+if (builder.Environment.IsDevelopment())
+{
+    var sqliteConn = builder.Configuration.GetConnectionString("Sqlite");
+    builder.Services.AddDbContext<ServerDbContext>(options =>
+        options.UseSqlite(sqliteConn));
+}
+else
+{
+    var pgConn = builder.Configuration.GetConnectionString("Postgres");
+    builder.Services.AddDbContext<ServerDbContext>(options =>
+        options.UseNpgsql(pgConn));
+}
 
 var app = builder.Build();
 

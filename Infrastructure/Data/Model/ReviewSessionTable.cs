@@ -10,7 +10,7 @@ namespace Infrastructure.Data.Model
     public class ReviewSessionTable
     {
         public Guid Id { get; set; }
-        [ForeignKey(nameof(AnkiDbContext.Users))]
+        [ForeignKey(nameof(MobileDbContext.Users))]
         public int UserId { get; set; }
     }
 }
