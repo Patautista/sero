@@ -30,7 +30,7 @@ namespace Infrastructure.Audio
             var cacheKey = _cache.ComputeCacheKey(text, languageCode, voiceGender);
 
             // ✅ Busca no cache antes
-            var cached = await _cache.GetAsync(cacheKey);
+            var cached = await _cache.GetBytesAsync(cacheKey);
             if (cached != null)
             {
                 return cached;

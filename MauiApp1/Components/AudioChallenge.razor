@@ -1,12 +1,13 @@
 ﻿@using System.Text
 @using Business.ViewModel
-@using Domain
 @using CommunityToolkit.Maui.Alerts;
+@using Domain
 @using Domain.Events
 @using MauiApp1.Services
+@using MauiApp1.Services.Audio
 @using static Business.AnswerEvaluator
 
-@inject SoundService SoundService
+@inject MauiSoundService SoundService
 @inject DatabaseService Database
 
 <div class="card-content transition-all duration-300 ease-in-out" style="filter: blur(@(isInputFocused ? "2px" : "0")); transform: scale(@(isInputFocused ? "0.95" : "1"));">

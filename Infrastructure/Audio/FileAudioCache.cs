@@ -19,7 +19,7 @@ namespace Infrastructure.Audio
             Directory.CreateDirectory(_basePath);
         }
 
-        public async Task<byte[]?> GetAsync(string key)
+        public async Task<byte[]?> GetBytesAsync(string key)
         {
             var path = GetPath(key);
             if (File.Exists(path))
@@ -45,5 +45,6 @@ namespace Infrastructure.Audio
         }
 
         private string GetPath(string key) => Path.Combine(_basePath, $"{key}.mp3");
+
     }
 }

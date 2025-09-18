@@ -13,7 +13,7 @@ namespace Business.Audio
     }
     public interface IAudioCache
     {
-        Task<byte[]?> GetAsync(string key);
+        Task<byte[]?> GetBytesAsync(string key);
         Task SetAsync(string key, byte[] data);
         string ComputeCacheKey(string text, string lang, VoiceGender voiceGender);
     }
