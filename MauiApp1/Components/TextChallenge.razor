@@ -133,7 +133,7 @@
         }
 
         Srs.Review(CurrentCard.State, (int)evaluation.Quality);
-        _challengeState.Feedback.MainMessage = AnswerEvaluator.BuildFeedbackMessage(evaluation, _challengeState.UserAnswer);
+        _challengeState.Feedback = AnswerEvaluator.BuildFeedbackMessage(evaluation, _challengeState.UserAnswer);
 
         await Database.UpdateUserCardState(CurrentCard.State, _challengeState.ExpEarned ?? 0);
 
