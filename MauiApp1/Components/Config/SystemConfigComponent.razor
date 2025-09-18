@@ -15,6 +15,6 @@
     {
 
         await dbContext.Database.EnsureDeletedAsync();
-        await SettingsService.SaveStudyConfigAsync(null);
+        SettingsService.StudyConfig.Update(null);
     }
 }

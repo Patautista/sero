@@ -78,7 +78,7 @@ public class DatabaseService(MobileDbContext db, ISettingsService settingsServic
             State = x.UserCardState.ToDomain()
         }).OrderBy(c => c.Card.DifficultyLevel).ToList();
 
-        var userDifficulty = (await settingsService.LoadAsync())?.DifficultyLevel ?? DifficultyLevel.Advanced;
+        var userDifficulty = (await settingsService.LoadStudyConfigAsync())?.DifficultyLevel ?? DifficultyLevel.Advanced;
         var filtered = cardWithStates.Where(c => c.Card.SuitsDifficulty(userDifficulty)).ToList();
 
         // Separate new vs review
