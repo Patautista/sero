@@ -34,6 +34,8 @@ namespace MauiApp1
             builder.Services.AddHttpClient<MauiSoundService>();
             builder.Services.AddScoped<MauiSoundService>();
             builder.Services.AddScoped<DatabaseService>();
+            builder.Services.AddHttpClient<ApiService>();
+            builder.Services.AddScoped<ApiService>();
             builder.Services.AddSingleton<ISettingsService, SettingsService>();
             builder.Services.AddSingleton<VocabularyService>();
 
