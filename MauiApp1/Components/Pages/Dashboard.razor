@@ -14,6 +14,12 @@ else
 {
     <div class="p-6 md:p-8 bg-gray-100 min-h-screen">
 
+        <!-- Estimated Vocabulary Count -->
+        <div class="col-span-1 md:col-span-2 bg-white rounded-xl shadow-lg p-6 mb-3">
+            <h4 class="text-lg font-semibold text-gray-700 mb-4">🔤 Vocabulário Estimado</h4>
+            <p class="text-3xl font-bold text-indigo-600">@vocabularyCount</p>
+        </div>
+
         <!-- Responsive Grid Container -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
 
@@ -83,22 +89,6 @@ else
                 </div>
             </div>
 
-            <!-- Chart Section -->
-            <div class="col-span-1 md:col-span-2 bg-white rounded-xl shadow-lg p-6">
-                <h4 class="text-lg font-semibold text-gray-700 mb-4">📅 Respostas ao longo do tempo</h4>
-                <RadzenChart>
-                    <RadzenLineSeries Smooth="true" Data="@chartData" CategoryProperty="@nameof(ChartPoint.Label)" ValueProperty="@nameof(ChartPoint.Value)" Title="2023" LineType="LineType.Dashed">
-                        <RadzenMarkers Visible="true" MarkerType="MarkerType.Square" />
-                        <RadzenSeriesDataLabels Visible="true" />
-                    </RadzenLineSeries>
-                    <RadzenCategoryAxis Padding="20" />
-                    <RadzenValueAxis>
-                        <RadzenGridLines Visible="true" />
-                        <RadzenAxisTitle Text="Cards Answered" />
-                    </RadzenValueAxis>
-                </RadzenChart>
-            </div>
-
             <!-- Pie Chart Section -->
             <div class="col-span-1 md:col-span-2 bg-white rounded-xl shadow-lg p-6">
                 <h4 class="text-lg font-semibold text-gray-700 mb-4">✅❌ Total de respostas</h4>
@@ -148,6 +138,8 @@ else
     // Dados dos gráficos de pizza
     private List<PiePoint> generalAnswerBreakdown = new();
     private List<PiePoint> perCardBreakdown = new();
+
+    private int vocabularyCount;
 
     protected override async Task OnInitializedAsync()
     {
@@ -213,6 +205,24 @@ else
             new PiePoint { Category = "Corretas", Value = correct },
             new PiePoint { Category = "Erradas", Value = incorrect }
         };
+
+        // ---- Vocabulário Estimado ----
+        vocabularyCount = CalculateVocabularyCount();
+    }
+
+    private int CalculateVocabularyCount()
+    {
+        if (_model == null || _model.CardAnsweredData == null)
+        {
+            return 0;
+        }
+
+        var allCardTexts = _model.CardAnsweredData.Select(c => c.CardNativeText).ToList();
+        var combinedText = string.Join(" ", allCardTexts).ToLower();
+        var words = combinedText.Split(new char[] { ' ', '.', ',', ';', ':', '-', '!', '?' }, StringSplitOptions.RemoveEmptyEntries);
+        var vocab = new HashSet<string>(words);
+
+        return vocab.Count;
     }
 
     public class ChartPoint
