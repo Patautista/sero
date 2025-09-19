@@ -12,13 +12,13 @@ namespace MauiApp1.Services.Audio
     {
         private static IAudioManager _audioManager = new AudioManager();
         private readonly IAudioCache _audioCache;
-        private readonly ISettingsService _settingsService;
+        private readonly ApiService _apiService;
         private readonly HttpClient _httpClient;
 
-        public MauiSoundService(IAudioCache audioCache, ISettingsService settingsService)
+        public MauiSoundService(IAudioCache audioCache, ApiService apiService)
         {
             _audioCache = audioCache;
-            _settingsService = settingsService;
+            _apiService = apiService;
             _httpClient = new HttpClient();
         }
 
@@ -32,11 +32,9 @@ namespace MauiApp1.Services.Audio
                 if (audioData == null)
                 {
                     // Fetch from TTSController
-                    var apiBase = _settingsService.ApiKey.Value ?? "http://localhost:5000"; // Replace with your API base or config
                     var voice = voiceGender == VoiceGender.Male ? "male" : "female";
-                    var url = $"{apiBase}/api/tts?text={Uri.EscapeDataString(text)}&lang={Uri.EscapeDataString(lang)}&voice={voice}";
 
-                    audioData = await _httpClient.GetByteArrayAsync(url);
+                    audioData = await _apiService.GetTTSAsync(text, lang, voice);
 
                     if (audioData != null && audioData.Length > 0)
                     {

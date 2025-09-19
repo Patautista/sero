@@ -31,8 +31,7 @@
 
     private List<(string Code, string DisplayName, string Source, string Target)> AvailableLanguages = new()
     {
-        ("it-pt", "Italian → Portuguese", "it", "pt"),
-        ("en-pt", "English → Portuguese", "en", "pt")
+        ("pt-it", "Português → Italiano", "pt", "it"),
     };
 
     protected override async Task OnInitializedAsync()
@@ -40,7 +39,7 @@
         config = SettingsService.StudyConfig.Value
                  ?? new StudyConfig
                  {
-                     SelectedLanguage = new LanguagePair { Source = new("it"), Target = new("pt") },
+                     SelectedLanguage = new LanguagePair { Source = new("pt"), Target = new("it") },
                      DifficultyLevel = DifficultyLevel.Beginner
                  };
 

@@ -4,15 +4,15 @@
 <EditForm Model="@ApiKey" OnValidSubmit="ApplyConfig">
     <div class="font-bold">
         <h3 class="font-bold">Adicione aqui sua chave de api se possuir uma.</h3>
-        <input class="w-1/3 form-control mb-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all" type="text" name="apiKey" value="@ApiKey" />
+        <input @bind="@ApiKey" class="w-1/3 form-control mb-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all" type="text" name="apiKey" />
     </div>
 
     <ButtonPrimary Type="submit">Salvar</ButtonPrimary>
 </EditForm>
 
 @code {
-    private string? apiKey;
-    public string ApiKey = string.Empty;
+    private string? apiKey { get; set; }
+    public string ApiKey { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
