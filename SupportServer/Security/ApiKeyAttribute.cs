@@ -28,7 +28,7 @@ namespace SupportServer.Security
 
             // Query the database for a valid API key
             var apiKeyExists = await dbContext.ApiAccesses
-                .AnyAsync(k => k.Key == extractedApiKey && k.IsActive);
+                .AnyAsync(k => k.Key == (string)extractedApiKey && k.IsActive);
 
             if (!apiKeyExists)
             {

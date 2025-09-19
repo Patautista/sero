@@ -35,6 +35,7 @@ namespace MauiApp1
             builder.Services.AddScoped<MauiSoundService>();
             builder.Services.AddScoped<DatabaseService>();
             builder.Services.AddSingleton<ISettingsService, SettingsService>();
+            builder.Services.AddSingleton<VocabularyService>();
 
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();

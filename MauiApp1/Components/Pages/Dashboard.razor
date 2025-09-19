@@ -1,7 +1,12 @@
 ﻿@page "/dashboard"
+@using Catalyst
 @using Domain.Events
 @using MauiApp1.Services
+@using Mosaik.Core
 @using Radzen
+@using Catalyst;
+@using Mosaik.Core;
+@inject VocabularyService VocabularyService
 @inject DatabaseService Database
 
 <h3 class="mb-4">📊 Dashboard de Revisões</h3>
@@ -14,10 +19,36 @@ else
 {
     <div class="p-6 md:p-8 bg-gray-100 min-h-screen">
 
-        <!-- Estimated Vocabulary Count -->
-        <div class="col-span-1 md:col-span-2 bg-white rounded-xl shadow-lg p-6 mb-3">
-            <h4 class="text-lg font-semibold text-gray-700 mb-4">🔤 Vocabulário Estimado</h4>
-            <p class="text-3xl font-bold text-indigo-600">@vocabularyCount</p>
+        <!-- Vocab by Part of Speech -->
+        <div class="col-span-1 md:col-span-2 bg-white rounded-xl shadow-lg p-6">
+            @if (vocabByPos?.Any() == true)
+            {
+                <div class="flex flex-row gap-2 p-6 mb-3">
+                    <h4 class="text-lg font-semibold text-gray-700 mb-4">🔤 Vocabulário Estimado</h4>
+                    <p class="text-xl font-bold text-indigo-600">@vocabularyCount</p>
+                </div>
+                <table class="w-full table-auto border-collapse">
+                    <thead class="bg-indigo-100 text-indigo-800">
+                        <tr>
+                            <th class="px-4 py-2 text-left rounded-tl-lg">Classe Gramatical</th>
+                            <th class="px-4 py-2 text-right rounded-tr-lg">Quantidade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var kv in vocabByPos.OrderByDescending(x => x.Value))
+                        {
+                            <tr class="border-t border-gray-200">
+                                <td class="px-4 py-2">@kv.Key</td>
+                                <td class="px-4 py-2 text-right">@kv.Value</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="text-gray-500">Analisando...</p>
+            }
         </div>
 
         <!-- Responsive Grid Container -->
@@ -107,6 +138,8 @@ else
 }
 
 @code {
+    // Add using for Catalyst
+
     public class Model
     {
         public record CardAnswered(
@@ -130,8 +163,7 @@ else
     private Model _model { get; set; }
 
     private double globalAvgTimeInSeconds;
-    private double globalSkipRate
-    ;
+    private double globalSkipRate;
     private List<ChartPoint> chartData = new();
     private List<CardStats> cardStats = new();
 
@@ -140,12 +172,11 @@ else
     private List<PiePoint> perCardBreakdown = new();
 
     private int vocabularyCount;
+    private Dictionary<string, int> vocabByPos = new();
 
     protected override async Task OnInitializedAsync()
     {
-
         _model = await DatabaseService.GetDashboardModelAsync();
-
 
         // ---- Visão Geral ----
         if (_model.CardAnsweredData.Any())
@@ -207,22 +238,11 @@ else
         };
 
         // ---- Vocabulário Estimado ----
-        vocabularyCount = CalculateVocabularyCount();
-    }
-
-    private int CalculateVocabularyCount()
-    {
-        if (_model == null || _model.CardAnsweredData == null)
-        {
-            return 0;
-        }
-
         var allCardTexts = _model.CardAnsweredData.Select(c => c.CardNativeText).ToList();
-        var combinedText = string.Join(" ", allCardTexts).ToLower();
-        var words = combinedText.Split(new char[] { ' ', '.', ',', ';', ':', '-', '!', '?' }, StringSplitOptions.RemoveEmptyEntries);
-        var vocab = new HashSet<string>(words);
+        vocabularyCount = VocabularyService.GetVocabularyCount(allCardTexts);
+        vocabByPos = await VocabularyService.GetVocabByPartOfSpeechAsync(allCardTexts);
 
-        return vocab.Count;
+        StateHasChanged();
     }
 
     public class ChartPoint
