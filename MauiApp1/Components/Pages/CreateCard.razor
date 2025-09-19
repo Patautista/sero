@@ -1,118 +1,118 @@
 ﻿@page "/create-card"
 @using System.Globalization
-
+@inject IJSRuntime JS
 @inject ISettingsService SettingsService
 @inject ApiService ApiService
 
 <div class="card-creation-container p-6 bg-white rounded-lg shadow-lg max-w-2xl mx-auto">
     <h2 class="text-2xl font-bold mb-6 text-indigo-700">Criar Novo Cartão</h2>
 
-    <!-- Target Language Sentences -->
-    <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">Frases em @_targetLang.DisplayName</label>
-        <div class="flex items-center gap-2">
-            <input @bind="newTargetSentence"
-                   class="flex-1 p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-                   placeholder="Insira a frase na língua alvo" />
-            <button @onclick="AddTargetSentence"
-                    class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
-                Adicionar
-            </button>
+    <!-- Language Switch with Text Markers -->
+    <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Idioma Primário</label>
+        <div class="flex items-center space-x-4">
+            <span @onclick="SetTargetAsPrimary"
+                  class="cursor-pointer px-3 py-1 rounded-lg transition
+                        @(primaryLanguage == Language.Target ? "bg-indigo-600 text-white font-semibold shadow" : "bg-gray-100 text-gray-700")">
+                @_targetLang?.DisplayName
+            </span>
+            <span @onclick="SetNativeAsPrimary"
+                  class="cursor-pointer px-3 py-1 rounded-lg transition
+                        @(primaryLanguage == Language.Native ? "bg-indigo-600 text-white font-semibold shadow" : "bg-gray-100 text-gray-700")">
+                @_nativeLang?.DisplayName
+            </span>
         </div>
-        @if (card.SentencesInTargetLanguage.Any())
+    </div>
+
+    <!-- Primary Language Input -->
+    <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Frase em @(primaryLanguage == Language.Target ? _targetLang?.DisplayName : _nativeLang?.DisplayName)</label>
+        <textarea @bind="primarySentence"
+                  @oninput="@(e => AutoResize(e, "primarySentenceArea"))"
+                  id="primarySentenceArea"
+                  class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 @(showValidation && string.IsNullOrWhiteSpace(primarySentence) ? "border-red-500" : "")"
+                  placeholder="Insira a frase"
+                  rows="1"
+                  style="overflow:hidden;resize:none"></textarea>
+        @if (showValidation && string.IsNullOrWhiteSpace(primarySentence))
         {
-            <ul class="mt-2 space-y-1">
-                @foreach (var sentence in card.SentencesInTargetLanguage)
-                {
-                    <li class="flex items-center gap-2">
-                        <span>@sentence.Text</span>
-                        @if (SettingsService.ApiKey.Value != null)
-                        {
-                            <button @onclick="() => GenerateAudio(sentence, false)"
-                                    class="text-indigo-600 hover:text-indigo-800">
-                                🔊
-                            </button>
-                        }
-                    </li>
-                }
-            </ul>
+            <span class="text-red-500 text-xs">Campo obrigatório.</span>
         }
     </div>
 
-    <div class="space-y-4">
-        <!-- Native Language Sentences -->
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Frases em @_nativeLang.DisplayName</label>
-            <div class="flex items-center gap-2">
-                <input @bind="newNativeSentence"
-                       class="flex-1 p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-                       placeholder="Insira a frase na língua nativa" />
-                <button @onclick="AddNativeSentence"
-                        class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
-                    Adicionar
-                </button>
-            </div>
-            @if (card.SentencesInNativeLanguage.Any())
+    <!-- Translation Input -->
+    <div class="mt-4">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Tradução para @(primaryLanguage == Language.Target ? _nativeLang?.DisplayName : _targetLang?.DisplayName)</label>
+        <div class="flex items-center gap-2">
+            <textarea @bind="translatedSentence"
+                      @oninput="@(e => AutoResize(e, "translatedSentenceArea"))"
+                      id="translatedSentenceArea"
+                      class="flex-1 p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 @(showValidation && string.IsNullOrWhiteSpace(translatedSentence) ? "border-red-500" : "")"
+                      placeholder="Tradução"
+                      rows="1"
+                      style="overflow:hidden;resize:none;height:@TranslatedTextAreaHeight"></textarea>
+            @if (SettingsService.ApiKey.Value != null)
             {
-                <ul class="mt-2 space-y-1">
-                    @foreach (var sentence in card.SentencesInNativeLanguage)
-                    {
-                        <li class="flex items-center gap-2">
-                            <span>@sentence.Text</span>
-                            @if (SettingsService.ApiKey.Value != null)
-                            {
-                                <button @onclick="() => GenerateAudio(sentence, true)"
-                                        class="text-indigo-600 hover:text-indigo-800">
-                                    🔊
-                                </button>
-                            }
-                        </li>
-                    }
-                </ul>
+                <button @onclick="TranslateAutomatically"
+                        class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                    Traduzir Automaticamente
+                </button>
             }
         </div>
+        @if (showValidation && string.IsNullOrWhiteSpace(translatedSentence))
+        {
+            <span class="text-red-500 text-xs">Campo obrigatório.</span>
+        }
+    </div>
 
-        <!-- Difficulty Level -->
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Nível de Dificuldade</label>
-            <select @bind="card.DifficultyLevel"
-                    class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500">
-                @foreach (var level in Enum.GetValues(typeof(DifficultyLevel)))
-                {
-                    <option value="@level">@level</option>
-                }
-            </select>
-        </div>
-
-        <!-- Tags -->
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Tags</label>
-            <div class="flex items-center gap-2">
-                <input @bind="newTag"
-                       class="flex-1 p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-                       placeholder="Insira a tag" />
-                <button @onclick="AddTag"
-                        class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
-                    Adicionar Tag
-                </button>
-            </div>
-            @if (card.Tags.Any())
+    <!-- Difficulty Level -->
+    <div class="mt-4">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Nível de Dificuldade</label>
+        <select @bind="card.DifficultyLevel"
+                class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500">
+            @foreach (var level in Enum.GetValues(typeof(DifficultyLevel)))
             {
-                <div class="flex flex-wrap gap-2 mt-2">
-                    @foreach (var tag in card.Tags)
-                    {
-                        <span class="px-2 py-1 bg-gray-100 rounded-full text-sm">@tag.Name</span>
-                    }
-                </div>
+                <option value="@level">@level</option>
             }
-        </div>
+        </select>
+    </div>
 
-        <div class="mt-6">
-            <button @onclick="SaveCard"
-                    class="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
-                Salvar Cartão
+    <!-- Tags -->
+    <div class="mt-4">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Tags</label>
+        <div class="flex items-center gap-2">
+            <input @bind="newTag"
+                   class="flex-1 p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+                   placeholder="Insira a tag" />
+            <button @onclick="AddTag"
+                    class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                Adicionar Tag
             </button>
         </div>
+        @if (card.Tags.Any())
+        {
+            <div class="flex flex-wrap gap-2 mt-2">
+                @foreach (var tag in card.Tags)
+                {
+                    <span class="px-2 py-1 bg-gray-100 rounded-full text-sm">@tag.Name</span>
+                }
+            </div>
+        }
+    </div>
+
+    <div class="mt-6 flex gap-2">
+        @if (SettingsService.ApiKey.Value != null)
+        {
+            <button @onclick="GenerateAudioAutomatically"
+                    class="w-1/2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                Gerar Áudio Automaticamente
+            </button>
+        }
+        <button @onclick="TrySaveCard"
+                class="w-1/2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                disabled="@(!CanSave)">
+            Salvar Cartão
+        </button>
     </div>
 </div>
 
@@ -127,32 +127,29 @@
     private CultureInfo _nativeLang = null;
     private CultureInfo _targetLang = null;
 
+    private enum Language { Native, Target }
+
+    private Language primaryLanguage = Language.Target;
+    private string primarySentence = "";
+    private string translatedSentence = "";
+    private string newTag = "";
+    private bool showValidation = false;
+    private bool isTranslating = false;
+
     protected override void OnInitialized()
     {
         _nativeLang = SettingsService.StudyConfig.Value?.SelectedLanguage.Source;
         _targetLang = SettingsService.StudyConfig.Value?.SelectedLanguage.Target;
     }
 
-    private string newNativeSentence = "";
-    private string newTargetSentence = "";
-    private string newTag = "";
-
-    private void AddNativeSentence()
+    private void SetTargetAsPrimary()
     {
-        if (!string.IsNullOrWhiteSpace(newNativeSentence))
-        {
-            card.SentencesInNativeLanguage.Add(new Sentence { Text = newNativeSentence });
-            newNativeSentence = "";
-        }
+        primaryLanguage = Language.Target;
     }
 
-    private void AddTargetSentence()
+    private void SetNativeAsPrimary()
     {
-        if (!string.IsNullOrWhiteSpace(newTargetSentence))
-        {
-            card.SentencesInTargetLanguage.Add(new Sentence { Text = newTargetSentence });
-            newTargetSentence = "";
-        }
+        primaryLanguage = Language.Native;
     }
 
     private void AddTag()
@@ -164,26 +161,85 @@
         }
     }
 
-    private async Task GenerateAudio(Sentence sentence, bool isNative)
+    private async Task TranslateAutomatically()
     {
+        if (string.IsNullOrWhiteSpace(primarySentence) || _nativeLang == null || _targetLang == null)
+            return;
+
+        isTranslating = true;
+        StateHasChanged();
+
         try
         {
+            string sourceLang, targetLang;
+            if (primaryLanguage == Language.Target)
+            {
+                sourceLang = _targetLang.TwoLetterISOLanguageName;
+                targetLang = _nativeLang.TwoLetterISOLanguageName;
+            }
+            else
+            {
+                sourceLang = _nativeLang.TwoLetterISOLanguageName;
+                targetLang = _targetLang.TwoLetterISOLanguageName;
+            }
 
-            var lang = isNative ? _nativeLang.Name : _targetLang.Name;
-
-            var audioData = await ApiService.GetTTSAsync(sentence.Text, lang);
+            var result = await ApiService.GetTranslationAsync(primarySentence, sourceLang, targetLang);
+            translatedSentence = result;
+            StateHasChanged();
         }
-        catch (Exception ex)
-        {
-            // Handle error (e.g., show notification)
-            Console.WriteLine($"Error generating audio: {ex.Message}");
+        finally
+        {   
+            isTranslating = false;
+            StateHasChanged();
         }
     }
 
-    private async Task SaveCard()
+    private async Task GenerateAudioAutomatically()
     {
-        // Implement save logic here
-        // You might want to inject a service to handle the saving
+        // Implement automatic audio generation logic here using ApiService
         await Task.CompletedTask;
     }
+
+    private bool CanSave =>
+        !string.IsNullOrWhiteSpace(primarySentence) &&
+        !string.IsNullOrWhiteSpace(translatedSentence);
+
+    private async Task TrySaveCard()
+    {
+        showValidation = true;
+        if (!CanSave)
+            return;
+
+        // Implement save logic here
+        await Task.CompletedTask;
+    }
+    private async Task AutoResize(ChangeEventArgs e, string id)
+    {
+        await JS.InvokeVoidAsync("autoResizeTextArea", id);
+    }
+
+    private string TranslatedTextAreaHeight
+    {
+        get
+        {
+            // Estimate: 1.5em per line, minimum 1.5em
+            if (string.IsNullOrEmpty(translatedSentence))
+                return "2.5em";
+            // Count lines (split by \n) or estimate by length
+            var lines = translatedSentence.Split('\n').Length;
+            // Optionally, estimate extra lines for long lines
+            int approxLines = lines + (int)Math.Ceiling(translatedSentence.Length / 60D);
+            return $"{Math.Max(approxLines * 2.5, 2.5)}em".Replace(",", ".");
+        }
+    }
 }
+
+<script>
+  window.autoResizeTextArea = (id) => {
+    var el = document.getElementById(id);
+    if (el) {
+      el.style.height = 'auto';
+      el.style.height = (el.scrollHeight) + 'px';
+    }
+  }
+</script>

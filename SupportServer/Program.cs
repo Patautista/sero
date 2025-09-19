@@ -1,4 +1,5 @@
 using Business.Audio;
+using DeepL;
 using ElevenLabs;
 using Infrastructure.Audio;
 using Infrastructure.Data;
@@ -14,6 +15,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<SpeechService>();
+builder.Services.AddScoped<DeepLClient>(sp =>
+{
+    var apiKey = builder.Configuration.GetSection("DeepL:ApiKey").Value;
+    return new DeepLClient(apiKey);
+});
 builder.Services.AddSingleton<IAudioCache>(new FileAudioCache("voice_cache"));
 builder.Services.AddScoped<ElevenLabsClient>(sp =>
 {
