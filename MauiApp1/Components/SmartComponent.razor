@@ -1,11 +1,29 @@
 ﻿@using System.Globalization
+@using CommunityToolkit.Maui.Alerts
+@using MauiApp1.Services.Audio
 @inject ApiService ApiService
+@inject MauiSoundService SoundService
 @inject ISettingsService SettingsService
 
 @code{
     protected async Task<string> Translate(string text, string lang = "en")
     {
         return await ApiService.GetNativeTranslationAsync(text, lang);
+    }
+    protected async Task PlayVoiceClip(string text, string lang)
+    {
+
+        var res = await SoundService.PlayVoiceClip(text, lang);
+        if (res)
+        {
+            var toast = Toast.Make("Reproduzindo áudio.", CommunityToolkit.Maui.Core.ToastDuration.Short, 14);
+            await toast.Show(CancellationToken.None);
+        }
+        else
+        {
+            var toast = Toast.Make("Falha ao reproduzir áudio.", CommunityToolkit.Maui.Core.ToastDuration.Short, 14);
+            await toast.Show(CancellationToken.None);
+        }
     }
     protected CultureInfo Nativelanguage => SettingsService?.StudyConfig?.Value?.SelectedLanguage?.Source;
     protected string NativelanguageCode => Nativelanguage.TwoLetterISOLanguageName;

@@ -6,13 +6,14 @@
 @using MauiApp1.Services
 @using MauiApp1.Services.Audio
 @using static Business.AnswerEvaluator
+@inherits SmartComponent
 
 @inject MauiSoundService SoundService
 @inject DatabaseService Database
 
 <div class="card-content transition-all duration-300 ease-in-out" style="filter: blur(@(isInputFocused ? "2px" : "0")); transform: scale(@(isInputFocused ? "0.95" : "1"));">
     <div class="d-flex justify-content-between align-items-center mb-2">
-        <h1 class="text-xl font-medium">Traduza para o Italiano</h1>
+        <h1 class="text-xl font-medium">Traduza para o @TargetLanguage.DisplayName</h1>
 
         <!-- Floating EXP badge -->
         @if (_challengeState.ExpEarned.HasValue)
@@ -130,7 +131,7 @@
         if (_challengeState.IsCorrect)
         {
             _challengeState.ExpEarned = ExpCalculator.CalculateEarnedExp(CurrentCard.Card, CurrentCard.State.Repetitions);
-            await PlayVoice(evaluation.ClosestMatch, CurrentCard.Card.TargetSample.Language);
+            await PlayVoiceClip(evaluation.ClosestMatch, CurrentCard.Card.TargetSample.Language);
         }
 
         Srs.Review(CurrentCard.State, (int)evaluation.Quality);
@@ -150,22 +151,6 @@
         StartCountdown(_challengeState.AnswerQuality == AnswerQuality.Perfect ? 3 : 7);
 
         StateHasChanged();
-    }
-
-    private async Task PlayVoice(string text, string lang)
-    {
-
-        var res = await SoundService.PlayVoiceClip(text, CurrentCard.Card.TargetSample.Language);
-        if (res)
-        {
-            var toast = Toast.Make("Reproduzindo áudio.", CommunityToolkit.Maui.Core.ToastDuration.Short, 14);
-            await toast.Show(CancellationToken.None);
-        }
-        else
-        {
-            var toast = Toast.Make("Falha ao reproduzir áudio.", CommunityToolkit.Maui.Core.ToastDuration.Short, 14);
-            await toast.Show(CancellationToken.None);
-        }
     }
 
     private async Task ForceCorrectAnswer()
