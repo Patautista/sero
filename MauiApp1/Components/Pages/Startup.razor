@@ -10,7 +10,7 @@
     protected override async Task OnInitializedAsync()
     {
         await Init.SeedAsync();
-        var cfg = await SettingsService.LoadAsync();
+        var cfg = SettingsService.StudyConfig.Value;
 
         if (cfg == null)
         {

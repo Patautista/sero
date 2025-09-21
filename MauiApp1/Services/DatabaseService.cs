@@ -4,8 +4,11 @@ using Business.Model;
 using Business.ViewModel;
 using Domain.Entity;
 using Domain.Entity.Specification;
+using Domain.Events;
 using Infrastructure.Data;
+using Infrastructure.Data.Mappers;
 using Infrastructure.Data.Model;
+using MauiApp1.Components.Pages;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Linq.Expressions;
@@ -14,7 +17,7 @@ using System.Text.Json;
 
 namespace MauiApp1.Services;
 
-public class DatabaseService(AnkiDbContext db, ISettingsService settingsService)
+public class DatabaseService(MobileDbContext db, ISettingsService settingsService)
 {
     public async Task<ICollection<CardWithState>> GetDueCards(ReviewSessionMode sessionMode, int exp, CancellationToken cancellationToken = default)
     {
@@ -75,7 +78,7 @@ public class DatabaseService(AnkiDbContext db, ISettingsService settingsService)
             State = x.UserCardState.ToDomain()
         }).OrderBy(c => c.Card.DifficultyLevel).ToList();
 
-        var userDifficulty = (await settingsService.LoadAsync())?.DifficultyLevel ?? DifficultyLevel.Advanced;
+        var userDifficulty = settingsService.StudyConfig.Value?.DifficultyLevel ?? DifficultyLevel.Advanced;
         var filtered = cardWithStates.Where(c => c.Card.SuitsDifficulty(userDifficulty)).ToList();
 
         // Separate new vs review
@@ -130,6 +133,73 @@ public class DatabaseService(AnkiDbContext db, ISettingsService settingsService)
         {
             Console.WriteLine(ex.Message);
         }
+    }
+    public async Task SaveCardAnsweredAsync(CardAnsweredEvent domainEvent)
+    {
+        try
+        {
+            var evt = EventMapper.ToTable(domainEvent, Events.CardAnswered.Schemas.CardAnsweredV1);
+            db.Events.Add(evt);
+            await db.SaveChangesAsync();
+        }
+        catch (Exception ex) { 
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    public async Task AddAlternativeSentence(Sentence domainSentence)
+    {
+        try
+        {
+            var sentence = new SentenceTable
+            {
+                Language = domainSentence.Language,
+                MeaningId = domainSentence.MeaningId,
+                Text = domainSentence.Text
+            };
+            // Should sanitize/tidy first
+            db.Sentences.Add(sentence);
+            await db.SaveChangesAsync();
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
+
+    public async Task<Dashboard.Model> GetDashboardModelAsync()
+    {
+        var cardAnsweredEvents = (await db.Events
+            .Where(e => e.Name == nameof(CardAnsweredEvent)).ToListAsync())
+            .Select(e => JsonSerializer.Deserialize<CardAnsweredEvent>(e.DomainEventJson))
+            .Join(db.Cards.Include(c => c.Meaning.Sentences), e => e.CardId, c => c.Id, (cardEvent, card) => new { cardEvent, card })
+            .Select(x => new Dashboard.Model.CardAnswered( 
+                ReviewSessionId: Guid.Empty,
+                CardId: x.card.Id, 
+                CardNativeText: x.card.Meaning.Sentences.First().Text,
+                EllapsedMs: x.cardEvent.EllapsedMs,
+                Correct: x.cardEvent.Correct))
+            .Where(e => e != null)
+            .ToList();
+        var cardSkippedEvents = (await db.Events
+            .Where(e => e.Name == nameof(CardSkippedEvent)).ToListAsync())
+            .Select(e => JsonSerializer.Deserialize<CardSkippedEvent>(e.DomainEventJson))
+            .Join(db.Cards.Include(c => c.Meaning.Sentences), e => e.CardId, c => c.Id, (cardEvent, card) => new { cardEvent , card })
+            .Select(x => new Dashboard.Model.CardSkipped(x.cardEvent.Id, x.card.Meaning.Sentences.First().Text, x.card.Id))
+            .Where(e => e != null)
+            .ToList();
+
+        var model = new Dashboard.Model();
+        model.CardAnsweredData = cardAnsweredEvents;
+        model.CardSkippedData = cardSkippedEvents;
+        return model;
+    }
+
+    public async Task SaveCardSkippedAsync(CardSkippedEvent domainEvent)
+    {
+        var evt = EventMapper.ToTable(domainEvent, Infrastructure.Data.Model.Events.CardSkipped.Schemas.CardSkippedV1);
+        db.Events.Add(evt);
+        await db.SaveChangesAsync();
     }
     public async Task<int> GetUserExpAsync()
     {

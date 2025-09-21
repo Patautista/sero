@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Migrations
 {
-    [DbContext(typeof(AnkiDbContext))]
+    [DbContext(typeof(MobileDbContext))]
     partial class AnkiAppContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
@@ -87,6 +87,45 @@ namespace Infrastructure.Migrations
                     b.ToTable("Curricula");
                 });
 
+            modelBuilder.Entity("Infrastructure.Data.Model.EventTable", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("CardId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DomainEventJson")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("OccurredAtUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Schema")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("SessionId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Events");
+                });
+
             modelBuilder.Entity("Infrastructure.Data.Model.MeaningTable", b =>
                 {
                     b.Property<int>("Id")
@@ -100,6 +139,20 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Meanings");
+                });
+
+            modelBuilder.Entity("Infrastructure.Data.Model.ReviewSessionTable", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ReviewSessions");
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Model.SentenceTable", b =>

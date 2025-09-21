@@ -1,8 +1,13 @@
 ﻿using AppLogic.Web;
 using Business;
+using Business.Audio;
+using CommunityToolkit.Maui;
+using Infrastructure.Audio;
 using Infrastructure.Data;
 using MauiApp1.Services;
+using MauiApp1.Services.Audio;
 using MauiApp1.Services.Seed;
+using MauiApp1.Services.Translations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Radzen;
@@ -16,6 +21,7 @@ namespace MauiApp1
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -24,8 +30,16 @@ namespace MauiApp1
             builder.Services.AddRadzenComponents();
 
             builder.Services.AddMauiBlazorWebView();
+            builder.Services.AddApplicationServices(builder.Configuration);
+            builder.Services.AddScoped<IAudioCache, MobileAudioCache>();
+            builder.Services.AddHttpClient<MauiSoundService>();
+            builder.Services.AddScoped<MauiSoundService>();
             builder.Services.AddScoped<DatabaseService>();
+            builder.Services.AddScoped<MobileTranslationCache>();
+            builder.Services.AddHttpClient<ApiService>();
+            builder.Services.AddScoped<ApiService>();
             builder.Services.AddSingleton<ISettingsService, SettingsService>();
+            builder.Services.AddSingleton<VocabularyService>();
 
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
@@ -33,7 +47,7 @@ namespace MauiApp1
 #endif
 
             var basePath = FileSystem.AppDataDirectory;
-            builder.Services.AddDbContext<AnkiDbContext>(options =>
+            builder.Services.AddDbContext<MobileDbContext>(options =>
                 options.UseSqlite($"Filename={Path.Combine(basePath, "localdb.db")}")
             );
 

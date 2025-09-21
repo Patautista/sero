@@ -1,0 +1,248 @@
+﻿@page "/create-card"
+@using System.Globalization
+@inject IJSRuntime JS
+@inject ISettingsService SettingsService
+@inject ApiService ApiService
+@inherits SmartComponent
+
+<div class="card-creation-container p-6 bg-white rounded-lg shadow-lg max-w-2xl mx-auto">
+    <h2 class="text-2xl font-bold mb-6 text-indigo-700">Criar Novo Cartão</h2>
+
+    <!-- Language Switch with Text Markers -->
+    <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-2">@Translate("Idioma Primário")</label>
+        <div class="flex items-center space-x-4">
+            <span @onclick="SetTargetAsPrimary"
+                  class="cursor-pointer px-3 py-1 rounded-lg transition
+                        @(primaryLanguage == Language.Target ? "bg-indigo-600 text-white font-semibold shadow" : "bg-gray-100 text-gray-700")">
+                @_targetLang?.DisplayName
+            </span>
+            <span @onclick="SetNativeAsPrimary"
+                  class="cursor-pointer px-3 py-1 rounded-lg transition
+                        @(primaryLanguage == Language.Native ? "bg-indigo-600 text-white font-semibold shadow" : "bg-gray-100 text-gray-700")">
+                @_nativeLang?.DisplayName
+            </span>
+        </div>
+    </div>
+
+    <!-- Primary Language Input -->
+    <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+            <Translate Text="Frase em"></Translate> @(primaryLanguage == Language.Target ? _targetLang?.DisplayName : _nativeLang?.DisplayName)
+        </label>
+        <textarea @bind="primarySentence"
+                  @oninput="@(e => AutoResize(e, "primarySentenceArea"))"
+                  id="primarySentenceArea"
+                  class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 @(showValidation && string.IsNullOrWhiteSpace(primarySentence) ? "border-red-500" : "")"
+                  placeholder="@Translate("Insira a frase")"
+                  rows="1"
+                  style="overflow:hidden;resize:none"></textarea>
+        @if (showValidation && string.IsNullOrWhiteSpace(primarySentence))
+        {
+            <span class="text-red-500 text-xs"><Translate Text="Campo obrigatório."></Translate></span>
+        }
+    </div>
+
+    <!-- Translation Input -->
+    <div class="mt-4">
+        <label class="block text-sm font-medium text-gray-700 mb-2">@Translate("Tradução para") @(primaryLanguage == Language.Target ? _nativeLang?.DisplayName : _targetLang?.DisplayName)</label>
+        <div class="flex items-center gap-2">
+            <textarea @bind="translatedSentence"
+                      @oninput="@(e => AutoResize(e, "translatedSentenceArea"))"
+                      id="translatedSentenceArea"
+                      class="flex-1 p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 @(showValidation && string.IsNullOrWhiteSpace(translatedSentence) ? "border-red-500" : "")"
+                      placeholder="@Translate("Tradução")"
+                      rows="1"
+                      style="overflow:hidden;resize:none;height:@TranslatedTextAreaHeight"></textarea>
+            @if (SettingsService.ApiKey.Value != null)
+            {
+                <button @onclick="TranslateAutomatically"
+                        class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                    @Translate("Traduzir Automaticamente")
+                </button>
+            }
+        </div>
+        @if (showValidation && string.IsNullOrWhiteSpace(translatedSentence))
+        {
+            <span class="text-red-500 text-xs">Campo obrigatório.</span>
+        }
+    </div>
+
+    <!-- Difficulty Level -->
+    <div class="mt-4">
+        <label class="block text-sm font-medium text-gray-700 mb-2">@Translate("Nível de Dificuldade")</label>
+        <select @bind="card.DifficultyLevel"
+                class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500">
+            @foreach (var level in Enum.GetValues(typeof(DifficultyLevel)))
+            {
+                <option value="@level">@level</option>
+            }
+        </select>
+    </div>
+
+    <!-- Tags -->
+    <div class="mt-4">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Tags</label>
+        <div class="flex items-center gap-2">
+            <input @bind="newTag"
+                   class="flex-1 p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+                   placeholder="Insira a tag" />
+            <button @onclick="AddTag"
+                    class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                @Translate("Adicionar Tag")
+            </button>
+        </div>
+        @if (card.Tags.Any())
+        {
+            <div class="flex flex-wrap gap-2 mt-2">
+                @foreach (var tag in card.Tags)
+                {
+                    <span class="px-2 py-1 bg-gray-100 rounded-full text-sm">@tag.Name</span>
+                }
+            </div>
+        }
+    </div>
+
+    <div class="mt-6 flex gap-2">
+        @if (SettingsService.ApiKey.Value != null)
+        {
+            <button @onclick="GenerateAudioAutomatically"
+                    class="w-1/2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                @Translate("Gerar Áudio Automaticamente")
+            </button>
+        }
+        <button @onclick="TrySaveCard"
+                class="w-1/2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                disabled="@(!CanSave)">
+            @Translate("Salvar Cartão")
+        </button>
+    </div>
+</div>
+
+@code {
+    private Card card = new()
+    {
+        SentencesInNativeLanguage = new List<Sentence>(),
+        SentencesInTargetLanguage = new List<Sentence>(),
+        Tags = new List<Tag>()
+    };
+
+    private CultureInfo _nativeLang = null;
+    private CultureInfo _targetLang = null;
+
+    private enum Language { Native, Target }
+
+    private Language primaryLanguage = Language.Target;
+    private string primarySentence = "";
+    private string translatedSentence = "";
+    private string newTag = "";
+    private bool showValidation = false;
+    private bool isTranslating = false;
+
+    protected override void OnInitialized()
+    {
+        _nativeLang = SettingsService.StudyConfig.Value?.SelectedLanguage.Source;
+        _targetLang = SettingsService.StudyConfig.Value?.SelectedLanguage.Target;
+    }
+
+    private void SetTargetAsPrimary()
+    {
+        primaryLanguage = Language.Target;
+    }
+
+    private void SetNativeAsPrimary()
+    {
+        primaryLanguage = Language.Native;
+    }
+
+    private void AddTag()
+    {
+        if (!string.IsNullOrWhiteSpace(newTag))
+        {
+            card.Tags.Add(new Tag { Name = newTag.ToLower() });
+            newTag = "";
+        }
+    }
+
+    private async Task TranslateAutomatically()
+    {
+        if (string.IsNullOrWhiteSpace(primarySentence) || _nativeLang == null || _targetLang == null)
+            return;
+
+        isTranslating = true;
+        StateHasChanged();
+
+        try
+        {
+            string sourceLang, targetLang;
+            if (primaryLanguage == Language.Target)
+            {
+                sourceLang = _targetLang.TwoLetterISOLanguageName;
+                targetLang = _nativeLang.TwoLetterISOLanguageName;
+            }
+            else
+            {
+                sourceLang = _nativeLang.TwoLetterISOLanguageName;
+                targetLang = _targetLang.TwoLetterISOLanguageName;
+            }
+
+            var result = await ApiService.GetTranslationAsync(primarySentence, sourceLang, targetLang);
+            translatedSentence = result;
+            StateHasChanged();
+        }
+        finally
+        {   
+            isTranslating = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task GenerateAudioAutomatically()
+    {
+        // Implement automatic audio generation logic here using ApiService
+        await Task.CompletedTask;
+    }
+
+    private bool CanSave =>
+        !string.IsNullOrWhiteSpace(primarySentence) &&
+        !string.IsNullOrWhiteSpace(translatedSentence);
+
+    private async Task TrySaveCard()
+    {
+        showValidation = true;
+        if (!CanSave)
+            return;
+
+        // Implement save logic here
+        await Task.CompletedTask;
+    }
+    private async Task AutoResize(ChangeEventArgs e, string id)
+    {
+        await JS.InvokeVoidAsync("autoResizeTextArea", id);
+    }
+
+    private string TranslatedTextAreaHeight
+    {
+        get
+        {
+            // Estimate: 1.5em per line, minimum 1.5em
+            if (string.IsNullOrEmpty(translatedSentence))
+                return "2.5em";
+            // Count lines (split by \n) or estimate by length
+            var lines = translatedSentence.Split('\n').Length;
+            // Optionally, estimate extra lines for long lines
+            int approxLines = lines + (int)Math.Ceiling(translatedSentence.Length / 60D);
+            return $"{Math.Max(approxLines * 2.5, 2.5)}em".Replace(",", ".");
+        }
+    }
+}
+
+<script>
+  window.autoResizeTextArea = (id) => {
+    var el = document.getElementById(id);
+    if (el) {
+      el.style.height = 'auto';
+      el.style.height = (el.scrollHeight) + 'px';
+    }
+  }
+</script>

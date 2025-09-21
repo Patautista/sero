@@ -1,0 +1,271 @@
+﻿@page "/dashboard"
+@using Catalyst
+@using Domain.Events
+@using MauiApp1.Services
+@using Mosaik.Core
+@using Radzen
+@using Catalyst;
+@using Mosaik.Core;
+@inject VocabularyService VocabularyService
+@inject DatabaseService Database
+@inherits SmartComponent
+
+<h3 class="mb-4"><Translate Text="📊 Dashboard de Revisões"></Translate></h3>
+
+@if (_model == null)
+{
+    <LoadingSpinner></LoadingSpinner>
+}
+else
+{
+    <div class="p-6 md:p-8 bg-gray-100 min-h-screen">
+
+        <!-- Vocab by Part of Speech -->
+        <div class="col-span-1 md:col-span-2 bg-white rounded-xl shadow-lg p-6">
+            @if (vocabByPos?.Any() == true)
+            {
+                <div class="flex flex-row gap-2 p-6 mb-3">
+                    <h4 class="text-lg font-semibold text-gray-700 mb-4">🔤 <Translate Text="Vocabulário Estimado"></Translate></h4>
+                    <p class="text-xl font-bold text-indigo-600">@vocabularyCount</p>
+                </div>
+                <table class="w-full table-auto border-collapse">
+                    <thead class="bg-indigo-100 text-indigo-800">
+                        <tr>
+                            <th class="px-4 py-2 text-left rounded-tl-lg"><Translate Text="Classe Gramatical"></Translate></th>
+                            <th class="px-4 py-2 text-right rounded-tr-lg"><Translate Text="Quantidade"></Translate></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var kv in vocabByPos.OrderByDescending(x => x.Value))
+                        {
+                            <tr class="border-t border-gray-200">
+                                <td class="px-4 py-2">@kv.Key</td>
+                                <td class="px-4 py-2 text-right">@kv.Value</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="text-gray-500"><Translate Text="Analisando..."></Translate></p>
+            }
+        </div>
+
+        <!-- Responsive Grid Container -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+
+            <!-- Stat Card 1: Average Time -->
+            <div class="bg-white rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-2xl hover:scale-105">
+                <h4 class="text-lg font-semibold text-gray-700 mb-2">⏱️ @Translate("Tempo Médio por Resposta")</h4>
+                <p class="text-3xl font-bold text-indigo-600">@globalAvgTimeInSeconds.ToString("N2") s</p>
+            </div>
+
+            <!-- Stat Card 2: Skip Rate -->
+            <div class="bg-white rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-2xl hover:scale-105">
+                <h4 class="text-lg font-semibold text-gray-700 mb-2">📉 @Translate("Taxa de Skip")</h4>
+                <p class="text-3xl font-bold text-indigo-600">@globalSkipRate.ToString("N1") %</p>
+            </div>
+
+            <!-- Metrics Table -->
+            <div class="col-span-1 md:col-span-2 bg-white rounded-xl shadow-lg p-6">
+                <h4 class="text-lg font-semibold text-gray-700 mb-4">🃏 @Translate("Métricas de Card")</h4>
+                <div class="overflow-x-auto">
+                    <!-- Mobile Card View -->
+                    <div class="block md:hidden">
+                        @foreach (var card in cardStats)
+                        {
+                            <div class="bg-gray-50 rounded-lg shadow-sm p-4 mb-4">
+                                <h5 class="text-sm font-bold text-gray-900 mb-2">ID: @card.CardId</h5>
+                                <h5 class="text-sm font-bold text-gray-900 mb-2">@card.CardText</h5>
+
+                                <ul class="text-sm text-gray-700 space-y-1">
+                                    <li><strong>@Translate("Tempo médio de resposta (s):")</strong> @card.AvgTimeSeconds.ToString("N2")</li>
+                                    <li><strong># @Translate("Respostas:")</strong> @card.AnswerCount</li>
+                                    <li><strong>@Translate("Taxa de acerto (%):")</strong> @card.CorrectAnswerRate.ToString("N1") %</li>
+                                    <li><strong># @Translate("Skips:")</strong> @card.SkipCount</li>
+                                    <li><strong>@Translate("Taxa de skip (%):")</strong> @card.SkipRate.ToString("N1") %</li>
+                                </ul>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Desktop Table View -->
+                    <table class="w-full table-auto mt-3 border-collapse hidden md:table">
+                        <thead class="bg-indigo-100 text-indigo-800">
+                            <tr>
+                                <th class="px-4 py-2 text-left rounded-tl-lg">ID</th>
+                                <th class="px-4 py-2 text-left">@Translate("Frase")</th>
+                                <th class="px-4 py-2 text-right">@Translate("Tempo médio de resposta (s)")</th>
+                                <th class="px-4 py-2 text-right"># @Translate("Respostas")</th>
+                                <th class="px-4 py-2 text-right">@Translate("Taxa de acerto (%)")</th>
+                                <th class="px-4 py-2 text-right"># @Translate("Skips")</th>
+                                <th class="px-4 py-2 text-right rounded-tr-lg">@Translate("Taxa de skip (%)")</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var cardStat in cardStats)
+                            {
+                                <tr class="border-t border-gray-200 hover:bg-gray-50 transition-colors duration-150">
+                                    <td class="px-4 py-2">@cardStat.CardId</td>
+                                    <td class="px-4 py-2">@cardStat.CardText</td>
+                                    <td class="px-4 py-2 text-right">@cardStat.AvgTimeSeconds.ToString("N2")</td>
+                                    <td class="px-4 py-2 text-right">@cardStat.AnswerCount</td>
+                                    <td class="px-4 py-2 text-right">@cardStat.CorrectAnswerRate.ToString("N1") %</td>
+                                    <td class="px-4 py-2 text-right">@cardStat.SkipCount</td>
+                                    <td class="px-4 py-2 text-right">@cardStat.SkipRate.ToString("N1") %</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pie Chart Section -->
+            <div class="col-span-1 md:col-span-2 bg-white rounded-xl shadow-lg p-6">
+                <h4 class="text-lg font-semibold text-gray-700 mb-4">✅❌ @Translate("Total de respostas")</h4>
+                <RadzenChart>
+                    <RadzenPieSeries Data="@generalAnswerBreakdown"
+                                     CategoryProperty="Category"
+                                     ValueProperty="Value">
+                        <RadzenSeriesDataLabels Visible="true" />
+                    </RadzenPieSeries>
+                </RadzenChart>
+            </div>
+
+        </div>
+    </div>
+
+}
+
+@code {
+    // Add using for Catalyst
+
+    public class Model
+    {
+        public record CardAnswered(
+        Guid ReviewSessionId,
+        int CardId,
+        string CardNativeText,
+        int EllapsedMs,
+        bool Correct
+    ) : DomainEvent;
+
+        public record CardSkipped(
+            Guid ReviewSessionId,
+            string CardNativeText,
+            int CardId
+        ) : DomainEvent;
+
+        public ICollection<CardAnswered> CardAnsweredData { get; set; }
+        public ICollection<CardSkipped> CardSkippedData { get; set; }
+    }
+
+    private Model _model { get; set; }
+
+    private double globalAvgTimeInSeconds;
+    private double globalSkipRate;
+    private List<ChartPoint> chartData = new();
+    private List<CardStats> cardStats = new();
+
+    // Dados dos gráficos de pizza
+    private List<PiePoint> generalAnswerBreakdown = new();
+    private List<PiePoint> perCardBreakdown = new();
+
+    private int vocabularyCount;
+    private Dictionary<string, int> vocabByPos = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _model = await DatabaseService.GetDashboardModelAsync();
+
+        // ---- Visão Geral ----
+        if (_model.CardAnsweredData.Any())
+            globalAvgTimeInSeconds = _model.CardAnsweredData.Average(a => a.EllapsedMs) / 1000D;
+
+        var total = _model.CardAnsweredData.Count + _model.CardAnsweredData.Count;
+        globalSkipRate = total > 0 ? _model.CardSkippedData.Count * 100.0 / total : 0;
+
+        chartData = _model.CardAnsweredData
+            .GroupBy(a => a.OccurredAtUtc.Date)
+            .Select(g => new ChartPoint
+            {
+                Label = g.Key.ToShortDateString(),
+                Value = g.Average(x => x.EllapsedMs)
+            })
+            .ToList();
+
+        // ---- Métricas por Card ----
+        var skipsByCard = _model.CardSkippedData
+            .GroupBy(s => s.CardId)
+            .ToDictionary(g => g.Key, g => g.Count());
+
+        var correctAnswersByCard = _model.CardAnsweredData
+            .Where(e => e.Correct)
+            .GroupBy(s => s.CardId)
+            .ToDictionary(g => g.Key, g => g.Count());
+
+        cardStats = _model.CardAnsweredData
+            .GroupBy(a => a.CardId)
+            .Select(g =>
+            {
+                var skipCount = skipsByCard.ContainsKey(g.Key) ? skipsByCard[g.Key] : 0;
+                var correctCount = correctAnswersByCard.ContainsKey(g.Key) ? correctAnswersByCard[g.Key] : 0;
+                var answerCount = g.Count();
+                var totalCount = answerCount + skipCount;
+
+                return new CardStats
+                {
+                    CardId = g.Key,
+                    CardText = g.First()?.CardNativeText ?? Translate("Card sem texto"),
+                    AvgTimeSeconds = g.Average(x => x.EllapsedMs) / 1000D,
+                    AnswerCount = answerCount,
+                    SkipCount = skipCount,
+                    CorrectAnswerRate = totalCount > 0 ? (correctCount * 100.0 / totalCount) : 0,
+                    SkipRate = totalCount > 0 ? (skipCount * 100.0 / totalCount) : 0
+                };
+            })
+            .OrderByDescending(c => c.AnswerCount + c.SkipCount)
+            .ToList();
+
+        // ---- Gráfico Pizza Geral ----
+        var correct = _model.CardAnsweredData.Count(e => e.Correct);
+        var incorrect = _model.CardAnsweredData.Count - correct;
+
+        generalAnswerBreakdown = new List<PiePoint>
+        {
+            new PiePoint { Category = Translate("Corretas"), Value = correct },
+            new PiePoint { Category = Translate("Erradas"), Value = incorrect }
+        };
+
+        // ---- Vocabulário Estimado ----
+        var allCardTexts = _model.CardAnsweredData.Select(c => c.CardNativeText).ToList();
+        vocabularyCount = VocabularyService.GetVocabularyCount(allCardTexts);
+        vocabByPos = await VocabularyService.GetVocabByPartOfSpeechAsync(allCardTexts);
+
+        StateHasChanged();
+    }
+
+    public class ChartPoint
+    {
+        public string Label { get; set; }
+        public double Value { get; set; }
+    }
+
+    public class CardStats
+    {
+        public int CardId { get; set; }
+        public string CardText { get; set; }
+        public double AvgTimeSeconds { get; set; }
+        public int AnswerCount { get; set; }
+        public int SkipCount { get; set; }
+        public double SkipRate { get; set; }
+        public double CorrectAnswerRate { get; set; }
+    }
+
+    public class PiePoint
+    {
+        public string Category { get; set; }
+        public int Value { get; set; }
+    }
+}

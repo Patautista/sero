@@ -13,7 +13,7 @@ namespace Infrastructure.Data.Model
     public class CurriculumSectionTable
     {
         public int Id { get;  set; }
-        [ForeignKey(nameof(AnkiDbContext.Curricula))]
+        [ForeignKey(nameof(MobileDbContext.Curricula))]
         public int CurriculumId { get; set; }
         public string Title { get; set; }
         public string TagsSpecificationJson { get; set; } = new TautologySpecification().ToJson();

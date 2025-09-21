@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Infrastructure.ETL.Models.CardSeed1;
 
 namespace Infrastructure.ETL.Pipelines
 {
@@ -21,6 +22,66 @@ namespace Infrastructure.ETL.Pipelines
             {
                 
             };
+        }
+    }
+    public class GenerateAudioForSentences : PipelineStage
+    {
+        private readonly FileDatalakeService _datalakeService;
+        private readonly HttpClient _httpClient;
+        private readonly int _batchSize = 30;
+
+        public GenerateAudioForSentences(FileDatalakeService fileDatalakeService, HttpClient client)
+        {
+            Name = nameof(GenerateAudioForSentences);
+            _datalakeService = fileDatalakeService;
+            _datalakeService.Configure(this);
+            _httpClient = client;
+            var cards = _datalakeService.GetData<List<CardSeed1>>();
+
+        }
+
+        public async override Task ExecuteAsync()
+        {
+            Console.WriteLine($"Running {Name}...");
+            var cards = _datalakeService.GetData<List<CardSeed1>>();
+            var batch = new BatchResult { BatchSize = _batchSize, Schema = nameof(CardAudiov1) };
+            var count = _datalakeService.BatchCount();
+            batch.SetId(this, count + 1);
+            var data = new List<CardAudiov1>();
+            try
+            {
+                int index = 1;
+                var processable = cards.Skip(count * _batchSize).Take(_batchSize);
+                var test = cards.FindIndex(0, c => c.TargetSentence.Text == "Ciao nonno.");
+                var total = processable.Count();
+                foreach (var cardSeed in processable)
+                {
+                    Console.WriteLine($"Processing item {index} in {total}");
+                    var card = cardSeed.ToDomain();
+                    var res = await _httpClient.GetAsync($"/api/tts?text={card.TargetSample.Text}&lang={card.TargetSample.Language}");
+                    var audioData = await res.Content.ReadAsStringAsync();
+                    var cardAudio = new CardAudiov1(card, audioData);
+                    data.Add(cardAudio);
+                    index++;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                if (data.Count() < _batchSize)
+                {
+                    batch.MarkAsIncomplete(data);
+                }
+                else
+                {
+                    batch.MarkAsComplete(data);
+                }
+                _datalakeService.SaveBatch(batch);
+                Console.WriteLine("Finished batch. \n\n");
+            }
         }
     }
     public class GenerateAlternativeSentences : PipelineStage

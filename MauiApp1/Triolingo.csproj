@@ -50,7 +50,10 @@
         <MauiImage Include="Resources\Images\*" />
         <MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
 
-        <!-- Custom Fonts -->
+		<!-- Sounds -->
+		<MauiAsset Include="Sounds\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+
+		<!-- Custom Fonts -->
         <MauiFont Include="Resources\Fonts\*" />
 
         <!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
@@ -62,11 +65,13 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="CommunityToolkit.Maui" Version="8.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.11" />
         <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
         <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="$(MauiVersion)" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.1" />
+        <PackageReference Include="Plugin.Maui.Audio" Version="3.1.1" />
         <PackageReference Include="Radzen.Blazor" Version="7.3.3" />
     </ItemGroup>
 
