@@ -6,9 +6,9 @@
 @inject ISettingsService SettingsService
 
 @code{
-    protected async Task<string> Translate(string text, string lang = "en")
+    protected string Translate(string text, string lang = "pt")
     {
-        return await ApiService.GetNativeTranslationAsync(text, lang);
+        return ApiService.GetNativeTranslationAsync(text, lang).Result;
     }
     protected async Task PlayVoiceClip(string text, string lang)
     {
