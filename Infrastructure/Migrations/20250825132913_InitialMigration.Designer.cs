@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Migrations
 {
-    [DbContext(typeof(AnkiDbContext))]
+    [DbContext(typeof(MobileDbContext))]
     [Migration("20250825132913_InitialMigration")]
     partial class InitialMigration
     {

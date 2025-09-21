@@ -1,0 +1,86 @@
+﻿@using System.Net.Http.Json
+@inject HttpClient Http
+@inherits SmartComponent
+
+<div class="p-4">
+    @if (_articles == null)
+    {
+        <LoadingSpinner />
+    }
+    else
+    {
+        <RadzenCarousel Style="height:320px;width:100%;">
+            <Items>
+                @foreach (var article in _articles)
+                {
+                    <RadzenCarouselItem>
+                        <a href="@article.Content_Urls.Desktop.Page" target="_blank"
+                           class="block bg-white shadow-md rounded-xl p-4 hover:shadow-lg transition h-full">
+                            <h3 class="text-xl font-semibold mb-2">@article.Title</h3>
+                            @if (!string.IsNullOrEmpty(article.Thumbnail?.Source))
+                            {
+                                <img src="@article.Thumbnail.Source" alt="@article.Title"
+                                     class="max-h-40 mb-2 rounded-md mx-auto" />
+                            }
+                            <p class="text-gray-700">@article.Extract</p>
+                        </a>
+                    </RadzenCarouselItem>
+                }
+            </Items>
+        </RadzenCarousel>
+    }
+</div>
+
+@code {
+    private List<WikiArticle> _articles;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _articles = new List<WikiArticle>();
+
+        for (int i = 0; i < 3; i++)
+        {
+            var article = await GetRandomArticleAsync(TargetLanguageCode);
+            if (article != null) _articles.Add(article);
+        }
+        Console.WriteLine($"Total artigos carregados: {_articles.Count}");
+    }
+
+    private async Task<WikiArticle> GetRandomArticleAsync(string lang)
+    {
+        var url = $"https://{lang}.wikipedia.org/api/rest_v1/page/random/summary";
+
+        var request = new HttpRequestMessage(HttpMethod.Get, url);
+        request.Headers.UserAgent.ParseAdd("TriolingoApp/1.0 (https://github.com/tuapp)");
+
+        var response = await Http.SendAsync(request);
+
+        response.EnsureSuccessStatusCode();
+
+        return await response.Content.ReadFromJsonAsync<WikiArticle>();
+    }
+
+
+    public class WikiArticle
+    {
+        public string Title { get; set; }
+        public string Extract { get; set; }
+        public WikiUrls Content_Urls { get; set; }
+        public WikiImage Thumbnail { get; set; }
+    }
+
+    public class WikiUrls
+    {
+        public WikiDesktop Desktop { get; set; }
+    }
+
+    public class WikiDesktop
+    {
+        public string Page { get; set; }
+    }
+
+    public class WikiImage
+    {
+        public string Source { get; set; }
+    }
+}

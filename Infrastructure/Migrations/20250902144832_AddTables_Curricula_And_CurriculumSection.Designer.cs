@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Migrations
 {
-    [DbContext(typeof(AnkiDbContext))]
+    [DbContext(typeof(MobileDbContext))]
     [Migration("20250902144832_AddTables_Curricula_And_CurriculumSection")]
     partial class AddTables_Curricula_And_CurriculumSection
     {

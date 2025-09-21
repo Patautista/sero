@@ -1,6 +1,7 @@
 ﻿@using System.Net.Http
 @using System.Net.Http.Json
 @using MauiApp1.Services
+@using MediatR
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Routing
 @using Microsoft.AspNetCore.Components.Web
@@ -15,4 +16,6 @@
 @using Radzen
 @using Radzen.Blazor
 @using Domain.Entity
+@inject IMediator Mediator
+@using MauiApp1.Components.Buttons
 @inject DatabaseService DatabaseService

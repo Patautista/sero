@@ -1,0 +1,64 @@
+﻿@page "/dict"
+@using Infrastructure.Lookup
+@inherits SmartComponent
+
+<div class="gap-2">
+    <h3>Lookup term (Dict.cc)</h3>
+    <input @bind="searchWord" placeholder="Enter a word" />
+    <ButtonPrimary OnClick="Search">Search</ButtonPrimary>
+</div>
+
+@if (showModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,.5);">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Results for "@searchWord"</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                </div>
+                <div class="modal-body">
+                    @if (!string.IsNullOrEmpty(translationsHtml))
+                    {
+                        @((MarkupString)translationsHtml)
+                    }
+                    else
+                    {
+                        <p>No results found</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private string searchWord;
+    private string translationsHtml;
+    private bool showModal = false;
+
+    private async Task Search()
+    {
+        var client = new DictCcClient(new DictCcConfig
+        {
+            LanguagePair = GetAvailablePair(),
+            MaxResults = 20,
+            EnableCaching = false
+        });
+
+        translationsHtml = await client.GetHtmlTranslationsAsync(searchWord);
+        showModal = true;
+    }
+    private void CloseModal()
+    {
+        showModal = false;
+    }
+    private string GetAvailablePair()
+    {
+        if(TargetLanguage.ThreeLetterISOLanguageName == "it")
+        {
+            return "enit";
+        }
+        return string.Empty;
+    }
+}

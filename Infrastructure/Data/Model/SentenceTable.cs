@@ -13,8 +13,9 @@ namespace Infrastructure.Data.Model
     public record SentenceTable
     {
         public int Id { get; set; }
-        [ForeignKey(nameof(AnkiDbContext.Meanings))]
         public MeaningTable? Meaning { get; set; }
+
+        [ForeignKey(nameof(MobileDbContext.Meanings))]
         public int MeaningId { get; set; }
         public string Text { get; set; }
         public string Language { get; set; } = "pt";
@@ -24,6 +25,7 @@ namespace Infrastructure.Data.Model
             return new Domain.Entity.Sentence
             {
                 Id = Id,
+                MeaningId = Meaning == null ? MeaningId : Meaning.Id,
                 Language = Language,
                 Text = Text
             };

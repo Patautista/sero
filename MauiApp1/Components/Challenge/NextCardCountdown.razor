@@ -1,0 +1,8 @@
+﻿@if (Countdown > 0)
+{
+    <p class="text-muted">Próxima frase em @Countdown...</p>
+}
+
+@code {
+    [Parameter] public int Countdown { get; set; }
+}

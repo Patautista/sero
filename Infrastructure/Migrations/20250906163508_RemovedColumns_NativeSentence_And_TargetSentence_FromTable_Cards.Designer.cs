@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Migrations
 {
-    [DbContext(typeof(AnkiDbContext))]
+    [DbContext(typeof(MobileDbContext))]
     [Migration("20250906163508_RemovedColumns_NativeSentence_And_TargetSentence_FromTable_Cards")]
     partial class RemovedColumns_NativeSentence_And_TargetSentence_FromTable_Cards
     {

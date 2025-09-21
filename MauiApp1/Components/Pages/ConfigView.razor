@@ -4,20 +4,19 @@
 
 @inject ISettingsService SettingsService
 @inject NavigationManager Nav
-@inject AnkiDbContext dbContext
+@inject MobileDbContext dbContext
 
 
 <RadzenAccordion>
-            <Items>
-                <RadzenAccordionItem Text="Configurações de Estudo" Icon="book" CollapseTitle="Collapse orders."
-                                     ExpandTitle="Expand orders." CollapseAriaLabel="Collapse the order details."
-                                     ExpandAriaLabel="Expand the order details.">
-                    <MauiApp1.Components.Config.StudyConfigComponent></MauiApp1.Components.Config.StudyConfigComponent>
-                </RadzenAccordionItem>
-                <RadzenAccordionItem Text="Sistema" Icon="bug_report" CollapseTitle="Collapse employees."
-                                     ExpandTitle="Expand employees." CollapseAriaLabel="Collapse the employee details."
-                                     ExpandAriaLabel="Expand the employee details.">
-                    <MauiApp1.Components.Config.SystemConfigComponent></MauiApp1.Components.Config.SystemConfigComponent>
-                </RadzenAccordionItem>
-            </Items>
+    <Items>
+        <RadzenAccordionItem Text="Estudo" Icon="book">
+            <MauiApp1.Components.Config.StudyConfigComponent></MauiApp1.Components.Config.StudyConfigComponent>
+        </RadzenAccordionItem>
+        <RadzenAccordionItem Text="Sistema" Icon="bug_report">
+            <div class="space-y-4">
+                <MauiApp1.Components.Config.ApiConfigComponent></MauiApp1.Components.Config.ApiConfigComponent>
+                <MauiApp1.Components.Config.SystemConfigComponent></MauiApp1.Components.Config.SystemConfigComponent>
+            </div>
+        </RadzenAccordionItem>
+    </Items>
 </RadzenAccordion>
