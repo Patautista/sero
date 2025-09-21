@@ -18,6 +18,10 @@ namespace SupportServer.Controllers
         [HttpGet]
         public async Task<string> GetTTS(string text, string sourceLang, string targetLang)
         {
+            if (sourceLang == targetLang || string.IsNullOrEmpty(text))
+            {
+                return text;
+            }
             sourceLang = NormalizeSourceLang(sourceLang);
             targetLang = NormalizeTargetLang(targetLang);
 

@@ -3,13 +3,14 @@
 @inject IJSRuntime JS
 @inject ISettingsService SettingsService
 @inject ApiService ApiService
+@inherits SmartComponent
 
 <div class="card-creation-container p-6 bg-white rounded-lg shadow-lg max-w-2xl mx-auto">
     <h2 class="text-2xl font-bold mb-6 text-indigo-700">Criar Novo Cartão</h2>
 
     <!-- Language Switch with Text Markers -->
     <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-700 mb-2">Idioma Primário</label>
+        <label class="block text-sm font-medium text-gray-700 mb-2">@Translate("Idioma Primário")</label>
         <div class="flex items-center space-x-4">
             <span @onclick="SetTargetAsPrimary"
                   class="cursor-pointer px-3 py-1 rounded-lg transition
@@ -26,36 +27,38 @@
 
     <!-- Primary Language Input -->
     <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">Frase em @(primaryLanguage == Language.Target ? _targetLang?.DisplayName : _nativeLang?.DisplayName)</label>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+            <Translate Text="Frase em"></Translate> @(primaryLanguage == Language.Target ? _targetLang?.DisplayName : _nativeLang?.DisplayName)
+        </label>
         <textarea @bind="primarySentence"
                   @oninput="@(e => AutoResize(e, "primarySentenceArea"))"
                   id="primarySentenceArea"
                   class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 @(showValidation && string.IsNullOrWhiteSpace(primarySentence) ? "border-red-500" : "")"
-                  placeholder="Insira a frase"
+                  placeholder="@Translate("Insira a frase")"
                   rows="1"
                   style="overflow:hidden;resize:none"></textarea>
         @if (showValidation && string.IsNullOrWhiteSpace(primarySentence))
         {
-            <span class="text-red-500 text-xs">Campo obrigatório.</span>
+            <span class="text-red-500 text-xs"><Translate Text="Campo obrigatório."></Translate></span>
         }
     </div>
 
     <!-- Translation Input -->
     <div class="mt-4">
-        <label class="block text-sm font-medium text-gray-700 mb-2">Tradução para @(primaryLanguage == Language.Target ? _nativeLang?.DisplayName : _targetLang?.DisplayName)</label>
+        <label class="block text-sm font-medium text-gray-700 mb-2">@Translate("Tradução para") @(primaryLanguage == Language.Target ? _nativeLang?.DisplayName : _targetLang?.DisplayName)</label>
         <div class="flex items-center gap-2">
             <textarea @bind="translatedSentence"
                       @oninput="@(e => AutoResize(e, "translatedSentenceArea"))"
                       id="translatedSentenceArea"
                       class="flex-1 p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 @(showValidation && string.IsNullOrWhiteSpace(translatedSentence) ? "border-red-500" : "")"
-                      placeholder="Tradução"
+                      placeholder="@Translate("Tradução")"
                       rows="1"
                       style="overflow:hidden;resize:none;height:@TranslatedTextAreaHeight"></textarea>
             @if (SettingsService.ApiKey.Value != null)
             {
                 <button @onclick="TranslateAutomatically"
                         class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
-                    Traduzir Automaticamente
+                    @Translate("Traduzir Automaticamente")
                 </button>
             }
         </div>
@@ -67,7 +70,7 @@
 
     <!-- Difficulty Level -->
     <div class="mt-4">
-        <label class="block text-sm font-medium text-gray-700 mb-2">Nível de Dificuldade</label>
+        <label class="block text-sm font-medium text-gray-700 mb-2">@Translate("Nível de Dificuldade")</label>
         <select @bind="card.DifficultyLevel"
                 class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500">
             @foreach (var level in Enum.GetValues(typeof(DifficultyLevel)))
@@ -86,7 +89,7 @@
                    placeholder="Insira a tag" />
             <button @onclick="AddTag"
                     class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
-                Adicionar Tag
+                @Translate("Adicionar Tag")
             </button>
         </div>
         @if (card.Tags.Any())
@@ -105,13 +108,13 @@
         {
             <button @onclick="GenerateAudioAutomatically"
                     class="w-1/2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
-                Gerar Áudio Automaticamente
+                @Translate("Gerar Áudio Automaticamente")
             </button>
         }
         <button @onclick="TrySaveCard"
                 class="w-1/2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
                 disabled="@(!CanSave)">
-            Salvar Cartão
+            @Translate("Salvar Cartão")
         </button>
     </div>
 </div>

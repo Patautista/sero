@@ -35,21 +35,34 @@ namespace MauiApp1.Services
 
         public async Task<string> GetTranslationAsync(string text, string sourceLang, string targetLang)
         {
-            // 1. Try file cache
-            var cached = await _translationCache.GetAsync(text, sourceLang, targetLang);
-            if (cached != null)
-                return cached;
+            try
+            {
+                if (sourceLang == targetLang || string.IsNullOrEmpty(text))
+                {
+                    return text;
+                }
 
-            // 2. Fetch from API
-            var url = $"/api/Translations?text={Uri.EscapeDataString(text)}&sourceLang={Uri.EscapeDataString(sourceLang)}&targetLang={Uri.EscapeDataString(targetLang)}";
-            var response = await _httpClient.GetAsync(url);
-            response.EnsureSuccessStatusCode();
-            var translation = await response.Content.ReadAsStringAsync();
+                // 1. Try file cache
+                var cached = await _translationCache.GetAsync(text, sourceLang, targetLang);
+                if (cached != null)
+                    return cached;
 
-            // 3. Cache the translation
-            await _translationCache.SetAsync(text, sourceLang, targetLang, translation);
+                // 2. Fetch from API
+                var url = $"/api/Translations?text={Uri.EscapeDataString(text)}&sourceLang={Uri.EscapeDataString(sourceLang)}&targetLang={Uri.EscapeDataString(targetLang)}";
+                var response = await _httpClient.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+                var translation = await response.Content.ReadAsStringAsync();
 
-            return translation;
+                // 3. Cache the translation
+                await _translationCache.SetAsync(text, sourceLang, targetLang, translation);
+
+                return translation;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return "Error";
+            }
         }
 
         /// <summary>
@@ -61,7 +74,7 @@ namespace MauiApp1.Services
             if (studyConfig?.SelectedLanguage == null)
                 return null;
 
-            var targetLang = studyConfig.SelectedLanguage.Target?.TwoLetterISOLanguageName;
+            var targetLang = studyConfig.SelectedLanguage.Source?.TwoLetterISOLanguageName;
 
             if (string.IsNullOrWhiteSpace(sourceLang) || string.IsNullOrWhiteSpace(targetLang))
                 return null;

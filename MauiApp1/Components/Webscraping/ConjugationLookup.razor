@@ -15,7 +15,6 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Results for "@searchWord"</h5>
                     <button type="button" class="btn-close" @onclick="CloseModal"></button>
                 </div>
                 <div class="modal-body">
@@ -25,7 +24,7 @@
                                 @foreach (var mood in _data.SpecialMoods)
                                 {
                                     <div class="bg-gray-100 p-2 rounded-lg shadow-md">
-                                        <div class="font-bold text-sm mb-2">@mood.Name</div>
+                                        <div class="font-bold text-sm mb-2"><Translate Text="@mood.Name" Lang="en"></Translate></div>
                                         <div class="text-blue-600 font-semibold text-md">
                                             <strong class="selflink">@mood.Form</strong>
                                         </div>
@@ -36,12 +35,12 @@
                             @foreach(var mood in _data.Moods)
                             {
                                 <div class="bg-gray-100 p-4 rounded-lg shadow-md">
-                                <h3 class="font-bold text-lg mb-2 text-center">@mood.Name</h3>
+                                <h3 class="font-bold text-lg mb-2 text-center"><Translate Text="@mood.Name" Lang="en"></Translate></h3>
                                 <div class="space-y-3">
                                 @foreach (var tense in mood.Tenses)
                                 {
                                             <div>
-                                                <div class="font-bold text-base mb-1">@tense.Name</div>
+                                                <div class="font-bold text-base mb-1"><Translate Text="@tense.Name" Lang="en"></Translate></div>
                                                 <div class="grid grid-cols-2 gap-y-2">
                                                     @foreach (var conjucation in tense.Conjugations)
                                                     {

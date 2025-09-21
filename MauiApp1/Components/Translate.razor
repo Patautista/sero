@@ -1,0 +1,15 @@
+﻿<span>@_translated</span>
+@inject ApiService ApiService
+
+@code {
+    [Parameter] public string Text { get; set; }
+    [Parameter] public string Lang { get; set; } = "pt";
+
+    private string _translated;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _translated = await ApiService.GetNativeTranslationAsync(Text, Lang);
+        StateHasChanged(); // força re-render quando a tradução chega
+    }
+}
