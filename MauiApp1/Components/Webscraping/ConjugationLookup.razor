@@ -1,5 +1,6 @@
 ﻿@page "/wikt"
 @using Infrastructure.Lookup
+@inherits SmartComponent
 
 <div class="gap-2">
     <h3>Lookup conjugation (Wiktionary)</h3>
@@ -75,7 +76,11 @@
 
     private async Task Search()
     {
-        var client = new WiktionaryClient();
+        var options = new WiktionaryOptions
+        {
+            Language = TargetLanguage.EnglishName.FirstCharToUpper(),
+        };
+        var client = new WiktionaryClient(options);
 
         _data = await client.GetVerbInflectionData(searchWord);
         showModal = true;

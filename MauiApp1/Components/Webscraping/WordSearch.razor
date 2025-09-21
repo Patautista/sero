@@ -1,5 +1,6 @@
 ﻿@page "/dict"
 @using Infrastructure.Lookup
+@inherits SmartComponent
 
 <div class="gap-2">
     <h3>Lookup term (Dict.cc)</h3>
@@ -40,7 +41,7 @@
     {
         var client = new DictCcClient(new DictCcConfig
         {
-            LanguagePair = "enit",
+            LanguagePair = GetAvailablePair(),
             MaxResults = 20,
             EnableCaching = false
         });
@@ -51,5 +52,13 @@
     private void CloseModal()
     {
         showModal = false;
+    }
+    private string GetAvailablePair()
+    {
+        if(TargetLanguage.ThreeLetterISOLanguageName == "it")
+        {
+            return "enit";
+        }
+        return string.Empty;
     }
 }
