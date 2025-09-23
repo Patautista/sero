@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(MobileDbContext))]
-    partial class AnkiAppContextModelSnapshot : ModelSnapshot
+    [Migration("20250923224731_UpdateEventCardRef")]
+    partial class UpdateEventCardRef
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
@@ -184,7 +187,26 @@ namespace Infrastructure.Migrations
                     b.ToTable("Sentences");
                 });
 
-            modelBuilder.Entity("Infrastructure.Data.Model.SrsCardStateTable", b =>
+            modelBuilder.Entity("Infrastructure.Data.Model.TagTable", b =>
+                {
+                    b.Property<string>("Name")
+                        .HasMaxLength(128)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Name");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Tags");
+                });
+
+            modelBuilder.Entity("Infrastructure.Data.Model.UserCardStateTable", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -205,31 +227,15 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("NextReview")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("Repetitions")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
                     b.ToTable("UserCardStates");
-                });
-
-            modelBuilder.Entity("Infrastructure.Data.Model.TagTable", b =>
-                {
-                    b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Name");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Model.UserTable", b =>
@@ -269,7 +275,7 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Data.Model.SrsCardStateTable", "UserCardState")
+                    b.HasOne("Infrastructure.Data.Model.UserCardStateTable", "UserCardState")
                         .WithMany()
                         .HasForeignKey("UserCardStateId");
 
