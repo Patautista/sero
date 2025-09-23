@@ -1,10 +1,12 @@
 ﻿using Business;
+using Business.Model;
 using Business.ViewModel;
 using Domain.Entity;
 using Domain.Entity.Specification;
 using Infrastructure.Data.Model;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +16,8 @@ namespace MauiApp1.Services
 {
     public partial class DatabaseService
     {
+        private string _nativeCode => settingsService.StudyConfig.Value.SelectedLanguage.Source.TwoLetterISOLanguageName;
+        private string _targetCode => settingsService.StudyConfig.Value.SelectedLanguage.Target.TwoLetterISOLanguageName;
         public async Task<ICollection<CardWithState>> GetDueCards(ReviewSessionMode sessionMode, int exp, CancellationToken cancellationToken = default)
         {
             var cards = new List<CardTable>();
@@ -60,14 +64,14 @@ namespace MauiApp1.Services
                 Console.WriteLine(ex);
             }
 
-            // Now project to domain
+            // Project to domain
             var cardWithStates = cards.Select(x => new CardWithState
             {
                 Card = new Card
                 {
                     DifficultyLevel = DifficultyLevelExtensions.FromString(x.Meaning.DifficultyLevel),
-                    SentencesInNativeLanguage = x.Meaning.Sentences.Where(s => s.Language == "pt").Select(s => s.ToDomain()).ToList(),
-                    SentencesInTargetLanguage = x.Meaning.Sentences.Where(s => s.Language == "it").Select(s => s.ToDomain()).ToList(),
+                    SentencesInNativeLanguage = x.Meaning.Sentences.Where(s => s.Language == _nativeCode).Select(s => s.ToDomain()).ToList(),
+                    SentencesInTargetLanguage = x.Meaning.Sentences.Where(s => s.Language == _targetCode).Select(s => s.ToDomain()).ToList(),
                     Tags = x.Meaning.Tags.Select(t => t.ToDomain()).ToList(),
                 },
                 State = x.UserCardState.ToDomain()
@@ -115,6 +119,34 @@ namespace MauiApp1.Services
             {
                 Console.WriteLine(ex);
             }
+        }
+        public async Task<ICollection<Tag>> GetTagsAsync()
+        {
+            var tags = await db.Tags.ToListAsync();
+            return tags.Select(t => t.ToDomain()).ToList();
+        }
+        public async Task CreateCard(CardDefinition cardDefinition)
+        {
+            var cardTable = new CardTable
+            {
+                Meaning = new MeaningTable
+                {
+                    DifficultyLevel = cardDefinition.DifficultyLevel.ToString(),
+                    Sentences =
+                        new List<SentenceTable> {
+                            new SentenceTable {
+                                Language = cardDefinition.NativeLanguageCode,
+                                Text = cardDefinition.NativeSentence
+                            },
+                            new SentenceTable {
+                                Language = cardDefinition.TargetLanguageCode,
+                                Text = cardDefinition.TargetSentence
+                            },
+                        },
+                    Tags = cardDefinition.Tags.Select(tag => new TagTable { Name = tag.Name, Type = tag.Type }).ToList()
+                }
+            };
+            db.Cards.Add(cardTable);
         }
     }
 }

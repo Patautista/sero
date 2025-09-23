@@ -1,5 +1,6 @@
 ﻿@page "/create-card"
 @using System.Globalization
+@using Business.Model
 @inject IJSRuntime JS
 @inject ISettingsService SettingsService
 @inject ApiService ApiService
@@ -8,9 +9,9 @@
 <div class="card-creation-container p-6 bg-white rounded-lg shadow-lg max-w-2xl mx-auto">
     <h2 class="text-2xl font-bold mb-6 text-indigo-700">Criar Novo Cartão</h2>
 
-    <!-- Language Switch with Text Markers -->
+    <!-- Idioma primário -->
     <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-700 mb-2"><Translate Text="Idioma Primário"></Translate></label>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Idioma Primário</label>
         <div class="flex items-center space-x-4">
             <span @onclick="SetTargetAsPrimary"
                   class="cursor-pointer px-3 py-1 rounded-lg transition
@@ -25,21 +26,21 @@
         </div>
     </div>
 
-    <!-- Primary Language Input -->
+    <!-- Frase -->
     <div>
         <label class="block text-sm font-medium text-gray-700 mb-2">
-            <Translate Text="Frase em"></Translate> @(primaryLanguage == Language.Target ? TargetLanguage?.DisplayName : Nativelanguage?.DisplayName)
+            Frase em @(primaryLanguage == Language.Target ? TargetLanguage?.DisplayName : Nativelanguage?.DisplayName)
         </label>
         <textarea @bind="primarySentence"
                   @oninput="@(e => AutoResize(e, "primarySentenceArea"))"
                   id="primarySentenceArea"
                   class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 @(showValidation && string.IsNullOrWhiteSpace(primarySentence) ? "border-red-500" : "")"
-                  placeholder="@Translate("Insira a frase")"
+                  placeholder="Insira a frase"
                   rows="1"
                   style="overflow:hidden;resize:none"></textarea>
         @if (showValidation && string.IsNullOrWhiteSpace(primarySentence))
         {
-            <span class="text-red-500 text-xs"><Translate Text="Campo obrigatório."></Translate></span>
+            <span class="text-red-500 text-xs">Campo obrigatório.</span>
         }
     </div>
 
@@ -68,9 +69,9 @@
         }
     </div>
 
-    <!-- Difficulty Level -->
+    <!-- Nível de dificuldade -->
     <div class="mt-4">
-        <label class="block text-sm font-medium text-gray-700 mb-2"><Translate Text="Nível de Dificuldade"></Translate>)</label>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Nível de Dificuldade</label>
         <select @bind="card.DifficultyLevel"
                 class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500">
             @foreach (var level in Enum.GetValues(typeof(DifficultyLevel)))
@@ -81,23 +82,43 @@
     </div>
 
     <!-- Tags -->
-    <div class="mt-4">
+    <div class="mt-4 relative">
         <label class="block text-sm font-medium text-gray-700 mb-2">Tags</label>
-        <div class="flex items-center gap-2">
-            <input @bind="newTag"
-                   class="flex-1 p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-                   placeholder="Insira a tag" />
-            <button @onclick="AddTag"
-                    class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
-                <Translate Text="Adicionar Tag"></Translate>
-            </button>
-        </div>
-        @if (card.Tags.Any())
+
+        <!-- Input de pesquisa -->
+        <input @bind-value="tagSearch"
+               @bind-value:event="oninput"
+               placeholder="Digite para buscar tags..."
+               class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500" />
+
+        <!-- Dropdown com resultados filtrados -->
+        @if (showTagDropdown && filteredTags.Any())
+        {
+            <ul class="absolute z-10 bg-white border rounded-lg shadow mt-1 max-h-40 overflow-auto w-full">
+                @foreach (var tag in filteredTags)
+                {
+                    <li class="px-3 py-2 hover:bg-indigo-100 cursor-pointer"
+                        @onclick="() => SelectTag(tag)">
+                        @tag.Name
+                    </li>
+                }
+            </ul>
+        }
+
+        <!-- Tags selecionadas -->
+        @if (selectedTags.Any())
         {
             <div class="flex flex-wrap gap-2 mt-2">
-                @foreach (var tag in card.Tags)
+                @foreach (var tag in selectedTags)
                 {
-                    <span class="px-2 py-1 bg-gray-100 rounded-full text-sm">@tag.Name</span>
+                    <span class="flex items-center px-2 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm">
+                        @tag.Name
+                        <button type="button"
+                                class="ml-1 text-red-600 hover:text-red-800"
+                                @onclick="() => RemoveTag(tag)">
+                            ✕
+                        </button>
+                    </span>
                 }
             </div>
         }
@@ -106,10 +127,9 @@
     <div class="mt-6 flex gap-2">
         @if (SettingsService.ApiKey.Value != null)
         {
-            <button @onclick="GenerateAudioAutomatically"
-                    class="w-1/2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+            <ButtonPrimary Onclick="GenerateAudioAutomatically">
                 <Translate Text="Gerar Áudio Automaticamente"></Translate>
-            </button>
+            </ButtonPrimary>
         }
         <button @onclick="TrySaveCard"
                 class="w-1/2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
@@ -120,10 +140,8 @@
 </div>
 
 @code {
-    private Card card = new()
+    private CardDefinition card = new()
     {
-        SentencesInNativeLanguage = new List<Sentence>(),
-        SentencesInTargetLanguage = new List<Sentence>(),
         Tags = new List<Tag>()
     };
 
@@ -135,10 +153,26 @@
     private string newTag = "";
     private bool showValidation = false;
     private bool isTranslating = false;
+    private ICollection<Tag> allTags = new List<Tag>();
+    private List<Tag> filteredTags = new();
+    private HashSet<Tag> selectedTags = new();
 
-    protected override void OnInitialized()
+    private string _tagSearch = "";
+    private string tagSearch
     {
+        get => _tagSearch;
+        set
+        {
+            _tagSearch = value;
+            FilterTags(_tagSearch);
+        }
+    }
 
+    private bool showTagDropdown = false;
+
+    protected async override Task OnInitializedAsync()
+    {
+        allTags = await DatabaseService.GetTagsAsync();
     }
 
     private void SetTargetAsPrimary()
@@ -158,6 +192,36 @@
             card.Tags.Add(new Tag { Name = newTag.ToLower() });
             newTag = "";
         }
+    }
+    private void SelectTag(Tag tag)
+    {
+        selectedTags.Add(tag);
+        tagSearch = "";
+        filteredTags.Clear();
+        showTagDropdown = false;
+    }
+    private void FilterTags(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            filteredTags = new();
+            showTagDropdown = false;
+        }
+        else
+        {
+            filteredTags = allTags
+                .Where(t => t.Name.Contains(input, StringComparison.OrdinalIgnoreCase)
+                            && !selectedTags.Contains(t))
+                .Take(10)
+                .ToList();
+
+            showTagDropdown = filteredTags.Any();
+        }
+    }
+
+    private void RemoveTag(Tag tag)
+    {
+        selectedTags.Remove(tag);
     }
 
     private async Task TranslateAutomatically()
@@ -207,17 +271,32 @@
     private async Task TrySaveCard()
     {
         showValidation = true;
+
         if (!CanSave)
             return;
 
-        // Implement save logic here
-        await Task.CompletedTask;
+        var cardDefinition = new CardDefinition
+        {
+            NativeSentence = primaryLanguage == Language.Native ? primarySentence : translatedSentence,
+            TargetSentence = primaryLanguage == Language.Target ? primarySentence : translatedSentence,
+            NativeLanguageCode = NativelanguageCode,
+            TargetLanguageCode = TargetLanguageCode,
+            DifficultyLevel = DifficultyLevel.Intermediate,
+            Tags = selectedTags
+        };
+
+        await DatabaseService.CreateCard(cardDefinition);
     }
     private async Task AutoResize(ChangeEventArgs e, string id)
     {
         await JS.InvokeVoidAsync("autoResizeTextArea", id);
     }
 
+    private void ToggleTag(Tag tag, bool isChecked)
+    {
+        if (isChecked) selectedTags.Add(tag);
+        else selectedTags.Remove(tag);
+    }
     private string TranslatedTextAreaHeight
     {
         get
