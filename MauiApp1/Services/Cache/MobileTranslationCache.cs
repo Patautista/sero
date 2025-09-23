@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MauiApp1.Services.Translations
+namespace MauiApp1.Services.Cache
 {
     // File-based cache for translations
     public class MobileTranslationCache

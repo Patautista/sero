@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Audio
+namespace MauiApp1.Services.Cache
 {
     // Implementação usando arquivos locais
     public class MobileAudioCache : IAudioCache

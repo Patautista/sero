@@ -38,7 +38,6 @@ public class VocabularyService
         { "VERB", "Verb" },
         { "X", "Other" }
     };
-    private readonly ISettingsService _settingsService;
 
     public int GetVocabularyCount(IEnumerable<string> texts)
     {

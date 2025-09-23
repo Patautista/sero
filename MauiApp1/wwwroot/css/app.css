@@ -1,8 +1,9 @@
 ﻿html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
+
 :root {
-    --bs-table-striped-bg: #e6f2ff; 
+    --bs-table-striped-bg: #e6f2ff;
     --bs-table-striped-color: #000;
 }
 
@@ -38,6 +39,42 @@ h1:focus {
 
 .validation-message {
     color: #e50000;
+}
+
+.modal-backdrop-custom {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(60, 60, 60, 0.5);
+    z-index: 1040;
+    transition: background 0.3s;
+}
+
+.modal-animate {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 1050;
+    animation: modalFadeIn 0.3s;
+    pointer-events: none;
+}
+
+.modal-animate > .modal-content {
+    pointer-events: auto;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .animated-underline {

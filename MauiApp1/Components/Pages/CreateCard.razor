@@ -222,12 +222,9 @@
     {
         get
         {
-            // Estimate: 1.5em per line, minimum 1.5em
             if (string.IsNullOrEmpty(translatedSentence))
                 return "2.5em";
-            // Count lines (split by \n) or estimate by length
             var lines = translatedSentence.Split('\n').Length;
-            // Optionally, estimate extra lines for long lines
             int approxLines = lines + (int)Math.Ceiling(translatedSentence.Length / 60D);
             return $"{Math.Max(approxLines * 2.5, 2.5)}em".Replace(",", ".");
         }
