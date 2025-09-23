@@ -61,7 +61,7 @@ namespace MauiApp1.Services
             catch(Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return "Error";
+                throw new Exception("Translation failed", ex);
             }
         }
 
@@ -70,16 +70,24 @@ namespace MauiApp1.Services
         /// </summary>
         public async Task<string?> GetNativeTranslationAsync(string text, string sourceLang = "en")
         {
-            var studyConfig = _settingsService.StudyConfig.Value;
-            if (studyConfig?.SelectedLanguage == null)
-                return null;
+            try
+            {
+                var studyConfig = _settingsService.StudyConfig.Value;
+                if (studyConfig?.SelectedLanguage == null)
+                    return null;
 
-            var targetLang = studyConfig.SelectedLanguage.Source?.TwoLetterISOLanguageName;
+                var targetLang = studyConfig.SelectedLanguage.Source?.TwoLetterISOLanguageName;
 
-            if (string.IsNullOrWhiteSpace(sourceLang) || string.IsNullOrWhiteSpace(targetLang))
-                return null;
+                if (string.IsNullOrWhiteSpace(sourceLang) || string.IsNullOrWhiteSpace(targetLang))
+                    return null;
 
-            return await GetTranslationAsync(text, sourceLang, targetLang);
+                return await GetTranslationAsync(text, sourceLang, targetLang);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return text;
+            }
         }
     }
 }

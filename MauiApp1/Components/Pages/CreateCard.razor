@@ -10,17 +10,17 @@
 
     <!-- Language Switch with Text Markers -->
     <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-700 mb-2">@Translate("Idioma Primário")</label>
+        <label class="block text-sm font-medium text-gray-700 mb-2"><Translate Text="Idioma Primário"></Translate></label>
         <div class="flex items-center space-x-4">
             <span @onclick="SetTargetAsPrimary"
                   class="cursor-pointer px-3 py-1 rounded-lg transition
                         @(primaryLanguage == Language.Target ? "bg-indigo-600 text-white font-semibold shadow" : "bg-gray-100 text-gray-700")">
-                @_targetLang?.DisplayName
+                @TargetLanguage?.DisplayName
             </span>
             <span @onclick="SetNativeAsPrimary"
                   class="cursor-pointer px-3 py-1 rounded-lg transition
                         @(primaryLanguage == Language.Native ? "bg-indigo-600 text-white font-semibold shadow" : "bg-gray-100 text-gray-700")">
-                @_nativeLang?.DisplayName
+                @Nativelanguage?.DisplayName
             </span>
         </div>
     </div>
@@ -28,7 +28,7 @@
     <!-- Primary Language Input -->
     <div>
         <label class="block text-sm font-medium text-gray-700 mb-2">
-            <Translate Text="Frase em"></Translate> @(primaryLanguage == Language.Target ? _targetLang?.DisplayName : _nativeLang?.DisplayName)
+            <Translate Text="Frase em"></Translate> @(primaryLanguage == Language.Target ? TargetLanguage?.DisplayName : Nativelanguage?.DisplayName)
         </label>
         <textarea @bind="primarySentence"
                   @oninput="@(e => AutoResize(e, "primarySentenceArea"))"
@@ -45,7 +45,7 @@
 
     <!-- Translation Input -->
     <div class="mt-4">
-        <label class="block text-sm font-medium text-gray-700 mb-2">@Translate("Tradução para") @(primaryLanguage == Language.Target ? _nativeLang?.DisplayName : _targetLang?.DisplayName)</label>
+        <label class="block text-sm font-medium text-gray-700 mb-2">@Translate("Tradução para") @(primaryLanguage == Language.Target ? Nativelanguage?.DisplayName : TargetLanguage?.DisplayName)</label>
         <div class="flex items-center gap-2">
             <textarea @bind="translatedSentence"
                       @oninput="@(e => AutoResize(e, "translatedSentenceArea"))"
@@ -58,7 +58,7 @@
             {
                 <button @onclick="TranslateAutomatically"
                         class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
-                    @Translate("Traduzir Automaticamente")
+                    <Translate Text="Traduzir Automaticamente"></Translate>
                 </button>
             }
         </div>
@@ -70,7 +70,7 @@
 
     <!-- Difficulty Level -->
     <div class="mt-4">
-        <label class="block text-sm font-medium text-gray-700 mb-2">@Translate("Nível de Dificuldade")</label>
+        <label class="block text-sm font-medium text-gray-700 mb-2"><Translate Text="Nível de Dificuldade"></Translate>)</label>
         <select @bind="card.DifficultyLevel"
                 class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500">
             @foreach (var level in Enum.GetValues(typeof(DifficultyLevel)))
@@ -89,7 +89,7 @@
                    placeholder="Insira a tag" />
             <button @onclick="AddTag"
                     class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
-                @Translate("Adicionar Tag")
+                <Translate Text="Adicionar Tag"></Translate>
             </button>
         </div>
         @if (card.Tags.Any())
@@ -108,13 +108,13 @@
         {
             <button @onclick="GenerateAudioAutomatically"
                     class="w-1/2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
-                @Translate("Gerar Áudio Automaticamente")
+                <Translate Text="Gerar Áudio Automaticamente"></Translate>
             </button>
         }
         <button @onclick="TrySaveCard"
                 class="w-1/2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
                 disabled="@(!CanSave)">
-            @Translate("Salvar Cartão")
+            <Translate Text="Salvar Cartão"></Translate>
         </button>
     </div>
 </div>
@@ -127,9 +127,6 @@
         Tags = new List<Tag>()
     };
 
-    private CultureInfo _nativeLang = null;
-    private CultureInfo _targetLang = null;
-
     private enum Language { Native, Target }
 
     private Language primaryLanguage = Language.Target;
@@ -141,8 +138,7 @@
 
     protected override void OnInitialized()
     {
-        _nativeLang = SettingsService.StudyConfig.Value?.SelectedLanguage.Source;
-        _targetLang = SettingsService.StudyConfig.Value?.SelectedLanguage.Target;
+
     }
 
     private void SetTargetAsPrimary()
@@ -166,7 +162,7 @@
 
     private async Task TranslateAutomatically()
     {
-        if (string.IsNullOrWhiteSpace(primarySentence) || _nativeLang == null || _targetLang == null)
+        if (string.IsNullOrWhiteSpace(primarySentence) || Nativelanguage == null || TargetLanguage == null)
             return;
 
         isTranslating = true;
@@ -177,13 +173,13 @@
             string sourceLang, targetLang;
             if (primaryLanguage == Language.Target)
             {
-                sourceLang = _targetLang.TwoLetterISOLanguageName;
-                targetLang = _nativeLang.TwoLetterISOLanguageName;
+                sourceLang = TargetLanguage.TwoLetterISOLanguageName;
+                targetLang = Nativelanguage.TwoLetterISOLanguageName;
             }
             else
             {
-                sourceLang = _nativeLang.TwoLetterISOLanguageName;
-                targetLang = _targetLang.TwoLetterISOLanguageName;
+                sourceLang = Nativelanguage.TwoLetterISOLanguageName;
+                targetLang = TargetLanguage.TwoLetterISOLanguageName;
             }
 
             var result = await ApiService.GetTranslationAsync(primarySentence, sourceLang, targetLang);
@@ -199,8 +195,9 @@
 
     private async Task GenerateAudioAutomatically()
     {
-        // Implement automatic audio generation logic here using ApiService
-        await Task.CompletedTask;
+        var lang = primaryLanguage == Language.Target ? TargetLanguage : Nativelanguage;
+
+        await PlayVoiceClip(primarySentence, lang.TwoLetterISOLanguageName);
     }
 
     private bool CanSave =>
