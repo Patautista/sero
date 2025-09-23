@@ -9,19 +9,10 @@
 
     <WikiCarousel></WikiCarousel>
 
-    <h3 class ="mb-3">Escolha sua sessão de treino</h3>
-    <div class="d-flex flex-column gap-2 mt-lg-1" style="max-width: 250px;">
-        <button class="btn btn-primary py-2 px-6 rounded-lg font-bold text-white shadow-lg bg-gradient-to-r from-indigo-500 to-indigo-700 hover:from-indigo-600 hover:to-indigo-800 transition-all duration-200" @onclick="() => StartSession(ReviewSessionMode.Quick)">
-            <p class="text-white font-medium"><Translate Text="⚡ Rápida(5 novos, 15 revisados)"></Translate></p>
-        </button>
-
-        <button class="btn btn-primary py-2 px-6 rounded-lg font-bold text-white shadow-lg bg-gradient-to-r from-indigo-500 to-indigo-700 hover:from-indigo-600 hover:to-indigo-800 transition-all duration-200" @onclick="() => StartSession(ReviewSessionMode.Regular)">
-            <p class="text-white font-medium"><Translate Text="📘 Normal (10 novos, 30 revisados)"></Translate></p>
-        </button>
-
-        <button class="btn btn-primary py-2 px-6 rounded-lg font-bold text-white shadow-lg bg-gradient-to-r from-indigo-500 to-indigo-700 hover:from-indigo-600 hover:to-indigo-800 transition-all duration-200" @onclick="() => StartSession(ReviewSessionMode.Grind)">
-            <p class="text-white font-medium"><Translate Text="💪 Foco (20 novos, 60 revisados)"></Translate></p>
-        </button>
+   <div class="mt-4">
+        <ButtonPrimary OnClick="ShowModal" Class="w-full max-w-xs">
+            <p class="text-white font-medium">🚀 <Translate Text="Iniciar revisão"></Translate></p>
+        </ButtonPrimary>
     </div>
 </div>
 
@@ -35,12 +26,59 @@
         <MauiApp1.Components.Webscraping.ConjugationLookup></MauiApp1.Components.Webscraping.ConjugationLookup>
     </div>
 </div>
+    
+@if (showModal)
+{
+    <div class="modal-backdrop-custom" @onclick="HandleBackdropClick"></div>
+    <div class="modal fade show modal-animate" style="display:block;" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" @onclick:stopPropagation>
+                <div class="modal-header">
+                    <h5 class="modal-title"><Translate Text="Escolha sua sessão de treino"></Translate></h5>
+                </div>
+                <div class="modal-body flex justify-center">
+                    <div class="d-flex flex-column gap-2 mt-lg-1" style="max-width: 250px;">
+                        <button class="btn btn-primary py-2 px-6 rounded-lg font-bold text-white shadow-lg bg-gradient-to-r from-indigo-500 to-indigo-700 hover:from-indigo-600 hover:to-indigo-800 transition-all duration-200" @onclick="() => StartSession(ReviewSessionMode.Quick)">
+                            <p class="text-white font-medium">⚡ <Translate Text="Rápida(5 novos, 15 revisados)"></Translate></p>
+                        </button>
+
+                        <button class="btn btn-primary py-2 px-6 rounded-lg font-bold text-white shadow-lg bg-gradient-to-r from-indigo-500 to-indigo-700 hover:from-indigo-600 hover:to-indigo-800 transition-all duration-200" @onclick="() => StartSession(ReviewSessionMode.Regular)">
+                            <p class="text-white font-medium">📘 <Translate Text="Normal (10 novos, 30 revisados)"></Translate></p>
+                        </button>
+
+                        <button class="btn btn-primary py-2 px-6 rounded-lg font-bold text-white shadow-lg bg-gradient-to-r from-indigo-500 to-indigo-700 hover:from-indigo-600 hover:to-indigo-800 transition-all duration-200" @onclick="() => StartSession(ReviewSessionMode.Grind)">
+                            <p class="text-white font-medium">💪 <Translate Text="Foco (20 novos, 60 revisados)"></Translate></p>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @code {
+    private bool showModal = false;
+
+    private void ShowModal()
+    {
+        showModal = true;
+    }
+
+    private void HideModal()
+    {
+        showModal = false;
+    }
+
+    private void HandleBackdropClick()
+    {
+        HideModal();
+    }
+
     private int userExp;
     private void StartSession(ReviewSessionMode mode)
     {
         Navigation.NavigateTo($"{Routes.CardsReview}?mode={mode}");
+        HideModal();
     }
     protected override async Task OnInitializedAsync()
     {

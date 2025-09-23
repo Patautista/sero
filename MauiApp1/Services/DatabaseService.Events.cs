@@ -18,8 +18,8 @@ namespace MauiApp1.Services
             db.Events.Add(evt);
             await db.SaveChangesAsync();
         }
-    }
-    public async Task SaveCardAnsweredAsync(CardAnsweredEvent domainEvent)
+
+        public async Task SaveCardAnsweredAsync(CardAnsweredEvent domainEvent)
         {
             try
             {
@@ -33,3 +33,4 @@ namespace MauiApp1.Services
             }
         }
     }
+}
