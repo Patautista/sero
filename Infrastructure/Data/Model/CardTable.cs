@@ -14,6 +14,7 @@ namespace Infrastructure.Data.Model
         [ForeignKey(nameof(MobileDbContext.Meanings))]
         public int MeaningId { get; set; }
         public MeaningTable Meaning { get; set; }
-        public UserCardStateTable? UserCardState { get; set; }
+        public SrsCardStateTable? UserCardState { get; set; }
+        public ICollection<EventTable> Events { get; set; }
     }
 }
