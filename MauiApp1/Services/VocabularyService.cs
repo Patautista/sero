@@ -1,13 +1,22 @@
+using AppLogic.Web;
 using Catalyst;
+using DeepL.Model;
 using Mosaik.Core;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Language = Mosaik.Core.Language;
 
 namespace MauiApp1.Services;
 
 public class VocabularyService
 {
+    private readonly CultureInfo TargetLanguage;
+    public VocabularyService(ISettingsService settingsService)
+    {
+        TargetLanguage = settingsService.StudyConfig.Value.SelectedLanguage.Target;
+    }
     // Universal POS tag mapping (UD v2) to common names
     private static readonly Dictionary<string, string> PosCommonNames = new()
     {
@@ -29,6 +38,7 @@ public class VocabularyService
         { "VERB", "Verb" },
         { "X", "Other" }
     };
+    private readonly ISettingsService _settingsService;
 
     public int GetVocabularyCount(IEnumerable<string> texts)
     {
@@ -40,11 +50,16 @@ public class VocabularyService
 
     public async Task<Dictionary<string, int>> GetVocabByPartOfSpeechAsync(IEnumerable<string> texts)
     {
-        Catalyst.Models.Italian.Register();
-        var nlp = await Pipeline.ForAsync(Language.Italian);
+        var language = Language.English;
+        if (TargetLanguage.TwoLetterISOLanguageName == "it")
+        {
+            language = Language.Italian;
+            Catalyst.Models.Italian.Register();
+        }
+        var nlp = await Pipeline.ForAsync(language);
 
         var combinedText = string.Join(" ", texts);
-        var doc = new Document(combinedText, Language.Italian);
+        var doc = new Document(combinedText, language);
         nlp.ProcessSingle(doc);
 
         var posVocab = new Dictionary<string, HashSet<string>>();
