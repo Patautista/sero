@@ -10,11 +10,11 @@ namespace MauiApp1.Services
 {
     public partial class DatabaseService
     {
-        public async Task UpdateUserCardState(SrsCard userCardState, int earnedExp, CancellationToken cancellationToken = default)
+        public async Task UpdateUserCardState(SrsCard srsCard, int earnedExp, CancellationToken cancellationToken = default)
         {
             try
             {
-                var oldState = await db.UserCardStates.FindAsync(userCardState.Id);
+                var oldState = await db.UserCardStates.FindAsync(srsCard.StateId);
 
                 var user = UserTable.Default;
                 if (user != null)
@@ -26,16 +26,16 @@ namespace MauiApp1.Services
                 {
                     oldState = new SrsCardStateTable()
                     {
-                        CardId = userCardState.CardId,
+                        CardId = srsCard.CardId,
                         //UserId = userCardState.UserId
                     };
                     db.Add(oldState);
                 }
 
-                oldState.Interval = userCardState.Interval;
-                oldState.NextReview = userCardState.NextReview;
-                oldState.LastReviewed = userCardState.LastReviewed;
-                oldState.EaseFactor = userCardState.EaseFactor;
+                oldState.Interval = srsCard.Interval;
+                oldState.NextReview = srsCard.NextReview;
+                oldState.LastReviewed = srsCard.LastReviewed;
+                oldState.EaseFactor = srsCard.EaseFactor;
 
                 await db.SaveChangesAsync();
             }

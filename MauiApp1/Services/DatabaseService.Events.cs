@@ -15,6 +15,7 @@ namespace MauiApp1.Services
         public async Task SaveCardSkippedAsync(CardSkippedEvent domainEvent)
         {
             var evt = EventMapper.ToTable(domainEvent, Events.CardSkipped.Schemas.CardSkippedV1);
+            evt.CardId = domainEvent.CardId;
             db.Events.Add(evt);
             await db.SaveChangesAsync();
         }
@@ -24,6 +25,7 @@ namespace MauiApp1.Services
             try
             {
                 var evt = EventMapper.ToTable(domainEvent, Events.CardAnswered.Schemas.CardAnsweredV1);
+                evt.CardId = domainEvent.CardId;
                 db.Events.Add(evt);
                 await db.SaveChangesAsync();
             }

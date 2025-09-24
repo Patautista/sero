@@ -28,8 +28,9 @@ namespace Infrastructure.Data.Model
 
         [ForeignKey(nameof(MobileDbContext.ReviewSessions))]
         public Guid SessionId { get; set; }
+        [ForeignKey(nameof(MobileDbContext.Cards))]
         public int CardId { get; set; }
-        public CardTable Card { get; set; }
+        public CardTable? Card { get; set; }
     }
     public static class Events
     {

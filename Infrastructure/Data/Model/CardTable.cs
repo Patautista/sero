@@ -15,6 +15,7 @@ namespace Infrastructure.Data.Model
         public int MeaningId { get; set; }
         public MeaningTable Meaning { get; set; }
         public SrsCardStateTable? UserCardState { get; set; }
+        //[InverseProperty(nameof(EventTable.Card))]
         public ICollection<EventTable> Events { get; set; }
     }
 }

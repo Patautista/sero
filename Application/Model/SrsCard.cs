@@ -10,8 +10,8 @@ namespace Business.Model
 {
     public class SrsCard
     {
-        public int Id { get; set; }
         public int CardId { get; set; }
+        public int StateId { get; set; }
         public List<Sentence> SentencesInNativeLanguage { get; set; }
         public List<Sentence> SentencesInTargetLanguage { get; set; }
         [JsonIgnore]
