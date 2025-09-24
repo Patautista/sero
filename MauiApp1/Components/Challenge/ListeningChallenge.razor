@@ -1,6 +1,5 @@
 ﻿@using System.Text
 @using Business.Model
-@using Business.ViewModel
 @using CommunityToolkit.Maui.Alerts;
 @using Domain
 @using Domain.Events
@@ -38,7 +37,7 @@
 <!-- Botão para reproduzir áudio -->
 <div class="w-full flex justify-center mb-5 mt-3">
     <ButtonPrimary OnClick="PlayAudio">
-        <i class="fas fa-play"></i> <Translate Text="Reproduzir"></Translate>
+        <i class="fas fa-play"></i> Reproduzir
     </ButtonPrimary>
 </div>
 
@@ -47,9 +46,9 @@
 <div class="card-buttons transition-all duration-300 ease-in-out">
     <div class="flex justify-between">
         <div style="filter: blur(@(isInputFocused ? "2px" : "0")); transform: scale(@(isInputFocused ? "0.95" : "1"));">
-            <ButtonSecondary OnClick="SkipCard"><Translate Text="Pular"></Translate></ButtonSecondary>
+            <ButtonSecondary OnClick="OnSkip">Pular</ButtonSecondary>
         </div>
-        <ButtonPrimary OnClick="CheckAnswer"><Translate Text="Conferir"></Translate></ButtonPrimary>
+        <ButtonPrimary OnClick="CheckAnswer">Conferir</ButtonPrimary>
     </div>
 
     @if (_challengeState.Feedback is not null)
@@ -76,9 +75,9 @@
     @if (_challengeState.AnswerQuality != AnswerQuality.Perfect)
     {
         <div class="mt-4 text-center">
-            <p class="text-sm text-gray-600 mb-2"><Translate>Sua resposta estava correta?</Translate></p>
+            <p class="text-sm text-gray-600 mb-2">Sua resposta estava correta?</p>
             <button class="btn btn-sm btn-outline-success" @onclick="ForceCorrectAnswer">
-                <Translate>Sim, aceitar como resposta correta</Translate>
+                Sim, aceitar como resposta correta
             </button>
         </div>
     }
@@ -150,7 +149,7 @@
 
         var evt = new CardAnsweredEvent(
             Guid.NewGuid(),
-            "ListeningChallenge", 
+            "ListeningChallenge",
             CurrentCard.CardId,
             (int)_challengeState.AnswerTime.TotalMilliseconds,
             Correct: _challengeState.IsCorrect
@@ -216,7 +215,7 @@
 
         var evt = new CardAnsweredEvent(
             Guid.NewGuid(),
-            "ListeningChallenge",
+            "ListenChallenge",
             CurrentCard.CardId,
             (int)_challengeState.AnswerTime.TotalMilliseconds,
             Correct: true

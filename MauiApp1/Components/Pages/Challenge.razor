@@ -1,6 +1,7 @@
 ﻿@page "/anki"
 
 @using System.Text
+@using Business.Model
 @using MauiApp1.Components.Challenge
 @using Business.ViewModel
 @using Domain
@@ -43,7 +44,7 @@ else if (currentCard != null)
         </div>
 
         <div class="card p-4 mb-3" style="max-width: 600px; position: relative">
-            @if (currentCard.State.Repetitions > 5 && new Random().NextDouble() < 0.6)
+            @if (currentCard.Repetitions > 5 && new Random().NextDouble() < 0.6)
             {
                 <AudioChallenge CurrentCard="currentCard" OnSkip="SkipCard" OnChallengeCompleted="HandleChallengeCompleted"></AudioChallenge>
             }
@@ -63,8 +64,8 @@ else
 }
 @code {
     [Parameter] public ReviewSessionMode ReviewSessionMode { get; set; } = ReviewSessionMode.Regular;
-    private ICollection<CardWithState> cards;
-    private CardWithState currentCard;
+    private ICollection<SrsCard> cards;
+    private SrsCard currentCard;
     private int newCount;
     private int reviewCount;
     private int totalExp;
@@ -85,20 +86,13 @@ else
         cards = await Database.GetDueCards(ReviewSessionMode, totalExp);
 
         // Calculate counters
-        newCount = cards.Count(c => c.State.Repetitions == 0);
-        reviewCount = cards.Count(c => c.State.Repetitions > 0);
+        newCount = cards.Count(c => c.Repetitions == 0);
+        reviewCount = cards.Count(c => c.Repetitions > 0);
         NextCard();
     }
 
     private async Task SkipCard()
     {
-        var evt = new CardSkippedEvent(
-            Guid.NewGuid(),
-            currentCard.State.CardId
-        );
-
-        await Database.SaveCardSkippedAsync(evt);
-
         NextCard();
     }
 
@@ -119,8 +113,8 @@ else
         cards.Remove(currentCard);
 
         // Update counters
-        newCount = cards.Count(c => c.State.Repetitions == 0);
-        reviewCount = cards.Count(c => c.State.Repetitions > 0);
+        newCount = cards.Count(c => c.Repetitions == 0);
+        reviewCount = cards.Count(c => c.Repetitions > 0);
 
         StateHasChanged();
     }

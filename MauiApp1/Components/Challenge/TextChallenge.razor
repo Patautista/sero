@@ -1,4 +1,5 @@
 ﻿@using System.Text
+@using Business.Model
 @using Business.ViewModel
 @using CommunityToolkit.Maui.Alerts;
 @using Domain
@@ -25,26 +26,26 @@
     </div>
 
     <!-- Resposta para card novo -->
-    @if (CurrentCard.State.Repetitions == 0)
+    @if (CurrentCard.Repetitions == 0)
     {
         <div class="bg-sky-100 border-l-4 border-sky-500 text-sky-800 p-3 rounded-lg shadow-md mb-4" role="alert">
             <p class="mb-0 text-sm font-medium">
-                Novo card! Resposta: <strong class="font-semibold">@CurrentCard.Card.TargetSample.Text</strong>
+                Novo card! Resposta: <strong class="font-semibold">@CurrentCard.TargetSample.Text</strong>
             </p>
         </div>
     }
 </div>
 
 <!-- Prompt em língua nativa -->
-<p class="w-fit mb-5 mt-3 text-gray-950 animated-underline">@CurrentCard.Card.NativeSample.Text</p>
+<p class="w-fit mb-5 mt-3 text-gray-950 animated-underline">@CurrentCard.NativeSample.Text</p>
 <input class="w-full form-control mb-2 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all" @bind="_challengeState.UserAnswer" placeholder="Resposta" @onfocus="() => isInputFocused = true" @onblur="() => isInputFocused = false" />
 
 <div class="card-buttons transition-all duration-300 ease-in-out">
     <div class="flex justify-between">
         <div style="filter: blur(@(isInputFocused ? "2px" : "0")); transform: scale(@(isInputFocused ? "0.95" : "1"));">
-            <ButtonSecondary OnClick="OnSkip">Pular</ButtonSecondary>
+            <ButtonSecondary OnClick="SkipCard"><Translate Text="Pular"></Translate></ButtonSecondary>
         </div>
-        <ButtonPrimary OnClick="CheckAnswer">Conferir</ButtonPrimary>
+        <ButtonPrimary OnClick="CheckAnswer"><Translate Text="Conferir"></Translate></ButtonPrimary>
     </div>
 
     @if (_challengeState.Feedback is not null)
@@ -71,9 +72,9 @@
     @if (_challengeState.AnswerQuality != AnswerQuality.Perfect)
     {
         <div class="mt-4 text-center">
-            <p class="text-sm text-gray-600 mb-2">Sua resposta estava correta?</p>
+            <p class="text-sm text-gray-600 mb-2"><Translate Text="Sua resposta estava correta?"></Translate></p>
             <button class="btn btn-sm btn-outline-success" @onclick="ForceCorrectAnswer">
-                Sim, aceitar como resposta correta
+                <Translate Text="Sim, aceitar como resposta correta"></Translate>
             </button>
         </div>
     }
@@ -82,7 +83,7 @@
 </div>
 
 @code {
-    [Parameter] public CardWithState CurrentCard { get; set; }
+    [Parameter] public SrsCard CurrentCard { get; set; }
     [Parameter] public EventCallback<int> OnChallengeCompleted { get; set; }
     [Parameter] public EventCallback OnSkip { get; set; }
 
@@ -122,7 +123,7 @@
         // Calculate answer time
         _challengeState.AnswerTime = DateTime.UtcNow - _challengeState.CardShownAt;
 
-        var possibleAnswers = CurrentCard.Card.SentencesInTargetLanguage.Select(c => c.Text).ToList();
+        var possibleAnswers = CurrentCard.SentencesInTargetLanguage.Select(c => c.Text).ToList();
         var evaluation = AnswerEvaluator.Evaluate(_challengeState.UserAnswer, possibleAnswers);
 
         _challengeState.IsCorrect = evaluation.Quality != AnswerQuality.Wrong;
@@ -130,18 +131,19 @@
 
         if (_challengeState.IsCorrect)
         {
-            _challengeState.ExpEarned = ExpCalculator.CalculateEarnedExp(CurrentCard.Card, CurrentCard.State.Repetitions);
-            await PlayVoiceClip(evaluation.ClosestMatch, CurrentCard.Card.TargetSample.Language);
+            _challengeState.ExpEarned = ExpCalculator.CalculateEarnedExp(CurrentCard, CurrentCard.Repetitions);
+            await PlayVoiceClip(evaluation.ClosestMatch, CurrentCard.TargetSample.Language);
         }
 
-        Srs.Review(CurrentCard.State, (int)evaluation.Quality);
+        Srs.Review(CurrentCard, evaluation.Quality);
         _challengeState.Feedback = AnswerEvaluator.BuildFeedbackMessage(evaluation, _challengeState.UserAnswer);
 
-        await Database.UpdateUserCardState(CurrentCard.State, _challengeState.ExpEarned ?? 0);
+        await Database.UpdateUserCardState(CurrentCard, _challengeState.ExpEarned ?? 0);
 
         var evt = new CardAnsweredEvent(
             Guid.NewGuid(),
-            CurrentCard.State.CardId,
+            "TextChallenge",
+            CurrentCard.CardId,
             (int)_challengeState.AnswerTime.TotalMilliseconds,
             Correct: _challengeState.IsCorrect
         );
@@ -153,14 +155,27 @@
         StateHasChanged();
     }
 
+    private async Task SkipCard()
+    {
+        var evt = new CardSkippedEvent(
+            Guid.NewGuid(),
+            "TextChallenge",
+            CurrentCard.CardId
+        );
+
+        await Database.SaveCardSkippedAsync(evt);
+
+        await OnSkip.InvokeAsync(null);
+    }
+
     private async Task ForceCorrectAnswer()
     {
         // Add the user's answer as a new alternative sentence
         var newSentence = new Sentence
         {
-            MeaningId = CurrentCard.Card.NativeSample.MeaningId,
+            MeaningId = CurrentCard.NativeSample.MeaningId,
             Text = _challengeState.UserAnswer,
-            Language = CurrentCard.Card.TargetSample.Language
+            Language = CurrentCard.TargetSample.Language
         };
         await Database.AddAlternativeSentence(newSentence);
 
@@ -168,11 +183,11 @@
         if (!_challengeState.IsCorrect)
         {
             _challengeState.IsCorrect = true;
-            _challengeState.ExpEarned = ExpCalculator.CalculateEarnedExp(CurrentCard.Card, CurrentCard.State.Repetitions);
+            _challengeState.ExpEarned = ExpCalculator.CalculateEarnedExp(CurrentCard, CurrentCard.Repetitions);
 
             // Review the card with a "correct" quality
-            Srs.Review(CurrentCard.State, (int)AnswerQuality.Ok);
-            await Database.UpdateUserCardState(CurrentCard.State, _challengeState.ExpEarned ?? 0);
+            Srs.Review(CurrentCard, AnswerQuality.Ok);
+            await Database.UpdateUserCardState(CurrentCard, _challengeState.ExpEarned ?? 0);
         }
         _challengeState.Feedback = new AnswerFeedback
         {
@@ -185,7 +200,8 @@
 
         var evt = new CardAnsweredEvent(
             Guid.NewGuid(),
-            CurrentCard.State.CardId,
+            "TextChallenge",
+            CurrentCard.CardId,
             (int)_challengeState.AnswerTime.TotalMilliseconds,
             Correct: true
         );
