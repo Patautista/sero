@@ -44,8 +44,6 @@ namespace MauiApp1.Services
                         .Include(c => c.Events)
                         .ToList();
 
-
-
                     cards.AddRange(sectionCards);
                 }
 
