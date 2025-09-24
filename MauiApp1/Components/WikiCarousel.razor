@@ -3,9 +3,9 @@
 @inherits SmartComponent
 
 <div class="p-4">
-    @if (_articles == null)
+    @if (_isLoading)
     {
-        <LoadingSpinner />
+        <LoadingSpinner></LoadingSpinner>
     }
     else
     {
@@ -33,6 +33,7 @@
 
 @code {
     private List<WikiArticle> _articles;
+    private bool _isLoading = true;
 
     protected override async Task OnInitializedAsync()
     {
@@ -43,6 +44,7 @@
             var article = await GetRandomArticleAsync(TargetLanguageCode);
             if (article != null) _articles.Add(article);
         }
+        _isLoading = false;
         Console.WriteLine($"Total artigos carregados: {_articles.Count}");
     }
 
