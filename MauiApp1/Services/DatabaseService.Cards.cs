@@ -44,6 +44,8 @@ namespace MauiApp1.Services
                         .Include(c => c.Events)
                         .ToList();
 
+
+
                     cards.AddRange(sectionCards);
                 }
 
@@ -69,6 +71,8 @@ namespace MauiApp1.Services
             // Project to domain
             var cardWithStates = cards.Select(x => new SrsCard
             {
+                CardId = x.Id,
+                StateId = x.UserCardState.Id,
                 DifficultyLevel = DifficultyLevelExtensions.FromString(x.Meaning.DifficultyLevel),
                 SentencesInNativeLanguage = x.Meaning.Sentences.Where(s => s.Language == _nativeCode).Select(s => s.ToDomain()).ToList(),
                 SentencesInTargetLanguage = x.Meaning.Sentences.Where(s => s.Language == _targetCode).Select(s => s.ToDomain()).ToList(),
