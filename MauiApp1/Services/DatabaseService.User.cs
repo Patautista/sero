@@ -1,4 +1,5 @@
 ﻿using Business.Model;
+using Infrastructure.Data.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +10,13 @@ namespace MauiApp1.Services
 {
     public partial class DatabaseService
     {
-        public async Task UpdateUserCardState(UserCardState userCardState, int earnedExp, CancellationToken cancellationToken = default)
+        public async Task UpdateUserCardState(SrsCard userCardState, int earnedExp, CancellationToken cancellationToken = default)
         {
             try
             {
                 var oldState = await db.UserCardStates.FindAsync(userCardState.Id);
 
-                var user = await db.Users.FindAsync(userCardState.UserId);
+                var user = UserTable.Default;
                 if (user != null)
                 {
                     user.Exp += earnedExp;
@@ -23,10 +24,10 @@ namespace MauiApp1.Services
 
                 if (oldState == null)
                 {
-                    oldState = new Infrastructure.Data.Model.UserCardStateTable()
+                    oldState = new SrsCardStateTable()
                     {
                         CardId = userCardState.CardId,
-                        UserId = userCardState.UserId
+                        //UserId = userCardState.UserId
                     };
                     db.Add(oldState);
                 }
@@ -35,7 +36,6 @@ namespace MauiApp1.Services
                 oldState.NextReview = userCardState.NextReview;
                 oldState.LastReviewed = userCardState.LastReviewed;
                 oldState.EaseFactor = userCardState.EaseFactor;
-                oldState.Repetitions = userCardState.Repetitions;
 
                 await db.SaveChangesAsync();
             }
@@ -46,7 +46,7 @@ namespace MauiApp1.Services
         }
         public async Task<int> GetUserExpAsync()
         {
-            var user = await db.Users.FindAsync(Infrastructure.Data.Model.UserTable.Default.Id);
+            var user = await db.Users.FindAsync(UserTable.Default.Id);
             return user.Exp;
         }
     }

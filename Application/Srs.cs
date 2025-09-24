@@ -9,9 +9,9 @@ namespace Business
 {
     public static class Srs
     {
-        public static void Review(UserCardState state, int quality)
+        public static void Review(SrsCard state, AnswerQuality quality)
         {
-            if (quality < 3)
+            if (quality == AnswerQuality.Wrong)
             {
                 state.Repetitions = 0;
                 state.Interval = 1;
@@ -19,7 +19,7 @@ namespace Business
             else
             {
                 state.Repetitions++;
-                state.EaseFactor = Math.Max(1.3, state.EaseFactor + 0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
+                state.EaseFactor = Math.Max(1.3, state.EaseFactor + 0.1 - (5 - (int)quality) * (0.08 + (5 - (int)quality) * 0.02));
 
                 switch (state.Repetitions)
                 {

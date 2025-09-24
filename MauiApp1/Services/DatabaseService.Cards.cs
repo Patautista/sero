@@ -3,6 +3,7 @@ using Business.Model;
 using Business.ViewModel;
 using Domain.Entity;
 using Domain.Entity.Specification;
+using Domain.Events;
 using Infrastructure.Data.Model;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -18,7 +19,7 @@ namespace MauiApp1.Services
     {
         private string _nativeCode => settingsService.StudyConfig.Value.SelectedLanguage.Source.TwoLetterISOLanguageName;
         private string _targetCode => settingsService.StudyConfig.Value.SelectedLanguage.Target.TwoLetterISOLanguageName;
-        public async Task<ICollection<CardWithState>> GetDueCards(ReviewSessionMode sessionMode, int exp, CancellationToken cancellationToken = default)
+        public async Task<ICollection<SrsCard>> GetDueCards(ReviewSessionMode sessionMode, int exp, CancellationToken cancellationToken = default)
         {
             var cards = new List<CardTable>();
 
@@ -40,6 +41,7 @@ namespace MauiApp1.Services
                         .Include(c => c.Meaning.Tags)
                         .Include(c => c.Meaning.Sentences)
                         .Include(c => c.UserCardState)
+                        .Include(c => c.Events)
                         .ToList();
 
                     cards.AddRange(sectionCards);
@@ -49,10 +51,10 @@ namespace MauiApp1.Services
                 {
                     if (card.UserCardState == null)
                     {
-                        card.UserCardState = new Infrastructure.Data.Model.UserCardStateTable()
+                        card.UserCardState = new SrsCardStateTable()
                         {
                             CardId = card.Id,
-                            UserId = Infrastructure.Data.Model.UserTable.Default.Id,
+                            UserId = UserTable.Default.Id,
                         };
                         await db.UserCardStates.AddAsync(card.UserCardState);
                     }
@@ -65,24 +67,25 @@ namespace MauiApp1.Services
             }
 
             // Project to domain
-            var cardWithStates = cards.Select(x => new CardWithState
+            var cardWithStates = cards.Select(x => new SrsCard
             {
-                Card = new Card
-                {
-                    DifficultyLevel = DifficultyLevelExtensions.FromString(x.Meaning.DifficultyLevel),
-                    SentencesInNativeLanguage = x.Meaning.Sentences.Where(s => s.Language == _nativeCode).Select(s => s.ToDomain()).ToList(),
-                    SentencesInTargetLanguage = x.Meaning.Sentences.Where(s => s.Language == _targetCode).Select(s => s.ToDomain()).ToList(),
-                    Tags = x.Meaning.Tags.Select(t => t.ToDomain()).ToList(),
-                },
-                State = x.UserCardState.ToDomain()
-            }).OrderBy(c => c.Card.DifficultyLevel).ToList();
+                DifficultyLevel = DifficultyLevelExtensions.FromString(x.Meaning.DifficultyLevel),
+                SentencesInNativeLanguage = x.Meaning.Sentences.Where(s => s.Language == _nativeCode).Select(s => s.ToDomain()).ToList(),
+                SentencesInTargetLanguage = x.Meaning.Sentences.Where(s => s.Language == _targetCode).Select(s => s.ToDomain()).ToList(),
+                Tags = x.Meaning.Tags.Select(t => t.ToDomain()).ToList(),
+                Repetitions = x.Events.Where(e => e.Name == nameof(CardAnsweredEvent)).Count(),
+                EaseFactor = x.UserCardState.EaseFactor,
+                Interval = x.UserCardState.Interval,
+                NextReview = x.UserCardState.NextReview,
+                LastReviewed = x.UserCardState.LastReviewed,
+            }).OrderBy(c => c.DifficultyLevel).ToList();
 
             var userDifficulty = settingsService.StudyConfig.Value?.DifficultyLevel ?? DifficultyLevel.Advanced;
-            var filtered = cardWithStates.Where(c => c.Card.SuitsDifficulty(userDifficulty)).ToList();
+            var filtered = cardWithStates.ToList();
 
             // Separate new vs review
-            var newCards = filtered.Where(c => c.State.Repetitions == 0).ToList();
-            var reviewCards = filtered.Where(c => c.State.Repetitions > 0).ToList();
+            var newCards = filtered.Where(c => c.Repetitions == 0).ToList();
+            var reviewCards = filtered.Where(c => c.Repetitions > 0).ToList();
 
             // Session-specific limits
             (int newLimit, int reviewLimit) = sessionMode switch
@@ -94,7 +97,7 @@ namespace MauiApp1.Services
             };
 
             // Pick cards
-            var sessionCards = new List<CardWithState>();
+            var sessionCards = new List<SrsCard>();
             sessionCards.AddRange(reviewCards.Take(reviewLimit));
             sessionCards.AddRange(newCards.Take(newLimit));
 
