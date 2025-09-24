@@ -35,7 +35,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("UserCardStateId");
 
-                    b.ToTable("Cards");
+                    b.ToTable("Cards", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Model.CurriculumSectionTable", b =>
@@ -69,7 +69,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("CurriculumTableId");
 
-                    b.ToTable("CurriculumSections");
+                    b.ToTable("CurriculumSections", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Model.CurriculumTable", b =>
@@ -84,7 +84,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Curricula");
+                    b.ToTable("Curricula", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Model.EventTable", b =>
@@ -128,7 +128,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("CardTableId");
 
-                    b.ToTable("Events");
+                    b.ToTable("Events", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Model.MeaningTable", b =>
@@ -143,7 +143,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Meanings");
+                    b.ToTable("Meanings", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Model.ReviewSessionTable", b =>
@@ -157,7 +157,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ReviewSessions");
+                    b.ToTable("ReviewSessions", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Model.SentenceTable", b =>
@@ -181,7 +181,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("MeaningId");
 
-                    b.ToTable("Sentences");
+                    b.ToTable("Sentences", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Model.SrsCardStateTable", b =>
@@ -210,7 +210,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserCardStates");
+                    b.ToTable("UserCardStates", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Model.TagTable", b =>
@@ -229,7 +229,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Tags");
+                    b.ToTable("Tags", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Model.UserTable", b =>
@@ -243,7 +243,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("MeaningTag", b =>
