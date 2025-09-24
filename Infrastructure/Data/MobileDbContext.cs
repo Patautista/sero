@@ -47,6 +47,11 @@ namespace Infrastructure.Data
                 e.HasIndex(t => t.Name).IsUnique(); // optional but nice
             });
 
+            modelBuilder.Entity<EventTable>()
+            .HasOne(e => e.Card)
+            .WithMany(c => c.Events)
+            .HasForeignKey(e => e.CardId);
+
             // Many-to-many Card <-> Tag with explicit join table using Tag.Name as principal key
             modelBuilder.Entity<MeaningTable>()
                 .HasMany(c => c.Tags)
