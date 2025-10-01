@@ -50,7 +50,7 @@ public class VocabularyService
     public async Task<Dictionary<string, int>> GetVocabByPartOfSpeechAsync(IEnumerable<string> texts)
     {
         var language = Language.English;
-        if (TargetLanguage.TwoLetterISOLanguageName == "it")
+        if (TargetLanguage.TwoLetterISOLanguageName == AvailableCodes.Italian)
         {
             language = Language.Italian;
             Catalyst.Models.Italian.Register();
