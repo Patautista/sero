@@ -87,6 +87,18 @@ namespace MauiApp1.Services.Seed
 
             var newTags = new List<TagTable>();
 
+            // Create default deck
+            var deck = new DeckTable
+            {
+                Name = "Italiano-Português",
+                Description = "Deck padrão gerado a partir do backup_it-pt.json",
+                TargetLanguage = "it",
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+                Cards = new List<CardTable>()
+            };
+            await _context.Decks.AddAsync(deck);
+
             foreach (var group in grouped)
             {
                 var meaning = new MeaningTable
@@ -132,107 +144,20 @@ namespace MauiApp1.Services.Seed
 
                 _context.Meanings.Add(meaning);
 
-                _context.Cards.Add(new CardTable
+                var card = new CardTable
                 {
-                    Meaning = meaning
-                });
+                    Meaning = meaning,
+                    Deck = deck
+                };
+                _context.Cards.Add(card);
+                deck.Cards.Add(card);
             }
 
             if (newTags.Count > 0)
                 await _context.Tags.AddRangeAsync(newTags);
 
             await _context.SaveChangesAsync();
-
-            var curriculumTable = new CurriculumTable
-            {
-                Id = 0,
-                Name = "it-pt",
-                Sections = new List<CurriculumSectionTable> {
-                new CurriculumSectionTable
-                {
-                    CurriculumId = 0,
-                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "introduction").ToJson(),
-                    Title = "Apresentações",
-                    RequiredExp = ExpCalculator.ExpForLevel(1)
-                },
-                new CurriculumSectionTable
-                {
-                    CurriculumId = 0,
-                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "family").ToJson(),
-                    DifficultySpecificationJson =
-                        new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Beginner")
-                        .ToJson(),
-                    Title = "Família 1",
-                    RequiredExp = ExpCalculator.ExpForLevel(2)
-                },
-                new CurriculumSectionTable
-                {
-                    CurriculumId = 0,
-                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "food").ToJson(),
-                    DifficultySpecificationJson =
-                        new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Beginner").ToJson(),
-                    Title = "Comida 1",
-                    RequiredExp = ExpCalculator.ExpForLevel(5)
-                },
-                new CurriculumSectionTable
-                {
-                    CurriculumId = 0,
-                    TagsSpecificationJson = 
-                        new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "time").ToJson(),
-                    DifficultySpecificationJson =
-                        new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Beginner").ToJson(),
-                    Title = "Tempo 1",
-                    RequiredExp = ExpCalculator.ExpForLevel(8)
-                },
-                new CurriculumSectionTable
-                {
-                    CurriculumId = 0,
-                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "like").ToJson(),
-                    DifficultySpecificationJson =
-                        new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Beginner").ToJson(),
-                    Title = "Gostar 1",
-                    RequiredExp = ExpCalculator.ExpForLevel(10)
-                },
-                new CurriculumSectionTable
-                {
-                    CurriculumId = 0,
-                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "want").ToJson(),
-                    DifficultySpecificationJson =
-                        new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Beginner").ToJson(),
-                    Title = "Querer 1",
-                    RequiredExp = ExpCalculator.ExpForLevel(10)
-                },
-                
-                new CurriculumSectionTable
-                {
-                    CurriculumId = 0,
-                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "need").ToJson(),
-                    DifficultySpecificationJson =
-                        new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Beginner").ToJson(),
-                    Title = "Precisar 1",
-                    RequiredExp = ExpCalculator.ExpForLevel(9)
-                },
-                new CurriculumSectionTable
-                {
-                    CurriculumId = 0,
-                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "past").ToJson(),
-                    DifficultySpecificationJson =
-                        new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Beginner").ToJson(),
-                    Title = "Passado 1",
-                    RequiredExp = ExpCalculator.ExpForLevel(14)
-                },
-                new CurriculumSectionTable
-                {
-                    CurriculumId = 0,
-                    TagsSpecificationJson = new PropertySpecificationDto(nameof(TagTable.Name), MatchOperator.Equals, "future").ToJson(),
-                    DifficultySpecificationJson =
-                        new PropertySpecificationDto(nameof(MeaningTable.DifficultyLevel), MatchOperator.Equals, "Beginner").ToJson(),
-                    Title = "Futuro 1",
-                    RequiredExp = ExpCalculator.ExpForLevel(18)
-                },
-            }};
-            _context.Curricula.Add(curriculumTable);
-            await _context.SaveChangesAsync();
+            
         }
 
     }

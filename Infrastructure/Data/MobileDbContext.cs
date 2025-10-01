@@ -13,9 +13,8 @@ namespace Infrastructure.Data
     public class MobileDbContext : DbContext
     {
         public MobileDbContext(DbContextOptions<MobileDbContext> options) : base(options) { }
+        public DbSet<DeckTable> Decks { get; set; }
         public DbSet<CardTable> Cards { get; set; }
-        public DbSet<CurriculumTable> Curricula { get; set; }
-        public DbSet<CurriculumSectionTable> CurriculumSections { get; set; }
         public DbSet<UserTable> Users { get; set; }
         public DbSet<ReviewSessionTable> ReviewSessions { get; set; }
         public DbSet<SrsCardStateTable> UserCardStates { get; set; }

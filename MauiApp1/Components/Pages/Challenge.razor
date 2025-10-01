@@ -70,7 +70,7 @@ else
     private int reviewCount;
     private int totalExp;
     private bool isInputFocused = false;
-
+    private int deckId;
 
     protected override async Task OnInitializedAsync()
     {
@@ -81,9 +81,13 @@ else
         {
             ReviewSessionMode = mode;
         }
+        if (query.TryGetValue("deckId", out var deckIdParam) && int.TryParse(deckIdParam, out var deckIdValue))
+        {
+            deckId = deckIdValue;
+        }
 
         totalExp = await Database.GetUserExpAsync();
-        cards = await Database.GetDueCards(ReviewSessionMode, totalExp);
+        cards = await Database.GetDueCards(deckId, ReviewSessionMode, totalExp);
 
         // Calculate counters
         newCount = cards.Count(c => c.Repetitions == 0);

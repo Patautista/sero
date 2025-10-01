@@ -4,7 +4,8 @@
            transition-all duration-200
            @Class"
         type="@Type"
-        @onclick="OnClick">
+        @onclick="OnClick"
+        disabled="@Disabled">
     @ChildContent
 </button>
 
@@ -13,4 +14,5 @@
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public string? Class { get; set; }
     [Parameter] public string? Type { get; set; } = "button";
+    [Parameter] public bool Disabled { get; set; } = false;
 }

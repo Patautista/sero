@@ -1,0 +1,77 @@
+@inject MauiApp1.Services.DatabaseService DatabaseService
+
+<div class="deck-container">
+    <h1 class="text-3xl font-bold mb-8 text-center text-indigo-700">@deck?.Name</h1>
+    <p class="text-center text-gray-600 mb-4">@deck?.Description</p>
+
+    <div class="mb-6 flex justify-center">
+        <input type="text" class="search-input px-4 py-2 rounded-lg border border-gray-300 w-full max-w-md"
+               placeholder="Search cards..." @bind="searchTerm" @bind:event="oninput" />
+    </div>
+
+    <div class="card-gallery grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @if (filteredCards.Any())
+        {
+            @foreach (var card in filteredCards)
+            {
+                <MauiApp1.Components.User.CardSummary Card="card"></MauiApp1.Components.User.CardSummary>
+            }
+        }
+        else
+        {
+            <p class="text-center text-gray-500 col-span-full">No cards found.</p>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int UserExp { get; set; }
+
+    private Infrastructure.Data.Model.DeckTable? deck;
+    private List<Card> allCards = new();
+    private string searchTerm = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        UserExp = await DatabaseService.GetUserExpAsync();
+        deck = await DatabaseService.GetFirstDeckAsync();
+
+        if (deck != null)
+        {
+            allCards = deck.Cards.Select(c => new Card
+            {
+                DifficultyLevel = Enum.Parse<DifficultyLevel>(c.Meaning.DifficultyLevel),
+                SentencesInNativeLanguage = c.Meaning.Sentences.Where(s => s.Language == "pt").Select(s => s.ToDomain()).ToList(),
+                SentencesInTargetLanguage = c.Meaning.Sentences.Where(s => s.Language == "it").Select(s => s.ToDomain()).ToList(),
+                Tags = c.Meaning.Tags.Select(t => t.ToDomain()).ToList()
+            }).ToList();
+        }
+    }
+
+    private IEnumerable<Card> filteredCards =>
+        string.IsNullOrWhiteSpace(searchTerm)
+            ? allCards
+            : allCards.Where(card =>
+                card.SentencesInNativeLanguage.Any(s => s.Text.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                card.SentencesInTargetLanguage.Any(s => s.Text.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                card.Tags.Any(t => t.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+            );
+}
+
+<style>
+    .deck-container {
+        padding: 40px;
+        background-color: #f7f9fc;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        max-width: 1200px;
+        margin: auto;
+    }
+    .search-input {
+        font-size: 1rem;
+    }
+    .card-gallery {
+        margin-top: 20px;
+    }
+</style>
