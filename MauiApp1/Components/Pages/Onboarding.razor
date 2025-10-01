@@ -1,0 +1,122 @@
+﻿@page "/onboarding"
+@using Infrastructure.Data
+@using MauiApp1.Services.Seed
+@inject ISettingsService SettingsService
+@inject NavigationManager Nav
+@inject MobileDbContextInitialiser DbInit
+@inject MobileDbContext DbContext
+
+<div class="onboarding-container max-w-xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
+    @if (step == 0)
+    {
+        <h2 class="text-2xl font-bold mb-4 text-indigo-700">Bem-vindo ao Sentaki!</h2>
+        <p class="mb-6">Vamos configurar seu app para a melhor experiência de estudo.</p>
+        <ButtonPrimary OnClick="@(() => step++)">Começar</ButtonPrimary>
+    }
+    else if (step == 1)
+    {
+        <h3 class="text-xl font-semibold mb-2">Escolha o idioma do aplicativo</h3>
+        <select class="form-select mb-4" @bind="selectedAppLanguage">
+            <option value="">Selecione...</option>
+            <option value="pt">Português</option>
+            <option value="en">English</option>
+        </select>
+        <ButtonPrimary OnClick="@(() => step++)" Disabled="@string.IsNullOrWhiteSpace(selectedAppLanguage)">Próximo</ButtonPrimary>
+    }
+    else if (step == 2)
+    {
+        <h3 class="text-xl font-semibold mb-2">Escolha o idioma alvo de estudo</h3>
+        <select class="form-select mb-4" @bind="selectedTargetLanguage">
+            <option value="">Selecione...</option>
+            <option value="it">Italiano</option>
+        </select>
+        <ButtonPrimary OnClick="@(() => step++)" Disabled="@string.IsNullOrWhiteSpace(selectedTargetLanguage)">Próximo</ButtonPrimary>
+    }
+    else if (step == 3)
+    {
+        <h3 class="text-xl font-semibold mb-2">Dificuldade Inicial</h3>
+        <select class="form-select mb-4" @bind="selectedDifficulty">
+            @foreach (var level in Enum.GetValues<DifficultyLevel>())
+            {
+                <option value="@level">@level</option>
+            }
+        </select>
+        <ButtonPrimary OnClick="@(() => step++)">Próximo</ButtonPrimary>
+    }
+    else if (step == 4)
+    {
+        <h3 class="text-xl font-semibold mb-2">Crie seu primeiro deck</h3>
+        <div class="mb-3">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Nome do Deck</label>
+            <input class="form-input w-full" @bind="deckName" />
+        </div>
+        <div class="mb-3">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
+            <input class="form-input w-full" @bind="deckDescription" />
+        </div>
+        <ButtonPrimary OnClick="@(() => step++)" Disabled="@string.IsNullOrWhiteSpace(deckName)">Próximo</ButtonPrimary>
+    }
+    else if (step == 5)
+    {
+        <h3 class="text-xl font-semibold mb-2">Deseja importar o deck padrão?</h3>
+        <label class="flex items-center mb-4">
+            <input type="checkbox" class="mr-2" @bind="seedRequested" />
+            <span>Quero importar o deck padrão de frases</span>
+        </label>
+        <ButtonPrimary OnClick="@NextStep">Finalizar</ButtonPrimary>
+    }
+    else if (step == 6)
+    {
+        <h3 class="text-xl font-bold mb-4 text-green-700">Configuração concluída!</h3>
+        <p class="mb-6">Seu app está pronto para uso. Bons estudos!</p>
+        <ButtonPrimary OnClick="@(() => Nav.NavigateTo("/session-select", true))">Ir para o app</ButtonPrimary>
+    }
+</div>
+
+@code {
+    int step = 0;
+    string selectedAppLanguage = "";
+    string selectedTargetLanguage = "";
+    DifficultyLevel selectedDifficulty = DifficultyLevel.Beginner;
+    string deckName = "";
+    string deckDescription = "";
+    bool seedRequested = false;
+
+    private async Task NextStep()
+    {
+        step++;
+        if (step == 6)
+        {
+            // Save study config
+            var config = new StudyConfig
+            {
+                SelectedLanguageCode = $"{selectedAppLanguage}-{selectedTargetLanguage}",
+                DifficultyLevel = selectedDifficulty,
+                SelectedLanguage = new LanguagePair
+                {
+                    Source = new(selectedAppLanguage),
+                    Target = new(selectedTargetLanguage)
+                }
+            };
+            SettingsService.StudyConfig.Update(config);
+
+            // Create deck
+            var deck = new Infrastructure.Data.Model.DeckTable
+            {
+                Name = deckName,
+                Description = deckDescription,
+                TargetLanguage = selectedTargetLanguage,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+            DbContext.Decks.Add(deck);
+            await DbContext.SaveChangesAsync();
+
+            // Seed if requested
+            if (seedRequested)
+            {
+                await DbInit.SeedAsync();
+            }
+        }
+    }
+}

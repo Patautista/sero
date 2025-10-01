@@ -20,5 +20,6 @@
 
         await dbContext.Database.EnsureDeletedAsync();
         SettingsService.StudyConfig.Update(null);
+        Nav.NavigateTo("/", true);
     }
 }
