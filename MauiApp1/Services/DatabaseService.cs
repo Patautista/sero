@@ -46,50 +46,28 @@ public partial class DatabaseService(MobileDbContext db, ISettingsService settin
         model.CardSkippedData = cardSkippedEvents;
         return model;
     }
-    public async Task<Curriculum> GetCurriculumAsync()
+    public async Task<DeckTable?> GetFirstDeckAsync()
     {
-        var curriculum = new Curriculum
+        if (!await db.Decks.AnyAsync())
         {
-            Name = "A sua trilha",
-            Sections = new List<CurriculumSection>()
-        };
-
-        var curriculumTable = db.Curricula.Include(c => c.Sections).FirstOrDefault();
-
-        if(curriculumTable == null)
-        {
-            return curriculum;
-        }
-
-        foreach (var sectionTable in curriculumTable.Sections){
-            var tagSpecJson = sectionTable.TagsSpecificationJson;
-            var tagPredicate = SpecificationExpressionFactory.FromJson<TagTable>(tagSpecJson);
-
-            var meaningSpecJson = sectionTable.DifficultySpecificationJson;
-            var meaningPredicate = SpecificationExpressionFactory.FromJson<MeaningTable>(meaningSpecJson);
-
-            var cards = db.Tags.Where(tagPredicate)
-                .SelectMany(t => t.Meanings)
-                .Where(meaningPredicate)
-                .SelectMany(m => m.Cards)
-                .Include(c => c.Meaning.Tags)
-                .Include(c => c.Meaning.Sentences)
-                .ToList();
-
-            var section = new CurriculumSection { 
-                Cards =  cards.Select(c => 
-                new Card { 
-                    DifficultyLevel = Enum.Parse<DifficultyLevel>(c.Meaning.DifficultyLevel),
-                    SentencesInNativeLanguage = c.Meaning.Sentences.Where(s => s.Language == "pt").Select(s => s.ToDomain()).ToList(),
-                    SentencesInTargetLanguage = c.Meaning.Sentences.Where(s => s.Language == "it").Select(s => s.ToDomain()).ToList(),
-                    Tags = c.Meaning.Tags.Where(t => t.Type != null && t.Type != Domain.Entity.TagTypes.Difficulty).Select(t => t.ToDomain()).ToList()
-                }).ToList(),
-                Title = sectionTable.Title,
-                RequiredExp = sectionTable.RequiredExp,
+            var defaultDeck = new DeckTable
+            {
+                Name = "Default Deck",
+                Description = "This is the default deck.",
             };
-            curriculum.Sections.Add(section);
+            db.Decks.Add(defaultDeck);
+            await db.SaveChangesAsync();
         }
-
-        return curriculum;
-    } 
+        return await db.Decks.Include(d => d.Cards)
+                             .ThenInclude(c => c.Meaning)
+                             .ThenInclude(m => m.Tags)
+                             .Include(d => d.Cards)
+                             .ThenInclude(c => c.Meaning)
+                             .ThenInclude(m => m.Sentences)
+                             .FirstOrDefaultAsync();
+    }
+    public async Task<List<DeckTable>> GetAllDecksAsync()
+    {
+        return await db.Decks.OrderBy(d => d.Name).ToListAsync();
+    }
 }

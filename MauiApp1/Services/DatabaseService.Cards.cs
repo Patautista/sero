@@ -19,34 +19,22 @@ namespace MauiApp1.Services
     {
         private string _nativeCode => settingsService.StudyConfig.Value.SelectedLanguage.Source.TwoLetterISOLanguageName;
         private string _targetCode => settingsService.StudyConfig.Value.SelectedLanguage.Target.TwoLetterISOLanguageName;
-        public async Task<ICollection<SrsCard>> GetDueCards(ReviewSessionMode sessionMode, int exp, CancellationToken cancellationToken = default)
+        public async Task<ICollection<SrsCard>> GetDueCards(int deckId, ReviewSessionMode sessionMode, int exp, CancellationToken cancellationToken = default)
         {
             var cards = new List<CardTable>();
 
             try
             {
-                var unlockedSections = db.CurriculumSections.Where(s => s.RequiredExp <= exp).ToList();
-                foreach (var sectionTable in unlockedSections)
-                {
-                    var tagSpecJson = sectionTable.TagsSpecificationJson;
-                    var tagPredicate = SpecificationExpressionFactory.FromJson<TagTable>(tagSpecJson);
+                // Get all cards from the specified deck
+                cards = await db.Cards
+                    .Where(c => c.DeckId == deckId)
+                    .Include(c => c.Meaning.Tags)
+                    .Include(c => c.Meaning.Sentences)
+                    .Include(c => c.UserCardState)
+                    .Include(c => c.Events)
+                    .ToListAsync(cancellationToken);
 
-                    var meaningSpecJson = sectionTable.DifficultySpecificationJson;
-                    var meaningPredicate = SpecificationExpressionFactory.FromJson<MeaningTable>(meaningSpecJson);
-
-                    var sectionCards = db.Tags.Where(tagPredicate)
-                        .SelectMany(t => t.Meanings)
-                        .Where(meaningPredicate)
-                        .SelectMany(m => m.Cards)
-                        .Include(c => c.Meaning.Tags)
-                        .Include(c => c.Meaning.Sentences)
-                        .Include(c => c.UserCardState)
-                        .Include(c => c.Events)
-                        .ToList();
-
-                    cards.AddRange(sectionCards);
-                }
-
+                // Ensure UserCardState exists
                 foreach (var card in cards)
                 {
                     if (card.UserCardState == null)
@@ -56,10 +44,10 @@ namespace MauiApp1.Services
                             CardId = card.Id,
                             UserId = UserTable.Default.Id,
                         };
-                        await db.UserCardStates.AddAsync(card.UserCardState);
+                        await db.UserCardStates.AddAsync(card.UserCardState, cancellationToken);
                     }
                 }
-                await db.SaveChangesAsync();
+                await db.SaveChangesAsync(cancellationToken);
             }
             catch (Exception ex)
             {
@@ -130,7 +118,7 @@ namespace MauiApp1.Services
             var tags = await db.Tags.ToListAsync();
             return tags.Select(t => t.ToDomain()).ToList();
         }
-        public async Task CreateCard(CardDefinition cardDefinition)
+        public async Task CreateCard(CardDefinition cardDefinition, int deckId)
         {
             var cardTable = new CardTable
             {
@@ -149,7 +137,8 @@ namespace MauiApp1.Services
                             },
                         },
                     Tags = cardDefinition.Tags.Select(tag => new TagTable { Name = tag.Name, Type = tag.Type }).ToList()
-                }
+                },
+                DeckId = deckId
             };
             db.Cards.Add(cardTable);
         }
