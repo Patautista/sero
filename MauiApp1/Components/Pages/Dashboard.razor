@@ -12,7 +12,7 @@
 
 <h3 class="mb-4">📊 <Translate Text="Estatísticas"></Translate></h3>
 
-@if (_model == null)
+@if (isLoading)
 {
     <LoadingSpinner></LoadingSpinner>
 }
@@ -162,6 +162,7 @@ else
     }
 
     private Model _model { get; set; }
+    private bool isLoading = true;
 
     private double globalAvgTimeInSeconds;
     private double globalSkipRate;
@@ -243,7 +244,7 @@ else
         vocabularyCount = VocabularyService.GetVocabularyCount(allCardTexts);
         vocabByPos = await VocabularyService.GetVocabByPartOfSpeechAsync(allCardTexts);
 
-        StateHasChanged();
+        isLoading = false;
     }
 
     public class ChartPoint
