@@ -1,11 +1,12 @@
-﻿@inject ISettingsService SettingsService
+﻿@using System.Globalization
+@inject ISettingsService SettingsService
 @inject NavigationManager Nav
 
 <EditForm Model="@config" OnValidSubmit="ApplyStudyConfig">
                     <div class="mb-3">
                         <label class="form-label">Escolha o Idioma</label>
                         <select class="form-select" @bind="selectedLanguageCode">
-                            @foreach (var pair in AvailableLanguages)
+                            @foreach (var pair in AvailabilityService.TargetLanguages.Select(c => new { Code = c, DisplayName = new CultureInfo(c).DisplayName }))
                             {
                                 <option value="@pair.Code">@pair.DisplayName</option>
                             }
@@ -29,11 +30,6 @@
     private StudyConfig? config;
     private string selectedLanguageCode;
 
-    private List<(string Code, string DisplayName, string Source, string Target)> AvailableLanguages = new()
-    {
-        ("pt-it", "Português → Italiano", "pt", "it"),
-    };
-
     protected override async Task OnInitializedAsync()
     {
         config = SettingsService.StudyConfig.Value
@@ -51,11 +47,11 @@
     private async Task ApplyStudyConfig()
     {
         // Map dropdown code back to LanguagePair
-        var lang = AvailableLanguages.FirstOrDefault(l => l.Code == selectedLanguageCode);
+        var lang = AvailabilityService.TargetLanguages.FirstOrDefault(l => l == selectedLanguageCode);
         config.SelectedLanguage = new LanguagePair
         {
-            Source = new(lang.Source),
-            Target = new(lang.Target)
+            Source = config.SelectedLanguage.Source,
+            Target = new(lang)
         };
 
         SettingsService.StudyConfig.Update(config);

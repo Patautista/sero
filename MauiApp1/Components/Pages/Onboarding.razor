@@ -21,20 +21,20 @@
             <option value="pt">Português</option>
             <option value="en">English</option>
         </select>
-        <ButtonPrimary OnClick="@(() => step++)" Disabled="@string.IsNullOrWhiteSpace(selectedAppLanguage)">Próximo</ButtonPrimary>
+        <ButtonPrimary OnClick="@SetSourceLanguageAndNext" Disabled="@string.IsNullOrWhiteSpace(selectedAppLanguage)"><Translate Text="Próximo"></Translate></ButtonPrimary>
     }
     else if (step == 2)
     {
-        <h3 class="text-xl font-semibold mb-2">Escolha o idioma alvo de estudo</h3>
+        <h3 class="text-xl font-semibold mb-2"><Translate Text="Escolha o idioma alvo de estudo"></Translate></h3>
         <select class="form-select mb-4" @bind="selectedTargetLanguage">
             <option value="">Selecione...</option>
             <option value="it">Italiano</option>
         </select>
-        <ButtonPrimary OnClick="@(() => step++)" Disabled="@string.IsNullOrWhiteSpace(selectedTargetLanguage)">Próximo</ButtonPrimary>
+        <ButtonPrimary OnClick="@(() => step++)" Disabled="@string.IsNullOrWhiteSpace(selectedTargetLanguage)"><Translate Text="Próximo"></Translate></ButtonPrimary>
     }
     else if (step == 3)
     {
-        <h3 class="text-xl font-semibold mb-2">Dificuldade Inicial</h3>
+        <h3 class="text-xl font-semibold mb-2"><Translate Text="Dificuldade inicial"></Translate></h3>
         <select class="form-select mb-4" @bind="selectedDifficulty">
             @foreach (var level in Enum.GetValues<DifficultyLevel>())
             {
@@ -47,18 +47,18 @@
     {
         <h3 class="text-xl font-semibold mb-2">Crie seu primeiro deck</h3>
         <div class="mb-3">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Nome do Deck</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1"><Translate Text="Nome do Deck"></Translate></label>
             <input class="form-input w-full" @bind="deckName" />
         </div>
         <div class="mb-3">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1"><Translate Text="Descrição"></Translate></label>
             <input class="form-input w-full" @bind="deckDescription" />
         </div>
-        <ButtonPrimary OnClick="@(() => step++)" Disabled="@string.IsNullOrWhiteSpace(deckName)">Próximo</ButtonPrimary>
+        <ButtonPrimary OnClick="@(() => step++)" Disabled="@string.IsNullOrWhiteSpace(deckName)"><Translate Text="Próximo"></Translate></ButtonPrimary>
     }
     else if (step == 5)
     {
-        <h3 class="text-xl font-semibold mb-2">Deseja importar o deck padrão?</h3>
+        <h3 class="text-xl font-semibold mb-2"><Translate Text="Deseja importar o deck padrão?"></Translate></h3>
         <label class="flex items-center mb-4">
             <input type="checkbox" class="mr-2" @bind="seedRequested" />
             <span>Quero importar o deck padrão de frases</span>
@@ -67,9 +67,9 @@
     }
     else if (step == 6)
     {
-        <h3 class="text-xl font-bold mb-4 text-green-700">Configuração concluída!</h3>
-        <p class="mb-6">Seu app está pronto para uso. Bons estudos!</p>
-        <ButtonPrimary OnClick="@(() => Nav.NavigateTo("/session-select", true))">Ir para o app</ButtonPrimary>
+        <h3 class="text-xl font-bold mb-4 text-green-700"><Translate Text="Configuração concluída!"></Translate></h3>
+        <p class="mb-6"><Translate Text="Seu app está pronto para uso. Bons estudos!"></Translate></p>
+        <ButtonPrimary OnClick="@(() => Nav.NavigateTo("/session-select", true))"><Translate Text="Ir para o app"></Translate></ButtonPrimary>
     }
 </div>
 
@@ -82,21 +82,33 @@
     string deckDescription = "";
     bool seedRequested = false;
 
+    private void SetSourceLanguageAndNext()
+    {
+        // Set the source language in StudyConfig as soon as the user chooses it
+        var config = SettingsService.StudyConfig.Value ?? new StudyConfig();
+        config.SelectedLanguage = new LanguagePair
+        {
+            Source = new(selectedAppLanguage),
+            Target = new(string.IsNullOrWhiteSpace(selectedTargetLanguage) ? "it" : selectedTargetLanguage) // fallback for now
+        };
+        SettingsService.StudyConfig.Update(config);
+
+        step++;
+    }
+
     private async Task NextStep()
     {
         step++;
         if (step == 6)
         {
-            // Save study config
-            var config = new StudyConfig
+            // Save full study config
+            var config = SettingsService.StudyConfig.Value ?? new StudyConfig();
+            config.SelectedLanguageCode = $"{selectedAppLanguage}-{selectedTargetLanguage}";
+            config.DifficultyLevel = selectedDifficulty;
+            config.SelectedLanguage = new LanguagePair
             {
-                SelectedLanguageCode = $"{selectedAppLanguage}-{selectedTargetLanguage}",
-                DifficultyLevel = selectedDifficulty,
-                SelectedLanguage = new LanguagePair
-                {
-                    Source = new(selectedAppLanguage),
-                    Target = new(selectedTargetLanguage)
-                }
+                Source = new(selectedAppLanguage),
+                Target = new(selectedTargetLanguage)
             };
             SettingsService.StudyConfig.Update(config);
 
