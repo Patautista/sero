@@ -73,7 +73,7 @@
                       placeholder="@Translate("Tradução")"
                       rows="1"
                       style="overflow:hidden;resize:none;height:@TranslatedTextAreaHeight"></textarea>
-            @if (SettingsService.ApiKey.Value != null)
+            @if (SettingsService.ApiConfig.Value != null)
             {
                 <button @onclick="TranslateAutomatically"
                         class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
@@ -143,7 +143,7 @@
     </div>
 
     <div class="mt-6 flex gap-2">
-        @if (SettingsService.ApiKey.Value != null)
+        @if (SettingsService.ApiConfig.Value != null)
         {
             <ButtonPrimary Onclick="GenerateAudioAutomatically">
                 <Translate Text="Gerar Áudio Automaticamente"></Translate>

@@ -1,10 +1,175 @@
 ﻿@page "/onboarding"
+@using Business.MobileConfig
 @using Infrastructure.Data
+@using Infrastructure.Services
+@using Infrastructure
 @using MauiApp1.Services.Seed
+@using System.Globalization
+@using Microsoft.AspNetCore.Components.Forms
 @inject ISettingsService SettingsService
 @inject NavigationManager Nav
 @inject MobileDbContextInitialiser DbInit
 @inject MobileDbContext DbContext
+
+@code {
+    int step = 0;
+    string selectedAppLanguage = "";
+    string selectedTargetLanguage = "";
+    DifficultyLevel selectedDifficulty = DifficultyLevel.Beginner;
+    string deckName = "";
+    string deckDescription = "";
+    string ankiFileError = "";
+    string? ankiFilePath;
+
+    public DeckOptionModel OptionModel { get; set; } = new();
+    public List<Option> DeckOptions => GetDeckOptions();
+
+    public class DeckOptionModel
+    {
+        public string SelectedOption { get; set; }
+    }
+
+    public class Option
+    {
+        public string Value { get; set; }
+        public string Label { get; set; }
+    }
+
+    private List<Option> GetDeckOptions()
+    {
+        var options = new List<Option>
+        {
+            new Option { Value = "scratch", Label = "Começar do zero" },
+            new Option { Value = "anki", Label = "Importar de arquivo Anki CSV" }
+        };
+        if (selectedTargetLanguage == AvailableCodes.Italian)
+        {
+            options.Add(new Option { Value = "library", Label = "Importar do acervo" });
+        }
+        return options;
+    }
+    private void SetSourceLanguageAndNext()
+    {
+        var config = SettingsService.StudyConfig.Value ?? new StudyConfig();
+        config.SelectedLanguageCode = $"{selectedAppLanguage}-{selectedTargetLanguage}";
+        config.SelectedLanguage = new LanguagePair
+        {
+            Source = new(selectedAppLanguage),
+            Target = new(string.IsNullOrWhiteSpace(selectedTargetLanguage) ? "it" : selectedTargetLanguage)
+        };
+        SettingsService.StudyConfig.Update(config);
+
+        step++;
+    }
+
+    private bool IsDeckOptionValid()
+    {
+        if (OptionModel.SelectedOption == "anki")
+            return !string.IsNullOrEmpty(ankiFilePath);
+        return !string.IsNullOrWhiteSpace(OptionModel.SelectedOption);
+    }
+
+    private async Task CreateOrImportDeck()
+    {
+        // Save study config
+        var config = SettingsService.StudyConfig.Value ?? new StudyConfig();
+        config.SelectedLanguageCode = $"{selectedAppLanguage}-{selectedTargetLanguage}";
+        config.DifficultyLevel = selectedDifficulty;
+        config.SelectedLanguage = new LanguagePair
+        {
+            Source = new(selectedAppLanguage),
+            Target = new(selectedTargetLanguage)
+        };
+        SettingsService.StudyConfig.Update(config);
+
+        // Create deck
+        var deck = new Infrastructure.Data.Model.DeckTable
+        {
+            Name = deckName,
+            Description = deckDescription,
+            TargetLanguage = selectedTargetLanguage,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        };
+        try
+        {
+            
+            DbContext.Decks.Add(deck);
+            await DbContext.SaveChangesAsync();
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+
+        // Import logic
+        if (OptionModel.SelectedOption == "anki" && !string.IsNullOrEmpty(ankiFilePath))
+        {
+            try
+            {
+                var ankiService = new AnkiImportService();
+                var cards = ankiService.Import(ankiFilePath).ToList();
+                foreach (var card in cards)
+                {
+                    await DbContext.Cards.AddAsync(new Infrastructure.Data.Model.CardTable
+                    {
+                        Meaning = new Infrastructure.Data.Model.MeaningTable
+                        {
+                            DifficultyLevel = card.DifficultyLevel.ToString(),
+                            Sentences = new List<Infrastructure.Data.Model.SentenceTable>
+                        {
+                            new() { Language = card.NativeLanguageCode, Text = card.NativeSentence },
+                            new() { Language = card.TargetLanguageCode, Text = card.TargetSentence }
+                        },
+                            Tags = card.Tags.Select(tag => new Infrastructure.Data.Model.TagTable { Name = tag.Name, Type = tag.Type }).ToList()
+                        },
+                        DeckId = deck.Id
+                    });
+                }
+                await DbContext.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        else if (OptionModel.SelectedOption == "library" && selectedTargetLanguage == AvailableCodes.Italian)
+        {
+            await DbInit.SeedAsync();
+        }
+        // else: scratch, do nothing (empty deck)
+
+        step++;
+    }
+
+    private async Task OnAnkiFileSelected(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            ankiFileError = "";
+            var file = e.File;
+            if (file != null && file.Size > 0)
+            {
+                var tempPath = Path.GetTempFileName();
+                await using (var stream = file.OpenReadStream())
+                await using (var fs = File.Create(tempPath))
+                {
+                    await stream.CopyToAsync(fs);
+                }
+                ankiFilePath = tempPath;
+            }
+            else
+            {
+                ankiFileError = file == null ? "Nenhum arquivo selecionado." : "Arquivo vazio.";
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+}
 
 <div class="onboarding-container max-w-xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
     @if (step == 0)
@@ -15,20 +180,25 @@
     }
     else if (step == 1)
     {
-        <h3 class="text-xl font-semibold mb-2">Escolha o idioma do aplicativo</h3>
+        <h3 class="text-xl font-semibold mb-2"><Translate Text="Escolha o idioma do aplicativo"></Translate></h3>
         <select class="form-select mb-4" @bind="selectedAppLanguage">
-            <option value="">Selecione...</option>
-            <option value="pt">Português</option>
-            <option value="en">English</option>
+            <option value=""><Translate Text="Selecione..."></Translate></option>
+            @foreach (var langCode in AvailabilityService.AppLanguages)
+            {
+                <option value="@langCode">@(new CultureInfo(langCode).NativeName.FirstCharToUpper())</option>
+            }
         </select>
         <ButtonPrimary OnClick="@SetSourceLanguageAndNext" Disabled="@string.IsNullOrWhiteSpace(selectedAppLanguage)"><Translate Text="Próximo"></Translate></ButtonPrimary>
     }
     else if (step == 2)
     {
-        <h3 class="text-xl font-semibold mb-2"><Translate Text="Escolha o idioma alvo de estudo"></Translate></h3>
+        <h3 class="text-xl font-semibold mb-2"><Translate Text="Que língua você está estudando?"></Translate></h3>
         <select class="form-select mb-4" @bind="selectedTargetLanguage">
-            <option value="">Selecione...</option>
-            <option value="it">Italiano</option>
+            <option value=""><Translate Text="Selecione..."></Translate></option>
+            @foreach(var langCode in AvailabilityService.TargetLanguages)
+            {
+                <option value="@langCode">@(new CultureInfo(langCode).DisplayName.FirstCharToUpper())</option>
+            }   
         </select>
         <ButtonPrimary OnClick="@(() => step++)" Disabled="@string.IsNullOrWhiteSpace(selectedTargetLanguage)"><Translate Text="Próximo"></Translate></ButtonPrimary>
     }
@@ -45,7 +215,7 @@
     }
     else if (step == 4)
     {
-        <h3 class="text-xl font-semibold mb-2">Crie seu primeiro deck</h3>
+        <h3 class="text-xl font-semibold mb-2">Como deseja criar seu primeiro deck?</h3>
         <div class="mb-3">
             <label class="block text-sm font-medium text-gray-700 mb-1"><Translate Text="Nome do Deck"></Translate></label>
             <input class="form-input w-full" @bind="deckName" />
@@ -54,81 +224,34 @@
             <label class="block text-sm font-medium text-gray-700 mb-1"><Translate Text="Descrição"></Translate></label>
             <input class="form-input w-full" @bind="deckDescription" />
         </div>
-        <ButtonPrimary OnClick="@(() => step++)" Disabled="@string.IsNullOrWhiteSpace(deckName)"><Translate Text="Próximo"></Translate></ButtonPrimary>
+        <div class="mb-6">
+            <EditForm Model="@OptionModel">
+                <InputRadioGroup @bind-Value="OptionModel.SelectedOption" class="flex flex-col gap-2">
+                    @foreach (var option in DeckOptions)
+                    {
+                        <div>
+                            <InputRadio Value="@option.Value" />
+                            <label class="ml-2">@option.Label</label>
+                        </div>
+                        @if (option.Value == "anki" && OptionModel.SelectedOption == "anki")
+                        {
+                            <InputFile OnChange="OnAnkiFileSelected" accept=".csv,.txt" class="mt-2" />
+                            @if (!string.IsNullOrEmpty(ankiFileError))
+                            {
+                                <div class="text-danger text-sm mt-1">@ankiFileError</div>
+                            }
+                        }
+                    }
+                </InputRadioGroup>
+            </EditForm>
+        </div>
+        <ButtonPrimary OnClick="@CreateOrImportDeck" Disabled="@(string.IsNullOrWhiteSpace(deckName) || !IsDeckOptionValid())"><Translate Text="Finalizar"></Translate></ButtonPrimary>
     }
     else if (step == 5)
-    {
-        <h3 class="text-xl font-semibold mb-2"><Translate Text="Deseja importar o deck padrão?"></Translate></h3>
-        <label class="flex items-center mb-4">
-            <input type="checkbox" class="mr-2" @bind="seedRequested" />
-            <span>Quero importar o deck padrão de frases</span>
-        </label>
-        <ButtonPrimary OnClick="@NextStep">Finalizar</ButtonPrimary>
-    }
-    else if (step == 6)
     {
         <h3 class="text-xl font-bold mb-4 text-green-700"><Translate Text="Configuração concluída!"></Translate></h3>
         <p class="mb-6"><Translate Text="Seu app está pronto para uso. Bons estudos!"></Translate></p>
         <ButtonPrimary OnClick="@(() => Nav.NavigateTo("/session-select", true))"><Translate Text="Ir para o app"></Translate></ButtonPrimary>
     }
+
 </div>
-
-@code {
-    int step = 0;
-    string selectedAppLanguage = "";
-    string selectedTargetLanguage = "";
-    DifficultyLevel selectedDifficulty = DifficultyLevel.Beginner;
-    string deckName = "";
-    string deckDescription = "";
-    bool seedRequested = false;
-
-    private void SetSourceLanguageAndNext()
-    {
-        // Set the source language in StudyConfig as soon as the user chooses it
-        var config = SettingsService.StudyConfig.Value ?? new StudyConfig();
-        config.SelectedLanguage = new LanguagePair
-        {
-            Source = new(selectedAppLanguage),
-            Target = new(string.IsNullOrWhiteSpace(selectedTargetLanguage) ? "it" : selectedTargetLanguage) // fallback for now
-        };
-        SettingsService.StudyConfig.Update(config);
-
-        step++;
-    }
-
-    private async Task NextStep()
-    {
-        step++;
-        if (step == 6)
-        {
-            // Save full study config
-            var config = SettingsService.StudyConfig.Value ?? new StudyConfig();
-            config.SelectedLanguageCode = $"{selectedAppLanguage}-{selectedTargetLanguage}";
-            config.DifficultyLevel = selectedDifficulty;
-            config.SelectedLanguage = new LanguagePair
-            {
-                Source = new(selectedAppLanguage),
-                Target = new(selectedTargetLanguage)
-            };
-            SettingsService.StudyConfig.Update(config);
-
-            // Create deck
-            var deck = new Infrastructure.Data.Model.DeckTable
-            {
-                Name = deckName,
-                Description = deckDescription,
-                TargetLanguage = selectedTargetLanguage,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-            };
-            DbContext.Decks.Add(deck);
-            await DbContext.SaveChangesAsync();
-
-            // Seed if requested
-            if (seedRequested)
-            {
-                await DbInit.SeedAsync();
-            }
-        }
-    }
-}

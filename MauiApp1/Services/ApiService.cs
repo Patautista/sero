@@ -7,6 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Globalization;
 using MauiApp1.Services.Cache;
+using Business;
+using System.Text.Json;
+using System.Net.Http.Json;
+using Business.Model;
 
 namespace MauiApp1.Services
 {
@@ -19,8 +23,11 @@ namespace MauiApp1.Services
         public ApiService(HttpClient httpClient, ISettingsService settingsService, MobileTranslationCache translationCache)
         {
             _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri("https://bison-settling-longhorn.ngrok-free.app");
-            _httpClient.DefaultRequestHeaders.Add("X-Api-Key", settingsService.ApiKey.Value);
+            if (!string.IsNullOrEmpty(settingsService.ApiConfig?.Value?.BaseUrl))
+            {
+                _httpClient.BaseAddress = new Uri(settingsService.ApiConfig?.Value?.BaseUrl ?? "");
+            }
+            _httpClient.DefaultRequestHeaders.Add("X-Api-Key", settingsService.ApiConfig.Value?.ApiKey);
             _translationCache = translationCache;
             _settingsService = settingsService;
         }
@@ -50,13 +57,20 @@ namespace MauiApp1.Services
                 // 2. Fetch from API
                 var url = $"/api/Translations?text={Uri.EscapeDataString(text)}&sourceLang={Uri.EscapeDataString(sourceLang)}&targetLang={Uri.EscapeDataString(targetLang)}";
                 var response = await _httpClient.GetAsync(url);
-                response.EnsureSuccessStatusCode();
-                var translation = await response.Content.ReadAsStringAsync();
+                if (response.IsSuccessStatusCode)
+                {
+                    var translation = await response.Content.ReadAsStringAsync();
 
-                // 3. Cache the translation
-                await _translationCache.SetAsync(text, sourceLang, targetLang, translation);
+                    // 3. Cache the translation
+                    await _translationCache.SetAsync(text, sourceLang, targetLang, translation);
 
-                return translation;
+                    return translation;
+                }
+                else
+                {
+                    Console.WriteLine($"Translation API error: {response.StatusCode}");
+                    return text;
+                }
             }
             catch(Exception ex)
             {
@@ -68,26 +82,53 @@ namespace MauiApp1.Services
         /// <summary>
         /// Translates using the default source/target languages from SettingsService. Returns null if not configured.
         /// </summary>
-        public async Task<string?> GetNativeTranslationAsync(string text, string sourceLang = "en")
+        public async Task<string?> GetNativeTranslationAsync(string text, string originalLang = "en")
         {
             try
             {
                 var studyConfig = _settingsService.StudyConfig.Value;
-                if (studyConfig?.SelectedLanguage == null)
-                    return null;
+                string targetLang;
+                if (studyConfig?.SelectedLanguage != null)
+                {
+                    targetLang = studyConfig.SelectedLanguage.Source?.TwoLetterISOLanguageName;
+                }
+                else
+                {
+                    // Fallback to app language
+                    targetLang = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+                }
 
-                var targetLang = studyConfig.SelectedLanguage.Source?.TwoLetterISOLanguageName;
+                if (string.IsNullOrWhiteSpace(originalLang) || string.IsNullOrWhiteSpace(targetLang))
+                    return text;
 
-                if (string.IsNullOrWhiteSpace(sourceLang) || string.IsNullOrWhiteSpace(targetLang))
-                    return null;
-
-                return await GetTranslationAsync(text, sourceLang, targetLang);
+                return await GetTranslationAsync(text, originalLang, targetLang);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return text;
             }
+        }
+
+        public async Task<CardDefinition?> GenerateBossChallengeAsync(string targetLanguageCode, string nativeLanguageCode, List<string> texts)
+        {
+            var request = new
+            {
+                TargetLanguageCode = targetLanguageCode,
+                NativeLanguageCode = nativeLanguageCode,
+                Texts = texts
+            };
+
+            var response = await _httpClient.PostAsJsonAsync("/api/challenges/generate", request);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine($"GenerateChallenge API error: {response.StatusCode}");
+                return null;
+            }
+
+            var card = await response.Content.ReadFromJsonAsync<CardDefinition>();
+            return card;
         }
     }
 }

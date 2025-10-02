@@ -1,6 +1,7 @@
 using Business.Audio;
 using DeepL;
 using ElevenLabs;
+using Infrastructure.AI;
 using Infrastructure.Audio;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,11 @@ builder.Services.AddScoped<DeepLClient>(sp =>
 {
     var apiKey = builder.Configuration.GetSection("DeepL:ApiKey").Value;
     return new DeepLClient(apiKey);
+});
+builder.Services.AddScoped<GeminiClient>(sp =>
+{
+    var apiKey = builder.Configuration.GetSection("Gemini:ApiKey").Value;
+    return new GeminiClient(apiKey);
 });
 builder.Services.AddSingleton<IAudioCache>(new FileAudioCache("voice_cache"));
 builder.Services.AddScoped<ElevenLabsClient>(sp =>

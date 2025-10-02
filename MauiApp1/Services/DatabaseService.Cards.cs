@@ -142,5 +142,11 @@ namespace MauiApp1.Services
             };
             db.Cards.Add(cardTable);
         }
+
+        public async Task<List<string>> GetAllCardSentencesAsync()
+        {
+            var sentences = await db.Sentences.ToListAsync();
+            return sentences.Select(s => s.Text).Distinct().ToList();
+        }
     }
 }

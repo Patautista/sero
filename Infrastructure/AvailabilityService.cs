@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MauiApp1.Services
+namespace Infrastructure.Services
 {
     public class AvailabilityService
     {
         public static List<string> TargetLanguages = new()
         {
             AvailableCodes.Italian,
+            AvailableCodes.Norwegian,
         };
         
 
@@ -23,5 +24,6 @@ namespace MauiApp1.Services
     public static class AvailableCodes
     {
         public static string Italian = "it";
+        public static string Norwegian = "no";
     }
 }

@@ -1,9 +1,12 @@
 ﻿@using System.Globalization
 @using CommunityToolkit.Maui.Alerts
+@using Infrastructure.Services
 @using MauiApp1.Services.Audio
 @inject ApiService ApiService
 @inject MauiSoundService SoundService
 @inject ISettingsService SettingsService
+@inject Infrastructure.Services.VocabularyService VocabularyService
+@inject MauiApp1.Services.DatabaseService Database
 
 @code{
     protected string Translate(string text, string lang = "pt")
@@ -29,4 +32,10 @@
     protected string NativelanguageCode => Nativelanguage.TwoLetterISOLanguageName;
     protected CultureInfo TargetLanguage => SettingsService?.StudyConfig?.Value?.SelectedLanguage?.Target;
     protected string TargetLanguageCode => TargetLanguage.TwoLetterISOLanguageName;
+    protected async Task<List<VocabularyService.Word>> GetGlobalVocabularyAsync()
+    {
+        var allSentences = await Database.GetAllCardSentencesAsync();
+        var vocabWords = await VocabularyService.GetVocabWordsWithTagAsync(allSentences);
+        return vocabWords;
+    }
 }

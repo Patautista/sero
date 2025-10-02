@@ -47,6 +47,12 @@ namespace MauiApp1.Services
         public async Task<int> GetUserExpAsync()
         {
             var user = await db.Users.FindAsync(UserTable.Default.Id);
+            if(user == null)
+            {
+                db.Add(UserTable.Default);
+                await db.SaveChangesAsync();
+                return 0;
+            }
             return user.Exp;
         }
     }

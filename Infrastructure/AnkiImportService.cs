@@ -1,0 +1,49 @@
+﻿using Business.Model;
+using Domain.Entity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Infrastructure
+{
+    public class AnkiImportService
+    {
+        public IEnumerable<CardDefinition> Import(string filePath)
+        {
+            var lines = File.ReadAllLines(filePath);
+
+            var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var line in lines)
+            {
+                if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#"))
+                    continue;
+
+                var parts = line.Split('\t');
+                if (parts.Length < 2) continue;
+
+                var native = parts[1].Trim();
+                var target = parts[0].Trim();
+
+                // chave única
+                var key = $"{native}||{target}";
+                if (!seen.Add(key))
+                    continue;
+                if (!seen.Add($"{target}||{native}"))
+                    continue; // já existe, pula// já existe, pula
+
+                yield return new CardDefinition
+                {
+                    NativeLanguageCode = "pt",
+                    TargetLanguageCode = "no",
+                    NativeSentence = native,
+                    TargetSentence = target,
+                    Tags = new List<Tag>(),
+                    DifficultyLevel = DifficultyLevel.Unknown,
+                };
+            }
+        }
+    }
+}
