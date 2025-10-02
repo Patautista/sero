@@ -22,8 +22,8 @@ namespace SupportServer.Controllers
             {
                 return text;
             }
-            sourceLang = NormalizeSourceLang(sourceLang);
-            targetLang = NormalizeTargetLang(targetLang);
+            sourceLang = DeepLHelper.NormalizeSourceLang(sourceLang);
+            targetLang = DeepLHelper.NormalizeTargetLang(targetLang);
 
             var res = await service.TranslateTextAsync(text, sourceLang, targetLang);
             if (res == null || string.IsNullOrEmpty(res.Text))
@@ -31,38 +31,6 @@ namespace SupportServer.Controllers
                 throw new Exception("Translation failed");
             }
             return res.Text;
-        }
-        private string NormalizeSourceLang(string code)
-        {
-            if(code.Equals("en", StringComparison.OrdinalIgnoreCase) || code.Equals("en-us", StringComparison.OrdinalIgnoreCase))
-            {
-                return LanguageCode.English;
-            }
-            if (code.Equals("pt", StringComparison.OrdinalIgnoreCase) || code.Equals("pt-BR", StringComparison.OrdinalIgnoreCase))
-            {
-                return LanguageCode.Portuguese;
-            }
-            if (code.Equals("it", StringComparison.OrdinalIgnoreCase))
-            {
-                return LanguageCode.Italian;
-            }
-            return LanguageCode.English;
-        }
-        private string NormalizeTargetLang(string code)
-        {
-            if (code.Equals("en", StringComparison.OrdinalIgnoreCase) || code.Equals("en-us", StringComparison.OrdinalIgnoreCase))
-            {
-                return LanguageCode.EnglishAmerican;
-            }
-            if (code.Equals("pt", StringComparison.OrdinalIgnoreCase) || code.Equals("pt-BR", StringComparison.OrdinalIgnoreCase))
-            {
-                return LanguageCode.PortugueseBrazilian;
-            }
-            if (code.Equals("it", StringComparison.OrdinalIgnoreCase))
-            {
-                return LanguageCode.Italian;
-            }
-            return LanguageCode.EnglishAmerican;
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Business;
-using Domain.Entity;
+﻿using Domain.Entity;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -8,7 +7,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Business
+namespace Business.MobileConfig
 {
     public class StudyConfig
     {
@@ -36,6 +35,11 @@ namespace Business
                 SelectedLanguageCode = $"{value.Source.TwoLetterISOLanguageName}-{value.Target.TwoLetterISOLanguageName}";
             }
         }
+        public static StudyConfig Default => new StudyConfig
+        {
+            SelectedLanguageCode = "it-pt",
+            DifficultyLevel = DifficultyLevel.Beginner
+        };
     }
 
 }

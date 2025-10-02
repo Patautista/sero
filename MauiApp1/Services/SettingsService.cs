@@ -1,31 +1,21 @@
 ﻿using System.Text.Json;
 using Business;
+using Business.MobileConfig;
 
 namespace AppLogic.Web
 {
-    public interface ISettingsService
-    {
-        ISettingProperty<string?> ApiKey { get; }
-        ISettingProperty<StudyConfig?> StudyConfig { get; }
-    }
-
-    public interface ISettingProperty<T>
-    {
-        T Value { get; }
-        void Update(T value);
-    }
-
     public class SettingsService : ISettingsService
     {
         private const string StudySectionKey = "StudyConfig";
-        private const string ApiKeyKey = "ApiKey";
+        private const string ApiConfigKey = "ApiConfig";
 
-        public ISettingProperty<string?> ApiKey { get; }
         public ISettingProperty<StudyConfig?> StudyConfig { get; }
+
+        public ISettingProperty<ApiConfig?> ApiConfig { get; }
 
         public SettingsService()
         {
-            ApiKey = new SettingProperty<string?>(ApiKeyKey);
+            ApiConfig = new SettingProperty<ApiConfig?>(ApiConfigKey);
             StudyConfig = new SettingProperty<StudyConfig?>(StudySectionKey);
         }
 

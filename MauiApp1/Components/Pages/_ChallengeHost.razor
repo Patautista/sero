@@ -44,11 +44,16 @@ else if (currentCard != null)
         </div>
 
         <div class="card p-4 mb-3" style="max-width: 600px; position: relative">
-            @if (currentCard.Repetitions > 5 && new Random().NextDouble() < 0.6)
+            @if (new Random().NextDouble() < 1.0)
+            {
+                <BossChallenge CurrentCard="currentCard" OnSkip="SkipCard" OnChallengeCompleted="HandleChallengeCompleted"></BossChallenge>
+            }
+            else if (currentCard.Repetitions > 5 && new Random().NextDouble() < 0.6)
             {
                 <ListeningChallenge CurrentCard="currentCard" OnSkip="SkipCard" OnChallengeCompleted="HandleChallengeCompleted"></ListeningChallenge>
             }
-            else{
+            else
+            {
                 <TextChallenge CurrentCard="currentCard" OnSkip="SkipCard" OnChallengeCompleted="HandleChallengeCompleted"></TextChallenge>
             }
         </div>

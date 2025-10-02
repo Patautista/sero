@@ -10,7 +10,8 @@ namespace Domain.Entity
     {
         Beginner,
         Intermediate,
-        Advanced
+        Advanced,
+        Unknown
     }
 
     public static class DifficultyLevelExtensions

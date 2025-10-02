@@ -1,4 +1,4 @@
-using AppLogic.Web;
+using Business;
 using Catalyst;
 using DeepL.Model;
 using Mosaik.Core;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Language = Mosaik.Core.Language;
 
-namespace MauiApp1.Services;
+namespace Infrastructure.Services;
 
 public class VocabularyService
 {
@@ -16,6 +16,14 @@ public class VocabularyService
     public VocabularyService(ISettingsService settingsService)
     {
         TargetLanguage = settingsService.StudyConfig.Value.SelectedLanguage.Target;
+    }
+    public VocabularyService(string targetLangCode)
+    {
+        TargetLanguage = new(targetLangCode);
+    }
+    public VocabularyService(CultureInfo targetLanguage)
+    {
+        TargetLanguage = targetLanguage;
     }
     // Universal POS tag mapping (UD v2) to common names
     private static readonly Dictionary<string, string> PosCommonNames = new()
@@ -55,6 +63,11 @@ public class VocabularyService
             language = Language.Italian;
             Catalyst.Models.Italian.Register();
         }
+        if (TargetLanguage.TwoLetterISOLanguageName == AvailableCodes.Norwegian)
+        {
+            language = Language.Norwegian;
+            Catalyst.Models.Norwegian.Register();
+        }
         var nlp = await Pipeline.ForAsync(language);
 
         var combinedText = string.Join(" ", texts);
@@ -81,5 +94,59 @@ public class VocabularyService
         }
 
         return posVocab.ToDictionary(kv => kv.Key, kv => kv.Value.Count);
+    }
+
+    public class Word
+    {
+        public string Text { get; set; } = string.Empty;
+        public string PartOfSpeech { get; set; } = string.Empty;
+    }
+
+    public async Task<List<Word>> GetVocabWordsWithTagAsync(IEnumerable<string> texts)
+    {
+        var language = Language.English;
+        if (TargetLanguage.TwoLetterISOLanguageName == AvailableCodes.Italian)
+        {
+            language = Language.Italian;
+            Catalyst.Models.Italian.Register();
+        }
+        if (TargetLanguage.TwoLetterISOLanguageName == AvailableCodes.Norwegian)
+        {
+            language = Language.Norwegian;
+            Catalyst.Models.Norwegian.Register();
+        }
+        var nlp = await Pipeline.ForAsync(language);
+
+        var combinedText = string.Join(" ", texts);
+        var doc = new Document(combinedText, language);
+        nlp.ProcessSingle(doc);
+
+        var words = new List<Word>();
+
+        var seen = new HashSet<(string, string)>();
+
+        foreach (var sentence in doc)
+        {
+            foreach (var token in sentence)
+            {
+                var posTag = token.POS.ToString();
+                var wordText = token.Value.ToLowerInvariant();
+                if (string.IsNullOrWhiteSpace(wordText) || wordText.Length < 2) continue;
+
+                var pos = PosCommonNames.TryGetValue(posTag, out var commonName) ? commonName : posTag;
+
+                // Avoid duplicates (word + pos)
+                if (seen.Add((wordText, pos)))
+                {
+                    words.Add(new Word
+                    {
+                        Text = wordText,
+                        PartOfSpeech = pos
+                    });
+                }
+            }
+        }
+
+        return words;
     }
 }
