@@ -14,7 +14,7 @@
     <!-- Deck selection -->
     <div class="mb-4 w-full max-w-xs">
         <label class="block text-sm font-medium text-gray-700 mb-2">Selecione o Deck</label>
-        <select @bind="selectedDeckId" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500">
+        <select @bind="selectedDeckId" @onchange="OnDeckChanged" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500">
             <option value="0">-- Escolha um deck --</option>
             @foreach (var deck in decks)
             {
@@ -99,5 +99,18 @@
     {
         userExp = await DatabaseService.GetUserExpAsync();
         decks = await DatabaseService.GetAllDecksAsync();
+    }
+
+    private void OnDeckChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out var deckId))
+        {
+            selectedDeckId = deckId;
+            var deck = decks.FirstOrDefault(d => d.Id == deckId);
+            if (deck != null && !string.IsNullOrWhiteSpace(deck.TargetLanguage))
+            {
+                UpdateTargetLanguageFromDeck(deck.TargetLanguage);
+            }
+        }
     }
 }

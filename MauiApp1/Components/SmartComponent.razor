@@ -1,4 +1,5 @@
 ﻿@using System.Globalization
+@using Business.MobileConfig
 @using CommunityToolkit.Maui.Alerts
 @using Infrastructure.Services
 @using MauiApp1.Services.Audio
@@ -27,6 +28,14 @@
             var toast = Toast.Make("Falha ao reproduzir áudio.", CommunityToolkit.Maui.Core.ToastDuration.Short, 14);
             await toast.Show(CancellationToken.None);
         }
+    }
+    protected void UpdateTargetLanguageFromDeck(string targetLanguageCode)
+    {
+        var config = SettingsService.StudyConfig.Value ?? new StudyConfig();
+        config.SelectedLanguage ??= new LanguagePair();
+        config.SelectedLanguage.Target = new CultureInfo(targetLanguageCode);
+        config.SelectedLanguageCode = $"{config.SelectedLanguage.Source?.TwoLetterISOLanguageName ?? "pt"}-{targetLanguageCode}";
+        SettingsService.StudyConfig.Update(config);
     }
     protected CultureInfo Nativelanguage => SettingsService?.StudyConfig?.Value?.SelectedLanguage?.Source;
     protected string NativelanguageCode => Nativelanguage.TwoLetterISOLanguageName;
