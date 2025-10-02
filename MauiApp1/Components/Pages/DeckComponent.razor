@@ -1,4 +1,5 @@
 @inject MauiApp1.Services.DatabaseService DatabaseService
+@inherits SmartComponent
 
 <div class="deck-container">
     <h1 class="text-3xl font-bold mb-8 text-center text-indigo-700">@deck?.Name</h1>
@@ -42,8 +43,8 @@
             allCards = deck.Cards.Select(c => new Card
             {
                 DifficultyLevel = Enum.Parse<DifficultyLevel>(c.Meaning.DifficultyLevel),
-                SentencesInNativeLanguage = c.Meaning.Sentences.Where(s => s.Language == "pt").Select(s => s.ToDomain()).ToList(),
-                SentencesInTargetLanguage = c.Meaning.Sentences.Where(s => s.Language == "it").Select(s => s.ToDomain()).ToList(),
+                SentencesInNativeLanguage = c.Meaning.Sentences.Where(s => s.Language == NativelanguageCode).Select(s => s.ToDomain()).ToList(),
+                SentencesInTargetLanguage = c.Meaning.Sentences.Where(s => s.Language == TargetLanguageCode).Select(s => s.ToDomain()).ToList(),
                 Tags = c.Meaning.Tags.Select(t => t.ToDomain()).ToList()
             }).ToList();
         }

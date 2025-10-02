@@ -31,6 +31,7 @@ namespace Infrastructure.Data
             {
                 Console.WriteLine($"Entity: {entityType.Name}");
             }
+            modelBuilder.Entity<DeckTable>().ToTable("Decks");
 
             modelBuilder.Ignore<Domain.Entity.Card>();
             modelBuilder.Ignore<Domain.Entity.CurriculumSection>();
