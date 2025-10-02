@@ -24,6 +24,11 @@
     public DeckOptionModel OptionModel { get; set; } = new();
     public List<Option> DeckOptions => GetDeckOptions();
 
+    protected override void OnInitialized()
+    {
+        DbContext.Database.EnsureCreated();
+    }
+
     public class DeckOptionModel
     {
         public string SelectedOption { get; set; }
@@ -93,7 +98,6 @@
         };
         try
         {
-            
             DbContext.Decks.Add(deck);
             await DbContext.SaveChangesAsync();
         }
@@ -111,20 +115,21 @@
                 var cards = ankiService.Import(ankiFilePath).ToList();
                 foreach (var card in cards)
                 {
-                    await DbContext.Cards.AddAsync(new Infrastructure.Data.Model.CardTable
-                    {
-                        Meaning = new Infrastructure.Data.Model.MeaningTable
+                    var cardTable = new Infrastructure.Data.Model.CardTable
                         {
-                            DifficultyLevel = card.DifficultyLevel.ToString(),
-                            Sentences = new List<Infrastructure.Data.Model.SentenceTable>
+                            Meaning = new Infrastructure.Data.Model.MeaningTable
+                            {
+                                DifficultyLevel = card.DifficultyLevel.ToString(),
+                                Sentences = new List<Infrastructure.Data.Model.SentenceTable>
                         {
                             new() { Language = card.NativeLanguageCode, Text = card.NativeSentence },
                             new() { Language = card.TargetLanguageCode, Text = card.TargetSentence }
                         },
-                            Tags = card.Tags.Select(tag => new Infrastructure.Data.Model.TagTable { Name = tag.Name, Type = tag.Type }).ToList()
-                        },
-                        DeckId = deck.Id
-                    });
+                                Tags = card.Tags.Select(tag => new Infrastructure.Data.Model.TagTable { Name = tag.Name, Type = tag.Type }).ToList()
+                            },
+                            DeckId = deck.Id
+                        };
+                    await DbContext.Cards.AddAsync(cardTable);
                 }
                 await DbContext.SaveChangesAsync();
             }
@@ -251,7 +256,7 @@
     {
         <h3 class="text-xl font-bold mb-4 text-green-700"><Translate Text="Configuração concluída!"></Translate></h3>
         <p class="mb-6"><Translate Text="Seu app está pronto para uso. Bons estudos!"></Translate></p>
-        <ButtonPrimary OnClick="@(() => Nav.NavigateTo("/session-select", true))"><Translate Text="Ir para o app"></Translate></ButtonPrimary>
+        <ButtonPrimary OnClick="@(() => Nav.NavigateTo(Routes.SessionSelect, true))"><Translate Text="Ir para o app"></Translate></ButtonPrimary>
     }
 
 </div>
