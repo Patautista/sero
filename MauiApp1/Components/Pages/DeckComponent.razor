@@ -27,7 +27,7 @@
 
 @code {
     [Parameter]
-    public int UserExp { get; set; }
+    public int DeckId { get; set; }
 
     private Infrastructure.Data.Model.DeckTable? deck;
     private List<Card> allCards = new();
@@ -35,7 +35,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        UserExp = await DatabaseService.GetUserExpAsync();
         deck = await DatabaseService.GetFirstDeckAsync();
 
         if (deck != null)
@@ -47,6 +46,25 @@
                 SentencesInTargetLanguage = c.Meaning.Sentences.Where(s => s.Language == TargetLanguageCode).Select(s => s.ToDomain()).ToList(),
                 Tags = c.Meaning.Tags.Select(t => t.ToDomain()).ToList()
             }).ToList();
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (DeckId > 0)
+        {
+            deck = await DatabaseService.GetDeckByIdAsync(DeckId);
+
+            if (deck != null)
+            {
+                allCards = deck.Cards.Select(c => new Card
+                {
+                    DifficultyLevel = Enum.Parse<DifficultyLevel>(c.Meaning.DifficultyLevel),
+                    SentencesInNativeLanguage = c.Meaning.Sentences.Where(s => s.Language == NativelanguageCode).Select(s => s.ToDomain()).ToList(),
+                    SentencesInTargetLanguage = c.Meaning.Sentences.Where(s => s.Language == TargetLanguageCode).Select(s => s.ToDomain()).ToList(),
+                    Tags = c.Meaning.Tags.Select(t => t.ToDomain()).ToList()
+                }).ToList();
+            }
         }
     }
 

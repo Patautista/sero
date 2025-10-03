@@ -38,7 +38,6 @@ namespace Infrastructure.Audio
                 return cached;
             }
 
-            // Caso não exista, gera via ElevenLabs
             var voice = await _elevenLabsClient.VoicesEndpoint.GetVoiceAsync(GetVoiceId(languageCode, voiceGender));
 
             await _elevenLabsClient.VoicesEndpoint.EditVoiceSettingsAsync(
