@@ -131,7 +131,7 @@ else if (BossSrsCard != null)
 
         // Use language codes from SmartComponent
         var targetLang = TargetLanguageCode;
-        var nativeLang = NativelanguageCode;
+        var nativeLang = NativeLanguageCode;
 
         // Generate the challenge using your API service
         BossCardDefinition = await ApiService.GenerateBossChallengeAsync(targetLang, nativeLang, subset);
