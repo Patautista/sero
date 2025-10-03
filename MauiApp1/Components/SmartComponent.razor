@@ -16,7 +16,7 @@
     }
     protected async Task PlayVoiceClip(string text, string lang)
     {
-        if (!IsApiConfigured()) return;
+        if (!IsApiLive) return;
         var res = await SoundService.PlayVoiceClip(text, lang);
         if (res)
         {
@@ -29,9 +29,10 @@
             await toast.Show(CancellationToken.None);
         }
     }
-    protected bool IsApiConfigured()
+    protected bool IsApiLive = false;
+    protected async override Task OnInitializedAsync()
     {
-        return SettingsService.ApiConfig.Value != null;
+        IsApiLive = await ApiService.GetPingAsync();
     }
 
     protected void UpdateTargetLanguageFromDeck(string targetLanguageCode)

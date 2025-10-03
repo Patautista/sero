@@ -117,6 +117,7 @@ else if (BossSrsCard != null)
 
     protected override async Task OnInitializedAsync()
     {
+        await base.OnInitializedAsync();
         isLoadingBossChallenge = true;
 
         // Get global vocabulary from all cards
