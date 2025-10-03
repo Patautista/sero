@@ -10,7 +10,7 @@ namespace Infrastructure
 {
     public class AnkiImportService
     {
-        public IEnumerable<CardDefinition> Import(string filePath)
+        public IEnumerable<CardDefinition> Import(string filePath, string nativeLanguageCode, string targetLanguageCode)
         {
             var lines = File.ReadAllLines(filePath);
 
@@ -36,8 +36,8 @@ namespace Infrastructure
 
                 yield return new CardDefinition
                 {
-                    NativeLanguageCode = "pt",
-                    TargetLanguageCode = "no",
+                    NativeLanguageCode = nativeLanguageCode,
+                    TargetLanguageCode = targetLanguageCode,
                     NativeSentence = native,
                     TargetSentence = target,
                     Tags = new List<Tag>(),

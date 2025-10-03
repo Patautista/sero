@@ -156,7 +156,7 @@
             try
             {
                 var ankiService = new AnkiImportService();
-                var cards = ankiService.Import(ankiFilePath).ToList();
+                var cards = ankiService.Import(ankiFilePath, selectedAppLanguage, selectedTargetLanguage).ToList();
                 foreach (var card in cards)
                 {
                     var cardTable = new Infrastructure.Data.Model.CardTable
@@ -264,7 +264,7 @@
     }
     else if (step == 4)
     {
-        <h3 class="text-xl font-semibold mb-2">Como deseja criar seu primeiro deck?</h3>
+        <h3 class="text-xl font-semibold mb-2"><Translate Text="Como deseja criar seu primeiro deck?"></Translate></h3>
         <div class="mb-3">
             <label class="block text-sm font-medium text-gray-700 mb-1"><Translate Text="Nome do Deck"></Translate></label>
             <input class="form-input w-full" @bind="deckName" />
@@ -280,13 +280,13 @@
                 {
                     <div>
                         <InputRadio Value="@option.Value" />
-                        <label class="ml-2">@option.Label</label>
+                            <label class="ml-2"><Translate Text="@option.Label"></Translate></label>
                     </div>
 
                     @if (option.Value == "anki" && OptionModel.SelectedOption == "anki")
                     {
                         <button type="button" class="btn btn-secondary mt-2" @onclick="PickAnkiFile">
-                            Selecionar arquivo .txt
+                                <Translate Text="Selecionar arquivo .txt"></Translate>
                         </button>
 
                         @if (!string.IsNullOrEmpty(ankiFilePath))
