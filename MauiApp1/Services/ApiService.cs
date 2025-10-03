@@ -1,16 +1,17 @@
 ﻿using AppLogic.Web;
+using Business;
+using Business.Model;
 using Infrastructure.Audio;
+using MauiApp1.Services.Cache;
+using Microsoft.Recognizers.Definitions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Globalization;
-using MauiApp1.Services.Cache;
-using Business;
-using System.Text.Json;
+using System.Linq;
 using System.Net.Http.Json;
-using Business.Model;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace MauiApp1.Services
 {
@@ -22,14 +23,22 @@ namespace MauiApp1.Services
 
         public ApiService(HttpClient httpClient, ISettingsService settingsService, MobileTranslationCache translationCache)
         {
-            _httpClient = httpClient;
-            if (!string.IsNullOrEmpty(settingsService.ApiConfig?.Value?.BaseUrl))
+            try
             {
-                _httpClient.BaseAddress = new Uri(settingsService.ApiConfig?.Value?.BaseUrl ?? "");
+                _httpClient = httpClient;
+                var baseUrl = settingsService.ApiConfig?.Value?.BaseUrl;
+                if (!string.IsNullOrEmpty(baseUrl))
+                {
+                    _httpClient.BaseAddress = new Uri(baseUrl);
+                }
+                _httpClient.DefaultRequestHeaders.Add("X-Api-Key", settingsService.ApiConfig.Value?.ApiKey);
+                _translationCache = translationCache;
+                _settingsService = settingsService;
             }
-            _httpClient.DefaultRequestHeaders.Add("X-Api-Key", settingsService.ApiConfig.Value?.ApiKey);
-            _translationCache = translationCache;
-            _settingsService = settingsService;
+            catch
+            {
+                settingsService.ApiConfig.Update(null);
+            }
         }
 
         public async Task<byte[]> GetTTSAsync(string text, string lang, string voice = "female")

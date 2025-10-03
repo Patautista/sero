@@ -24,9 +24,9 @@
     public DeckOptionModel OptionModel { get; set; } = new();
     public List<Option> DeckOptions => GetDeckOptions();
 
-    protected override void OnInitialized()
+    protected async override Task OnInitializedAsync()
     {
-        DbContext.Database.EnsureCreated();
+        await DbInit.InitialiseAsync();
     }
 
     public class DeckOptionModel
@@ -45,7 +45,7 @@
         var options = new List<Option>
         {
             new Option { Value = "scratch", Label = "Começar do zero" },
-            new Option { Value = "anki", Label = "Importar de arquivo Anki CSV" }
+            new Option { Value = "anki", Label = "Importar de arquivo Anki TXT" }
         };
         if (selectedTargetLanguage == AvailableCodes.Italian)
         {
@@ -53,6 +53,50 @@
         }
         return options;
     }
+    private async Task PickAnkiFile()
+    {
+        try
+        {
+            ankiFileError = "";
+            var customFileTypes = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
+        {
+            { DevicePlatform.Android, new[] { "text/plain" } },
+            { DevicePlatform.WinUI, new[] { ".txt" } },
+            { DevicePlatform.MacCatalyst, new[] { "txt" } },
+            { DevicePlatform.iOS, new[] { "public.plain-text" } }
+        });
+
+            var options = new PickOptions
+            {
+                PickerTitle = "Selecione arquivo .txt",
+                FileTypes = customFileTypes
+            };
+
+            var result = await FilePicker.Default.PickAsync(options);
+
+            if (result != null)
+            {
+                ankiFilePath = result.FullPath ?? result.FileName;
+
+                // Ler conteúdo do arquivo se precisar
+                using var stream = await result.OpenReadAsync();
+                using var reader = new StreamReader(stream);
+                var content = await reader.ReadToEndAsync();
+
+                Console.WriteLine(content.Substring(0, Math.Min(100, content.Length))); // só exemplo
+            }
+            else
+            {
+                ankiFileError = "Nenhum arquivo selecionado.";
+            }
+        }
+        catch (Exception ex)
+        {
+            ankiFileError = $"Erro ao selecionar arquivo: {ex.Message}";
+            Console.WriteLine(ex);
+        }
+    }
+
     private void SetSourceLanguageAndNext()
     {
         var config = SettingsService.StudyConfig.Value ?? new StudyConfig();
@@ -121,10 +165,10 @@
                             {
                                 DifficultyLevel = card.DifficultyLevel.ToString(),
                                 Sentences = new List<Infrastructure.Data.Model.SentenceTable>
-                        {
-                            new() { Language = card.NativeLanguageCode, Text = card.NativeSentence },
-                            new() { Language = card.TargetLanguageCode, Text = card.TargetSentence }
-                        },
+                                {
+                                    new() { Language = card.NativeLanguageCode, Text = card.NativeSentence },
+                                    new() { Language = card.TargetLanguageCode, Text = card.TargetSentence }
+                                },
                                 Tags = card.Tags.Select(tag => new Infrastructure.Data.Model.TagTable { Name = tag.Name, Type = tag.Type }).ToList()
                             },
                             DeckId = deck.Id
@@ -179,7 +223,7 @@
 <div class="onboarding-container max-w-xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
     @if (step == 0)
     {
-        <h2 class="text-2xl font-bold mb-4 text-indigo-700">Bem-vindo ao Sentaki!</h2>
+        <h2 class="text-2xl font-bold mb-4 text-indigo-700">Bem-vindo ao Triolingo!</h2>
         <p class="mb-6">Vamos configurar seu app para a melhor experiência de estudo.</p>
         <ButtonPrimary OnClick="@(() => step++)">Começar</ButtonPrimary>
     }
@@ -230,25 +274,34 @@
             <input class="form-input w-full" @bind="deckDescription" />
         </div>
         <div class="mb-6">
-            <EditForm Model="@OptionModel">
-                <InputRadioGroup @bind-Value="OptionModel.SelectedOption" class="flex flex-col gap-2">
-                    @foreach (var option in DeckOptions)
+           <EditForm Model="@OptionModel">
+            <InputRadioGroup @bind-Value="OptionModel.SelectedOption" class="flex flex-col gap-2">
+                @foreach (var option in DeckOptions)
+                {
+                    <div>
+                        <InputRadio Value="@option.Value" />
+                        <label class="ml-2">@option.Label</label>
+                    </div>
+
+                    @if (option.Value == "anki" && OptionModel.SelectedOption == "anki")
                     {
-                        <div>
-                            <InputRadio Value="@option.Value" />
-                            <label class="ml-2">@option.Label</label>
-                        </div>
-                        @if (option.Value == "anki" && OptionModel.SelectedOption == "anki")
+                        <button type="button" class="btn btn-secondary mt-2" @onclick="PickAnkiFile">
+                            Selecionar arquivo .txt
+                        </button>
+
+                        @if (!string.IsNullOrEmpty(ankiFilePath))
                         {
-                            <InputFile OnChange="OnAnkiFileSelected" accept=".csv,.txt" class="mt-2" />
-                            @if (!string.IsNullOrEmpty(ankiFileError))
-                            {
-                                <div class="text-danger text-sm mt-1">@ankiFileError</div>
-                            }
+                            <div class="mt-1">Arquivo selecionado: @ankiFilePath</div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(ankiFileError))
+                        {
+                            <div class="text-danger text-sm mt-1">@ankiFileError</div>
                         }
                     }
-                </InputRadioGroup>
-            </EditForm>
+                }
+            </InputRadioGroup>
+        </EditForm>
         </div>
         <ButtonPrimary OnClick="@CreateOrImportDeck" Disabled="@(string.IsNullOrWhiteSpace(deckName) || !IsDeckOptionValid())"><Translate Text="Finalizar"></Translate></ButtonPrimary>
     }

@@ -118,7 +118,7 @@ namespace MauiApp1.Services
             var tags = await db.Tags.ToListAsync();
             return tags.Select(t => t.ToDomain()).ToList();
         }
-        public async Task CreateCard(CardDefinition cardDefinition, int deckId)
+        public async Task<SrsCard> CreateCard(CardDefinition cardDefinition, int deckId)
         {
             var cardTable = new CardTable
             {
@@ -136,16 +136,34 @@ namespace MauiApp1.Services
                                 Text = cardDefinition.TargetSentence
                             },
                         },
-                    Tags = cardDefinition.Tags.Select(tag => new TagTable { Name = tag.Name, Type = tag.Type }).ToList()
+                    Tags = cardDefinition.Tags?.Select(tag => new TagTable { Name = tag.Name, Type = tag.Type }).ToList() ?? new(),
                 },
+                Events = new List<EventTable>(),
+                UserCardState = new(),
                 DeckId = deckId
             };
             db.Cards.Add(cardTable);
+            await db.SaveChangesAsync();
+
+            return new SrsCard
+            {
+                CardId = cardTable.Id,
+                StateId = cardTable.UserCardState.Id,
+                DifficultyLevel = DifficultyLevelExtensions.FromString(cardTable.Meaning.DifficultyLevel),
+                SentencesInNativeLanguage = cardTable.Meaning.Sentences.Where(s => s.Language == _nativeCode).Select(s => s.ToDomain()).ToList(),
+                SentencesInTargetLanguage = cardTable.Meaning.Sentences.Where(s => s.Language == _targetCode).Select(s => s.ToDomain()).ToList(),
+                Tags = cardTable.Meaning.Tags?.Select(t => t.ToDomain()).ToList(),
+                Repetitions = cardTable.Events.Where(e => e.Name == nameof(CardAnsweredEvent)).Count(),
+                EaseFactor = cardTable.UserCardState.EaseFactor,
+                Interval = cardTable.UserCardState.Interval,
+                NextReview = cardTable.UserCardState.NextReview,
+                LastReviewed = cardTable.UserCardState.LastReviewed
+            };
         }
 
-        public async Task<List<string>> GetAllCardSentencesAsync()
+        public async Task<List<string>> GetAllForeignSentencesAsync(string langCode)
         {
-            var sentences = await db.Sentences.ToListAsync();
+            var sentences = await db.Sentences.Where(sentence => sentence.Language == langCode).ToListAsync();
             return sentences.Select(s => s.Text).Distinct().ToList();
         }
     }
