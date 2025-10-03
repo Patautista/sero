@@ -70,4 +70,15 @@ public partial class DatabaseService(MobileDbContext db, ISettingsService settin
     {
         return await db.Decks.OrderBy(d => d.Name).ToListAsync();
     }
+    public async Task<DeckTable?> GetDeckByIdAsync(int deckId)
+    {
+        return await db.Decks
+            .Include(d => d.Cards)
+                .ThenInclude(c => c.Meaning)
+                    .ThenInclude(m => m.Tags)
+            .Include(d => d.Cards)
+                .ThenInclude(c => c.Meaning)
+                    .ThenInclude(m => m.Sentences)
+            .FirstOrDefaultAsync(d => d.Id == deckId);
+    }
 }

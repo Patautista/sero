@@ -1,0 +1,22 @@
+@page "/decks"
+@using Infrastructure.Data.Model
+
+<div class="card flex flex-col items-center mb-5 p-3">
+    <h2 class="text-2xl font-bold mb-8 text-center text-indigo-700">Visualizar Decks</h2>
+    <div class="mb-4 w-full max-w-xs">
+        <MauiApp1.Components.Shared.DeckPicker @bind-SelectedDeckId="selectedDeckId" />
+    </div>
+</div>
+
+@if (selectedDeckId > 0)
+{
+    <DeckComponent DeckId="selectedDeckId" />
+}
+else
+{
+    <div class="text-center text-gray-500 mt-8">Selecione um deck para visualizar.</div>
+}
+
+@code {
+    private int selectedDeckId = 0;
+}

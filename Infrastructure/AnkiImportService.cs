@@ -2,6 +2,7 @@
 using Domain.Entity;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,7 +33,7 @@ namespace Infrastructure
                 if (!seen.Add(key))
                     continue;
                 if (!seen.Add($"{target}||{native}"))
-                    continue; // já existe, pula// já existe, pula
+                    continue; // já existe, pula
 
                 yield return new CardDefinition
                 {
@@ -44,6 +45,32 @@ namespace Infrastructure
                     DifficultyLevel = DifficultyLevel.Unknown,
                 };
             }
+        }
+
+        public void Export(IEnumerable<CardDefinition> cards, string filePath)
+        {
+            var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var lines = new List<string>();
+
+            foreach (var card in cards)
+            {
+                if (string.IsNullOrWhiteSpace(card.NativeSentence) || string.IsNullOrWhiteSpace(card.TargetSentence))
+                    continue;
+
+                var native = card.NativeSentence.Trim();
+                var target = card.TargetSentence.Trim();
+
+                var key = $"{native}||{target}";
+                if (!seen.Add(key))
+                    continue;
+                if (!seen.Add($"{target}||{native}"))
+                    continue; // skip duplicates
+
+                // Export in the same format: target \t native
+                lines.Add($"{target}\t{native}");
+            }
+
+            File.WriteAllLines(filePath, lines, Encoding.UTF8);
         }
     }
 }
