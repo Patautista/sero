@@ -16,7 +16,7 @@
     }
     protected async Task PlayVoiceClip(string text, string lang)
     {
-
+        if (!IsApiConfigured()) return;
         var res = await SoundService.PlayVoiceClip(text, lang);
         if (res)
         {
@@ -29,6 +29,11 @@
             await toast.Show(CancellationToken.None);
         }
     }
+    protected bool IsApiConfigured()
+    {
+        return SettingsService.ApiConfig.Value != null;
+    }
+
     protected void UpdateTargetLanguageFromDeck(string targetLanguageCode)
     {
         var config = SettingsService.StudyConfig.Value ?? new StudyConfig();
@@ -41,9 +46,9 @@
     protected string NativelanguageCode => Nativelanguage.TwoLetterISOLanguageName;
     protected CultureInfo TargetLanguage => SettingsService?.StudyConfig?.Value?.SelectedLanguage?.Target;
     protected string TargetLanguageCode => TargetLanguage.TwoLetterISOLanguageName;
-    protected async Task<List<VocabularyService.Word>> GetGlobalVocabularyAsync()
+    protected async Task<List<VocabularyService.Word>> GetTargetVocabularyAsync()
     {
-        var allSentences = await Database.GetAllCardSentencesAsync();
+        var allSentences = await Database.GetAllForeignSentencesAsync(TargetLanguageCode);
         var vocabWords = await VocabularyService.GetVocabWordsWithTagAsync(allSentences);
         return vocabWords;
     }

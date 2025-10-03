@@ -23,6 +23,7 @@ namespace Domain.Entity
                 "beginner" => DifficultyLevel.Beginner,
                 "intermediate" => DifficultyLevel.Intermediate,
                 "advanced" => DifficultyLevel.Advanced,
+                "unknown" => DifficultyLevel.Unknown,
                 _ => throw new ArgumentException($"Invalid difficulty: {value}")
             };
         }

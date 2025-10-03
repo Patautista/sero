@@ -26,6 +26,9 @@ namespace Infrastructure.Migrations
                     b.Property<int>("DeckId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("DeckTableId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("MeaningId")
                         .HasColumnType("INTEGER");
 
@@ -34,13 +37,13 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DeckId");
+                    b.HasIndex("DeckTableId");
 
                     b.HasIndex("MeaningId");
 
                     b.HasIndex("UserCardStateId");
 
-                    b.ToTable("Cards");
+                    b.ToTable("Cards", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Model.DeckTable", b =>
@@ -69,7 +72,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Decks");
+                    b.ToTable("Decks", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Model.EventTable", b =>
@@ -110,7 +113,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("CardId");
 
-                    b.ToTable("Events");
+                    b.ToTable("Events", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Model.MeaningTable", b =>
@@ -125,7 +128,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Meanings");
+                    b.ToTable("Meanings", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Model.ReviewSessionTable", b =>
@@ -139,7 +142,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ReviewSessions");
+                    b.ToTable("ReviewSessions", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Model.SentenceTable", b =>
@@ -163,7 +166,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("MeaningId");
 
-                    b.ToTable("Sentences");
+                    b.ToTable("Sentences", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Model.SrsCardStateTable", b =>
@@ -192,7 +195,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserCardStates");
+                    b.ToTable("UserCardStates", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Model.TagTable", b =>
@@ -211,7 +214,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Tags");
+                    b.ToTable("Tags", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Model.UserTable", b =>
@@ -225,7 +228,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("MeaningTag", b =>
@@ -245,11 +248,9 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Infrastructure.Data.Model.CardTable", b =>
                 {
-                    b.HasOne("Infrastructure.Data.Model.DeckTable", "Deck")
+                    b.HasOne("Infrastructure.Data.Model.DeckTable", null)
                         .WithMany("Cards")
-                        .HasForeignKey("DeckId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DeckTableId");
 
                     b.HasOne("Infrastructure.Data.Model.MeaningTable", "Meaning")
                         .WithMany("Cards")
@@ -260,8 +261,6 @@ namespace Infrastructure.Migrations
                     b.HasOne("Infrastructure.Data.Model.SrsCardStateTable", "UserCardState")
                         .WithMany()
                         .HasForeignKey("UserCardStateId");
-
-                    b.Navigation("Deck");
 
                     b.Navigation("Meaning");
 

@@ -14,11 +14,14 @@ namespace SupportServer.Controllers
     {
 
         [HttpGet]
-        public Task<byte[]> GetTTS(string text, string lang, string voice = "female")
+        public async Task<FileContentResult> GetTTS(string text, string lang, string voice = "female")
         {
             VoiceGender voiceGender = voice.ToLower() == "male" ? 
                 VoiceGender.Male : VoiceGender.Female;
-            return speechService.GenerateSpeechAsync(text, voiceGender, lang);
+
+            var audioBytes = await speechService.GenerateSpeechAsync(text, voiceGender, lang);
+
+            return File(audioBytes, "audio/mpeg");
         }
     }
 }

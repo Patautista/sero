@@ -47,9 +47,19 @@ namespace MauiApp1.Services.Audio
                     }
                 }
 
-                // Play from byte array
-                using var stream = new MemoryStream(audioData);
-                var player = _audioManager.CreatePlayer(stream);
+                // Depois de obter audioData
+                var cachePath = Path.Combine(FileSystem.CacheDirectory, "tts_cache");
+                if (!Directory.Exists(cachePath))
+                    Directory.CreateDirectory(cachePath);
+
+                var filePath = Path.Combine(cachePath, $"{key}.mp3");
+
+                // Grava o arquivo se não existir
+                if (!File.Exists(filePath))
+                    await File.WriteAllBytesAsync(filePath, audioData);
+
+                // Agora toca do arquivo
+                var player = _audioManager.CreatePlayer(filePath);
                 player.Play();
                 return true;
             }

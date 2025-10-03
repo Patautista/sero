@@ -9,7 +9,7 @@
 @using CommunityToolkit.Maui.Alerts;
 @using MauiApp1.Components.User
 @using Microsoft.AspNetCore.WebUtilities;
-
+@inherits SmartComponent
 @inject NavigationManager Navigation
 @using MauiApp1.Services
 @attribute [StreamRendering(true)]
@@ -44,11 +44,11 @@ else if (currentCard != null)
         </div>
 
         <div class="card p-4 mb-3" style="max-width: 600px; position: relative">
-            @if (new Random().NextDouble() < 1.0)
+            @if (new Random().NextDouble() < 0.05 && IsApiConfigured())
             {
-                <BossChallenge CurrentCard="currentCard" OnSkip="SkipCard" OnChallengeCompleted="HandleChallengeCompleted"></BossChallenge>
+                <BossChallenge DeckId="deckId" OnSkip="SkipCard" OnChallengeCompleted="HandleChallengeCompleted"></BossChallenge>
             }
-            else if (currentCard.Repetitions > 5 && new Random().NextDouble() < 0.6)
+            else if (currentCard.Repetitions > 5 && new Random().NextDouble() < 0.6 && IsApiConfigured())
             {
                 <ListeningChallenge CurrentCard="currentCard" OnSkip="SkipCard" OnChallengeCompleted="HandleChallengeCompleted"></ListeningChallenge>
             }

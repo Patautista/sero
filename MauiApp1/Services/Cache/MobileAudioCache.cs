@@ -8,26 +8,27 @@ using System.Threading.Tasks;
 
 namespace MauiApp1.Services.Cache
 {
-    // Implementação usando arquivos locais
     public class MobileAudioCache : IAudioCache
     {
         private readonly string _basePath;
 
-        public MobileAudioCache(string basePath = "Sounds/voice_cache/")
+        public MobileAudioCache(string? basePath = null)
         {
-            _basePath = basePath;
+            _basePath = basePath ?? Path.Combine(FileSystem.AppDataDirectory, "voice_cache");
         }
 
         public async Task<byte[]?> GetBytesAsync(string key)
         {
-            using var stream = await FileSystem.OpenAppPackageFileAsync(GetPath(key));
-            if (stream != null)
+            try
             {
-                using var ms = new MemoryStream();
-                await stream.CopyToAsync(ms);
-                return ms.ToArray();
+                var path = GetPath(key);
+                if (File.Exists(path))
+                {
+                    return await File.ReadAllBytesAsync(path);
+                }
+                return null;
             }
-            else
+            catch
             {
                 return null;
             }
@@ -36,6 +37,11 @@ namespace MauiApp1.Services.Cache
         public async Task SetAsync(string key, byte[] data)
         {
             var path = GetPath(key);
+            var dir = Path.GetDirectoryName(path);
+
+            if (!Directory.Exists(dir))
+                Directory.CreateDirectory(dir!);
+
             await File.WriteAllBytesAsync(path, data);
         }
 
@@ -50,4 +56,5 @@ namespace MauiApp1.Services.Cache
 
         private string GetPath(string key) => Path.Combine(_basePath, $"{key}.mp3");
     }
+
 }

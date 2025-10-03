@@ -2,27 +2,31 @@
 @inject HttpClient Http
 @inherits SmartComponent
 
-<div class="p-4">
+<div class="p-4 flex justify-center w-full max-w-6xl mx-auto">
     @if (_isLoading)
     {
         <LoadingSpinner></LoadingSpinner>
     }
     else
     {
-        <RadzenCarousel Style="height:320px;width:100%;">
+        <RadzenCarousel Style="height:100%;width:100%;">
             <Items>
                 @foreach (var article in _articles)
                 {
                     <RadzenCarouselItem>
                         <a href="@article.Content_Urls.Desktop.Page" target="_blank"
-                           class="block bg-white shadow-md rounded-xl p-4 hover:shadow-lg transition h-full">
-                            <h3 class="text-xl font-semibold mb-2">@article.Title</h3>
+                           class="block bg-white shadow-md rounded-xl p-4 hover:shadow-lg transition h-full flex flex-col">
+                            @* Added flex-col for consistent vertical stacking *@
+
+                            <h3 class="text-xl font-semibold mb-2 line-clamp-2">@article.Title</h3> @* Added line-clamp to prevent oversized titles from breaking layout *@
+
                             @if (!string.IsNullOrEmpty(article.Thumbnail?.Source))
                             {
                                 <img src="@article.Thumbnail.Source" alt="@article.Title"
-                                     class="max-h-40 mb-2 rounded-md mx-auto" />
+                                     class="max-h-40 object-cover w-full mb-2 rounded-md mx-auto" /> @* Added object-cover and w-full for better image handling *@
                             }
-                            <p class="text-gray-700">@article.Extract</p>
+
+                            <p class="text-gray-700 flex-grow overflow-hidden line-clamp-3">@article.Extract</p> @* Added line-clamp for extract too, and flex-grow to ensure all cards are same height if content is short *@
                         </a>
                     </RadzenCarouselItem>
                 }
