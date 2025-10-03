@@ -44,11 +44,11 @@ else if (currentCard != null)
         </div>
 
         <div class="card p-4 mb-3" style="max-width: 600px; position: relative">
-            @if (new Random().NextDouble() < 0.05 && IsApiConfigured())
+            @if (new Random().NextDouble() < 0.05 && IsApiLive)
             {
                 <BossChallenge DeckId="deckId" OnSkip="SkipCard" OnChallengeCompleted="HandleChallengeCompleted"></BossChallenge>
             }
-            else if (currentCard.Repetitions > 5 && new Random().NextDouble() < 0.6 && IsApiConfigured())
+            else if (currentCard.Repetitions > 5 && new Random().NextDouble() < 0.6 && IsApiLive)
             {
                 <ListeningChallenge CurrentCard="currentCard" OnSkip="SkipCard" OnChallengeCompleted="HandleChallengeCompleted"></ListeningChallenge>
             }
@@ -79,6 +79,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        await base.OnInitializedAsync();
         var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
         var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
 

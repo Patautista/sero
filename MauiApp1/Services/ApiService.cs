@@ -49,6 +49,24 @@ namespace MauiApp1.Services
             return await response.Content.ReadAsByteArrayAsync();
         }
 
+        public async Task<bool> GetPingAsync()
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync("/api/ping");
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadAsStringAsync();
+                    return bool.TryParse(result, out var isAlive) && isAlive;
+                }
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public async Task<string> GetTranslationAsync(string text, string sourceLang, string targetLang)
         {
             try
