@@ -1,6 +1,7 @@
 @page "/decks"
 @using Infrastructure.Data.Model
 @using Business.Model
+@using CommunityToolkit.Maui.Storage
 @inherits SmartComponent
 @inject MauiApp1.Services.DatabaseService DatabaseService
 @inject ISettingsService SettingsService
@@ -88,7 +89,6 @@ else
             return;
         }
 
-        // Map deck cards to CardDefinition
         var cardDefinitions = deck.Cards.Select(card => new CardDefinition
         {
             NativeLanguageCode = NativeLanguageCode,
@@ -99,18 +99,21 @@ else
             DifficultyLevel = Enum.TryParse<DifficultyLevel>(card.Meaning.DifficultyLevel, out var level) ? level : DifficultyLevel.Unknown
         }).ToList();
 
-        // Ask user for file path (simple for MAUI: use FilePicker or default path)
         var fileName = $"{deck.Name}_export.txt";
-        var filePath = Path.Combine(FileSystem.Current.AppDataDirectory, fileName);
+        var fileContent = new Infrastructure.AnkiImportService().SaveToString(cardDefinitions);
 
-        var ankiService = new Infrastructure.AnkiImportService();
-        ankiService.Export(cardDefinitions, filePath);
+        var result = await FileSaver.Default.SaveAsync(fileName, new MemoryStream(System.Text.Encoding.UTF8.GetBytes(fileContent)));
 
-        exportMessage = $"Deck exportado para: {filePath}";
+        if (result.IsSuccessful)
+        {
+            exportMessage = $"Deck exportado para: {result.FilePath}";
+            await JS.InvokeVoidAsync("navigator.clipboard.writeText", result.FilePath);
+        }
+        else
+        {
+            exportMessage = "Falha ao exportar o deck.";
+        }
         StateHasChanged();
-
-        // Optionally, show file in OS or copy path to clipboard
-        await JS.InvokeVoidAsync("navigator.clipboard.writeText", filePath);
     }
 
     private void OnCardCreated()

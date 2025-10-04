@@ -1,5 +1,6 @@
 ﻿@page "/session-select"
 @using Infrastructure.Data.Model
+@using Infrastructure.Services
 @inject NavigationManager Navigation
 @inject MauiApp1.Services.DatabaseService DatabaseService
 @inherits SmartComponent
@@ -34,9 +35,12 @@
     <div  class="card p-3 mb-2">
         <MauiApp1.Components.Webscraping.WordSearch></MauiApp1.Components.Webscraping.WordSearch>
     </div>
-    <div  class="card p-3 mb-2">
-        <MauiApp1.Components.Webscraping.ConjugationLookup></MauiApp1.Components.Webscraping.ConjugationLookup>
-    </div>
+    @if(TargetLanguageCode == AvailableCodes.Italian)
+    {
+        <div class="card p-3 mb-2">
+            <MauiApp1.Components.Webscraping.ConjugationLookup></MauiApp1.Components.Webscraping.ConjugationLookup>
+        </div>
+    }
 </div>
     
 @if (showModal)
