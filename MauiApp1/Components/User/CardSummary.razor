@@ -1,5 +1,10 @@
-﻿<div class="card shadow-md rounded-lg overflow-hidden bg-gray-50 transition-all duration-200 transform hover:translate-y-[-5px]">
+﻿<div class="card shadow-md rounded-lg overflow-hidden bg-gray-50 transition-all duration-200 transform hover:translate-y-[-5px] relative">
     <div class="p-4">
+        <button class="absolute top-2 right-2 text-red-600 hover:text-red-800"
+                @onclick="OnDeleteClicked"
+                title="Excluir cartão">
+            <i class="fa fa-minus-circle"></i>
+        </button>
         <p class="text-sm text-gray-500 mb-2">
             <span class="font-medium text-gray-700">@Card.NativeSample.Language.ToUpper():</span> @Card.NativeSample.Text
         </p>
@@ -19,4 +24,13 @@
 @code {
     [Parameter]
     public Domain.Entity.Card Card { get; set; } = new();
+
+    [Parameter]
+    public EventCallback OnDelete { get; set; }
+
+    private async Task OnDeleteClicked()
+    {
+        if (OnDelete.HasDelegate)
+            await OnDelete.InvokeAsync();
+    }
 }
