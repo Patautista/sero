@@ -118,15 +118,4 @@ else
         showCreateCardModal = false;
         StateHasChanged();
     }
-
-    private async Task ConfirmDeleteCard(int cardId)
-    {
-        var confirmed = await JS.InvokeAsync<bool>("confirm", "Tem certeza que deseja excluir este cartão?");
-        if (confirmed)
-        {
-            // Lógica para excluir o cartão
-            // Exemplo: await DatabaseService.DeleteCardAsync(cardId);
-            StateHasChanged();
-        }
-    }
 }

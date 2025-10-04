@@ -191,5 +191,107 @@ namespace MauiApp1.Services
                 return false;
             }
         }
+        public async Task<bool> UpdateCardAsync(int cardId, CardDefinition updatedDefinition)
+        {
+            try
+            {
+                var card = await db.Cards
+                    .Include(c => c.Meaning)
+                    .Include(c => c.Meaning.Sentences)
+                    .Include(c => c.Meaning.Tags)
+                    .FirstOrDefaultAsync(c => c.Id == cardId);
+
+                if (card == null)
+                    return false;
+
+                // Update sentences
+                var nativeSentence = card.Meaning.Sentences.FirstOrDefault(s => s.Language == updatedDefinition.NativeLanguageCode);
+                var targetSentence = card.Meaning.Sentences.FirstOrDefault(s => s.Language == updatedDefinition.TargetLanguageCode);
+
+                if (nativeSentence != null)
+                    nativeSentence.Text = updatedDefinition.NativeSentence;
+                if (targetSentence != null)
+                    targetSentence.Text = updatedDefinition.TargetSentence;
+
+                // Update tags
+                card.Meaning.Tags.Clear();
+                foreach (var tag in updatedDefinition.Tags)
+                {
+                    card.Meaning.Tags.Add(new TagTable { Name = tag.Name, Type = tag.Type });
+                }
+
+                // Update difficulty
+                card.Meaning.DifficultyLevel = updatedDefinition.DifficultyLevel.ToString();
+
+                await db.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
+        }
+
+        public async Task<ICollection<SrsCard>> QuerySrsCardsAsync(
+            int deckId,
+            Func<SrsCard, bool>? filter = null,
+            CancellationToken cancellationToken = default)
+        {
+            var cards = new List<CardTable>();
+
+            try
+            {
+                cards = await db.Cards
+                    .Where(c => c.DeckId == deckId)
+                    .Include(c => c.Meaning.Tags)
+                    .Include(c => c.Meaning.Sentences)
+                    .Include(c => c.UserCardState)
+                    .Include(c => c.Events)
+                    .ToListAsync(cancellationToken);
+
+                // Ensure UserCardState exists
+                foreach (var card in cards)
+                {
+                    if (card.UserCardState == null)
+                    {
+                        card.UserCardState = new SrsCardStateTable()
+                        {
+                            CardId = card.Id,
+                            UserId = UserTable.Default.Id,
+                        };
+                        await db.UserCardStates.AddAsync(card.UserCardState, cancellationToken);
+                    }
+                }
+                await db.SaveChangesAsync(cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            // Project to domain
+            var cardWithStates = cards.Select(x => new SrsCard
+            {
+                CardId = x.Id,
+                StateId = x.UserCardState.Id,
+                DifficultyLevel = DifficultyLevelExtensions.FromString(x.Meaning.DifficultyLevel),
+                SentencesInNativeLanguage = x.Meaning.Sentences.Where(s => s.Language == _nativeCode).Select(s => s.ToDomain()).ToList(),
+                SentencesInTargetLanguage = x.Meaning.Sentences.Where(s => s.Language == _targetCode).Select(s => s.ToDomain()).ToList(),
+                Tags = x.Meaning.Tags.Select(t => t.ToDomain()).ToList(),
+                Repetitions = x.Events.Where(e => e.Name == nameof(CardAnsweredEvent)).Count(),
+                EaseFactor = x.UserCardState.EaseFactor,
+                Interval = x.UserCardState.Interval,
+                NextReview = x.UserCardState.NextReview,
+                LastReviewed = x.UserCardState.LastReviewed,
+            }).OrderBy(c => c.DifficultyLevel);
+
+            // Apply filter if provided
+            var filtered = filter != null
+                ? cardWithStates.Where(filter).ToList()
+                : cardWithStates.ToList();
+
+            return filtered;
+        }
     }
 }

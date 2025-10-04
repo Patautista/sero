@@ -1,36 +1,115 @@
-﻿<div class="card shadow-md rounded-lg overflow-hidden bg-gray-50 transition-all duration-200 transform hover:translate-y-[-5px] relative">
+﻿@using Business.Model
+<div class="card shadow-md rounded-lg overflow-hidden bg-gray-50 transition-all duration-200 transform hover:translate-y-[-5px] relative">
     <div class="p-4">
-        <button class="absolute top-2 right-2 text-red-600 hover:text-red-800"
-                @onclick="OnDeleteClicked"
-                title="Excluir cartão">
-            <i class="fa fa-minus-circle"></i>
-        </button>
-        <p class="text-sm text-gray-500 mb-2">
-            <span class="font-medium text-gray-700">@Card.NativeSample.Language.ToUpper():</span> @Card.NativeSample.Text
-        </p>
-        <p class="text-lg font-bold mb-2 text-indigo-800">
-            <span class="font-medium text-gray-700">@Card.TargetSample.Language.ToUpper():</span> @Card.TargetSample.Text
-        </p>
-        <div class="flex flex-wrap gap-1">
-            @foreach (var tag in Card.Tags)
-            {
-                <span class="badge bg-indigo-200 text-slate-800 px-2 py-1 rounded-full text-xs font-medium">@tag.Name</span>
-            }
-            <span class="badge bg-green-200 text-green-800 px-2 py-1 rounded-full text-xs font-medium">@Card.DifficultyLevel</span>
-        </div>
+        @if (!isEditMode)
+        {
+            <button class="absolute top-2 right-2 text-blue-600 hover:text-blue-800"
+                    @onclick="EnableEditMode"
+                    title="Editar cartão">
+                <i class="fa fa-edit"></i>
+            </button>
+        }
+        else
+        {
+            <button class="absolute top-2 right-10 text-green-600 hover:text-green-800"
+                    @onclick="OnConfirmEdit"
+                    title="Salvar alterações">
+                <i class="fa fa-check-circle"></i>
+            </button>
+            <button class="absolute top-2 right-2 text-red-600 hover:text-red-800"
+                    @onclick="OnDeleteClicked"
+                    title="Excluir cartão">
+                <i class="fa fa-minus-circle"></i>
+            </button>
+        }
+
+        @if (!isEditMode)
+        {
+            <p class="text-sm text-gray-500 mb-2">
+                <span class="font-medium text-gray-700">@Card.NativeSample.Language.ToUpper():</span> @Card.NativeSample.Text
+            </p>
+            <p class="text-lg font-bold mb-2 text-indigo-800">
+                <span class="font-medium text-gray-700">@Card.TargetSample.Language.ToUpper():</span> @Card.TargetSample.Text
+            </p>
+            <div class="flex flex-wrap gap-1">
+                @foreach (var tag in Card.Tags)
+                {
+                    <span class="badge bg-indigo-200 text-slate-800 px-2 py-1 rounded-full text-xs font-medium">@tag.Name</span>
+                }
+                <span class="badge bg-green-200 text-green-800 px-2 py-1 rounded-full text-xs font-medium">@Card.DifficultyLevel</span>
+            </div>
+        }
+        else
+        {
+            <div class="mb-2">
+                <label class="block text-xs text-gray-600">Frase Nativa</label>
+                <input class="w-full px-2 py-1 border rounded" @bind="editModel.NativeSentence" />
+            </div>
+            <div class="mb-2">
+                <label class="block text-xs text-gray-600">Frase Alvo</label>
+                <input class="w-full px-2 py-1 border rounded" @bind="editModel.TargetSentence" />
+            </div>
+            <div class="mb-2">
+                <label class="block text-xs text-gray-600">Dificuldade</label>
+                <select class="w-full px-2 py-1 border rounded" @bind="editModel.DifficultyLevel">
+                    @foreach (DifficultyLevel level in Enum.GetValues(typeof(DifficultyLevel)))
+                    {
+                        <option value="@level">@level</option>
+                    }
+                </select>
+            </div>
+            <div class="mb-2">
+                <label class="block text-xs text-gray-600">Tags (separadas por vírgula)</label>
+                <input class="w-full px-2 py-1 border rounded" @bind="tagsInput" />
+            </div>
+        }
     </div>
 </div>
 
 @code {
     [Parameter]
-    public Domain.Entity.Card Card { get; set; } = new();
+    public SrsCard Card { get; set; } = new();
 
     [Parameter]
     public EventCallback OnDelete { get; set; }
+
+    [Parameter]
+    public EventCallback<CardDefinition> OnEditConfirm { get; set; }
+
+    private bool isEditMode = false;
+    private CardDefinition editModel = new();
+    private string tagsInput = "";
+
+    private void EnableEditMode()
+    {
+        isEditMode = true;
+        editModel = new CardDefinition
+        {
+            NativeLanguageCode = Card.NativeSample.Language,
+            TargetLanguageCode = Card.TargetSample.Language,
+            NativeSentence = Card.NativeSample.Text,
+            TargetSentence = Card.TargetSample.Text,
+            Tags = Card.Tags.ToList(),
+            DifficultyLevel = Card.DifficultyLevel
+        };
+        tagsInput = string.Join(", ", Card.Tags.Select(t => t.Name));
+    }
 
     private async Task OnDeleteClicked()
     {
         if (OnDelete.HasDelegate)
             await OnDelete.InvokeAsync();
+    }
+
+    private async Task OnConfirmEdit()
+    {
+        // Parse tags from input
+        editModel.Tags = tagsInput.Split(',', StringSplitOptions.RemoveEmptyEntries)
+            .Select(t => new Tag { Name = t.Trim(), Type = "" }).ToList();
+
+        if (OnEditConfirm.HasDelegate)
+            await OnEditConfirm.InvokeAsync(editModel);
+
+        isEditMode = false;
     }
 }

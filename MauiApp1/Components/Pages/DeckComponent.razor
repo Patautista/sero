@@ -1,3 +1,5 @@
+@using Business.Model
+@using Infrastructure.Data.Model
 @inject MauiApp1.Services.DatabaseService DatabaseService
 @inherits SmartComponent
 
@@ -15,7 +17,10 @@
         {
             @foreach (var card in filteredCards)
             {
-                <MauiApp1.Components.User.CardSummary Card="card" OnDelete="() => PromptDelete(card)"></MauiApp1.Components.User.CardSummary>
+                <MauiApp1.Components.User.CardSummary
+                    Card="card"
+                    OnDelete="() => ConfirmDeleteCard(card.CardId)"
+                    OnEditConfirm="(def) => ConfirmEditCard(card.CardId, def)" />
             }
         }
         else
@@ -52,11 +57,11 @@
     public int DeckId { get; set; }
 
     private Infrastructure.Data.Model.DeckTable? deck;
-    private List<Card> allCards = new();
+    private ICollection<SrsCard> allCards = new List<SrsCard>();
     private string searchTerm = "";
 
     // For deletion
-    private Card? cardToDelete;
+    private SrsCard? cardToDelete;
     private bool showDeleteConfirm = false;
 
     protected override async Task OnInitializedAsync()
@@ -65,13 +70,7 @@
 
         if (deck != null)
         {
-            allCards = deck.Cards.Select(c => new Card
-            {
-                DifficultyLevel = Enum.Parse<DifficultyLevel>(c.Meaning.DifficultyLevel),
-                SentencesInNativeLanguage = c.Meaning.Sentences.Where(s => s.Language == NativeLanguageCode).Select(s => s.ToDomain()).ToList(),
-                SentencesInTargetLanguage = c.Meaning.Sentences.Where(s => s.Language == TargetLanguageCode).Select(s => s.ToDomain()).ToList(),
-                Tags = c.Meaning.Tags.Select(t => t.ToDomain()).ToList()
-            }).ToList();
+            allCards = await DatabaseService.QuerySrsCardsAsync(deck.Id);
         }
     }
 
@@ -83,18 +82,12 @@
 
             if (deck != null)
             {
-                allCards = deck.Cards.Select(c => new Card
-                {
-                    DifficultyLevel = Enum.Parse<DifficultyLevel>(c.Meaning.DifficultyLevel),
-                    SentencesInNativeLanguage = c.Meaning.Sentences.Where(s => s.Language == NativeLanguageCode).Select(s => s.ToDomain()).ToList(),
-                    SentencesInTargetLanguage = c.Meaning.Sentences.Where(s => s.Language == TargetLanguageCode).Select(s => s.ToDomain()).ToList(),
-                    Tags = c.Meaning.Tags.Select(t => t.ToDomain()).ToList()
-                }).ToList();
+                allCards = await DatabaseService.QuerySrsCardsAsync(deck.Id);
             }
         }
     }
 
-    private IEnumerable<Card> filteredCards =>
+    private IEnumerable<SrsCard> filteredCards =>
         string.IsNullOrWhiteSpace(searchTerm)
             ? allCards
             : allCards.Where(card =>
@@ -104,7 +97,7 @@
             );
 
     // Deletion logic
-    private void PromptDelete(Card card)
+    private void PromptDelete(SrsCard card)
     {
         cardToDelete = card;
         showDeleteConfirm = true;
@@ -114,6 +107,17 @@
     {
         cardToDelete = null;
         showDeleteConfirm = false;
+    }
+
+    private async Task ConfirmDeleteCard(int cardId)
+    {
+        var confirmed = await PromptConfirm("Tem certeza que deseja excluir este cartão?");
+        if (confirmed)
+        {
+            // Lógica para excluir o cartão
+            // Exemplo: await DatabaseService.DeleteCardAsync(cardId);
+            StateHasChanged();
+        }
     }
 
     private async Task DeleteCardConfirmed()
@@ -136,6 +140,16 @@
             }
         }
         CancelDelete();
+    }
+
+    private async Task ConfirmEditCard(int cardId, CardDefinition updatedDefinition)
+    {
+        var success = await DatabaseService.UpdateCardAsync(cardId, updatedDefinition);
+        if (success)
+        {
+            // Optionally refresh deck/cards
+            StateHasChanged();
+        }
     }
 }
 

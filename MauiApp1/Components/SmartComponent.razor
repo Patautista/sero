@@ -2,12 +2,14 @@
 @using Business.MobileConfig
 @using CommunityToolkit.Maui.Alerts
 @using Infrastructure.Services
+@using Microsoft.JSInterop
 @using MauiApp1.Services.Audio
 @inject ApiService ApiService
 @inject MauiSoundService SoundService
 @inject ISettingsService SettingsService
 @inject Infrastructure.Services.VocabularyService VocabularyService
 @inject MauiApp1.Services.DatabaseService Database
+@inject IJSRuntime JS
 
 @code{
     protected string Translate(string text, string lang = "pt")
@@ -34,7 +36,16 @@
     {
         IsApiLive = await ApiService.GetPingAsync();
     }
-
+    protected async Task<bool> PromptConfirm(string prompt)
+    {
+        try{
+            return await JS.InvokeAsync<bool>("confirm", prompt);
+        }
+        catch
+        {
+            return false;
+        }
+    }
     protected void UpdateTargetLanguageFromDeck(string targetLanguageCode)
     {
         var config = SettingsService.StudyConfig.Value ?? new StudyConfig();
