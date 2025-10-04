@@ -166,5 +166,30 @@ namespace MauiApp1.Services
             var sentences = await db.Sentences.Where(sentence => sentence.Language == langCode).ToListAsync();
             return sentences.Select(s => s.Text).Distinct().ToList();
         }
+
+        public async Task<bool> DeleteCardAsync(int cardId)
+        {
+            try
+            {
+                var card = await db.Cards
+                    .Include(c => c.Meaning)
+                    .Include(c => c.UserCardState)
+                    .Include(c => c.Events)
+                    .FirstOrDefaultAsync(c => c.Id == cardId);
+
+                if (card == null)
+                    return false;
+
+                // Remove related entities if needed
+                db.Cards.Remove(card);
+                await db.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
+        }
     }
 }

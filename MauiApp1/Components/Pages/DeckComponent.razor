@@ -15,7 +15,7 @@
         {
             @foreach (var card in filteredCards)
             {
-                <MauiApp1.Components.User.CardSummary Card="card"></MauiApp1.Components.User.CardSummary>
+                <MauiApp1.Components.User.CardSummary Card="card" OnDelete="() => PromptDelete(card)"></MauiApp1.Components.User.CardSummary>
             }
         }
         else
@@ -25,6 +25,28 @@
     </div>
 </div>
 
+@if (showDeleteConfirm)
+{
+    <div class="modal-backdrop-custom"></div>
+    <div class="modal fade show modal-animate" style="display:block;" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" @onclick:stopPropagation>
+                <div class="modal-header">
+                    <h5 class="modal-title text-red-600">Confirmar exclusão</h5>
+                    <button type="button" class="close" @onclick="CancelDelete">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Tem certeza que deseja excluir este cartão?</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" @onclick="DeleteCardConfirmed">Excluir</button>
+                    <button class="btn btn-secondary" @onclick="CancelDelete">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 @code {
     [Parameter]
     public int DeckId { get; set; }
@@ -32,6 +54,10 @@
     private Infrastructure.Data.Model.DeckTable? deck;
     private List<Card> allCards = new();
     private string searchTerm = "";
+
+    // For deletion
+    private Card? cardToDelete;
+    private bool showDeleteConfirm = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -76,6 +102,41 @@
                 card.SentencesInTargetLanguage.Any(s => s.Text.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
                 card.Tags.Any(t => t.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
             );
+
+    // Deletion logic
+    private void PromptDelete(Card card)
+    {
+        cardToDelete = card;
+        showDeleteConfirm = true;
+    }
+
+    private void CancelDelete()
+    {
+        cardToDelete = null;
+        showDeleteConfirm = false;
+    }
+
+    private async Task DeleteCardConfirmed()
+    {
+        if (cardToDelete != null && deck != null)
+        {
+            // Find CardTable Id by matching sentence and tags
+            var cardTable = deck.Cards.FirstOrDefault(c =>
+                c.Meaning.Sentences.Any(s => s.Text == cardToDelete.NativeSample.Text) &&
+                c.Meaning.Sentences.Any(s => s.Text == cardToDelete.TargetSample.Text)
+            );
+            if (cardTable != null)
+            {
+                var success = await DatabaseService.DeleteCardAsync(cardTable.Id);
+                if (success)
+                {
+                    allCards.Remove(cardToDelete);
+                    StateHasChanged();
+                }
+            }
+        }
+        CancelDelete();
+    }
 }
 
 <style>
