@@ -10,6 +10,7 @@ namespace Domain.Entity
 {
     public record Card
     {
+        public int Id { get; set; }
         public List<Sentence> SentencesInNativeLanguage { get; set; }
         public List<Sentence> SentencesInTargetLanguage { get; set; }
         [JsonIgnore]
