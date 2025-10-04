@@ -47,7 +47,7 @@ namespace Infrastructure
             }
         }
 
-        public void Export(IEnumerable<CardDefinition> cards, string filePath)
+        public string SaveToString(IEnumerable<CardDefinition> cards)
         {
             var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             var lines = new List<string>();
@@ -69,8 +69,12 @@ namespace Infrastructure
                 // Export in the same format: target \t native
                 lines.Add($"{target}\t{native}");
             }
+            return string.Join(Environment.NewLine, lines);
+        }
 
-            File.WriteAllLines(filePath, lines, Encoding.UTF8);
+        public void Export(IEnumerable<CardDefinition> cards, string filePath)
+        {
+            File.WriteAllText(filePath, SaveToString(cards), Encoding.UTF8);
         }
     }
 }

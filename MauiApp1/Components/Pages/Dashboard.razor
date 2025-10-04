@@ -21,35 +21,43 @@ else
 {
     <div class="p-6 md:p-8 bg-gray-100 min-h-screen">
 
-        <!-- Vocab by Part of Speech -->
+        <!-- Vocab by Part of Speech Accordion -->
         <div class="col-span-1 md:col-span-2 bg-white rounded-xl shadow-lg p-6">
-            @if (vocabByPos?.Any() == true)
+            <div class="flex flex-row gap-2 mb-3 items-center cursor-pointer select-none" @onclick="() => showVocabDetails = !showVocabDetails">
+                <h4 class="text-lg font-semibold text-gray-700 mb-4 flex-1">
+                    🔤 <Translate Text="Vocabulário Estimado"></Translate>
+                </h4>
+                <p class="text-xl font-bold text-indigo-600">@vocabularyCount</p>
+                <span class="ml-2 text-gray-500">
+                    @(showVocabDetails ? "▼" : "►")
+                </span>
+            </div>
+            @if (showVocabDetails)
             {
-                <div class="flex flex-row gap-2 mb-3">
-                    <h4 class="text-lg font-semibold text-gray-700 mb-4">🔤 <Translate Text="Vocabulário Estimado"></Translate></h4>
-                    <p class="text-xl font-bold text-indigo-600">@vocabularyCount</p>
-                </div>
-                <table class="w-full table-auto border-collapse">
-                    <thead class="bg-indigo-100 text-indigo-800">
-                        <tr>
-                            <th class="px-4 py-2 text-left rounded-tl-lg"><Translate Text="Classe Gramatical"></Translate></th>
-                            <th class="px-4 py-2 text-right rounded-tr-lg"><Translate Text="Quantidade"></Translate></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var kv in vocabByPos.OrderByDescending(x => x.Value))
-                        {
-                            <tr class="border-t border-gray-200">
-                                <td class="px-4 py-2"><Translate Text=@kv.Key Lang="en"></Translate></td>
-                                <td class="px-4 py-2 text-right">@kv.Value</td>
+                @if (vocabByPos?.Any() == true)
+                {
+                    <table class="w-full table-auto border-collapse">
+                        <thead class="bg-indigo-100 text-indigo-800">
+                            <tr>
+                                <th class="px-4 py-2 text-left rounded-tl-lg"><Translate Text="Classe Gramatical"></Translate></th>
+                                <th class="px-4 py-2 text-right rounded-tr-lg"><Translate Text="Quantidade"></Translate></th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
-            }
-            else
-            {
-                <p class="text-gray-500"><Translate Text="Analisando..."></Translate></p>
+                        </thead>
+                        <tbody>
+                            @foreach (var kv in vocabByPos.OrderByDescending(x => x.Value))
+                            {
+                                <tr class="border-t border-gray-200">
+                                    <td class="px-4 py-2"><Translate Text=@kv.Key Lang="en"></Translate></td>
+                                    <td class="px-4 py-2 text-right">@kv.Value</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p class="text-gray-500"><Translate Text="Analisando..."></Translate></p>
+                }
             }
         </div>
 
@@ -72,14 +80,15 @@ else
             <div class="col-span-1 md:col-span-2 bg-white rounded-xl shadow-lg p-6">
                 <h4 class="text-lg font-semibold text-gray-700 mb-4">🃏 <Translate Text="Métricas de Card"></Translate></h4>
                 <div class="overflow-x-auto">
-                    <!-- Mobile Card View -->
+
+                    <!-- Top 3 by Answer Time -->
+                    <h5 class="text-md font-bold text-indigo-700 mb-2 mt-2">⏱️ <Translate Text="Top 3 por tempo de resposta"></Translate></h5>
                     <div class="block md:hidden">
-                        @foreach (var card in cardStats)
+                        @foreach (var card in topByTime)
                         {
                             <div class="bg-gray-50 rounded-lg shadow-sm p-4 mb-4">
                                 <h5 class="text-sm font-bold text-gray-900 mb-2">ID: @card.CardId</h5>
                                 <h5 class="text-sm font-bold text-gray-900 mb-2">@card.CardText</h5>
-
                                 <ul class="text-sm text-gray-700 space-y-1">
                                     <li><strong><Translate Text="Tempo médio de resposta (s):"></Translate></strong> @card.AvgTimeSeconds.ToString("N2")</li>
                                     <li><strong># <Translate Text="Respostas:"></Translate></strong> @card.AnswerCount</li>
@@ -90,8 +99,6 @@ else
                             </div>
                         }
                     </div>
-
-                    <!-- Desktop Table View -->
                     <table class="w-full table-auto mt-3 border-collapse hidden md:table">
                         <thead class="bg-indigo-100 text-indigo-800">
                             <tr>
@@ -105,7 +112,53 @@ else
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var cardStat in cardStats)
+                            @foreach (var cardStat in topByTime)
+                            {
+                                <tr class="border-t border-gray-200 hover:bg-gray-50 transition-colors duration-150">
+                                    <td class="px-4 py-2">@cardStat.CardId</td>
+                                    <td class="px-4 py-2">@cardStat.CardText</td>
+                                    <td class="px-4 py-2 text-right">@cardStat.AvgTimeSeconds.ToString("N2")</td>
+                                    <td class="px-4 py-2 text-right">@cardStat.AnswerCount</td>
+                                    <td class="px-4 py-2 text-right">@cardStat.CorrectAnswerRate.ToString("N1") %</td>
+                                    <td class="px-4 py-2 text-right">@cardStat.SkipCount</td>
+                                    <td class="px-4 py-2 text-right">@cardStat.SkipRate.ToString("N1") %</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <!-- Top 3 by Worst Hit Rate -->
+                    <h5 class="text-md font-bold text-red-700 mb-2 mt-6">❌ <Translate Text="Top 3 por menor taxa de acerto"></Translate></h5>
+                    <div class="block md:hidden">
+                        @foreach (var card in topByWorstCorrectRate)
+                        {
+                            <div class="bg-gray-50 rounded-lg shadow-sm p-4 mb-4">
+                                <h5 class="text-sm font-bold text-gray-900 mb-2">ID: @card.CardId</h5>
+                                <h5 class="text-sm font-bold text-gray-900 mb-2">@card.CardText</h5>
+                                <ul class="text-sm text-gray-700 space-y-1">
+                                    <li><strong><Translate Text="Tempo médio de resposta (s):"></Translate></strong> @card.AvgTimeSeconds.ToString("N2")</li>
+                                    <li><strong># <Translate Text="Respostas:"></Translate></strong> @card.AnswerCount</li>
+                                    <li><strong> <Translate Text="Taxa de acerto (%):"></Translate></strong> @card.CorrectAnswerRate.ToString("N1") %</li>
+                                    <li><strong># <Translate Text="Skips:"></Translate></strong> @card.SkipCount</li>
+                                    <li><strong><Translate Text="Taxa de skip (%):"></Translate></strong> @card.SkipRate.ToString("N1") %</li>
+                                </ul>
+                            </div>
+                        }
+                    </div>
+                    <table class="w-full table-auto mt-3 border-collapse hidden md:table">
+                        <thead class="bg-indigo-100 text-indigo-800">
+                            <tr>
+                                <th class="px-4 py-2 text-left rounded-tl-lg">ID</th>
+                                <th class="px-4 py-2 text-left"><Translate Text="Frase"></Translate></th>
+                                <th class="px-4 py-2 text-right"><Translate Text="Tempo médio de resposta (s)"></Translate></th>
+                                <th class="px-4 py-2 text-right"># <Translate Text="Respostas"></Translate></th>
+                                <th class="px-4 py-2 text-right"><Translate Text="Taxa de acerto (%)"></Translate></th>
+                                <th class="px-4 py-2 text-right"># <Translate Text="Skips"></Translate></th>
+                                <th class="px-4 py-2 text-right rounded-tr-lg"><Translate Text="Taxa de skip (%)"></Translate></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var cardStat in topByWorstCorrectRate)
                             {
                                 <tr class="border-t border-gray-200 hover:bg-gray-50 transition-colors duration-150">
                                     <td class="px-4 py-2">@cardStat.CardId</td>
@@ -169,6 +222,9 @@ else
     private double globalSkipRate;
     private List<ChartPoint> chartData = new();
     private List<CardStats> cardStats = new();
+    private List<CardStats> topCardStats = new(); // Add this
+    private List<CardStats> topByTime = new();
+    private List<CardStats> topByWorstCorrectRate = new();
 
     // Dados dos gráficos de pizza
     private List<PiePoint> generalAnswerBreakdown = new();
@@ -176,6 +232,8 @@ else
 
     private int vocabularyCount;
     private Dictionary<string, int> vocabByPos = new();
+
+    private bool showVocabDetails = false; // Accordion state
 
     protected override async Task OnInitializedAsync()
     {
@@ -228,6 +286,17 @@ else
                 };
             })
             .OrderByDescending(c => c.AnswerCount + c.SkipCount)
+            .ToList();
+
+
+        // ---- Filter for Top Cards ----
+        topByTime = cardStats.OrderByDescending(c => c.AvgTimeSeconds).Take(3).ToList();
+        topByWorstCorrectRate = cardStats.OrderBy(c => c.CorrectAnswerRate).Take(3).ToList();
+
+        topCardStats = topByTime
+            .Concat(topByWorstCorrectRate)
+            .GroupBy(c => c.CardId)
+            .Select(g => g.First())
             .ToList();
 
         // ---- Gráfico Pizza Geral ----
