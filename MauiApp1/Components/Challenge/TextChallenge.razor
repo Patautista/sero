@@ -6,7 +6,7 @@
 @using Domain.Events
 @using MauiApp1.Services
 @using MauiApp1.Services.Audio
-@using static Business.AnswerEvaluator
+@inject Business.AnswerEvaluator AnswerEvaluator
 @inherits SmartComponent
 
 @inject MauiSoundService SoundService
@@ -124,7 +124,7 @@
         _challengeState.AnswerTime = DateTime.UtcNow - _challengeState.CardShownAt;
 
         var possibleAnswers = CurrentCard.SentencesInTargetLanguage.Select(c => c.Text).ToList();
-        var evaluation = AnswerEvaluator.Evaluate(_challengeState.UserAnswer, possibleAnswers);
+        var evaluation = await AnswerEvaluator.Evaluate(CurrentCard.NativeSample.Text, _challengeState.UserAnswer, possibleAnswers);
 
         _challengeState.IsCorrect = evaluation.Quality != AnswerQuality.Wrong;
         _challengeState.AnswerQuality = evaluation.Quality;

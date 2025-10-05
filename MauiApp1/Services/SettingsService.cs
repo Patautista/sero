@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-using Business;
+using Business.Interfaces;
 using Business.MobileConfig;
 
 namespace AppLogic.Web

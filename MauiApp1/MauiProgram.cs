@@ -1,6 +1,7 @@
 ﻿using AppLogic.Web;
 using Business;
 using Business.Audio;
+using Business.Interfaces;
 using CommunityToolkit.Maui;
 using Infrastructure.Data;
 using Infrastructure.Services;
@@ -35,9 +36,11 @@ namespace MauiApp1
             builder.Services.AddHttpClient<MauiSoundService>();
             builder.Services.AddScoped<MauiSoundService>();
             builder.Services.AddScoped<DatabaseService>();
+            builder.Services.AddScoped<AnswerEvaluator>();
             builder.Services.AddScoped<MobileTranslationCache>();
             builder.Services.AddHttpClient<ApiService>();
             builder.Services.AddScoped<ApiService>();
+            builder.Services.AddScoped<IAIEvaluator,ApiService>();
             builder.Services.AddSingleton<ISettingsService, SettingsService>();
             builder.Services.AddSingleton<VocabularyService>();
 

@@ -10,10 +10,10 @@ namespace SupportServer.Controllers
     [Route("api/[controller]")]
     public class ChallengesController : ControllerBase
     {
-        private readonly GeminiClient _geminiClient;
+        private readonly IPromptClient _geminiClient;
         private readonly DeepLClient _deepLClient;
 
-        public ChallengesController(GeminiClient geminiClient, DeepLClient deepLClient)
+        public ChallengesController(IPromptClient geminiClient, DeepLClient deepLClient)
         {
             // ideal: mover a chave para config segura (ex: appsettings ou Secret Manager)
             _geminiClient = geminiClient;

@@ -1,7 +1,8 @@
 @page "/decks"
-@using Infrastructure.Data.Model
+@using Business.Interfaces
 @using Business.Model
 @using CommunityToolkit.Maui.Storage
+@using Infrastructure.Data.Model
 @inherits SmartComponent
 @inject MauiApp1.Services.DatabaseService DatabaseService
 @inject ISettingsService SettingsService
@@ -100,7 +101,7 @@ else
         }).ToList();
 
         var fileName = $"{deck.Name}_export.txt";
-        var fileContent = new Infrastructure.AnkiImportService().SaveToString(cardDefinitions);
+        var fileContent = new Infrastructure.Parsing.AnkiImportService().SaveToString(cardDefinitions);
 
         var result = await FileSaver.Default.SaveAsync(fileName, new MemoryStream(System.Text.Encoding.UTF8.GetBytes(fileContent)));
 

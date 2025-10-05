@@ -21,7 +21,7 @@ builder.Services.AddScoped<DeepLClient>(sp =>
     var apiKey = builder.Configuration.GetSection("DeepL:ApiKey").Value;
     return new DeepLClient(apiKey);
 });
-builder.Services.AddScoped<GeminiClient>(sp =>
+builder.Services.AddScoped<IPromptClient, GeminiClient>(sp =>
 {
     var apiKey = builder.Configuration.GetSection("Gemini:ApiKey").Value;
     return new GeminiClient(apiKey);

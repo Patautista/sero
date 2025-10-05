@@ -1,5 +1,5 @@
 ﻿using AppLogic.Web;
-using Business;
+using Business.Interfaces;
 using Business.Model;
 using Infrastructure.Audio;
 using MauiApp1.Services.Cache;
@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace MauiApp1.Services
 {
-    public class ApiService
+    public class ApiService : IAIEvaluator
     {
         private readonly HttpClient _httpClient;
         private readonly MobileTranslationCache _translationCache;
@@ -156,6 +156,35 @@ namespace MauiApp1.Services
 
             var card = await response.Content.ReadFromJsonAsync<CardDefinition>();
             return card;
+        }
+
+        public async Task<AnswerEvaluation> GetAnswerEvaluation(string challenge, string userAnswer, ICollection<string> possibleAnswers)
+        {
+            var request = new
+            {
+                Challenge = challenge,
+                UserAnswer = userAnswer,
+                PossibleAnswers = possibleAnswers
+            };
+
+            var response = await _httpClient.PostAsJsonAsync("/api/evaluation/evaluate", request);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine($"Evaluation API error: {response.StatusCode}");
+                throw new Exception("Evaluation failed");
+            }
+            var answerQuality = AnswerQuality.Wrong;
+
+            var aiResult = await response.Content.ReadAsStringAsync();
+            Enum.TryParse(aiResult, true, out answerQuality);
+
+            return new AnswerEvaluation(answerQuality, string.Empty)!;
+        }
+
+        public Task<bool> IsAvailable()
+        {
+            return GetPingAsync();
         }
     }
 }
