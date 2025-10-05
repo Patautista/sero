@@ -43,9 +43,9 @@ namespace SupportServer.Controllers
                 {string.Join(", ", subset)}
 
                 Please write a sentence or short paragraph in {language.EnglishName} that:
-                - Is natural and meaningful in everyday language
+                - Is NATURAL and MEANINFUL in everyday language
                 - Uses SOME of the given words (not necessarily all)
-                - Keeps the output at most 30 words long
+                - Keeps the output at most 20 words long
                 - Does not introduce very unusual or archaic words
                 - Avoids repeating the exact same example from the input text
 

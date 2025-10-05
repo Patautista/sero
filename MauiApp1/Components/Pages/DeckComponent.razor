@@ -13,9 +13,9 @@
     </div>
 
     <div class="card-gallery grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        @if (filteredCards.Any())
+        @if (orderedCards.Any())
         {
-            @foreach (var card in filteredCards)
+            @foreach (var card in orderedCards)
             {
                 <MauiApp1.Components.User.CardSummary
                     Card="card"
@@ -87,14 +87,14 @@
         }
     }
 
-    private IEnumerable<SrsCard> filteredCards =>
+    private IEnumerable<SrsCard> orderedCards =>
         string.IsNullOrWhiteSpace(searchTerm)
             ? allCards
             : allCards.Where(card =>
                 card.SentencesInNativeLanguage.Any(s => s.Text.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
                 card.SentencesInTargetLanguage.Any(s => s.Text.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
                 card.Tags.Any(t => t.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-            );
+            ).OrderByDescending(c => c.Repetitions);
 
     // Deletion logic
     private void PromptDelete(SrsCard card)

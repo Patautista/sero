@@ -31,12 +31,23 @@
             <p class="text-lg font-bold mb-2 text-indigo-800">
                 <span class="font-medium text-gray-700">@Card.TargetSample.Language.ToUpper():</span> @Card.TargetSample.Text
             </p>
-            <div class="flex flex-wrap gap-1">
+            <div class="flex flex-wrap gap-1 mb-2">
                 @foreach (var tag in Card.Tags)
                 {
                     <span class="badge bg-indigo-200 text-slate-800 px-2 py-1 rounded-full text-xs font-medium">@tag.Name</span>
                 }
                 <span class="badge bg-green-200 text-green-800 px-2 py-1 rounded-full text-xs font-medium">@Card.DifficultyLevel</span>
+            </div>
+            <div class="text-xs text-gray-600">
+                <p class="mb-1">
+                    <span class="font-medium"><Translate Text="Próxima Revisão:"></Translate></span> @Card.NextReview.ToString("MMM dd, yyyy")
+                </p>
+                @if (Card.LastReviewed != DateTime.MinValue)
+                {
+                    <p>
+                        <span class="font-medium"><Translate Text="Última Revisão:"></Translate></span> @Card.LastReviewed.ToString("MMM dd, yyyy")
+                    </p>
+                }
             </div>
         }
         else
