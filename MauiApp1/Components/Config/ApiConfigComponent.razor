@@ -1,4 +1,5 @@
-﻿@inject ISettingsService SettingsService
+﻿@using Business.Interfaces
+@inject ISettingsService SettingsService
 @inject NavigationManager Nav
 
 <EditForm Model="@ApiConfig" OnValidSubmit="ApplyConfig">

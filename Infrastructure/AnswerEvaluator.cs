@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Business.Interfaces;
+using Business.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,9 +11,15 @@ namespace Business
 {
     public class AnswerEvaluator
     {
+        private readonly IAIEvaluator _aiEvaluator;
 
-        public static AnswerEvaluation Evaluate(string userAnswer, ICollection<string> possibleAnswers)
+        public AnswerEvaluator(IAIEvaluator aiEvaluator)
         {
+            _aiEvaluator = aiEvaluator;
+        }
+        public async Task<AnswerEvaluation> Evaluate(string challenge, string userAnswer, ICollection<string> possibleAnswers)
+        {
+            
             // Normalize the user's answer
             var normalizedUserAnswer = NormalizeString(userAnswer);
 
@@ -35,22 +43,17 @@ namespace Business
             }
             else
             {
+                if (await _aiEvaluator.IsAvailable())
+                {
+                    return await _aiEvaluator.GetAnswerEvaluation(challenge, userAnswer, possibleAnswers);
+                }
                 return new AnswerEvaluation(AnswerQuality.Wrong, bestMatch.Answer);
             }
         }
 
         // --- Helper Functions ---
 
-        public record AnswerFeedback
-        {
-            public AnswerQuality Quality { get; init; }
-            public string ClosestMatch { get; init; }
-            public string MainMessage { get; set; }
-            public string? ExpectedAnswer { get; init; }
-            public string? Hint { get; init; }
-        }
-
-        public static AnswerFeedback BuildFeedbackMessage(AnswerEvaluation evaluation, string userAnswer)
+        public AnswerFeedback BuildFeedbackMessage(AnswerEvaluation evaluation, string userAnswer)
         {
             string mainMessage;
             string? expectedAnswer = null;
@@ -156,22 +159,5 @@ namespace Business
             }
             return d[n, m];
         }
-    }
-    public record AnswerEvaluation
-    {
-        public AnswerEvaluation(AnswerQuality quality, string closestMatch)
-        {
-            Quality = quality;
-            ClosestMatch = closestMatch;
-        }
-        public readonly string ClosestMatch; 
-        public readonly AnswerQuality Quality;
-    }
-    public enum AnswerQuality
-    {
-        Wrong = 2,
-        Hard = 3,
-        Ok = 4,
-        Perfect = 5
     }
 }

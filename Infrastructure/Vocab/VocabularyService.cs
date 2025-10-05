@@ -1,4 +1,4 @@
-using Business;
+using Business.Interfaces;
 using Catalyst;
 using DeepL.Model;
 using Mosaik.Core;
