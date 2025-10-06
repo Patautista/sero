@@ -158,7 +158,7 @@
             try
             {
                 var ankiService = new AnkiImportService();
-                var cards = ankiService.Import(ankiFilePath, selectedAppLanguage, selectedTargetLanguage).ToList();
+                var cards = ankiService.ImportTxt(ankiFilePath, selectedAppLanguage, selectedTargetLanguage).ToList();
                 foreach (var card in cards)
                 {
                     var cardTable = new Infrastructure.Data.Model.CardTable

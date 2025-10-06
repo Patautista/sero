@@ -13,13 +13,13 @@
     </div>
 
     <div class="card-gallery grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        @if (orderedCards.Any())
+        @if (filteredCards.Any())
         {
-            @foreach (var card in orderedCards)
+            @foreach (var card in filteredCards)
             {
                 <MauiApp1.Components.User.CardSummary
                     Card="card"
-                    OnDelete="() => ConfirmDeleteCard(card.CardId)"
+                    OnDelete="() => PromptDelete(card)"
                     OnEditConfirm="(def) => ConfirmEditCard(card.CardId, def)" />
             }
         }
@@ -37,11 +37,11 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content" @onclick:stopPropagation>
                 <div class="modal-header">
-                    <h5 class="modal-title text-red-600">Confirmar exclusão</h5>
+                    <h5 class="modal-title text-red-600"><Translate Text="Confirmar exclusão"></Translate></h5>
                     <button type="button" class="close" @onclick="CancelDelete">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <p>Tem certeza que deseja excluir este cartão?</p>
+                    <p><Translate Text="Tem certeza que deseja excluir este cartão?"></Translate></p>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-danger" @onclick="DeleteCardConfirmed">Excluir</button>
@@ -87,7 +87,7 @@
         }
     }
 
-    private IEnumerable<SrsCard> orderedCards =>
+    private IEnumerable<SrsCard> filteredCards =>
         string.IsNullOrWhiteSpace(searchTerm)
             ? allCards
             : allCards.Where(card =>
@@ -111,7 +111,7 @@
 
     private async Task ConfirmDeleteCard(int cardId)
     {
-        var confirmed = await PromptConfirm("Tem certeza que deseja excluir este cartão?");
+        var confirmed = await PromptConfirm(Translate("Tem certeza que deseja excluir este cartão?"));
         if (confirmed)
         {
             // Lógica para excluir o cartão
@@ -124,19 +124,12 @@
     {
         if (cardToDelete != null && deck != null)
         {
-            // Find CardTable Id by matching sentence and tags
-            var cardTable = deck.Cards.FirstOrDefault(c =>
-                c.Meaning.Sentences.Any(s => s.Text == cardToDelete.NativeSample.Text) &&
-                c.Meaning.Sentences.Any(s => s.Text == cardToDelete.TargetSample.Text)
-            );
-            if (cardTable != null)
+
+            var success = await DatabaseService.DeleteCardAsync(cardToDelete.CardId);
+            if (success)
             {
-                var success = await DatabaseService.DeleteCardAsync(cardTable.Id);
-                if (success)
-                {
-                    allCards.Remove(cardToDelete);
-                    StateHasChanged();
-                }
+                allCards.Remove(cardToDelete);
+                StateHasChanged();
             }
         }
         CancelDelete();
