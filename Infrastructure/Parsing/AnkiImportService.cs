@@ -1,4 +1,5 @@
-﻿using Business.Model;
+﻿using AnkiNet;
+using Business.Model;
 using Domain.Entity;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace Infrastructure.Parsing
 {
     public class AnkiImportService
     {
-        public IEnumerable<CardDefinition> Import(string filePath, string nativeLanguageCode, string targetLanguageCode)
+        public IEnumerable<CardDefinition> ImportTxt(string filePath, string nativeLanguageCode, string targetLanguageCode)
         {
             var lines = File.ReadAllLines(filePath);
 
@@ -46,6 +47,31 @@ namespace Infrastructure.Parsing
                 };
             }
         }
+
+        /*
+         public async Task<IEnumerable<CardDefinition>> ImportApkg(string filePath, string nativeLanguageCode, string targetLanguageCode)
+        {
+            AnkiCollection collection = await AnkiFileReader.ReadFromFileAsync(filePath);
+            foreach (var card in collection.DefaultDeck.Cards)
+            {
+                if (card.Note.Fields.Count() < 2)
+                    continue;
+                var native = card.Note.Fields[1]?.Trim();
+                var target = card.Note.Fields[0]?.Trim();
+                if (string.IsNullOrWhiteSpace(native) || string.IsNullOrWhiteSpace(target))
+                    continue;
+                yield return new CardDefinition
+                {
+                    NativeLanguageCode = nativeLanguageCode,
+                    TargetLanguageCode = targetLanguageCode,
+                    NativeSentence = native,
+                    TargetSentence = target,
+                    Tags = new List<Tag>(),
+                    DifficultyLevel = DifficultyLevel.Unknown,
+                };
+            }
+        }
+         */
 
         public string SaveToString(IEnumerable<CardDefinition> cards)
         {
