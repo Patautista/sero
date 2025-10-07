@@ -17,6 +17,9 @@
     <None Update="Norsk Custom-20250926124943.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Norsk Custom-20251003100009.apkg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -7,7 +7,7 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Caleb.Anki.NET" Version="2.0.1" />
+		<PackageReference Include="Caleb.Anki.NET" Version="2.0.2" />
 		<PackageReference Include="Catalyst" Version="1.0.54164" />
 		<PackageReference Include="Catalyst.Models.Italian" Version="1.0.30952" />
 		<PackageReference Include="Catalyst.Models.Norwegian" Version="1.0.30952" />
@@ -25,6 +25,7 @@
 		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.1" />
 		<PackageReference Include="Mosaik.Core" Version="25.5.58373" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
+		<PackageReference Include="SearchPioneer.Lingua" Version="1.0.4" />
 	</ItemGroup>
 
 	<ItemGroup>
