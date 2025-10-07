@@ -157,7 +157,7 @@
         {
             try
             {
-                var ankiService = new AnkiImportService();
+                var ankiService = new AnkiHelper();
                 var cards = ankiService.ImportTxt(ankiFilePath, selectedAppLanguage, selectedTargetLanguage).ToList();
                 foreach (var card in cards)
                 {

@@ -101,7 +101,7 @@ else
         }).ToList();
 
         var fileName = $"{deck.Name}_export.txt";
-        var fileContent = new Infrastructure.Parsing.AnkiImportService().SaveToString(cardDefinitions);
+        var fileContent = new Infrastructure.Parsing.AnkiHelper().SaveToString(cardDefinitions);
 
         var result = await FileSaver.Default.SaveAsync(fileName, new MemoryStream(System.Text.Encoding.UTF8.GetBytes(fileContent)));
 
