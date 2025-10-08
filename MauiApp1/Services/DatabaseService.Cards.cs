@@ -120,45 +120,7 @@ namespace MauiApp1.Services
             var tags = await db.Tags.ToListAsync();
             return tags.Select(t => t.ToDomain()).ToList();
         }
-        public async Task CreateCardWithRevisions(SrsCard srsCard, int deckId)
-        {
-            var events = new List<EventTable>();
-            for(var i = 0; i < srsCard.Repetitions; i++)
-            {
-                var answerEvent = AnkiHelper.AnkiAnswerEvent with { CardId = srsCard.CardId };
-                var eventTable = EventMapper.ToTable(answerEvent, Events.CardAnswered.Schemas.CardAnsweredV1);
-                events.Add(eventTable);
-            }
-            var cardTable = new CardTable
-            {
-                Meaning = new MeaningTable
-                {
-                    DifficultyLevel = srsCard.DifficultyLevel.ToString(),
-                    Sentences =
-                        new List<SentenceTable> {
-                            new SentenceTable {
-                                Language = srsCard.NativeSample.Language,
-                                Text = srsCard.NativeSample.Text
-                            },
-                            new SentenceTable {
-                                Language = srsCard.TargetSample.Language,
-                                Text = srsCard.TargetSample.Text
-                            },
-                        },
-                    Tags = srsCard.Tags?.Select(tag => new TagTable { Name = tag.Name, Type = tag.Type }).ToList() ?? new(),
-                },
-                Events = events,
-                UserCardState = new SrsCardStateTable
-                {
-                    EaseFactor = srsCard.EaseFactor,
-                    LastReviewed = srsCard.LastReviewed,
-                    NextReview = srsCard.NextReview,
-                    Interval = srsCard.Interval
-                },
-                DeckId = deckId
-            };
-            db.Cards.Add(cardTable);
-        }
+
         public async Task<SrsCard> CreateCard(CardDefinition cardDefinition, int deckId)
         {
             var cardTable = new CardTable
