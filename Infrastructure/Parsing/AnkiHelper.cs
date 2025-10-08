@@ -19,41 +19,6 @@ namespace Infrastructure.Parsing
 {
     public class AnkiHelper
     {
-        public IEnumerable<CardDefinition> ImportTxt(string filePath, string nativeLanguageCode, string targetLanguageCode)
-        {
-            var lines = File.ReadAllLines(filePath);
-
-            var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
-            foreach (var line in lines)
-            {
-                if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#"))
-                    continue;
-
-                var parts = line.Split('\t');
-                if (parts.Length < 2) continue;
-
-                var native = parts[1].Trim();
-                var target = parts[0].Trim();
-
-                // chave única
-                var key = $"{native}||{target}";
-                if (!seen.Add(key))
-                    continue;
-                if (!seen.Add($"{target}||{native}"))
-                    continue; // já existe, pula
-
-                yield return new CardDefinition
-                {
-                    NativeLanguageCode = nativeLanguageCode,
-                    TargetLanguageCode = targetLanguageCode,
-                    NativeSentence = native,
-                    TargetSentence = target,
-                    Tags = new List<Tag>(),
-                    DifficultyLevel = DifficultyLevel.Unknown,
-                };
-            }
-        }
 
         public async Task<ICollection<CardTable>> ReadApkg(string filePath, string nativeLanguageCode, string targetLanguageCode)
         {
@@ -78,6 +43,7 @@ namespace Infrastructure.Parsing
                 var nativeLanguage = FromCode(nativeLanguageCode);
 
                 Directory.SetCurrentDirectory(AppContext.BaseDirectory);
+
                 var detector = LanguageDetectorBuilder
                     .FromLanguages(targetLanguage, nativeLanguage)
                     .WithPreloadedLanguageModels()
@@ -154,26 +120,6 @@ namespace Infrastructure.Parsing
             }
             return tableModels;
         }
-         
-        private Language FromCode(string code)
-        {
-            return code.ToLower() switch
-            {
-                AvailableCodes.Portuguese or "por" or "portuguese" => Portuguese,
-                AvailableCodes.Norwegian or "nob" or "norwegian" => Nynorsk,
-                AvailableCodes.Italian or "ita" or "italian" => Italian,
-                _ => throw new ArgumentException($"Unsupported language code: {code}")
-            };
-        }
-        private string ToCode(Language language)
-        {
-            return language switch
-            {
-                Language.Portuguese => AvailableCodes.Portuguese,
-                Language.Nynorsk => AvailableCodes.Norwegian,
-                _ => throw new ArgumentException($"Unsupported language: {language}")
-            };
-        }
 
         public string SaveToString(IEnumerable<CardDefinition> cards)
         {
@@ -200,7 +146,42 @@ namespace Infrastructure.Parsing
             return string.Join(Environment.NewLine, lines);
         }
 
-        public void Export(IEnumerable<CardDefinition> cards, string filePath)
+        public IEnumerable<CardDefinition> ImportTxt(string filePath, string nativeLanguageCode, string targetLanguageCode)
+        {
+            var lines = File.ReadAllLines(filePath);
+
+            var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var line in lines)
+            {
+                if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#"))
+                    continue;
+
+                var parts = line.Split('\t');
+                if (parts.Length < 2) continue;
+
+                var native = parts[1].Trim();
+                var target = parts[0].Trim();
+
+                // chave única
+                var key = $"{native}||{target}";
+                if (!seen.Add(key))
+                    continue;
+                if (!seen.Add($"{target}||{native}"))
+                    continue; // já existe, pula
+
+                yield return new CardDefinition
+                {
+                    NativeLanguageCode = nativeLanguageCode,
+                    TargetLanguageCode = targetLanguageCode,
+                    NativeSentence = native,
+                    TargetSentence = target,
+                    Tags = new List<Tag>(),
+                    DifficultyLevel = DifficultyLevel.Unknown,
+                };
+            }
+        }
+        public void ExportTxt(IEnumerable<CardDefinition> cards, string filePath)
         {
             File.WriteAllText(filePath, SaveToString(cards), Encoding.UTF8);
         }
@@ -209,5 +190,92 @@ namespace Infrastructure.Parsing
             {
                 OccurredAtUtc = DateTimeOffset.FromUnixTimeMilliseconds(timestamp).UtcDateTime
             };
+
+        private Language FromCode(string code)
+        {
+            return code.ToLower() switch
+            {
+                AvailableCodes.Portuguese or "por" or "portuguese" => Portuguese,
+                AvailableCodes.Norwegian or "nob" or "norwegian" => Nynorsk,
+                AvailableCodes.Italian or "ita" or "italian" => Italian,
+                _ => throw new ArgumentException($"Unsupported language code: {code}")
+            };
+        }
+        private string ToCode(Language language)
+        {
+            return language switch
+            {
+                Language.Portuguese => AvailableCodes.Portuguese,
+                Language.Nynorsk => AvailableCodes.Norwegian,
+                _ => throw new ArgumentException($"Unsupported language: {language}")
+            };
+        }
+
+        public async Task ExportApkg(DeckTable deck, string outputPath)
+        {
+            if (deck?.Cards == null)
+                throw new ArgumentNullException(nameof(deck));
+
+            var collection = new AnkiCollection();
+            var ankiDeck = collection.CreateDeck(deck.Name);
+
+            var cardTypes = new[]
+            {
+                new AnkiCardType(
+                    "Forwards",
+                    0,
+                    "{{Front}}<br/>",
+                    "{{Front}}<hr id=\"answer\">{{Back}}"
+                )
+            };
+
+            var noteType = new AnkiNoteType(
+                "Basic",
+                cardTypes,
+                new[] { "Front", "Back" }
+            );
+
+            var noteTypeId = collection.CreateNoteType(noteType);
+
+            foreach (var cardTable in deck.Cards)
+            {
+                if (cardTable.Meaning?.Sentences == null || cardTable.Meaning.Sentences.Count < 2)
+                    continue;
+
+                var nativeSentence = cardTable.Meaning.Sentences
+                    .FirstOrDefault(s => s.Language != deck.TargetLanguage)?.Text;
+                var targetSentence = cardTable.Meaning.Sentences
+                    .FirstOrDefault(s => s.Language == deck.TargetLanguage)?.Text;
+
+                if (string.IsNullOrWhiteSpace(nativeSentence) || string.IsNullOrWhiteSpace(targetSentence))
+                    continue;
+
+                var ids = collection.CreateNote(ankiDeck, noteTypeId, nativeSentence, targetSentence);
+
+                collection.TryGetDeckById(ankiDeck, out var ankiDeckToUse);
+
+                var card = ankiDeckToUse.Cards.Where(c => c.Id == ids.Skip(1).First()).First();
+
+                // If we have SRS state, transfer it
+                if (cardTable.UserCardState != null && cardTable.Events != null)
+                {
+                    foreach(var cardAnswerEvent in cardTable.Events.Where(e => e.Name == nameof(CardAnsweredEvent)).ToArray())
+                    {
+                        collection.CreateRevisionLog(
+                        cardId: card.Id,
+                        ease: (long)cardTable.UserCardState.EaseFactor,
+                        interval: cardTable.UserCardState.Interval,
+                        factor: 2,
+                        lastInterval: cardTable.UserCardState.Interval,
+                        revisionType: AnkiNet.CollectionFile.Model.RevisionType.Review,
+                        timeTookMs: new DateTimeOffset(cardTable.UserCardState.LastReviewed).ToUnixTimeMilliseconds(),
+                        createdAtMs: ((DateTimeOffset)cardAnswerEvent.OccurredAtUtc).ToUnixTimeMilliseconds()
+                    );
+                    }
+                }
+            }
+
+            await AnkiFileWriter.WriteToFileAsync(outputPath, collection);
+        }
     }
 }

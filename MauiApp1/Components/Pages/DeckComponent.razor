@@ -94,7 +94,7 @@
                 card.SentencesInNativeLanguage.Any(s => s.Text.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
                 card.SentencesInTargetLanguage.Any(s => s.Text.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
                 card.Tags.Any(t => t.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-            ).OrderByDescending(c => c.NextReview);
+            ).OrderBy(c => c.NextReview);
 
     // Deletion logic
     private void PromptDelete(SrsCard card)
