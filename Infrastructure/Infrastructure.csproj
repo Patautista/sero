@@ -7,7 +7,6 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Caleb.Anki.NET" Version="2.0.2" />
 		<PackageReference Include="Catalyst" Version="1.0.54164" />
 		<PackageReference Include="Catalyst.Models.Italian" Version="1.0.30952" />
 		<PackageReference Include="Catalyst.Models.Norwegian" Version="1.0.30952" />
@@ -29,6 +28,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\AnkiNet\AnkiNet.csproj" />
 	  <ProjectReference Include="..\Application\Business.csproj" />
 	  <ProjectReference Include="..\Domain\Domain.csproj" />
 	</ItemGroup>
