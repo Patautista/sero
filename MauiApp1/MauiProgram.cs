@@ -12,6 +12,7 @@ using MauiApp1.Services.Seed;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Radzen;
+using System.IO.Compression;
 
 namespace MauiApp1
 {
@@ -52,11 +53,14 @@ namespace MauiApp1
             var basePath = FileSystem.AppDataDirectory;
             builder.Services.AddDbContext<MobileDbContext>(options =>
                 options.UseSqlite($"Filename={Path.Combine(basePath, "localdb.db")}")
+                .EnableSensitiveDataLogging()
             );
 
             builder.Services.AddScoped<MobileDbContextInitialiser>();
 
             var app = builder.Build();
+
+            //EnsureLinguaModelsExistAsync().Wait();
 
             using (var scope = app.Services.CreateScope())
             {
@@ -69,5 +73,6 @@ namespace MauiApp1
 
             return app;
         }
+        
     }
 }

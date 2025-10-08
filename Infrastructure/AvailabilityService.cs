@@ -23,7 +23,8 @@ namespace Infrastructure.Services
     }
     public static class AvailableCodes
     {
-        public static string Italian = "it";
-        public static string Norwegian = "no";
+        public const string Italian = "it";
+        public const string Norwegian = "no";
+        public const string Portuguese = "pt";
     }
 }

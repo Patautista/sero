@@ -4,10 +4,12 @@ using Domain.Entity;
 using Domain.Events;
 using Infrastructure.Data.Mappers;
 using Infrastructure.Data.Model;
+using Infrastructure.Services;
 using Lingua;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -53,7 +55,6 @@ namespace Infrastructure.Parsing
             }
         }
 
-        
         public async Task<ICollection<CardTable>> ReadApkg(string filePath, string nativeLanguageCode, string targetLanguageCode)
         {
             var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -63,16 +64,24 @@ namespace Infrastructure.Parsing
             {
 
                 AnkiCollection collection = await AnkiFileReader.ReadFromFileAsync(filePath);
+
                 var deck = collection.Decks.FirstOrDefault(d => d.Name != "Default");
-                var deckTable = new DeckTable { Name = deck.Name ?? "Default" };
+
+                var deckTable = new DeckTable { 
+                    Name = deck.Name ?? "Default",
+                    Description = "Anki",
+                    TargetLanguage = targetLanguageCode 
+                };
+
 
                 var targetLanguage = FromCode(targetLanguageCode);
                 var nativeLanguage = FromCode(nativeLanguageCode);
+
+                Directory.SetCurrentDirectory(AppContext.BaseDirectory);
                 var detector = LanguageDetectorBuilder
                     .FromLanguages(targetLanguage, nativeLanguage)
+                    .WithPreloadedLanguageModels()
                     .Build();
-
-                CardTable cardTable = new();
 
                 foreach (var card in deck.Cards)
                 {
@@ -86,18 +95,33 @@ namespace Infrastructure.Parsing
                         ? DateTimeOffset.FromUnixTimeMilliseconds(lastRevision.Id).ToLocalTime().DateTime 
                         : DateTime.MinValue;
 
-                    var nativeSentence = card.Note.Fields.FirstOrDefault(n => detector.DetectLanguageOf(n) == nativeLanguage)?.Trim();
-                    var targetSentence = card.Note.Fields.FirstOrDefault(n => detector.DetectLanguageOf(n) == targetLanguage)?.Trim();
+                    string nativeSentence = string.Empty;
+                    foreach (var n in card.Note.Fields)
+                    {
+                        var lang = detector.DetectLanguageOf(n);
+                        if (lang == nativeLanguage)
+                        {
+                            nativeSentence = n.Trim();
+                            break;
+                        }
+                    }
 
-                    cardTable = new CardTable
+                    string targetSentence = string.Empty;
+                    foreach (var n in card.Note.Fields)
+                    {
+                        var lang = detector.DetectLanguageOf(n);
+                        if (lang == targetLanguage)
+                        {
+                            targetSentence = n.Trim();
+                            break;
+                        }
+                    }
+
+                    var cardTable = new CardTable
                     {
                         Events = CardRevisions.Select(r =>
-                            EventMapper.ToTable(AnkiAnswerEvent with
-                            {
-                                EllapsedMs = (int)r.TimeTookMs,
-                                OccurredAtUtc = DateTimeOffset.FromUnixTimeMilliseconds(lastRevision.Id).ToLocalTime().DateTime
-                            }, 
-                            Events.CardAnswered.Schemas.CardAnsweredV1))
+                         EventMapper.ToTable(CreateAnkiEvent(r.CardId, r.Id, r.TimeTookMs), 
+                         Events.CardAnswered.Schemas.CardAnsweredV1))
                         .ToList(),
                         Meaning = new MeaningTable { Sentences = new List<SentenceTable> {
                             new SentenceTable { Language = nativeLanguageCode, Text = nativeSentence },
@@ -135,8 +159,9 @@ namespace Infrastructure.Parsing
         {
             return code.ToLower() switch
             {
-                "pt" or "por" or "portuguese" => Portuguese,
-                "no" or "nob" or "norwegian" => Nynorsk,
+                AvailableCodes.Portuguese or "por" or "portuguese" => Portuguese,
+                AvailableCodes.Norwegian or "nob" or "norwegian" => Nynorsk,
+                AvailableCodes.Italian or "ita" or "italian" => Italian,
                 _ => throw new ArgumentException($"Unsupported language code: {code}")
             };
         }
@@ -144,8 +169,8 @@ namespace Infrastructure.Parsing
         {
             return language switch
             {
-                Language.Portuguese => "pt",
-                Language.Nynorsk => "no",
+                Language.Portuguese => AvailableCodes.Portuguese,
+                Language.Nynorsk => AvailableCodes.Norwegian,
                 _ => throw new ArgumentException($"Unsupported language: {language}")
             };
         }
@@ -179,6 +204,10 @@ namespace Infrastructure.Parsing
         {
             File.WriteAllText(filePath, SaveToString(cards), Encoding.UTF8);
         }
-        public static CardAnsweredEvent AnkiAnswerEvent = new CardAnsweredEvent(Guid.NewGuid(), "TextChallenge", 1, 1000, true);
+        private static CardAnsweredEvent CreateAnkiEvent(long cardId, long timestamp, long elapsedMs)
+            => new(Guid.NewGuid(), "TextChallenge", (int)cardId, (int)elapsedMs, true)
+            {
+                OccurredAtUtc = DateTimeOffset.FromUnixTimeMilliseconds(timestamp).UtcDateTime
+            };
     }
 }

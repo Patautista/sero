@@ -8,6 +8,7 @@
 @using Infrastructure.Services
 @using MauiApp1.Services.Seed
 @using Microsoft.AspNetCore.Components.Forms
+@using System.IO.Compression
 @inject ISettingsService SettingsService
 @inject NavigationManager Nav
 @inject MobileDbContextInitialiser DbInit
@@ -47,7 +48,7 @@
         var options = new List<Option>
         {
             new Option { Value = "scratch", Label = "Começar do zero" },
-            new Option { Value = "anki", Label = "Importar de arquivo Anki TXT" }
+            new Option { Value = "anki", Label = "Importar de arquivo Anki (APKG)" }
         };
         if (selectedTargetLanguage == AvailableCodes.Italian)
         {
@@ -61,35 +62,32 @@
         {
             ankiFileError = "";
             var customFileTypes = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
-        {
-            { DevicePlatform.Android, new[] { "text/plain" } },
-            { DevicePlatform.WinUI, new[] { ".txt" } },
-            { DevicePlatform.MacCatalyst, new[] { "txt" } },
-            { DevicePlatform.iOS, new[] { "public.plain-text" } }
-        });
+            {
+                { DevicePlatform.Android, new[] { "*/*" } },
+                { DevicePlatform.WinUI, new[] { ".apkg" } },
+                { DevicePlatform.MacCatalyst, new[] { "apkg" } },
+                { DevicePlatform.iOS, new[] { "com.pkware.zip-archive", "public.data" } },
+            });
 
             var options = new PickOptions
             {
-                PickerTitle = "Selecione arquivo .txt",
+                PickerTitle = "Selecione arquivo .apkg",
                 FileTypes = customFileTypes
             };
 
             var result = await FilePicker.Default.PickAsync(options);
 
-            if (result != null)
+            if (!Path.GetExtension(result.FileName).Equals(".apkg", StringComparison.OrdinalIgnoreCase))
             {
-                ankiFilePath = result.FullPath ?? result.FileName;
-
-                // Ler conteúdo do arquivo se precisar
-                using var stream = await result.OpenReadAsync();
-                using var reader = new StreamReader(stream);
-                var content = await reader.ReadToEndAsync();
-
-                Console.WriteLine(content.Substring(0, Math.Min(100, content.Length))); // só exemplo
+                ankiFileError = "Formato inválido.";
+            }
+            else if(result == null)
+            {
+                ankiFileError = "Nenhum arquivo selecionado.";
             }
             else
             {
-                ankiFileError = "Nenhum arquivo selecionado.";
+                ankiFilePath = result.FullPath ?? result.FileName;
             }
         }
         catch (Exception ex)
@@ -106,7 +104,7 @@
         config.SelectedLanguage = new LanguagePair
         {
             Source = new(selectedAppLanguage),
-            Target = new(string.IsNullOrWhiteSpace(selectedTargetLanguage) ? "it" : selectedTargetLanguage)
+            Target = new(string.IsNullOrWhiteSpace(selectedTargetLanguage) ? AvailableCodes.Italian : selectedTargetLanguage)
         };
         SettingsService.StudyConfig.Update(config);
 
@@ -118,6 +116,25 @@
         if (OptionModel.SelectedOption == "anki")
             return !string.IsNullOrEmpty(ankiFilePath);
         return !string.IsNullOrWhiteSpace(OptionModel.SelectedOption);
+    }
+
+    public static async Task PrepareLinguaModelsAsync()
+    {
+        var destDir = Path.Combine(FileSystem.AppDataDirectory, "Lingua");
+        
+
+        Directory.CreateDirectory(destDir);
+
+        // Copia o zip do pacote para o disco
+        var zipPath = Path.Combine(FileSystem.AppDataDirectory, "LinguaModels.zip");
+        using (var src = await FileSystem.OpenAppPackageFileAsync("LinguaModels.zip"))
+        using (var dst = File.Create(zipPath))
+            await src.CopyToAsync(dst);
+
+        // Extrai
+        ZipFile.ExtractToDirectory(zipPath, destDir, overwriteFiles: true);
+
+        File.Delete(zipPath);
     }
 
     private async Task CreateOrImportDeck()
@@ -133,50 +150,15 @@
         };
         SettingsService.StudyConfig.Update(config);
 
-        // Create deck
-        var deck = new Infrastructure.Data.Model.DeckTable
-        {
-            Name = deckName,
-            Description = deckDescription,
-            TargetLanguage = selectedTargetLanguage,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        };
-        try
-        {
-            DbContext.Decks.Add(deck);
-            await DbContext.SaveChangesAsync();
-        }
-        catch(Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
-
         // Import logic
         if (OptionModel.SelectedOption == "anki" && !string.IsNullOrEmpty(ankiFilePath))
         {
+            var ankiService = new AnkiHelper();
+            await PrepareLinguaModelsAsync();
+            var cards = await ankiService.ReadApkg(ankiFilePath, selectedAppLanguage, selectedTargetLanguage);
             try
             {
-                var ankiService = new AnkiHelper();
-                var cards = ankiService.ImportTxt(ankiFilePath, selectedAppLanguage, selectedTargetLanguage).ToList();
-                foreach (var card in cards)
-                {
-                    var cardTable = new Infrastructure.Data.Model.CardTable
-                        {
-                            Meaning = new Infrastructure.Data.Model.MeaningTable
-                            {
-                                DifficultyLevel = card.DifficultyLevel.ToString(),
-                                Sentences = new List<Infrastructure.Data.Model.SentenceTable>
-                                {
-                                    new() { Language = card.NativeLanguageCode, Text = card.NativeSentence },
-                                    new() { Language = card.TargetLanguageCode, Text = card.TargetSentence }
-                                },
-                                Tags = card.Tags.Select(tag => new Infrastructure.Data.Model.TagTable { Name = tag.Name, Type = tag.Type }).ToList()
-                            },
-                            DeckId = deck.Id
-                        };
-                    await DbContext.Cards.AddAsync(cardTable);
-                }
+                await DbContext.Cards.AddRangeAsync(cards);
                 await DbContext.SaveChangesAsync();
             }
             catch(Exception ex)
@@ -188,36 +170,30 @@
         {
             await DbInit.SeedAsync();
         }
+        else
+        {
+            // Create deck
+            var deck = new Infrastructure.Data.Model.DeckTable
+            {
+                Name = deckName,
+                Description = deckDescription,
+                TargetLanguage = selectedTargetLanguage,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+            try
+            {
+                DbContext.Decks.Add(deck);
+                await DbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
         // else: scratch, do nothing (empty deck)
 
         step++;
-    }
-
-    private async Task OnAnkiFileSelected(InputFileChangeEventArgs e)
-    {
-        try
-        {
-            ankiFileError = "";
-            var file = e.File;
-            if (file != null && file.Size > 0)
-            {
-                var tempPath = Path.GetTempFileName();
-                await using (var stream = file.OpenReadStream())
-                await using (var fs = File.Create(tempPath))
-                {
-                    await stream.CopyToAsync(fs);
-                }
-                ankiFilePath = tempPath;
-            }
-            else
-            {
-                ankiFileError = file == null ? "Nenhum arquivo selecionado." : "Arquivo vazio.";
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
     }
 
 }
@@ -267,14 +243,17 @@
     else if (step == 4)
     {
         <h3 class="text-xl font-semibold mb-2"><Translate Text="Como deseja criar seu primeiro deck?"></Translate></h3>
-        <div class="mb-3">
+        @if(OptionModel.SelectedOption != "anki")
+        {
+            <div class="mb-3">
             <label class="block text-sm font-medium text-gray-700 mb-1"><Translate Text="Nome do Deck"></Translate></label>
             <input class="form-input w-full" @bind="deckName" />
-        </div>
-        <div class="mb-3">
-            <label class="block text-sm font-medium text-gray-700 mb-1"><Translate Text="Descrição"></Translate></label>
-            <input class="form-input w-full" @bind="deckDescription" />
-        </div>
+            </div>
+            <div class="mb-3">
+                <label class="block text-sm font-medium text-gray-700 mb-1"><Translate Text="Descrição"></Translate></label>
+                <input class="form-input w-full" @bind="deckDescription" />
+            </div>
+        }
         <div class="mb-6">
            <EditForm Model="@OptionModel">
             <InputRadioGroup @bind-Value="OptionModel.SelectedOption" class="flex flex-col gap-2">
@@ -288,7 +267,7 @@
                     @if (option.Value == "anki" && OptionModel.SelectedOption == "anki")
                     {
                         <button type="button" class="btn btn-secondary mt-2" @onclick="PickAnkiFile">
-                                <Translate Text="Selecionar arquivo .txt"></Translate>
+                                <Translate Text="Selecionar arquivo .apkg"></Translate>
                         </button>
 
                         @if (!string.IsNullOrEmpty(ankiFilePath))
@@ -305,7 +284,7 @@
             </InputRadioGroup>
         </EditForm>
         </div>
-        <ButtonPrimary OnClick="@CreateOrImportDeck" Disabled="@(string.IsNullOrWhiteSpace(deckName) || !IsDeckOptionValid())"><Translate Text="Finalizar"></Translate></ButtonPrimary>
+        <ButtonPrimary OnClick="@CreateOrImportDeck" Disabled="@((OptionModel.SelectedOption != "anki" && string.IsNullOrWhiteSpace(deckName)) || !IsDeckOptionValid())"><Translate Text="Finalizar"></Translate></ButtonPrimary>
     }
     else if (step == 5)
     {
