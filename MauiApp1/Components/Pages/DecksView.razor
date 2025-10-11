@@ -1,0 +1,125 @@
+@page "/decks"
+@using Business.Interfaces
+@using Business.Model
+@using CommunityToolkit.Maui.Storage
+@using Infrastructure.Data.Model
+@inherits SmartComponent
+@inject MauiApp1.Services.DatabaseService DatabaseService
+@inject ISettingsService SettingsService
+@inject IJSRuntime JS
+
+<div class="card flex flex-col items-center mb-5 p-3">
+    <h2 class="text-2xl font-bold mb-8 text-center text-indigo-700">Visualizar Decks</h2>
+    <div class="mb-4 w-full max-w-xs">
+        <MauiApp1.Components.Shared.DeckPicker @bind-SelectedDeckId="selectedDeckId" />
+    </div>
+    <div class="flex gap-2 mt-2">
+        <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                @onclick="ShowCreateCardModal"
+                disabled="@(selectedDeckId == 0)">
+            Criar Novo Cartão
+        </button>
+        <button class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+                @onclick="ExportDeck"
+                disabled="@(selectedDeckId == 0)">
+            Exportar Deck
+        </button>
+    </div>
+</div>
+
+@if (selectedDeckId > 0)
+{
+    <DeckComponent DeckId="selectedDeckId" />
+}
+else
+{
+    <div class="text-center text-gray-500 mt-8">Selecione um deck para visualizar.</div>
+}
+
+@if (showCreateCardModal)
+{
+    <div class="modal-backdrop-custom" @onclick="HideCreateCardModal"></div>
+    <div class="modal fade show modal-animate" style="display:block;" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" @onclick:stopPropagation>
+                <div class="modal-header">
+                    <h5 class="modal-title">Criar Novo Cartão</h5>
+                    <button type="button" class="close" @onclick="HideCreateCardModal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <MauiApp1.Components.Pages.CreateCard SelectedDeckId="selectedDeckId" OnCardCreated="OnCardCreated" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(exportMessage))
+{
+    <div class="fixed bottom-4 right-4 bg-indigo-600 text-white px-4 py-2 rounded shadow-lg z-50">
+        @exportMessage
+    </div>
+}
+
+@code {
+    private int selectedDeckId = 0;
+    private bool showCreateCardModal = false;
+    private string exportMessage = "";
+
+    private void ShowCreateCardModal()
+    {
+        showCreateCardModal = true;
+    }
+
+    private void HideCreateCardModal()
+    {
+        showCreateCardModal = false;
+    }
+
+    private async Task ExportDeck()
+    {
+        exportMessage = "";
+        if (selectedDeckId == 0)
+            return;
+
+        var deck = await DatabaseService.GetDeckByIdAsync(selectedDeckId);
+        if (deck == null || deck.Cards == null || !deck.Cards.Any())
+        {
+            exportMessage = "Deck vazio ou não encontrado.";
+            StateHasChanged();
+            return;
+        }
+
+        // Create default filename
+        var fileName = $"{deck.Name}.apkg";
+
+        try
+        {
+            // Let user choose save location
+            var result = await FileSaver.Default.SaveAsync(fileName, Stream.Null);
+            if (!result.IsSuccessful)
+            {
+                exportMessage = "Operação cancelada pelo usuário.";
+                return;
+            }
+
+            // Use AnkiHelper to export the deck to the chosen location
+            var ankiHelper = new Infrastructure.Parsing.AnkiHelper();
+            await ankiHelper.ExportApkg(deck, result.FilePath);
+
+            exportMessage = $"Deck exportado para: {result.FilePath}";
+        }
+        catch (Exception ex)
+        {
+            exportMessage = $"Erro ao exportar: {ex.Message}";
+        }
+        
+        StateHasChanged();
+    }
+
+    private void OnCardCreated()
+    {
+        showCreateCardModal = false;
+        StateHasChanged();
+    }
+}

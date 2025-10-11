@@ -9,6 +9,7 @@
 	<ItemGroup>
 		<PackageReference Include="Catalyst" Version="1.0.54164" />
 		<PackageReference Include="Catalyst.Models.Italian" Version="1.0.30952" />
+		<PackageReference Include="Catalyst.Models.Norwegian" Version="1.0.30952" />
 		<PackageReference Include="DeepL.net" Version="1.15.0" />
 		<PackageReference Include="ElevenLabs-DotNet" Version="3.6.0" />
 		<PackageReference Include="HtmlAgilityPack" Version="1.12.2" />
@@ -23,9 +24,11 @@
 		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.1" />
 		<PackageReference Include="Mosaik.Core" Version="25.5.58373" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
+		<PackageReference Include="SearchPioneer.Lingua" Version="1.0.4" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\AnkiNet\AnkiNet.csproj" />
 	  <ProjectReference Include="..\Application\Business.csproj" />
 	  <ProjectReference Include="..\Domain\Domain.csproj" />
 	</ItemGroup>

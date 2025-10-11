@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using Business.Interfaces
 @using MauiApp1.Services
 @using MauiApp1.Services.Seed
 
@@ -9,16 +10,19 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await Init.SeedAsync();
-        var cfg = SettingsService.StudyConfig.Value;
+        // Optionally seed DB only if needed (or move to onboarding)
+        // await Init.SeedAsync();
 
-        if (cfg == null)
+        if (!IsOnboardingComplete)
         {
-            Nav.NavigateTo($"/{Routes.Settings}", true);
+            Nav.NavigateTo("/onboarding", true);
         }
         else
         {
             Nav.NavigateTo($"/{Routes.SessionSelect}", true);
         }
     }
+
+    private bool IsOnboardingComplete =>
+        SettingsService.StudyConfig.Value != null;
 }

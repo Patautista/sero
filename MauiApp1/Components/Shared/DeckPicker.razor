@@ -1,0 +1,32 @@
+@using Infrastructure.Data.Model
+@inject MauiApp1.Services.DatabaseService DatabaseService
+
+<label class="block text-sm font-medium text-gray-700 mb-2">Selecione o Deck</label>
+<select @onchange="OnDeckChanged" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500">
+    <option value="0">-- Escolha um deck --</option>
+    @foreach (var deck in decks)
+    {
+        <option value="@deck.Id">@deck.Name</option>
+    }
+</select>
+
+@code {
+    [Parameter] public int SelectedDeckId { get; set; }
+    [Parameter] public EventCallback<int> SelectedDeckIdChanged { get; set; }
+
+    private List<DeckTable> decks = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        decks = await DatabaseService.GetAllDecksAsync();
+    }
+
+    private async Task OnDeckChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out var deckId))
+        {
+            SelectedDeckId = deckId;
+            await SelectedDeckIdChanged.InvokeAsync(deckId);
+        }
+    }
+}

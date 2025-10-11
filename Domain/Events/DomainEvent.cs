@@ -15,6 +15,7 @@ namespace Domain.Events
 
     public record CardAnsweredEvent(
         Guid ReviewSessionId,
+        string ChallengeType,
         int CardId,
         int EllapsedMs,
         bool Correct
@@ -22,6 +23,7 @@ namespace Domain.Events
 
     public record CardSkippedEvent(
         Guid ReviewSessionId,
+        string ChallengeType,
         int CardId
     ) : DomainEvent;
 }

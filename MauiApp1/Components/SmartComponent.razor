@@ -1,9 +1,16 @@
 ﻿@using System.Globalization
+@using Business.Interfaces
+@using Business.MobileConfig
 @using CommunityToolkit.Maui.Alerts
+@using Infrastructure.Services
 @using MauiApp1.Services.Audio
+@using Microsoft.JSInterop
 @inject ApiService ApiService
 @inject MauiSoundService SoundService
 @inject ISettingsService SettingsService
+@inject Infrastructure.Services.VocabularyService VocabularyService
+@inject MauiApp1.Services.DatabaseService Database
+@inject IJSRuntime JS
 
 @code{
     protected string Translate(string text, string lang = "pt")
@@ -12,21 +19,50 @@
     }
     protected async Task PlayVoiceClip(string text, string lang)
     {
-
+        if (!IsApiLive) return;
         var res = await SoundService.PlayVoiceClip(text, lang);
         if (res)
         {
             var toast = Toast.Make("Reproduzindo áudio.", CommunityToolkit.Maui.Core.ToastDuration.Short, 14);
             await toast.Show(CancellationToken.None);
-        }
+        } 
         else
         {
             var toast = Toast.Make("Falha ao reproduzir áudio.", CommunityToolkit.Maui.Core.ToastDuration.Short, 14);
             await toast.Show(CancellationToken.None);
         }
     }
+    protected bool IsApiLive = false;
+    protected async override Task OnInitializedAsync()
+    {
+        IsApiLive = await ApiService.GetPingAsync();
+    }
+    protected async Task<bool> PromptConfirm(string prompt)
+    {
+        try{
+            return await JS.InvokeAsync<bool>("confirm", prompt);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+    protected void UpdateTargetLanguageFromDeck(string targetLanguageCode)
+    {
+        var config = SettingsService.StudyConfig.Value ?? new StudyConfig();
+        config.SelectedLanguage ??= new LanguagePair();
+        config.SelectedLanguage.Target = new CultureInfo(targetLanguageCode);
+        config.SelectedLanguageCode = $"{config.SelectedLanguage.Source?.TwoLetterISOLanguageName ?? "pt"}-{targetLanguageCode}";
+        SettingsService.StudyConfig.Update(config);
+    }
     protected CultureInfo Nativelanguage => SettingsService?.StudyConfig?.Value?.SelectedLanguage?.Source;
-    protected string NativelanguageCode => Nativelanguage.TwoLetterISOLanguageName;
+    protected string NativeLanguageCode => Nativelanguage.TwoLetterISOLanguageName;
     protected CultureInfo TargetLanguage => SettingsService?.StudyConfig?.Value?.SelectedLanguage?.Target;
     protected string TargetLanguageCode => TargetLanguage.TwoLetterISOLanguageName;
+    protected async Task<List<VocabularyService.Word>> GetTargetVocabularyAsync()
+    {
+        var allSentences = await Database.GetAllForeignSentencesAsync(TargetLanguageCode);
+        var vocabWords = await VocabularyService.GetVocabWordsWithTagAsync(allSentences);
+        return vocabWords;
+    }
 }

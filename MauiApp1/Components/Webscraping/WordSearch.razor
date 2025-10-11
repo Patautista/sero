@@ -1,5 +1,6 @@
 ﻿@page "/dict"
 @using Infrastructure.Lookup
+@using Infrastructure.Services
 @inherits SmartComponent
 
 <div class="gap-2">
@@ -55,9 +56,13 @@
     }
     private string GetAvailablePair()
     {
-        if(TargetLanguage.ThreeLetterISOLanguageName == "it")
+        if(TargetLanguageCode == AvailableCodes.Italian)
         {
             return "enit";
+        }
+        else if(TargetLanguageCode == AvailableCodes.Norwegian)
+        {
+            return "enno";
         }
         return string.Empty;
     }

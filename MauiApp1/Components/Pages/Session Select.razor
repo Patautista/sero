@@ -1,5 +1,8 @@
 ﻿@page "/session-select"
+@using Infrastructure.Data.Model
+@using Infrastructure.Services
 @inject NavigationManager Navigation
+@inject MauiApp1.Services.DatabaseService DatabaseService
 @inherits SmartComponent
 
 <div class="card flex flex-col items-center mb-5 p-3">
@@ -9,41 +12,107 @@
 
     <WikiCarousel></WikiCarousel>
 
-    <h3 class ="mb-3">Escolha sua sessão de treino</h3>
-    <div class="d-flex flex-column gap-2 mt-lg-1" style="max-width: 250px;">
-        <button class="btn btn-primary py-2 px-6 rounded-lg font-bold text-white shadow-lg bg-gradient-to-r from-indigo-500 to-indigo-700 hover:from-indigo-600 hover:to-indigo-800 transition-all duration-200" @onclick="() => StartSession(ReviewSessionMode.Quick)">
-            <p class="text-white font-medium"><Translate Text="⚡ Rápida(5 novos, 15 revisados)"></Translate></p>
-        </button>
+    <!-- Deck selection -->
+    <div class="mb-4 w-full max-w-xs">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Selecione o Deck</label>
+        <select @onchange="OnDeckChanged" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500">
+            <option value="0">-- Escolha um deck --</option>
+            @foreach (var deck in decks)
+            {
+                <option value="@deck.Id">@deck.Name</option>
+            }
+        </select>
+    </div>
 
-        <button class="btn btn-primary py-2 px-6 rounded-lg font-bold text-white shadow-lg bg-gradient-to-r from-indigo-500 to-indigo-700 hover:from-indigo-600 hover:to-indigo-800 transition-all duration-200" @onclick="() => StartSession(ReviewSessionMode.Regular)">
-            <p class="text-white font-medium"><Translate Text="📘 Normal (10 novos, 30 revisados)"></Translate></p>
-        </button>
-
-        <button class="btn btn-primary py-2 px-6 rounded-lg font-bold text-white shadow-lg bg-gradient-to-r from-indigo-500 to-indigo-700 hover:from-indigo-600 hover:to-indigo-800 transition-all duration-200" @onclick="() => StartSession(ReviewSessionMode.Grind)">
-            <p class="text-white font-medium"><Translate Text="💪 Foco (20 novos, 60 revisados)"></Translate></p>
-        </button>
+    <div class="mt-4">
+        <ButtonPrimary OnClick="ShowModal" Class="w-full max-w-xs" Disabled="selectedDeckId == 0">
+            <p class="text-white font-medium">🚀 <Translate Text="Iniciar revisão"></Translate></p>
+        </ButtonPrimary>
     </div>
 </div>
-
-<CurriculumComponent UserExp="userExp"></CurriculumComponent>
 
 <div class="mb-5 mt-5 gap-2">
     <div  class="card p-3 mb-2">
         <MauiApp1.Components.Webscraping.WordSearch></MauiApp1.Components.Webscraping.WordSearch>
     </div>
-    <div  class="card p-3 mb-2">
-        <MauiApp1.Components.Webscraping.ConjugationLookup></MauiApp1.Components.Webscraping.ConjugationLookup>
-    </div>
+    @if(TargetLanguageCode == AvailableCodes.Italian)
+    {
+        <div class="card p-3 mb-2">
+            <MauiApp1.Components.Webscraping.ConjugationLookup></MauiApp1.Components.Webscraping.ConjugationLookup>
+        </div>
+    }
 </div>
+    
+@if (showModal)
+{
+    <div class="modal-backdrop-custom" @onclick="HideModal"></div>
+    <div class="modal fade show modal-animate" style="display:block;" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" @onclick:stopPropagation>
+                <div class="modal-header">
+                    <h5 class="modal-title"><Translate Text="Escolha sua sessão de treino"></Translate></h5>
+                </div>
+                <div class="modal-body flex justify-center">
+                    <div class="d-flex flex-column gap-2 mt-lg-1" style="max-width: 250px;">
+                        <button class="btn btn-primary py-2 px-6 rounded-lg font-bold text-white shadow-lg bg-gradient-to-r from-indigo-500 to-indigo-700 hover:from-indigo-600 hover:to-indigo-800 transition-all duration-200" @onclick="() => StartSession(ReviewSessionMode.Quick)">
+                            <p class="text-white font-medium">⚡ <Translate Text="Rápida(5 novos, 15 revisados)"></Translate></p>
+                        </button>
+
+                        <button class="btn btn-primary py-2 px-6 rounded-lg font-bold text-white shadow-lg bg-gradient-to-r from-indigo-500 to-indigo-700 hover:from-indigo-600 hover:to-indigo-800 transition-all duration-200" @onclick="() => StartSession(ReviewSessionMode.Regular)">
+                            <p class="text-white font-medium">📘 <Translate Text="Normal (10 novos, 30 revisados)"></Translate></p>
+                        </button>
+
+                        <button class="btn btn-primary py-2 px-6 rounded-lg font-bold text-white shadow-lg bg-gradient-to-r from-indigo-500 to-indigo-700 hover:from-indigo-600 hover:to-indigo-800 transition-all duration-200" @onclick="() => StartSession(ReviewSessionMode.Grind)">
+                            <p class="text-white font-medium">💪 <Translate Text="Foco (20 novos, 60 revisados)"></Translate></p>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @code {
+    private bool showModal = false;
     private int userExp;
-    private void StartSession(ReviewSessionMode mode)
+    private List<DeckTable> decks = new();
+    private int selectedDeckId = 0;
+
+    private void ShowModal()
     {
-        Navigation.NavigateTo($"{Routes.CardsReview}?mode={mode}");
+        showModal = true;
     }
+
+    private void HideModal()
+    {
+        showModal = false;
+    }
+
+    private async void StartSession(ReviewSessionMode mode)
+    {
+        if (selectedDeckId == 0)
+            return;
+
+        Navigation.NavigateTo($"{Routes.CardsReview}?mode={mode}&deckId={selectedDeckId}");
+        HideModal();
+    }
+
     protected override async Task OnInitializedAsync()
     {
         userExp = await DatabaseService.GetUserExpAsync();
+        decks = await DatabaseService.GetAllDecksAsync();
+    }
+
+    private void OnDeckChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out var deckId))
+        {
+            selectedDeckId = deckId;
+            var deck = decks.FirstOrDefault(d => d.Id == deckId);
+            if (deck != null && !string.IsNullOrWhiteSpace(deck.TargetLanguage))
+            {
+                UpdateTargetLanguageFromDeck(deck.TargetLanguage);
+            }
+        }
     }
 }

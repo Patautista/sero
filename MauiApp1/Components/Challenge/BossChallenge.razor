@@ -1,0 +1,273 @@
+﻿@using System.Text
+@using Business.Model
+@using Business.ViewModel
+@using CommunityToolkit.Maui.Alerts;
+@using Domain
+@using Domain.Events
+@using MauiApp1.Services
+@using MauiApp1.Services.Audio
+@inject Business.AnswerEvaluator AnswerEvaluator
+@inherits SmartComponent
+@inject ApiService ApiService
+@inject MauiSoundService SoundService
+@inject DatabaseService Database
+
+@if (isLoadingBossChallenge)
+{
+    <LoadingSpinner />
+}
+else if (BossSrsCard != null)
+{
+    <div class="boss-card-content transition-all duration-300 ease-in-out" style="border: 3px solid #e63946; background: linear-gradient(135deg, #f8edeb 0%, #e63946 100%); box-shadow: 0 0 20px #e6394688; filter: blur(@(isInputFocused ? "2px" : "0")); transform: scale(@(isInputFocused ? "0.95" : "1"));">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h1 class="text-2xl font-bold text-[#e63946] flex items-center">
+                <span style="font-size:2rem;">👹</span> Boss Challenge!
+            </h1>
+            @if (_challengeState.ExpEarned.HasValue)
+            {
+                <div class="exp-badge boss-exp">
+                    +@_challengeState.ExpEarned EXP
+                </div>
+            }
+        </div>
+
+        @if (BossSrsCard.Repetitions == 0)
+        {
+            <div class="exp-badge boss-exp">
+                +@_challengeState.ExpEarned EXP
+            </div>
+        }
+    </div>
+
+    <p class="w-fit mb-5 mt-3 text-gray-950 animated-underline boss-underline">@BossSrsCard.NativeSample.Text</p>
+    <input class="w-full form-control mb-2 p-3 rounded-lg border border-red-300 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all" @bind="_challengeState.UserAnswer" placeholder="Resposta do Boss" @onfocus="() => isInputFocused = true" @onblur="() => isInputFocused = false" />
+
+    <div class="card-buttons transition-all duration-300 ease-in-out">
+        <div class="flex justify-between">
+            <div style="filter: blur(@(isInputFocused ? "2px" : "0")); transform: scale(@(isInputFocused ? "0.95" : "1"));">
+                <ButtonSecondary OnClick="SkipCard"><Translate Text="Pular"></Translate></ButtonSecondary>
+            </div>
+            <ButtonPrimary OnClick="CheckAnswer"><Translate Text="Conferir"></Translate></ButtonPrimary>
+        </div>
+
+    @if (_challengeState.Feedback is not null)
+    {
+        <div class="mt-4">
+            <div>
+                <span>@_challengeState.Feedback.MainMessage</span>
+            </div>
+            @if (_challengeState.Feedback.ExpectedAnswer is not null)
+            {
+                <div class="text-sm text-gray-700 mt-2">
+                    <strong>Resposta esperada:</strong> @_challengeState.Feedback.ExpectedAnswer
+                </div>
+            }
+            @if (_challengeState.Feedback.Hint is not null)
+            {
+                <div class="text-xs text-gray-500 mt-1">
+                    <strong>Dica:</strong> @_challengeState.Feedback.Hint
+                </div>
+            }
+        </div>
+    }
+
+    @if (_challengeState.AnswerQuality != AnswerQuality.Perfect)
+    {
+        <div class="mt-4 text-center">
+            <p class="text-sm text-gray-600 mb-2"><Translate Text="Sua resposta estava correta?"></Translate></p>
+            <button class="btn btn-sm btn-outline-danger" @onclick="ForceCorrectAnswer">
+                <Translate Text="Sim, aceitar como resposta correta"></Translate>
+            </button>
+        </div>
+    }
+
+    <NextCardCountdown Countdown="@_challengeState.Countdown" />
+</div>
+}
+
+@code {
+    [Parameter] public EventCallback<int> OnChallengeCompleted { get; set; }
+    [Parameter] public EventCallback OnSkip { get; set; }
+    [Parameter] public int DeckId { get; set; }
+
+    private class ChallengeState
+    {
+        public string UserAnswer;
+        public AnswerFeedback Feedback;
+        public bool IsCorrect;
+        public AnswerQuality AnswerQuality = AnswerQuality.Perfect;
+        public int Countdown;
+        public int? ExpEarned;
+        public DateTime CardShownAt;
+        public TimeSpan AnswerTime;
+        public bool NextCardCalled = true;
+    }
+    private ChallengeState _challengeState = new();
+    private System.Timers.Timer countdownTimer;
+    private bool isInputFocused = false;
+    private CardDefinition? BossCardDefinition;
+    private bool isLoadingBossChallenge = true;
+    private SrsCard? BossSrsCard;
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        ResetChallenge();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        isLoadingBossChallenge = true;
+
+        // Get global vocabulary from all cards
+        var vocabWords = await GetTargetVocabularyAsync();
+        var vocabList = vocabWords.Select(w => w.Text).Distinct().ToList();
+
+        var rnd = new Random();
+        var subset = vocabList
+            .OrderBy(_ => rnd.Next())
+            .Take(10) // x palavras aleatórias
+            .ToList();
+
+        // Use language codes from SmartComponent
+        var targetLang = TargetLanguageCode;
+        var nativeLang = NativeLanguageCode;
+
+        // Generate the challenge using your API service
+        BossCardDefinition = await ApiService.GenerateBossChallengeAsync(targetLang, nativeLang, subset);
+
+        var deckId = DeckId;
+
+        // Save the card to the database
+        BossSrsCard = await Database.CreateCard(BossCardDefinition, deckId);
+
+        isLoadingBossChallenge = false;
+        StateHasChanged();
+    }
+
+    private void ResetChallenge()
+    {
+        countdownTimer?.Stop();
+        _challengeState = new();
+        _challengeState.CardShownAt = DateTime.UtcNow;
+    }
+
+    private async Task CheckAnswer()
+    {
+        if (string.IsNullOrWhiteSpace(_challengeState.UserAnswer) || _challengeState.Countdown > 0) return;
+
+        _challengeState.AnswerTime = DateTime.UtcNow - _challengeState.CardShownAt;
+
+        var possibleAnswers = BossSrsCard.SentencesInTargetLanguage.Select(c => c.Text).ToList();
+        var evaluation = await AnswerEvaluator.Evaluate(BossSrsCard.NativeSample.Text, _challengeState.UserAnswer, possibleAnswers);
+
+        _challengeState.IsCorrect = evaluation.Quality != AnswerQuality.Wrong;
+        _challengeState.AnswerQuality = evaluation.Quality;
+
+        if (_challengeState.IsCorrect)
+        {
+            _challengeState.ExpEarned = ExpCalculator.CalculateEarnedExp(BossSrsCard, BossSrsCard.Repetitions);
+            await PlayVoiceClip(evaluation.ClosestMatch, BossSrsCard.TargetSample.Language);
+        }
+
+        Srs.Review(BossSrsCard, evaluation.Quality);
+        _challengeState.Feedback = AnswerEvaluator.BuildFeedbackMessage(evaluation, _challengeState.UserAnswer);
+
+        await Database.UpdateUserCardState(BossSrsCard, _challengeState.ExpEarned ?? 0);
+
+        var evt = new CardAnsweredEvent(
+            Guid.NewGuid(),
+            "BossChallenge",
+            BossSrsCard.CardId,
+            (int)_challengeState.AnswerTime.TotalMilliseconds,
+            Correct: _challengeState.IsCorrect
+        );
+
+        await Database.SaveCardAnsweredAsync(evt);
+
+        StartCountdown(_challengeState.AnswerQuality == AnswerQuality.Perfect ? 3 : 7);
+
+        StateHasChanged();
+    }
+
+    private async Task SkipCard()
+    {
+        var evt = new CardSkippedEvent(
+            Guid.NewGuid(),
+            "BossChallenge",
+            BossSrsCard.CardId
+        );
+
+        await Database.SaveCardSkippedAsync(evt);
+
+        await OnSkip.InvokeAsync(null);
+    }
+
+    private async Task ForceCorrectAnswer()
+    {
+        var newSentence = new Sentence
+        {
+            MeaningId = BossSrsCard.NativeSample.MeaningId,
+            Text = _challengeState.UserAnswer,
+            Language = BossSrsCard.TargetSample.Language
+        };
+        await Database.AddAlternativeSentence(newSentence);
+
+        if (!_challengeState.IsCorrect)
+        {
+            _challengeState.IsCorrect = true;
+            _challengeState.ExpEarned = ExpCalculator.CalculateEarnedExp(BossSrsCard, BossSrsCard.Repetitions);
+
+            Srs.Review(BossSrsCard, AnswerQuality.Ok);
+            await Database.UpdateUserCardState(BossSrsCard, _challengeState.ExpEarned ?? 0);
+        }
+        _challengeState.Feedback = new AnswerFeedback
+        {
+            Quality = AnswerQuality.Perfect,
+            ClosestMatch = _challengeState.UserAnswer,
+            MainMessage = "✅ Correto! Sua resposta foi adicionada como alternativa.",
+            ExpectedAnswer = null,
+            Hint = null
+        };
+
+        var evt = new CardAnsweredEvent(
+            Guid.NewGuid(),
+            "BossChallenge",
+            BossSrsCard.CardId,
+            (int)_challengeState.AnswerTime.TotalMilliseconds,
+            Correct: true
+        );
+        await Database.SaveCardAnsweredAsync(evt);
+
+        _challengeState.AnswerQuality = AnswerQuality.Perfect;
+        StartCountdown(5);
+    }
+
+    private void StartCountdown(int seconds)
+    {
+        _challengeState.Countdown = seconds;
+        _challengeState.NextCardCalled = false;
+
+        countdownTimer = new System.Timers.Timer(1000);
+        countdownTimer.Elapsed += async (s, e) =>
+        {
+            _challengeState.Countdown--;
+            await InvokeAsync(() =>
+            {
+                StateHasChanged();
+
+                if (_challengeState.Countdown <= 0 && !_challengeState.NextCardCalled)
+                {
+                    _challengeState.NextCardCalled = true;
+                    countdownTimer.Stop();
+                    countdownTimer.Dispose();
+                    countdownTimer = null;
+
+                    OnChallengeCompleted.InvokeAsync(_challengeState.ExpEarned ?? 0);
+                }
+            });
+        };
+        countdownTimer.Start();
+    }
+}

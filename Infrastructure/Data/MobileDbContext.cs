@@ -13,12 +13,11 @@ namespace Infrastructure.Data
     public class MobileDbContext : DbContext
     {
         public MobileDbContext(DbContextOptions<MobileDbContext> options) : base(options) { }
+        public DbSet<DeckTable> Decks { get; set; }
         public DbSet<CardTable> Cards { get; set; }
-        public DbSet<CurriculumTable> Curricula { get; set; }
-        public DbSet<CurriculumSectionTable> CurriculumSections { get; set; }
         public DbSet<UserTable> Users { get; set; }
         public DbSet<ReviewSessionTable> ReviewSessions { get; set; }
-        public DbSet<UserCardStateTable> UserCardStates { get; set; }
+        public DbSet<SrsCardStateTable> UserCardStates { get; set; }
         public DbSet<EventTable> Events { get; set; }
         public DbSet<SentenceTable> Sentences { get; set; }
         public DbSet<TagTable> Tags { get; set; }
@@ -32,6 +31,7 @@ namespace Infrastructure.Data
             {
                 Console.WriteLine($"Entity: {entityType.Name}");
             }
+            modelBuilder.Entity<DeckTable>().ToTable("Decks");
 
             modelBuilder.Ignore<Domain.Entity.Card>();
             modelBuilder.Ignore<Domain.Entity.CurriculumSection>();
@@ -46,6 +46,11 @@ namespace Infrastructure.Data
                 e.Property(t => t.Type).HasMaxLength(64).IsRequired();
                 e.HasIndex(t => t.Name).IsUnique(); // optional but nice
             });
+
+            modelBuilder.Entity<EventTable>()
+            .HasOne(e => e.Card)
+            .WithMany(c => c.Events)
+            .HasForeignKey(e => e.CardId);
 
             // Many-to-many Card <-> Tag with explicit join table using Tag.Name as principal key
             modelBuilder.Entity<MeaningTable>()

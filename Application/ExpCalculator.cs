@@ -1,4 +1,5 @@
-﻿using Domain.Entity;
+﻿using Business.Model;
+using Domain.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace Business
     {
         private const int BaseExp = 100; // tweakable: base scaling factor
         private const double GrowthFactor = 1.5; // tweakable: how fast difficulty scales
-        public static int CalculateEarnedExp(Card card, int repetitions)
+        public static int CalculateEarnedExp(SrsCard card, int repetitions)
         {
             // --- 1. Repetition factor (slower decay) ---
             // Use an exponential decay with gentle slope
