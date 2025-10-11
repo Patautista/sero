@@ -11,11 +11,10 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using static Infrastructure.Audio.SpeechService;
 
 namespace Infrastructure.Audio
 {
-    public class SpeechService
+    public class SpeechService : ISpeechService
     {
 
         private readonly ElevenLabsClient _elevenLabsClient;
