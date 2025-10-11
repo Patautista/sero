@@ -12,6 +12,8 @@
 		<PackageReference Include="Catalyst.Models.Norwegian" Version="1.0.30952" />
 		<PackageReference Include="DeepL.net" Version="1.15.0" />
 		<PackageReference Include="ElevenLabs-DotNet" Version="3.6.0" />
+		<PackageReference Include="Google.Apis" Version="1.72.0" />
+		<PackageReference Include="Google.Cloud.TextToSpeech.V1" Version="3.15.0" />
 		<PackageReference Include="HtmlAgilityPack" Version="1.12.2" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.11">
 		  <PrivateAssets>all</PrivateAssets>
