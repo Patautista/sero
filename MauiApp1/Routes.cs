@@ -13,5 +13,6 @@ namespace MauiApp1
         public static string SessionSelect = "session-select";
         public static string CreateCard = "create-card";
         public static string Dashboard = "dashboard";
+        public static string DecksView = "decks"; // Added route for deck visualization
     }
 }

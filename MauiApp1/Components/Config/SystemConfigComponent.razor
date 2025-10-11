@@ -1,4 +1,5 @@
-﻿@using Domain.Entity
+﻿@using Business.Interfaces
+@using Domain.Entity
 @using Infrastructure.Data
 
 @inject ISettingsService SettingsService
@@ -20,5 +21,6 @@
 
         await dbContext.Database.EnsureDeletedAsync();
         SettingsService.StudyConfig.Update(null);
+        Nav.NavigateTo("/", true);
     }
 }

@@ -13,7 +13,12 @@ namespace Infrastructure.Data.Model
         public int Id { get; set; }
         [ForeignKey(nameof(MobileDbContext.Meanings))]
         public int MeaningId { get; set; }
+        [ForeignKey(nameof(MobileDbContext.Decks))]
+        public int DeckId { get; set; }
+        public DeckTable Deck { get; set; }
         public MeaningTable Meaning { get; set; }
-        public UserCardStateTable? UserCardState { get; set; }
+        public SrsCardStateTable? UserCardState { get; set; }
+        //[InverseProperty(nameof(EventTable.Card))]
+        public ICollection<EventTable> Events { get; set; }
     }
 }

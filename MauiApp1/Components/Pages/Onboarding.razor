@@ -1,0 +1,296 @@
+﻿@page "/onboarding"
+@using System.Globalization
+@using Business.Interfaces
+@using Business.MobileConfig
+@using Infrastructure
+@using Infrastructure.Data
+@using Infrastructure.Parsing
+@using Infrastructure.Services
+@using MauiApp1.Services.Seed
+@using Microsoft.AspNetCore.Components.Forms
+@using System.IO.Compression
+@inject ISettingsService SettingsService
+@inject NavigationManager Nav
+@inject MobileDbContextInitialiser DbInit
+@inject MobileDbContext DbContext
+
+@code {
+    int step = 0;
+    string selectedAppLanguage = "";
+    string selectedTargetLanguage = "";
+    DifficultyLevel selectedDifficulty = DifficultyLevel.Beginner;
+    string deckName = "";
+    string deckDescription = "";
+    string ankiFileError = "";
+    string? ankiFilePath;
+
+    public DeckOptionModel OptionModel { get; set; } = new();
+    public List<Option> DeckOptions => GetDeckOptions();
+
+    protected async override Task OnInitializedAsync()
+    {
+        await DbInit.InitialiseAsync();
+    }
+
+    public class DeckOptionModel
+    {
+        public string SelectedOption { get; set; }
+    }
+
+    public class Option
+    {
+        public string Value { get; set; }
+        public string Label { get; set; }
+    }
+
+    private List<Option> GetDeckOptions()
+    {
+        var options = new List<Option>
+        {
+            new Option { Value = "scratch", Label = "Começar do zero" },
+            new Option { Value = "anki", Label = "Importar de arquivo Anki (APKG)" }
+        };
+        if (selectedTargetLanguage == AvailableCodes.Italian)
+        {
+            options.Add(new Option { Value = "library", Label = "Importar do acervo" });
+        }
+        return options;
+    }
+    private async Task PickAnkiFile()
+    {
+        try
+        {
+            ankiFileError = "";
+            var customFileTypes = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
+            {
+                { DevicePlatform.Android, new[] { "*/*" } },
+                { DevicePlatform.WinUI, new[] { ".apkg" } },
+                { DevicePlatform.MacCatalyst, new[] { "apkg" } },
+                { DevicePlatform.iOS, new[] { "com.pkware.zip-archive", "public.data" } },
+            });
+
+            var options = new PickOptions
+            {
+                PickerTitle = "Selecione arquivo .apkg",
+                FileTypes = customFileTypes
+            };
+
+            var result = await FilePicker.Default.PickAsync(options);
+
+            if (!Path.GetExtension(result.FileName).Equals(".apkg", StringComparison.OrdinalIgnoreCase))
+            {
+                ankiFileError = "Formato inválido.";
+            }
+            else if(result == null)
+            {
+                ankiFileError = "Nenhum arquivo selecionado.";
+            }
+            else
+            {
+                ankiFilePath = result.FullPath ?? result.FileName;
+            }
+        }
+        catch (Exception ex)
+        {
+            ankiFileError = $"Erro ao selecionar arquivo: {ex.Message}";
+            Console.WriteLine(ex);
+        }
+    }
+
+    private void SetSourceLanguageAndNext()
+    {
+        var config = SettingsService.StudyConfig.Value ?? new StudyConfig();
+        config.SelectedLanguageCode = $"{selectedAppLanguage}-{selectedTargetLanguage}";
+        config.SelectedLanguage = new LanguagePair
+        {
+            Source = new(selectedAppLanguage),
+            Target = new(string.IsNullOrWhiteSpace(selectedTargetLanguage) ? AvailableCodes.Italian : selectedTargetLanguage)
+        };
+        SettingsService.StudyConfig.Update(config);
+
+        step++;
+    }
+
+    private bool IsDeckOptionValid()
+    {
+        if (OptionModel.SelectedOption == "anki")
+            return !string.IsNullOrEmpty(ankiFilePath);
+        return !string.IsNullOrWhiteSpace(OptionModel.SelectedOption);
+    }
+
+    public static async Task PrepareLinguaModelsAsync()
+    {
+        var destDir = Path.Combine(FileSystem.AppDataDirectory, "Lingua");
+        
+
+        Directory.CreateDirectory(destDir);
+
+        // Copia o zip do pacote para o disco
+        var zipPath = Path.Combine(FileSystem.AppDataDirectory, "LinguaModels.zip");
+        using (var src = await FileSystem.OpenAppPackageFileAsync("LinguaModels.zip"))
+        using (var dst = File.Create(zipPath))
+            await src.CopyToAsync(dst);
+
+        // Extrai
+        ZipFile.ExtractToDirectory(zipPath, destDir, overwriteFiles: true);
+
+        File.Delete(zipPath);
+    }
+
+    private async Task CreateOrImportDeck()
+    {
+        // Save study config
+        var config = SettingsService.StudyConfig.Value ?? new StudyConfig();
+        config.SelectedLanguageCode = $"{selectedAppLanguage}-{selectedTargetLanguage}";
+        config.DifficultyLevel = selectedDifficulty;
+        config.SelectedLanguage = new LanguagePair
+        {
+            Source = new(selectedAppLanguage),
+            Target = new(selectedTargetLanguage)
+        };
+        SettingsService.StudyConfig.Update(config);
+
+        // Import logic
+        if (OptionModel.SelectedOption == "anki" && !string.IsNullOrEmpty(ankiFilePath))
+        {
+            var ankiService = new AnkiHelper();
+            await PrepareLinguaModelsAsync();
+            var cards = await ankiService.ReadApkg(ankiFilePath, selectedAppLanguage, selectedTargetLanguage);
+            try
+            {
+                await DbContext.Cards.AddRangeAsync(cards);
+                await DbContext.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        else if (OptionModel.SelectedOption == "library" && selectedTargetLanguage == AvailableCodes.Italian)
+        {
+            await DbInit.SeedAsync();
+        }
+        else
+        {
+            // Create deck
+            var deck = new Infrastructure.Data.Model.DeckTable
+            {
+                Name = deckName,
+                Description = deckDescription,
+                TargetLanguage = selectedTargetLanguage,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+            try
+            {
+                DbContext.Decks.Add(deck);
+                await DbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        // else: scratch, do nothing (empty deck)
+
+        step++;
+    }
+
+}
+
+<div class="onboarding-container max-w-xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
+    @if (step == 0)
+    {
+        <h2 class="text-2xl font-bold mb-4 text-indigo-700">Bem-vindo ao Triolingo!</h2>
+        <p class="mb-6">Vamos configurar seu app para a melhor experiência de estudo.</p>
+        <ButtonPrimary OnClick="@(() => step++)">Começar</ButtonPrimary>
+    }
+    else if (step == 1)
+    {
+        <h3 class="text-xl font-semibold mb-2"><Translate Text="Escolha o idioma do aplicativo"></Translate></h3>
+        <select class="form-select mb-4" @bind="selectedAppLanguage">
+            <option value=""><Translate Text="Selecione..."></Translate></option>
+            @foreach (var langCode in AvailabilityService.AppLanguages)
+            {
+                <option value="@langCode">@(new CultureInfo(langCode).NativeName.FirstCharToUpper())</option>
+            }
+        </select>
+        <ButtonPrimary OnClick="@SetSourceLanguageAndNext" Disabled="@string.IsNullOrWhiteSpace(selectedAppLanguage)"><Translate Text="Próximo"></Translate></ButtonPrimary>
+    }
+    else if (step == 2)
+    {
+        <h3 class="text-xl font-semibold mb-2"><Translate Text="Que língua você está estudando?"></Translate></h3>
+        <select class="form-select mb-4" @bind="selectedTargetLanguage">
+            <option value=""><Translate Text="Selecione..."></Translate></option>
+            @foreach(var langCode in AvailabilityService.TargetLanguages)
+            {
+                <option value="@langCode">@(new CultureInfo(langCode).DisplayName.FirstCharToUpper())</option>
+            }   
+        </select>
+        <ButtonPrimary OnClick="@(() => step++)" Disabled="@string.IsNullOrWhiteSpace(selectedTargetLanguage)"><Translate Text="Próximo"></Translate></ButtonPrimary>
+    }
+    else if (step == 3)
+    {
+        <h3 class="text-xl font-semibold mb-2"><Translate Text="Dificuldade inicial"></Translate></h3>
+        <select class="form-select mb-4" @bind="selectedDifficulty">
+            @foreach (var level in Enum.GetValues<DifficultyLevel>())
+            {
+                <option value="@level">@level</option>
+            }
+        </select>
+        <ButtonPrimary OnClick="@(() => step++)">Próximo</ButtonPrimary>
+    }
+    else if (step == 4)
+    {
+        <h3 class="text-xl font-semibold mb-2"><Translate Text="Como deseja criar seu primeiro deck?"></Translate></h3>
+        @if(OptionModel.SelectedOption != "anki")
+        {
+            <div class="mb-3">
+            <label class="block text-sm font-medium text-gray-700 mb-1"><Translate Text="Nome do Deck"></Translate></label>
+            <input class="form-input w-full" @bind="deckName" />
+            </div>
+            <div class="mb-3">
+                <label class="block text-sm font-medium text-gray-700 mb-1"><Translate Text="Descrição"></Translate></label>
+                <input class="form-input w-full" @bind="deckDescription" />
+            </div>
+        }
+        <div class="mb-6">
+           <EditForm Model="@OptionModel">
+            <InputRadioGroup @bind-Value="OptionModel.SelectedOption" class="flex flex-col gap-2">
+                @foreach (var option in DeckOptions)
+                {
+                    <div>
+                        <InputRadio Value="@option.Value" />
+                            <label class="ml-2"><Translate Text="@option.Label"></Translate></label>
+                    </div>
+
+                    @if (option.Value == "anki" && OptionModel.SelectedOption == "anki")
+                    {
+                        <button type="button" class="btn btn-secondary mt-2" @onclick="PickAnkiFile">
+                                <Translate Text="Selecionar arquivo .apkg"></Translate>
+                        </button>
+
+                        @if (!string.IsNullOrEmpty(ankiFilePath))
+                        {
+                            <div class="mt-1">Arquivo selecionado: @ankiFilePath</div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(ankiFileError))
+                        {
+                            <div class="text-danger text-sm mt-1">@ankiFileError</div>
+                        }
+                    }
+                }
+            </InputRadioGroup>
+        </EditForm>
+        </div>
+        <ButtonPrimary OnClick="@CreateOrImportDeck" Disabled="@((OptionModel.SelectedOption != "anki" && string.IsNullOrWhiteSpace(deckName)) || !IsDeckOptionValid())"><Translate Text="Finalizar"></Translate></ButtonPrimary>
+    }
+    else if (step == 5)
+    {
+        <h3 class="text-xl font-bold mb-4 text-green-700"><Translate Text="Configuração concluída!"></Translate></h3>
+        <p class="mb-6"><Translate Text="Seu app está pronto para uso. Bons estudos!"></Translate></p>
+        <ButtonPrimary OnClick="@(() => Nav.NavigateTo(Routes.SessionSelect, true))"><Translate Text="Ir para o app"></Translate></ButtonPrimary>
+    }
+
+</div>

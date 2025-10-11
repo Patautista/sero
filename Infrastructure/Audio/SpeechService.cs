@@ -1,8 +1,10 @@
 ﻿using Business.Audio;
+using DeepL;
 using ElevenLabs;
 using ElevenLabs.Models;
 using ElevenLabs.TextToSpeech;
 using ElevenLabs.Voices;
+using Infrastructure.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +38,6 @@ namespace Infrastructure.Audio
                 return cached;
             }
 
-            // Caso não exista, gera via ElevenLabs
             var voice = await _elevenLabsClient.VoicesEndpoint.GetVoiceAsync(GetVoiceId(languageCode, voiceGender));
 
             await _elevenLabsClient.VoicesEndpoint.EditVoiceSettingsAsync(
@@ -57,9 +58,13 @@ namespace Infrastructure.Audio
 
         private string GetVoiceId(string lang, VoiceGender voiceGender)
         {
-            if (lang == "it" && voiceGender == VoiceGender.Female)
+            if (lang == AvailableCodes.Italian && voiceGender == VoiceGender.Female)
             {
                 return "3DPhHWXDY263XJ1d2EPN";
+            }
+            if (lang == AvailableCodes.Norwegian && voiceGender == VoiceGender.Female)
+            {
+                return "uNsWM1StCcpydKYOjKyu";
             }
             throw new NotSupportedException($"No voice configured for {lang}-{voiceGender}");
         }

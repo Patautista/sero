@@ -1,51 +1,55 @@
 ﻿@page "/create-card"
 @using System.Globalization
+@using Business.Interfaces
+@using Business.Model
+@using Infrastructure.Data.Model
 @inject IJSRuntime JS
 @inject ISettingsService SettingsService
 @inject ApiService ApiService
+@inject MauiApp1.Services.DatabaseService DatabaseService
 @inherits SmartComponent
 
 <div class="card-creation-container p-6 bg-white rounded-lg shadow-lg max-w-2xl mx-auto">
-    <h2 class="text-2xl font-bold mb-6 text-indigo-700">Criar Novo Cartão</h2>
+    <h2 class="text-2xl font-bold mb-6 text-indigo-700"><Translate Text="Criar Novo Cartão"></Translate></h2>
 
-    <!-- Language Switch with Text Markers -->
+    <!-- Idioma primário -->
     <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-700 mb-2">@Translate("Idioma Primário")</label>
+        <label class="block text-sm font-medium text-gray-700 mb-2"><Translate Text="Idioma Primário"></Translate></label>
         <div class="flex items-center space-x-4">
             <span @onclick="SetTargetAsPrimary"
                   class="cursor-pointer px-3 py-1 rounded-lg transition
                         @(primaryLanguage == Language.Target ? "bg-indigo-600 text-white font-semibold shadow" : "bg-gray-100 text-gray-700")">
-                @_targetLang?.DisplayName
+                @TargetLanguage?.DisplayName
             </span>
             <span @onclick="SetNativeAsPrimary"
                   class="cursor-pointer px-3 py-1 rounded-lg transition
                         @(primaryLanguage == Language.Native ? "bg-indigo-600 text-white font-semibold shadow" : "bg-gray-100 text-gray-700")">
-                @_nativeLang?.DisplayName
+                @Nativelanguage?.DisplayName
             </span>
         </div>
     </div>
 
-    <!-- Primary Language Input -->
+    <!-- Frase -->
     <div>
         <label class="block text-sm font-medium text-gray-700 mb-2">
-            <Translate Text="Frase em"></Translate> @(primaryLanguage == Language.Target ? _targetLang?.DisplayName : _nativeLang?.DisplayName)
+            Frase em @(primaryLanguage == Language.Target ? TargetLanguage?.DisplayName : Nativelanguage?.DisplayName)
         </label>
         <textarea @bind="primarySentence"
                   @oninput="@(e => AutoResize(e, "primarySentenceArea"))"
                   id="primarySentenceArea"
                   class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 @(showValidation && string.IsNullOrWhiteSpace(primarySentence) ? "border-red-500" : "")"
-                  placeholder="@Translate("Insira a frase")"
+                  placeholder="Insira a frase"
                   rows="1"
                   style="overflow:hidden;resize:none"></textarea>
         @if (showValidation && string.IsNullOrWhiteSpace(primarySentence))
         {
-            <span class="text-red-500 text-xs"><Translate Text="Campo obrigatório."></Translate></span>
+            <span class="text-red-500 text-xs">Campo obrigatório.</span>
         }
     </div>
 
     <!-- Translation Input -->
     <div class="mt-4">
-        <label class="block text-sm font-medium text-gray-700 mb-2">@Translate("Tradução para") @(primaryLanguage == Language.Target ? _nativeLang?.DisplayName : _targetLang?.DisplayName)</label>
+        <label class="block text-sm font-medium text-gray-700 mb-2">@Translate("Tradução para") @(primaryLanguage == Language.Target ? Nativelanguage?.DisplayName : TargetLanguage?.DisplayName)</label>
         <div class="flex items-center gap-2">
             <textarea @bind="translatedSentence"
                       @oninput="@(e => AutoResize(e, "translatedSentenceArea"))"
@@ -54,11 +58,11 @@
                       placeholder="@Translate("Tradução")"
                       rows="1"
                       style="overflow:hidden;resize:none;height:@TranslatedTextAreaHeight"></textarea>
-            @if (SettingsService.ApiKey.Value != null)
+            @if (IsApiLive)
             {
                 <button @onclick="TranslateAutomatically"
                         class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
-                    @Translate("Traduzir Automaticamente")
+                    <Translate Text="Traduzir Automaticamente"></Translate>
                 </button>
             }
         </div>
@@ -68,9 +72,9 @@
         }
     </div>
 
-    <!-- Difficulty Level -->
+    <!-- Nível de dificuldade -->
     <div class="mt-4">
-        <label class="block text-sm font-medium text-gray-700 mb-2">@Translate("Nível de Dificuldade")</label>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Nível de Dificuldade</label>
         <select @bind="card.DifficultyLevel"
                 class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500">
             @foreach (var level in Enum.GetValues(typeof(DifficultyLevel)))
@@ -81,54 +85,74 @@
     </div>
 
     <!-- Tags -->
-    <div class="mt-4">
+    <div class="mt-4 relative">
         <label class="block text-sm font-medium text-gray-700 mb-2">Tags</label>
-        <div class="flex items-center gap-2">
-            <input @bind="newTag"
-                   class="flex-1 p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-                   placeholder="Insira a tag" />
-            <button @onclick="AddTag"
-                    class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
-                @Translate("Adicionar Tag")
-            </button>
-        </div>
-        @if (card.Tags.Any())
+
+        <!-- Input de pesquisa -->
+        <input @bind-value="tagSearch"
+               @bind-value:event="oninput"
+               placeholder="Digite para buscar tags..."
+               class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500" />
+
+        <!-- Dropdown com resultados filtrados -->
+        @if (showTagDropdown && filteredTags.Any())
+        {
+            <ul class="absolute z-10 bg-white border rounded-lg shadow mt-1 max-h-40 overflow-auto w-full">
+                @foreach (var tag in filteredTags)
+                {
+                    <li class="px-3 py-2 hover:bg-indigo-100 cursor-pointer"
+                        @onclick="() => SelectTag(tag)">
+                        @tag.Name
+                    </li>
+                }
+            </ul>
+        }
+
+        <!-- Tags selecionadas -->
+        @if (selectedTags.Any())
         {
             <div class="flex flex-wrap gap-2 mt-2">
-                @foreach (var tag in card.Tags)
+                @foreach (var tag in selectedTags)
                 {
-                    <span class="px-2 py-1 bg-gray-100 rounded-full text-sm">@tag.Name</span>
+                    <span class="flex items-center px-2 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm">
+                        @tag.Name
+                        <button type="button"
+                                class="ml-1 text-red-600 hover:text-red-800"
+                                @onclick="() => RemoveTag(tag)">
+                            ✕
+                        </button>
+                    </span>
                 }
             </div>
         }
     </div>
 
     <div class="mt-6 flex gap-2">
-        @if (SettingsService.ApiKey.Value != null)
+        @if (IsApiLive)
         {
-            <button @onclick="GenerateAudioAutomatically"
-                    class="w-1/2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
-                @Translate("Gerar Áudio Automaticamente")
-            </button>
+            <ButtonPrimary Onclick="GenerateAudioAutomatically">
+                <Translate Text="Gerar Áudio Automaticamente"></Translate>
+            </ButtonPrimary>
         }
         <button @onclick="TrySaveCard"
                 class="w-1/2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
                 disabled="@(!CanSave)">
-            @Translate("Salvar Cartão")
+            <Translate Text="Salvar Cartão"></Translate>
         </button>
     </div>
 </div>
 
 @code {
-    private Card card = new()
+    [Parameter]
+    public int SelectedDeckId { get; set; }
+
+    [Parameter]
+    public EventCallback OnCardCreated { get; set; }
+
+    private CardDefinition card = new()
     {
-        SentencesInNativeLanguage = new List<Sentence>(),
-        SentencesInTargetLanguage = new List<Sentence>(),
         Tags = new List<Tag>()
     };
-
-    private CultureInfo _nativeLang = null;
-    private CultureInfo _targetLang = null;
 
     private enum Language { Native, Target }
 
@@ -138,11 +162,27 @@
     private string newTag = "";
     private bool showValidation = false;
     private bool isTranslating = false;
+    private ICollection<Tag> allTags = new List<Tag>();
+    private List<Tag> filteredTags = new();
+    private HashSet<Tag> selectedTags = new();
 
-    protected override void OnInitialized()
+    private string _tagSearch = "";
+    private string tagSearch
     {
-        _nativeLang = SettingsService.StudyConfig.Value?.SelectedLanguage.Source;
-        _targetLang = SettingsService.StudyConfig.Value?.SelectedLanguage.Target;
+        get => _tagSearch;
+        set
+        {
+            _tagSearch = value;
+            FilterTags(_tagSearch);
+        }
+    }
+
+    private bool showTagDropdown = false;
+
+    protected async override Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        allTags = await DatabaseService.GetTagsAsync();
     }
 
     private void SetTargetAsPrimary()
@@ -163,10 +203,40 @@
             newTag = "";
         }
     }
+    private void SelectTag(Tag tag)
+    {
+        selectedTags.Add(tag);
+        tagSearch = "";
+        filteredTags.Clear();
+        showTagDropdown = false;
+    }
+    private void FilterTags(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            filteredTags = new();
+            showTagDropdown = false;
+        }
+        else
+        {
+            filteredTags = allTags
+                .Where(t => t.Name.Contains(input, StringComparison.OrdinalIgnoreCase)
+                            && !selectedTags.Contains(t))
+                .Take(10)
+                .ToList();
+
+            showTagDropdown = filteredTags.Any();
+        }
+    }
+
+    private void RemoveTag(Tag tag)
+    {
+        selectedTags.Remove(tag);
+    }
 
     private async Task TranslateAutomatically()
     {
-        if (string.IsNullOrWhiteSpace(primarySentence) || _nativeLang == null || _targetLang == null)
+        if (string.IsNullOrWhiteSpace(primarySentence) || Nativelanguage == null || TargetLanguage == null)
             return;
 
         isTranslating = true;
@@ -177,13 +247,13 @@
             string sourceLang, targetLang;
             if (primaryLanguage == Language.Target)
             {
-                sourceLang = _targetLang.TwoLetterISOLanguageName;
-                targetLang = _nativeLang.TwoLetterISOLanguageName;
+                sourceLang = TargetLanguage.TwoLetterISOLanguageName;
+                targetLang = Nativelanguage.TwoLetterISOLanguageName;
             }
             else
             {
-                sourceLang = _nativeLang.TwoLetterISOLanguageName;
-                targetLang = _targetLang.TwoLetterISOLanguageName;
+                sourceLang = Nativelanguage.TwoLetterISOLanguageName;
+                targetLang = TargetLanguage.TwoLetterISOLanguageName;
             }
 
             var result = await ApiService.GetTranslationAsync(primarySentence, sourceLang, targetLang);
@@ -199,38 +269,56 @@
 
     private async Task GenerateAudioAutomatically()
     {
-        // Implement automatic audio generation logic here using ApiService
-        await Task.CompletedTask;
+        var sentence = primaryLanguage == Language.Target ? primarySentence : translatedSentence;
+
+        await PlayVoiceClip(sentence, TargetLanguageCode);
     }
 
     private bool CanSave =>
         !string.IsNullOrWhiteSpace(primarySentence) &&
-        !string.IsNullOrWhiteSpace(translatedSentence);
+        !string.IsNullOrWhiteSpace(translatedSentence) &&
+        SelectedDeckId != 0;
 
     private async Task TrySaveCard()
     {
         showValidation = true;
+
         if (!CanSave)
             return;
 
-        // Implement save logic here
-        await Task.CompletedTask;
+        var cardDefinition = new CardDefinition
+        {
+            NativeSentence = primaryLanguage == Language.Native ? primarySentence : translatedSentence,
+            TargetSentence = primaryLanguage == Language.Target ? primarySentence : translatedSentence,
+            NativeLanguageCode = NativeLanguageCode,
+            TargetLanguageCode = TargetLanguageCode,
+            DifficultyLevel = card.DifficultyLevel,
+            Tags = selectedTags
+        };
+
+        await DatabaseService.CreateCard(cardDefinition, SelectedDeckId);
+
+        // Invoke callback after card creation
+        if (OnCardCreated.HasDelegate)
+            await OnCardCreated.InvokeAsync();
     }
     private async Task AutoResize(ChangeEventArgs e, string id)
     {
         await JS.InvokeVoidAsync("autoResizeTextArea", id);
     }
 
+    private void ToggleTag(Tag tag, bool isChecked)
+    {
+        if (isChecked) selectedTags.Add(tag);
+        else selectedTags.Remove(tag);
+    }
     private string TranslatedTextAreaHeight
     {
         get
         {
-            // Estimate: 1.5em per line, minimum 1.5em
             if (string.IsNullOrEmpty(translatedSentence))
                 return "2.5em";
-            // Count lines (split by \n) or estimate by length
             var lines = translatedSentence.Split('\n').Length;
-            // Optionally, estimate extra lines for long lines
             int approxLines = lines + (int)Math.Ceiling(translatedSentence.Length / 60D);
             return $"{Math.Max(approxLines * 2.5, 2.5)}em".Replace(",", ".");
         }

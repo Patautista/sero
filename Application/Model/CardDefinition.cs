@@ -11,8 +11,8 @@ namespace Business.Model
 {
     public class CardDefinition
     {
-        public CultureInfo NativeLanguage {  get; set; }
-        public CultureInfo TargetLanguage { get; set; }
+        public string NativeLanguageCode {  get; set; }
+        public string TargetLanguageCode { get; set; }
         public string NativeSentence { get; set; }
         public string TargetSentence { get; set; }
 

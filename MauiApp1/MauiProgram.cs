@@ -1,16 +1,18 @@
 ﻿using AppLogic.Web;
 using Business;
 using Business.Audio;
+using Business.Interfaces;
 using CommunityToolkit.Maui;
-using Infrastructure.Audio;
 using Infrastructure.Data;
+using Infrastructure.Services;
 using MauiApp1.Services;
 using MauiApp1.Services.Audio;
+using MauiApp1.Services.Cache;
 using MauiApp1.Services.Seed;
-using MauiApp1.Services.Translations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Radzen;
+using System.IO.Compression;
 
 namespace MauiApp1
 {
@@ -35,9 +37,11 @@ namespace MauiApp1
             builder.Services.AddHttpClient<MauiSoundService>();
             builder.Services.AddScoped<MauiSoundService>();
             builder.Services.AddScoped<DatabaseService>();
+            builder.Services.AddScoped<AnswerEvaluator>();
             builder.Services.AddScoped<MobileTranslationCache>();
             builder.Services.AddHttpClient<ApiService>();
             builder.Services.AddScoped<ApiService>();
+            builder.Services.AddScoped<IAIEvaluator,ApiService>();
             builder.Services.AddSingleton<ISettingsService, SettingsService>();
             builder.Services.AddSingleton<VocabularyService>();
 
@@ -49,11 +53,14 @@ namespace MauiApp1
             var basePath = FileSystem.AppDataDirectory;
             builder.Services.AddDbContext<MobileDbContext>(options =>
                 options.UseSqlite($"Filename={Path.Combine(basePath, "localdb.db")}")
+                .EnableSensitiveDataLogging()
             );
 
             builder.Services.AddScoped<MobileDbContextInitialiser>();
 
             var app = builder.Build();
+
+            //EnsureLinguaModelsExistAsync().Wait();
 
             using (var scope = app.Services.CreateScope())
             {
@@ -66,5 +73,6 @@ namespace MauiApp1
 
             return app;
         }
+        
     }
 }
