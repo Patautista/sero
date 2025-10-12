@@ -2,6 +2,8 @@
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
+using CommunityToolkit.Mvvm.Messaging;
+using MauiApp1.Messages;
 
 namespace MauiApp1
 {
@@ -37,8 +39,8 @@ namespace MauiApp1
                 var sharedText = intent.GetStringExtra(Intent.ExtraText);
                 if (!string.IsNullOrEmpty(sharedText))
                 {
-                    // Manda esse texto pro MAUI
-                    MessagingCenter.Send<object, string>(this, "SharedText", sharedText);
+                    // Send message using WeakReferenceMessenger
+                    WeakReferenceMessenger.Default.Send(new SharedTextMessage(sharedText));
                 }
             }
         }

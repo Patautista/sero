@@ -1,0 +1,32 @@
+@using MauiApp1.Services
+@inject SharedTextService SharedTextService
+@inject NavigationManager Navigation
+@inject MauiApp1.Services.DatabaseService DatabaseService
+@implements IDisposable
+
+@code {
+    protected override void OnInitialized()
+    {
+        SharedTextService.TextReceived += OnTextReceived;
+    }
+
+    private async void OnTextReceived(object? sender, string text)
+    {
+        // Get the first available deck or let user select later
+        var decks = await DatabaseService.GetAllDecksAsync();
+        var firstDeck = decks.FirstOrDefault();
+        
+        var encodedText = Uri.EscapeDataString(text);
+        
+        // Navigate to create card page with the shared text
+        await MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            Navigation.NavigateTo($"{Routes.CreateCard}/{encodedText}");
+        });
+    }
+
+    public void Dispose()
+    {
+        SharedTextService.TextReceived -= OnTextReceived;
+    }
+}

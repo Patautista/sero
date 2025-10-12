@@ -1,16 +1,31 @@
-﻿namespace MauiApp1
+﻿using CommunityToolkit.Mvvm.Messaging;
+using MauiApp1.Messages;
+using MauiApp1.Services;
+
+namespace MauiApp1
 {
     public partial class MainPage : ContentPage
     {
-        public MainPage()
+        private readonly SharedTextService _sharedTextService;
+
+        public MainPage(SharedTextService sharedTextService)
         {
             InitializeComponent();
+            _sharedTextService = sharedTextService;
 
-            MessagingCenter.Subscribe<object, string>(this, "SharedText", (sender, text) =>
+            // Register to receive SharedTextMessage
+            WeakReferenceMessenger.Default.Register<SharedTextMessage>(this, (recipient, message) =>
             {
-                // Aqui você já cria o Card com o texto
-                DisplayAlert("Novo Card", $"Texto recebido: {text}", "OK");
+                // Notify the Blazor layer through the service
+                _sharedTextService.NotifyTextReceived(message.Text);
             });
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            // Unregister when page is no longer visible to prevent memory leaks
+            WeakReferenceMessenger.Default.Unregister<SharedTextMessage>(this);
         }
     }
 }

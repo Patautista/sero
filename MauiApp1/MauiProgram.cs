@@ -44,7 +44,9 @@ namespace MauiApp1
             builder.Services.AddScoped<ApiService>();
             builder.Services.AddScoped<IAIEvaluator,ApiService>();
             builder.Services.AddSingleton<ISettingsService, SettingsService>();
-            builder.Services.AddSingleton<VocabularyService>();
+            builder.Services.AddSingleton<VocabularyService>();            
+            builder.Services.AddSingleton<SharedTextService>();            
+            builder.Services.AddSingleton<LanguageDetectionService>();
 
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
