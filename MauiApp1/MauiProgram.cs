@@ -39,6 +39,7 @@ namespace MauiApp1
             builder.Services.AddScoped<DatabaseService>();
             builder.Services.AddScoped<AnswerEvaluator>();
             builder.Services.AddScoped<MobileTranslationCache>();
+            builder.Services.AddSingleton<ApiStatusCache>();
             builder.Services.AddHttpClient<ApiService>();
             builder.Services.AddScoped<ApiService>();
             builder.Services.AddScoped<IAIEvaluator,ApiService>();

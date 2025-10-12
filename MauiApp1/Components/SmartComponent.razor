@@ -35,7 +35,7 @@
     protected bool IsApiLive = false;
     protected async override Task OnInitializedAsync()
     {
-        IsApiLive = await ApiService.GetPingAsync();
+        IsApiLive = await ApiService.IsAvailable();
     }
     protected async Task<bool> PromptConfirm(string prompt)
     {

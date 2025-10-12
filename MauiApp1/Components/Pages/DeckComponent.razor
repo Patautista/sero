@@ -64,16 +64,6 @@
     private SrsCard? cardToDelete;
     private bool showDeleteConfirm = false;
 
-    protected override async Task OnInitializedAsync()
-    {
-        deck = await DatabaseService.GetFirstDeckAsync();
-
-        if (deck != null)
-        {
-            allCards = await DatabaseService.QuerySrsCardsAsync(deck.Id);
-        }
-    }
-
     protected override async Task OnParametersSetAsync()
     {
         if (DeckId > 0)
@@ -83,6 +73,16 @@
             if (deck != null)
             {
                 allCards = await DatabaseService.QuerySrsCardsAsync(deck.Id);
+            }
+        }
+        else
+        {
+            deck = await DatabaseService.GetFirstDeckAsync();
+
+            if (deck != null)
+            {
+                allCards = await DatabaseService.QuerySrsCardsAsync(deck.Id);
+                DeckId = deck.Id;
             }
         }
     }

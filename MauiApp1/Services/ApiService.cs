@@ -20,8 +20,9 @@ namespace MauiApp1.Services
         private readonly HttpClient _httpClient;
         private readonly MobileTranslationCache _translationCache;
         private readonly ISettingsService _settingsService;
+        private readonly ApiStatusCache _statusCache;
 
-        public ApiService(HttpClient httpClient, ISettingsService settingsService, MobileTranslationCache translationCache)
+        public ApiService(HttpClient httpClient, ISettingsService settingsService, MobileTranslationCache translationCache, ApiStatusCache statusCache)
         {
             try
             {
@@ -34,6 +35,7 @@ namespace MauiApp1.Services
                 _httpClient.DefaultRequestHeaders.Add("X-Api-Key", settingsService.ApiConfig.Value?.ApiKey);
                 _translationCache = translationCache;
                 _settingsService = settingsService;
+                _statusCache = statusCache;
             }
             catch
             {
@@ -182,9 +184,22 @@ namespace MauiApp1.Services
             return new AnswerEvaluation(answerQuality, string.Empty)!;
         }
 
-        public Task<bool> IsAvailable()
+        public async Task<bool> IsAvailable()
         {
-            return GetPingAsync();
+            // Check cache first
+            var cachedStatus = await _statusCache.GetCachedStatusAsync();
+            if (cachedStatus.HasValue)
+            {
+                return cachedStatus.Value;
+            }
+
+            // Cache miss - perform actual ping
+            var isAlive = await GetPingAsync();
+
+            // Cache the result
+            await _statusCache.SetStatusAsync(isAlive);
+            
+            return isAlive;
         }
     }
 }
