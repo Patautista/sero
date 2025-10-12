@@ -121,8 +121,7 @@
     public static async Task PrepareLinguaModelsAsync()
     {
         var destDir = Path.Combine(FileSystem.AppDataDirectory, "Lingua");
-        
-
+       
         Directory.CreateDirectory(destDir);
 
         // Copia o zip do pacote para o disco
@@ -149,12 +148,12 @@
             Target = new(selectedTargetLanguage)
         };
         SettingsService.StudyConfig.Update(config);
+        await PrepareLinguaModelsAsync();
 
         // Import logic
         if (OptionModel.SelectedOption == "anki" && !string.IsNullOrEmpty(ankiFilePath))
         {
             var ankiService = new AnkiHelper();
-            await PrepareLinguaModelsAsync();
             var cards = await ankiService.ReadApkg(ankiFilePath, selectedAppLanguage, selectedTargetLanguage);
             try
             {
