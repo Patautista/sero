@@ -1,16 +1,29 @@
 ﻿@page "/create-card"
+@page "/create-card/{SharedText}"
 @using System.Globalization
 @using Business.Interfaces
 @using Business.Model
 @using Infrastructure.Data.Model
+@using MauiApp1.Services
 @inject IJSRuntime JS
 @inject ISettingsService SettingsService
 @inject ApiService ApiService
 @inject MauiApp1.Services.DatabaseService DatabaseService
+@inject NavigationManager Navigation
+@inject LanguageDetectionService LanguageDetector
 @inherits SmartComponent
 
 <div class="card-creation-container p-6 bg-white rounded-lg shadow-lg max-w-2xl mx-auto">
     <h2 class="text-2xl font-bold mb-6 text-indigo-700"><Translate Text="Criar Novo Cartão"></Translate></h2>
+
+    <!-- Deck Selection -->
+    <div class="mb-4">
+        <MauiApp1.Components.Shared.DeckPicker @bind-SelectedDeckId="SelectedDeckId" />
+        @if (showValidation && SelectedDeckId == 0)
+        {
+            <span class="text-red-500 text-xs">Por favor, selecione um deck.</span>
+        }
+    </div>
 
     <!-- Idioma primário -->
     <div class="mb-4">
@@ -27,6 +40,12 @@
                 @Nativelanguage?.DisplayName
             </span>
         </div>
+        @if (!string.IsNullOrWhiteSpace(languageDetectionMessage))
+        {
+            <div class="mt-2 text-sm text-indigo-600">
+                ℹ️ @languageDetectionMessage
+            </div>
+        }
     </div>
 
     <!-- Frase -->
@@ -148,6 +167,9 @@
 
     [Parameter]
     public EventCallback OnCardCreated { get; set; }
+    
+    [Parameter]
+    public string? SharedText { get; set; }
 
     private CardDefinition card = new()
     {
@@ -165,6 +187,7 @@
     private ICollection<Tag> allTags = new List<Tag>();
     private List<Tag> filteredTags = new();
     private HashSet<Tag> selectedTags = new();
+    private string languageDetectionMessage = "";
 
     private string _tagSearch = "";
     private string tagSearch
@@ -183,16 +206,86 @@
     {
         await base.OnInitializedAsync();
         allTags = await DatabaseService.GetTagsAsync();
+        
+        // If SharedText is provided via URL parameter, use it
+        if (!string.IsNullOrWhiteSpace(SharedText))
+        {
+            primarySentence = Uri.UnescapeDataString(SharedText);
+            
+            // Detect language and set primary language automatically
+            DetectAndSetPrimaryLanguage(primarySentence);
+            
+            StateHasChanged();
+        }
+        
+        // If no deck is selected, try to get the first available deck
+        if (SelectedDeckId == 0)
+        {
+            var decks = await DatabaseService.GetAllDecksAsync();
+            if (decks.Any())
+            {
+                SelectedDeckId = decks.First().Id;
+            }
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        
+        // Handle SharedText parameter changes
+        if (!string.IsNullOrWhiteSpace(SharedText))
+        {
+            primarySentence = Uri.UnescapeDataString(SharedText);
+            
+            // Detect language and set primary language automatically
+            DetectAndSetPrimaryLanguage(primarySentence);
+        }
+    }
+
+    private void DetectAndSetPrimaryLanguage(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            return;
+
+        var detectedCode = LanguageDetector.DetectLanguageCode(text);
+        
+        if (detectedCode == null)
+        {
+            languageDetectionMessage = "Não foi possível detectar o idioma automaticamente.";
+            return;
+        }
+
+        // Check if detected language matches target language
+        if (detectedCode == TargetLanguageCode)
+        {
+            primaryLanguage = Language.Target;
+            languageDetectionMessage = $"Idioma detectado: {TargetLanguage?.DisplayName} (idioma de estudo)";
+        }
+        // Check if detected language matches native language
+        else if (detectedCode == NativeLanguageCode)
+        {
+            primaryLanguage = Language.Native;
+            languageDetectionMessage = $"Idioma detectado: {Nativelanguage?.DisplayName} (idioma nativo)";
+        }
+        else
+        {
+            // Detected a different language
+            var detectedCulture = new CultureInfo(detectedCode);
+            languageDetectionMessage = $"Idioma detectado: {detectedCulture.DisplayName}. Por favor, verifique a seleção.";
+        }
     }
 
     private void SetTargetAsPrimary()
     {
         primaryLanguage = Language.Target;
+        languageDetectionMessage = ""; // Clear detection message when manually changed
     }
 
     private void SetNativeAsPrimary()
     {
         primaryLanguage = Language.Native;
+        languageDetectionMessage = ""; // Clear detection message when manually changed
     }
 
     private void AddTag()

@@ -1,12 +1,14 @@
-﻿namespace MauiApp1
+﻿using MauiApp1.Services;
+
+namespace MauiApp1
 {
     public partial class App : Application
     {
-        public App()
+        public App(SharedTextService sharedTextService)
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
+            MainPage = new MainPage(sharedTextService);
         }
     }
 }
