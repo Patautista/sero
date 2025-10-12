@@ -1,4 +1,6 @@
 ﻿@using Business.Model
+@inherits MauiApp1.Components.SmartComponent
+
 <div class="card shadow-md rounded-lg overflow-hidden bg-gray-50 transition-all duration-200 transform hover:translate-y-[-5px] relative">
     <div class="p-4">
         @if (!isEditMode)
@@ -28,8 +30,14 @@
             <p class="text-sm text-gray-500 mb-2">
                 <span class="font-medium text-gray-700">@Card.NativeSample.Language.ToUpper():</span> @Card.NativeSample.Text
             </p>
-            <p class="text-lg font-bold mb-2 text-indigo-800">
-                <span class="font-medium text-gray-700">@Card.TargetSample.Language.ToUpper():</span> @Card.TargetSample.Text
+            <p class="text-lg font-bold mb-2 text-indigo-800 flex items-center gap-2">
+                <span class="font-medium text-gray-700">@Card.TargetSample.Language.ToUpper():</span> 
+                <span>@Card.TargetSample.Text</span>
+                <button class="text-indigo-600 hover:text-indigo-800 transition-colors"
+                        @onclick="PlayTargetAudio"
+                        title="Reproduzir áudio">
+                    <i class="fa fa-play-circle"></i>
+                </button>
             </p>
             <div class="flex flex-wrap gap-1 mb-2">
                 @foreach (var tag in Card.Tags)
@@ -123,5 +131,10 @@
             await OnEditConfirm.InvokeAsync(editModel);
 
         isEditMode = false;
+    }
+
+    private async Task PlayTargetAudio()
+    {
+        await PlayVoiceClip(Card.TargetSample.Text, Card.TargetSample.Language);
     }
 }

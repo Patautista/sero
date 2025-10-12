@@ -22,25 +22,25 @@
     <nav class="flex-column lg:flex-row">
         <div class="nav-item px-3 py-2">
             <NavLink class="nav-link text-lg font-medium text-gray-700 hover:bg-indigo-100 rounded-lg px-4 py-2 transition-colors duration-200"
-                     href="@Routes.SessionSelect" Match="NavLinkMatch.All">
+                     href="@Routes.SessionSelect" Match="NavLinkMatch.All" @onclick="CloseNavMenu">
                 <span class="bi bi-card-text-nav-menu" aria-hidden="true"></span> Home
             </NavLink>
         </div>
         <div class="nav-item px-3 py-2">
             <NavLink class="nav-link text-lg font-medium text-gray-700 hover:bg-indigo-100 rounded-lg px-4 py-2 transition-colors duration-200"
-                     href="@Routes.Dashboard" Match="NavLinkMatch.All">
+                     href="@Routes.Dashboard" Match="NavLinkMatch.All" @onclick="CloseNavMenu">
                 <span class="bi bi-gear-fill-nav-menu" aria-hidden="true"></span> Estatísticas
             </NavLink>
         </div>
         <div class="nav-item px-3 py-2">
             <NavLink class="nav-link text-lg font-medium text-gray-700 hover:bg-indigo-100 rounded-lg px-4 py-2 transition-colors duration-200"
-                     href="@Routes.DecksView" Match="NavLinkMatch.All">
+                     href="@Routes.DecksView" Match="NavLinkMatch.All" @onclick="CloseNavMenu">
                 <span class="bi bi-collection-nav-menu" aria-hidden="true"></span> Visualizar Decks
             </NavLink>
         </div>
         <div class="nav-item px-3 py-2">
             <NavLink class="nav-link text-lg font-medium text-gray-700 hover:bg-indigo-100 rounded-lg px-4 py-2 transition-colors duration-200"
-                     href="@Routes.Settings" Match="NavLinkMatch.All">
+                     href="@Routes.Settings" Match="NavLinkMatch.All" @onclick="CloseNavMenu">
                 <span class="bi bi-gear-fill-nav-menu" aria-hidden="true"></span> Configuração
             </NavLink>
         </div>
@@ -53,6 +53,14 @@
     private void ToggleNavMenu()
     {
         isNavOpen = !isNavOpen;
+    }
+
+    private void CloseNavMenu()
+    {
+        if (isNavOpen)
+        {
+            isNavOpen = false;
+        }
     }
 
 }

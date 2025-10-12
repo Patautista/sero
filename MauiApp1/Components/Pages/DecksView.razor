@@ -66,6 +66,18 @@ else
     private bool showCreateCardModal = false;
     private string exportMessage = "";
 
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        
+        // Set the first deck as selected by default
+        var decks = await DatabaseService.GetAllDecksAsync();
+        if (decks != null && decks.Any())
+        {
+            selectedDeckId = decks.First().Id;
+        }
+    }
+
     private void ShowCreateCardModal()
     {
         showCreateCardModal = true;
