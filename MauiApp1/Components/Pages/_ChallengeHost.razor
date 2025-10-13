@@ -44,7 +44,7 @@ else if (currentCard != null)
         </div>
 
         <div class="card p-4 mb-3" style="max-width: 600px; position: relative">
-            @if (new Random().NextDouble() < 0.05 && IsApiLive)
+            @if (new Random().NextDouble() < 0.05 && IsApiLive && false)
             {
                 <BossChallenge DeckId="deckId" OnSkip="SkipCard" OnChallengeCompleted="HandleChallengeCompleted"></BossChallenge>
             }
@@ -129,9 +129,10 @@ else
         StateHasChanged();
     }
 
-    private void HandleChallengeCompleted(int expEarned)
+    private async Task HandleChallengeCompleted(int expEarned)
     {
         totalExp += expEarned;
+        await Database.UpdateUserCardState(currentCard, expEarned);
         NextCard();
     }
 
