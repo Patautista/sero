@@ -32,6 +32,10 @@
             await toast.Show(CancellationToken.None);
         }
     }
+    protected async Task PlayCorrectAnswer()
+    {
+        await SoundService.PlayCorrectAnswer();
+    }
     protected bool IsApiLive = false;
     protected async override Task OnInitializedAsync()
     {
