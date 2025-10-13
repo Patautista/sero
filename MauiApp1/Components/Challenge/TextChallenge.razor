@@ -140,8 +140,6 @@
         Srs.Review(CurrentCard, evaluation.Quality);
         _challengeState.Feedback = AnswerEvaluator.BuildFeedbackMessage(evaluation, _challengeState.UserAnswer);
 
-        await Database.UpdateUserCardState(CurrentCard, _challengeState.ExpEarned ?? 0);
-
         var evt = new CardAnsweredEvent(
             Guid.NewGuid(),
             "TextChallenge",
@@ -189,7 +187,6 @@
 
             // Review the card with a "correct" quality
             Srs.Review(CurrentCard, AnswerQuality.Ok);
-            await Database.UpdateUserCardState(CurrentCard, _challengeState.ExpEarned ?? 0);
         }
         _challengeState.Feedback = new AnswerFeedback
         {
