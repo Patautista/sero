@@ -58,13 +58,7 @@ public partial class DatabaseService(MobileDbContext db, ISettingsService settin
             db.Decks.Add(defaultDeck);
             await db.SaveChangesAsync();
         }
-        return await db.Decks.Include(d => d.Cards)
-                             .ThenInclude(c => c.Meaning)
-                             .ThenInclude(m => m.Tags)
-                             .Include(d => d.Cards)
-                             .ThenInclude(c => c.Meaning)
-                             .ThenInclude(m => m.Sentences)
-                             .FirstOrDefaultAsync();
+        return await db.Decks.Include(d => d.Cards).FirstOrDefaultAsync();
     }
     public async Task<List<DeckTable>> GetAllDecksAsync()
     {
@@ -80,5 +74,9 @@ public partial class DatabaseService(MobileDbContext db, ISettingsService settin
                 .ThenInclude(c => c.Meaning)
                     .ThenInclude(m => m.Sentences)
             .FirstOrDefaultAsync(d => d.Id == deckId);
+    }
+    public async Task<DeckTable?> GetOnlyDeckById(int deckId)
+    {
+        return await db.Decks.FindAsync(deckId);
     }
 }
