@@ -14,6 +14,7 @@ namespace MauiApp1
     DataMimeType = "text/plain")]
     public class MainActivity : MauiAppCompatActivity
     {
+        private bool _isIntentHandled = false;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -22,13 +23,18 @@ namespace MauiApp1
         protected override void OnResume()
         {
             base.OnResume();
-            HandleIntent(Intent);
+            if (!_isIntentHandled)
+            {
+                HandleIntent(Intent);
+                _isIntentHandled = true; // Ensure the intent is handled only once
+            }
         }
 
         protected override void OnNewIntent(Intent intent)
         {
             base.OnNewIntent(intent);
-            Intent = intent; // Important: update the Intent property
+            Intent = intent;
+            _isIntentHandled = false;
             HandleIntent(intent);
         }
 
@@ -39,6 +45,7 @@ namespace MauiApp1
                 var sharedText = intent.GetStringExtra(Intent.ExtraText);
                 if (!string.IsNullOrEmpty(sharedText))
                 {
+                    _isIntentHandled = true;
                     // Send message using WeakReferenceMessenger
                     WeakReferenceMessenger.Default.Send(new SharedTextMessage(sharedText));
                 }
