@@ -70,8 +70,17 @@ namespace MauiApp1.Services.Audio
 
         public async Task PlayCorrectAnswer()
         {
-            var player = _audioManager.CreatePlayer(await FileSystem.OpenAppPackageFileAsync("correct_answer.mp3"));
-            player.Play();
+            try
+            {
+                var stream = await FileSystem.OpenAppPackageFileAsync("correct_answer.mp3");
+                var player = _audioManager.CreatePlayer(stream);
+                player.Play();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to play correct answer sound: {ex.Message}");
+                // Optionally: fallback to system beep or ignore
+            }
         }
     }
 }
