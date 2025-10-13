@@ -140,6 +140,7 @@
         if (_challengeState.IsCorrect)
         {
             _challengeState.ExpEarned = ExpCalculator.CalculateEarnedExp(CurrentCard, CurrentCard.Repetitions);
+            await PlayCorrectAnswer();
         }
 
         Srs.Review(CurrentCard, evaluation.Quality);

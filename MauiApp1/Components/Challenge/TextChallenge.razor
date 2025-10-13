@@ -132,6 +132,8 @@
         if (_challengeState.IsCorrect)
         {
             _challengeState.ExpEarned = ExpCalculator.CalculateEarnedExp(CurrentCard, CurrentCard.Repetitions);
+            await PlayCorrectAnswer();
+            await Task.Delay(500);
             await PlayVoiceClip(evaluation.ClosestMatch, CurrentCard.TargetSample.Language);
         }
 

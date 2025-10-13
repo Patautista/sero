@@ -68,7 +68,7 @@ namespace MauiApp1.Services.Audio
             }
         }
 
-        public static async Task PlaySuccessSound()
+        public async Task PlayCorrectAnswer()
         {
             var player = _audioManager.CreatePlayer(await FileSystem.OpenAppPackageFileAsync("correct_answer.mp3"));
             player.Play();
