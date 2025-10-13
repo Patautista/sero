@@ -63,8 +63,6 @@ namespace MauiApp1
 
             var app = builder.Build();
 
-            //EnsureLinguaModelsExistAsync().Wait();
-
             using (var scope = app.Services.CreateScope())
             {
                 var init = scope.ServiceProvider.GetService<MobileDbContextInitialiser>();
