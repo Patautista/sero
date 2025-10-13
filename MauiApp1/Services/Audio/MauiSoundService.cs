@@ -13,13 +13,11 @@ namespace MauiApp1.Services.Audio
         private static IAudioManager _audioManager = new AudioManager();
         private readonly IAudioCache _audioCache;
         private readonly ApiService _apiService;
-        private readonly HttpClient _httpClient;
 
         public MauiSoundService(IAudioCache audioCache, ApiService apiService)
         {
             _audioCache = audioCache;
             _apiService = apiService;
-            _httpClient = new HttpClient();
         }
 
         public async Task<bool> PlayVoiceClip(string text, string lang, VoiceGender voiceGender = VoiceGender.Female)
@@ -59,7 +57,7 @@ namespace MauiApp1.Services.Audio
                     await File.WriteAllBytesAsync(filePath, audioData);
 
                 // Agora toca do arquivo
-                var player = _audioManager.CreatePlayer(filePath);
+                var player = AudioManager.Current.CreatePlayer(filePath);
                 player.Play();
                 return true;
             }
@@ -72,8 +70,7 @@ namespace MauiApp1.Services.Audio
 
         public static async Task PlaySuccessSound()
         {
-            // success.wav must be in Resources/Raw/
-            var player = _audioManager.CreatePlayer(await FileSystem.OpenAppPackageFileAsync("success.wav"));
+            var player = _audioManager.CreatePlayer(await FileSystem.OpenAppPackageFileAsync("correct_answer.mp3"));
             player.Play();
         }
     }

@@ -1,11 +1,24 @@
 @using Business.Model
+@using CommunityToolkit.Maui.Storage
 @using Infrastructure.Data.Model
 @inject MauiApp1.Services.DatabaseService DatabaseService
+@inject IJSRuntime JS
 @inherits SmartComponent
 
 <div class="deck-container">
-    <h1 class="text-3xl font-bold mb-8 text-center text-indigo-700">@deck?.Name</h1>
-    <p class="text-center text-gray-600 mb-4">@deck?.Description</p>
+    <h1 class="text-3xl font-bold mb-4 text-center text-indigo-700">@deck?.Name</h1>
+    <p class="text-center text-gray-600 mb-6">@deck?.Description</p>
+
+    <div class="flex gap-2 mb-6 justify-center">
+        <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                @onclick="ShowCreateCardModal">
+            <i class="fa fa-plus"></i> Adicionar card
+        </button>
+        <button class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+                @onclick="ExportDeck">
+            <i class="fa fa-file"></i> Exportar
+        </button>
+    </div>
 
     <div class="mb-6 flex justify-center">
         <input type="text" class="search-input px-4 py-2 rounded-lg border border-gray-300 w-full max-w-md"
@@ -52,6 +65,31 @@
     </div>
 }
 
+@if (showCreateCardModal)
+{
+    <div class="modal-backdrop-custom" @onclick="HideCreateCardModal"></div>
+    <div class="modal fade show modal-animate" style="display:block;" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" @onclick:stopPropagation>
+                <div class="modal-header">
+                    <h5 class="modal-title">Criar Novo Cartão</h5>
+                    <button type="button" class="close" @onclick="HideCreateCardModal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <MauiApp1.Components.Pages.CreateCard SelectedDeckId="DeckId" OnCardCreated="OnCardCreated" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(exportMessage))
+{
+    <div class="fixed bottom-4 right-4 bg-indigo-600 text-white px-4 py-2 rounded shadow-lg z-50">
+        @exportMessage
+    </div>
+}
+
 @code {
     [Parameter]
     public int DeckId { get; set; }
@@ -59,6 +97,8 @@
     private Infrastructure.Data.Model.DeckTable? deck;
     private ICollection<SrsCard> allCards = new List<SrsCard>();
     private string searchTerm = "";
+    private bool showCreateCardModal = false;
+    private string exportMessage = "";
 
     // For deletion
     private SrsCard? cardToDelete;
@@ -144,6 +184,59 @@
             StateHasChanged();
         }
     }
+
+    private void ShowCreateCardModal()
+    {
+        showCreateCardModal = true;
+    }
+
+    private void HideCreateCardModal()
+    {
+        showCreateCardModal = false;
+    }
+
+    private async Task ExportDeck()
+    {
+        exportMessage = "";
+        if (deck == null || deck.Cards == null || !deck.Cards.Any())
+        {
+            exportMessage = "Deck vazio ou não encontrado.";
+            StateHasChanged();
+            return;
+        }
+
+        // Create default filename
+        var fileName = $"{deck.Name}.apkg";
+
+        try
+        {
+            // Let user choose save location
+            var result = await FileSaver.Default.SaveAsync(fileName, Stream.Null);
+            if (!result.IsSuccessful)
+            {
+                exportMessage = "Operação cancelada pelo usuário.";
+                return;
+            }
+
+            // Use AnkiHelper to export the deck to the chosen location
+            var ankiHelper = new Infrastructure.Parsing.AnkiHelper();
+            await ankiHelper.ExportApkg(deck, result.FilePath);
+
+            exportMessage = $"Deck exportado para: {result.FilePath}";
+        }
+        catch (Exception ex)
+        {
+            exportMessage = $"Erro ao exportar: {ex.Message}";
+        }
+        
+        StateHasChanged();
+    }
+
+    private void OnCardCreated()
+    {
+        showCreateCardModal = false;
+        StateHasChanged();
+    }
 }
 
 <style>
@@ -161,4 +254,5 @@
     .card-gallery {
         margin-top: 20px;
     }
+}
 </style>
