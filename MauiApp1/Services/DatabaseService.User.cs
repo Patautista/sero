@@ -16,11 +16,13 @@ namespace MauiApp1.Services
             {
                 var oldState = await db.UserCardStates.FindAsync(srsCard.StateId);
 
-                var user = UserTable.Default;
-                if (user != null)
+                var user = await db.Users.FindAsync(UserTable.Default.Id);
+                if (user is null)
                 {
-                    user.Exp += earnedExp;
+                    user = UserTable.Default;
+                    db.Users.Add(user);
                 }
+                user.Exp += earnedExp;
 
                 if (oldState == null)
                 {

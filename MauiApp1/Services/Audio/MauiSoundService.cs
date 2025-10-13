@@ -13,6 +13,7 @@ namespace MauiApp1.Services.Audio
         private static IAudioManager _audioManager = new AudioManager();
         private readonly IAudioCache _audioCache;
         private readonly ApiService _apiService;
+        private IAudioPlayer? _currentPlayer;
 
         public MauiSoundService(IAudioCache audioCache, ApiService apiService)
         {
@@ -45,25 +46,16 @@ namespace MauiApp1.Services.Audio
                     }
                 }
 
-                // Depois de obter audioData
-                var cachePath = Path.Combine(FileSystem.CacheDirectory, "tts_cache");
-                if (!Directory.Exists(cachePath))
-                    Directory.CreateDirectory(cachePath);
-
-                var filePath = Path.Combine(cachePath, $"{key}.mp3");
-
-                // Grava o arquivo se não existir
-                if (!File.Exists(filePath))
-                    await File.WriteAllBytesAsync(filePath, audioData);
-
-                // Agora toca do arquivo
-                var player = AudioManager.Current.CreatePlayer(filePath);
-                player.Play();
+                // Create a MemoryStream from the audio data
+                var stream = new MemoryStream(audioData);
+                _currentPlayer = AudioManager.Current.CreatePlayer(stream);
+                _currentPlayer.Play();
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine($"Failed to play audio: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
                 return false;
             }
         }
@@ -73,12 +65,14 @@ namespace MauiApp1.Services.Audio
             try
             {
                 var stream = await FileSystem.OpenAppPackageFileAsync("correct_answer.mp3");
-                var player = _audioManager.CreatePlayer(stream);
-                player.Play();
+                
+                _currentPlayer = _audioManager.CreatePlayer(stream);
+                _currentPlayer.Play();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Failed to play correct answer sound: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
                 // Optionally: fallback to system beep or ignore
             }
         }

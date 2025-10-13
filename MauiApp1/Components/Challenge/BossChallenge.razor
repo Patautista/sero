@@ -172,8 +172,6 @@
         Srs.Review(BossSrsCard, evaluation.Quality);
         _challengeState.Feedback = AnswerEvaluator.BuildFeedbackMessage(evaluation, _challengeState.UserAnswer);
 
-        await Database.UpdateUserCardState(BossSrsCard, _challengeState.ExpEarned ?? 0);
-
         var evt = new CardAnsweredEvent(
             Guid.NewGuid(),
             "BossChallenge",
