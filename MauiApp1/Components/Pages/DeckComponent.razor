@@ -25,22 +25,24 @@
                placeholder="Search cards..." @bind="searchTerm" @bind:event="oninput" />
     </div>
 
-    <div class="card-gallery grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        @if (filteredCards.Any())
-        {
-            @foreach (var card in filteredCards)
+    <MauiApp1.Components.LoadingSpinner IsLoading="@isLoading">
+        <div class="card-gallery grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @if (filteredCards.Any())
             {
-                <MauiApp1.Components.User.CardSummary
-                    Card="card"
-                    OnDelete="() => PromptDelete(card)"
-                    OnEditConfirm="(def) => ConfirmEditCard(card.CardId, def)" />
+                @foreach (var card in filteredCards)
+                {
+                    <MauiApp1.Components.User.CardSummary
+                        Card="card"
+                        OnDelete="() => PromptDelete(card)"
+                        OnEditConfirm="(def) => ConfirmEditCard(card.CardId, def)" />
+                }
             }
-        }
-        else
-        {
-            <p class="text-center text-gray-500 col-span-full">No cards found.</p>
-        }
-    </div>
+            else
+            {
+                <p class="text-center text-gray-500 col-span-full">No cards found.</p>
+            }
+        </div>
+    </MauiApp1.Components.LoadingSpinner>
 </div>
 
 @if (showDeleteConfirm)
@@ -99,6 +101,7 @@
     private string searchTerm = "";
     private bool showCreateCardModal = false;
     private string exportMessage = "";
+    private bool isLoading = true;
 
     // For deletion
     private SrsCard? cardToDelete;
@@ -108,22 +111,25 @@
     {
         if (DeckId > 0)
         {
-            deck = await DatabaseService.GetDeckByIdAsync(DeckId);
-
-            if (deck != null)
-            {
-                allCards = await DatabaseService.QuerySrsCardsAsync(deck.Id);
-            }
+            deck = await DatabaseService.GetOnlyDeckById(DeckId);
         }
         else
         {
             deck = await DatabaseService.GetFirstDeckAsync();
-
-            if (deck != null)
+            DeckId = deck.Id;
+        }
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            isLoading = true;
+            if (deck != null && isLoading)
             {
                 allCards = await DatabaseService.QuerySrsCardsAsync(deck.Id);
-                DeckId = deck.Id;
             }
+            isLoading = false;
+            StateHasChanged();
         }
     }
 
@@ -198,6 +204,7 @@
     private async Task ExportDeck()
     {
         exportMessage = "";
+        deck = await DatabaseService.GetDeckByIdAsync(DeckId);
         if (deck == null || deck.Cards == null || !deck.Cards.Any())
         {
             exportMessage = "Deck vazio ou não encontrado.";
