@@ -17,13 +17,16 @@
     <h2 class="text-2xl font-bold mb-6 text-indigo-700"><Translate Text="Criar Novo Cartão"></Translate></h2>
 
     <!-- Deck Selection -->
-    <div class="mb-4">
+    @if (!string.IsNullOrWhiteSpace(SharedText))
+    {
+        <div class="mb-4">
         <MauiApp1.Components.Shared.DeckPicker @bind-SelectedDeckId="SelectedDeckId" />
         @if (showValidation && SelectedDeckId == 0)
         {
             <span class="text-red-500 text-xs">Por favor, selecione um deck.</span>
         }
     </div>
+    }
 
     <!-- Idioma primário -->
     <div class="mb-4">
@@ -59,32 +62,40 @@
                   class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 @(showValidation && string.IsNullOrWhiteSpace(primarySentence) ? "border-red-500" : "")"
                   placeholder="Insira a frase"
                   rows="1"
-                  style="overflow:hidden;resize:none"></textarea>
+                  style="overflow:hidden;resize:none;height:@PrimaryTextAreaHeight"></textarea>
         @if (showValidation && string.IsNullOrWhiteSpace(primarySentence))
         {
             <span class="text-red-500 text-xs">Campo obrigatório.</span>
         }
     </div>
 
+    <!-- Translation Button -->
+    @if (IsApiLive)
+    {
+        <div class="flex justify-center my-3">
+            <button @onclick="TranslateAutomatically"
+                    class="px-4 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-all shadow-md hover:shadow-lg flex items-center gap-2"
+                    disabled="@isTranslating">
+                <i class='fa fa-language text-lg'></i>
+                <span><Translate Text="Traduzir"></Translate></span>
+            </button>
+        </div>
+    }
+
     <!-- Translation Input -->
     <div class="mt-4">
         <label class="block text-sm font-medium text-gray-700 mb-2">@Translate("Tradução para") @(primaryLanguage == Language.Target ? Nativelanguage?.DisplayName : TargetLanguage?.DisplayName)</label>
-        <div class="flex items-center gap-2">
+        <LoadingText IsLoading="@isTranslating" Lines="2">
             <textarea @bind="translatedSentence"
                       @oninput="@(e => AutoResize(e, "translatedSentenceArea"))"
                       id="translatedSentenceArea"
-                      class="flex-1 p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 @(showValidation && string.IsNullOrWhiteSpace(translatedSentence) ? "border-red-500" : "")"
+                      class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 @(showValidation && string.IsNullOrWhiteSpace(translatedSentence) ? "border-red-500" : "")"
                       placeholder="@Translate("Tradução")"
                       rows="1"
-                      style="overflow:hidden;resize:none;height:@TranslatedTextAreaHeight"></textarea>
-            @if (IsApiLive)
-            {
-                <button @onclick="TranslateAutomatically"
-                        class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
-                    <Translate Text="Traduzir Automaticamente"></Translate>
-                </button>
-            }
-        </div>
+                      style="overflow:hidden;resize:none;height:@TranslatedTextAreaHeight"
+                      disabled="@isTranslating">
+            </textarea>
+        </LoadingText>
         @if (showValidation && string.IsNullOrWhiteSpace(translatedSentence))
         {
             <span class="text-red-500 text-xs">Campo obrigatório.</span>
@@ -147,12 +158,6 @@
     </div>
 
     <div class="mt-6 flex gap-2">
-        @if (IsApiLive)
-        {
-            <ButtonPrimary Onclick="GenerateAudioAutomatically">
-                <Translate Text="Gerar Áudio Automaticamente"></Translate>
-            </ButtonPrimary>
-        }
         <button @onclick="TrySaveCard"
                 class="w-1/2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
                 disabled="@(!CanSave)">
@@ -404,6 +409,17 @@
     {
         if (isChecked) selectedTags.Add(tag);
         else selectedTags.Remove(tag);
+    }
+    private string PrimaryTextAreaHeight
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(primarySentence))
+                return "2.5em";
+            var lines = primarySentence.Split('\n').Length;
+            int approxLines = lines + (int)Math.Ceiling(primarySentence.Length / 60D);
+            return $"{Math.Max(approxLines * 2.5, 2.5)}em".Replace(",", ".");
+        }
     }
     private string TranslatedTextAreaHeight
     {
