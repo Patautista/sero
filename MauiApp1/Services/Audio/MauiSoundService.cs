@@ -46,10 +46,6 @@ namespace MauiApp1.Services.Audio
                     }
                 }
 
-                // Stop and dispose any currently playing audio
-                _currentPlayer?.Stop();
-                _currentPlayer?.Dispose();
-
                 // Create a MemoryStream from the audio data
                 var stream = new MemoryStream(audioData);
                 _currentPlayer = AudioManager.Current.CreatePlayer(stream);
@@ -69,10 +65,6 @@ namespace MauiApp1.Services.Audio
             try
             {
                 var stream = await FileSystem.OpenAppPackageFileAsync("correct_answer.mp3");
-                
-                // Stop and dispose any currently playing audio
-                _currentPlayer?.Stop();
-                _currentPlayer?.Dispose();
                 
                 _currentPlayer = _audioManager.CreatePlayer(stream);
                 _currentPlayer.Play();
