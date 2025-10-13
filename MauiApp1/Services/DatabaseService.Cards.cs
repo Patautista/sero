@@ -73,11 +73,11 @@ namespace MauiApp1.Services
             }).OrderBy(c => c.DifficultyLevel).ToList();
 
             var userDifficulty = settingsService.StudyConfig.Value?.DifficultyLevel ?? DifficultyLevel.Advanced;
-            var filtered = cardWithStates.ToList();
+            var allDueCards = cardWithStates.Where(s => s.NextReview <= DateTime.Today).ToList();
 
             // Separate new vs review
-            var newCards = filtered.Where(c => c.Repetitions == 0).ToList();
-            var reviewCards = filtered.Where(c => c.Repetitions > 0).ToList();
+            var newCards = allDueCards.Where(c => c.Repetitions == 0).ToList();
+            var reviewCards = allDueCards.Where(c => c.Repetitions > 0).ToList();
 
             // Session-specific limits
             (int newLimit, int reviewLimit) = sessionMode switch
