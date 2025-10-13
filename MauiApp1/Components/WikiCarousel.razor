@@ -4,12 +4,7 @@
 @inherits SmartComponent
 
 <div class="p-4 flex justify-center w-full max-w-6xl mx-auto">
-    @if (_isLoading)
-    {
-        <LoadingSpinner></LoadingSpinner>
-    }
-    else
-    {
+    <LoadingSpinner IsLoading="_isLoading">
         <RadzenCarousel Style="height:100%;width:100%;">
             <Items>
                 @foreach (var article in _articles)
@@ -33,7 +28,7 @@
                 }
             </Items>
         </RadzenCarousel>
-    }
+    </LoadingSpinner>
 </div>
 
 @code {

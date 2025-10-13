@@ -31,18 +31,20 @@
     <!-- Idioma primário -->
     <div class="mb-4">
         <label class="block text-sm font-medium text-gray-700 mb-2"><Translate Text="Idioma Primário"></Translate></label>
-        <div class="flex items-center space-x-4">
-            <span @onclick="SetTargetAsPrimary"
-                  class="cursor-pointer px-3 py-1 rounded-lg transition
-                        @(primaryLanguage == Language.Target ? "bg-indigo-600 text-white font-semibold shadow" : "bg-gray-100 text-gray-700")">
-                @TargetLanguage?.DisplayName
-            </span>
-            <span @onclick="SetNativeAsPrimary"
-                  class="cursor-pointer px-3 py-1 rounded-lg transition
-                        @(primaryLanguage == Language.Native ? "bg-indigo-600 text-white font-semibold shadow" : "bg-gray-100 text-gray-700")">
-                @Nativelanguage?.DisplayName
-            </span>
-        </div>
+        <LoadingText IsLoading="@(primaryLanguage == LanguageDetected.Undecided)" Lines="1">
+            <div class="flex items-center space-x-4">
+                <span @onclick="SetTargetAsPrimary"
+                      class="cursor-pointer px-3 py-1 rounded-lg transition
+                            @(primaryLanguage == LanguageDetected.Target ? "bg-indigo-600 text-white font-semibold shadow" : "bg-gray-100 text-gray-700")">
+                    @TargetLanguage?.DisplayName
+                </span>
+                <span @onclick="SetNativeAsPrimary"
+                      class="cursor-pointer px-3 py-1 rounded-lg transition
+                            @(primaryLanguage == LanguageDetected.Native ? "bg-indigo-600 text-white font-semibold shadow" : "bg-gray-100 text-gray-700")">
+                    @Nativelanguage?.DisplayName
+                </span>
+            </div>
+        </LoadingText>
         @if (!string.IsNullOrWhiteSpace(languageDetectionMessage))
         {
             <div class="mt-2 text-sm text-indigo-600">
@@ -54,7 +56,7 @@
     <!-- Frase -->
     <div>
         <label class="block text-sm font-medium text-gray-700 mb-2">
-            Frase em @(primaryLanguage == Language.Target ? TargetLanguage?.DisplayName : Nativelanguage?.DisplayName)
+            Frase em @(primaryLanguage == LanguageDetected.Target ? TargetLanguage?.DisplayName : Nativelanguage?.DisplayName)
         </label>
         <textarea @bind="primarySentence"
                   @oninput="@(e => AutoResize(e, "primarySentenceArea"))"
@@ -84,7 +86,7 @@
 
     <!-- Translation Input -->
     <div class="mt-4">
-        <label class="block text-sm font-medium text-gray-700 mb-2">@Translate("Tradução para") @(primaryLanguage == Language.Target ? Nativelanguage?.DisplayName : TargetLanguage?.DisplayName)</label>
+        <label class="block text-sm font-medium text-gray-700 mb-2">@Translate("Tradução para") @(primaryLanguage == LanguageDetected.Target ? Nativelanguage?.DisplayName : TargetLanguage?.DisplayName)</label>
         <LoadingText IsLoading="@isTranslating" Lines="2">
             <textarea @bind="translatedSentence"
                       @oninput="@(e => AutoResize(e, "translatedSentenceArea"))"
@@ -172,7 +174,7 @@
 
     [Parameter]
     public EventCallback OnCardCreated { get; set; }
-    
+
     [Parameter]
     public string? SharedText { get; set; }
 
@@ -181,9 +183,9 @@
         Tags = new List<Tag>()
     };
 
-    private enum Language { Native, Target }
+    private enum LanguageDetected { Native, Target, Undecided }
 
-    private Language primaryLanguage = Language.Target;
+    private LanguageDetected primaryLanguage = LanguageDetected.Undecided;
     private string primarySentence = "";
     private string translatedSentence = "";
     private string newTag = "";
@@ -211,18 +213,19 @@
     {
         await base.OnInitializedAsync();
         allTags = await DatabaseService.GetTagsAsync();
-        
+
         // If SharedText is provided via URL parameter, use it
         if (!string.IsNullOrWhiteSpace(SharedText))
         {
             primarySentence = Uri.UnescapeDataString(SharedText);
-            
-            // Detect language and set primary language automatically
             DetectAndSetPrimaryLanguage(primarySentence);
-            
             StateHasChanged();
         }
-        
+        else
+        {
+            primaryLanguage = LanguageDetected.Target;
+        }
+
         // If no deck is selected, try to get the first available deck
         if (SelectedDeckId == 0)
         {
@@ -234,62 +237,82 @@
         }
     }
 
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (primaryLanguage == LanguageDetected.Undecided && !string.IsNullOrWhiteSpace(primarySentence))
+        {
+            DetectAndSetPrimaryLanguage(primarySentence);
+        }
+    }
+
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        
+
         // Handle SharedText parameter changes
         if (!string.IsNullOrWhiteSpace(SharedText))
         {
             primarySentence = Uri.UnescapeDataString(SharedText);
-            
+
             // Detect language and set primary language automatically
             DetectAndSetPrimaryLanguage(primarySentence);
         }
     }
 
-    private void DetectAndSetPrimaryLanguage(string text)
+    private async Task DetectAndSetPrimaryLanguage(string text)
     {
         if (string.IsNullOrWhiteSpace(text))
             return;
 
-        var detectedCode = LanguageDetector.DetectLanguageCode(text);
-        
-        if (detectedCode == null)
-        {
-            languageDetectionMessage = "Não foi possível detectar o idioma automaticamente.";
-            return;
-        }
+        primaryLanguage = LanguageDetected.Undecided;
+        languageDetectionMessage = "Detectando idioma...";
+        StateHasChanged();
 
-        // Check if detected language matches target language
-        if (detectedCode == TargetLanguageCode)
+        // Simulate async detection if needed, or wrap synchronous call
+        await Task.Run(() =>
         {
-            primaryLanguage = Language.Target;
-            languageDetectionMessage = $"Idioma detectado: {TargetLanguage?.DisplayName} (idioma de estudo)";
-        }
-        // Check if detected language matches native language
-        else if (detectedCode == NativeLanguageCode)
-        {
-            primaryLanguage = Language.Native;
-            languageDetectionMessage = $"Idioma detectado: {Nativelanguage?.DisplayName} (idioma nativo)";
-        }
-        else
-        {
-            // Detected a different language
-            var detectedCulture = new CultureInfo(detectedCode);
-            languageDetectionMessage = $"Idioma detectado: {detectedCulture.DisplayName}. Por favor, verifique a seleção.";
-        }
+            var detectedCode = LanguageDetector.DetectLanguageCode(text);
+
+            if (detectedCode == null)
+            {
+                languageDetectionMessage = "Não foi possível detectar o idioma automaticamente.";
+                primaryLanguage = LanguageDetected.Target; // Default fallback
+                return;
+            }
+
+            // Check if detected language matches target language
+            if (detectedCode == TargetLanguageCode)
+            {
+                primaryLanguage = LanguageDetected.Target;
+                languageDetectionMessage = $"Idioma detectado: {TargetLanguage?.DisplayName} (idioma de estudo)";
+            }
+            // Check if detected language matches native language
+            else if (detectedCode == NativeLanguageCode)
+            {
+                primaryLanguage = LanguageDetected.Native;
+                languageDetectionMessage = $"Idioma detectado: {Nativelanguage?.DisplayName} (idioma nativo)";
+            }
+            else
+            {
+                // Detected a different language
+                var detectedCulture = new CultureInfo(detectedCode);
+                languageDetectionMessage = $"Idioma detectado: {detectedCulture.DisplayName}. Por favor, verifique a seleção.";
+                primaryLanguage = LanguageDetected.Target; // Default fallback
+            }
+        });
+
+        StateHasChanged();
     }
 
     private void SetTargetAsPrimary()
     {
-        primaryLanguage = Language.Target;
+        primaryLanguage = LanguageDetected.Target;
         languageDetectionMessage = ""; // Clear detection message when manually changed
     }
 
     private void SetNativeAsPrimary()
     {
-        primaryLanguage = Language.Native;
+        primaryLanguage = LanguageDetected.Native;
         languageDetectionMessage = ""; // Clear detection message when manually changed
     }
 
@@ -343,7 +366,7 @@
         try
         {
             string sourceLang, targetLang;
-            if (primaryLanguage == Language.Target)
+            if (primaryLanguage == LanguageDetected.Target)
             {
                 sourceLang = TargetLanguage.TwoLetterISOLanguageName;
                 targetLang = Nativelanguage.TwoLetterISOLanguageName;
@@ -367,7 +390,7 @@
 
     private async Task GenerateAudioAutomatically()
     {
-        var sentence = primaryLanguage == Language.Target ? primarySentence : translatedSentence;
+        var sentence = primaryLanguage == LanguageDetected.Target ? primarySentence : translatedSentence;
 
         await PlayVoiceClip(sentence, TargetLanguageCode);
     }
@@ -386,8 +409,8 @@
 
         var cardDefinition = new CardDefinition
         {
-            NativeSentence = primaryLanguage == Language.Native ? primarySentence : translatedSentence,
-            TargetSentence = primaryLanguage == Language.Target ? primarySentence : translatedSentence,
+            NativeSentence = primaryLanguage == LanguageDetected.Native ? primarySentence : translatedSentence,
+            TargetSentence = primaryLanguage == LanguageDetected.Target ? primarySentence : translatedSentence,
             NativeLanguageCode = NativeLanguageCode,
             TargetLanguageCode = TargetLanguageCode,
             DifficultyLevel = card.DifficultyLevel,
@@ -399,6 +422,10 @@
         // Invoke callback after card creation
         if (OnCardCreated.HasDelegate)
             await OnCardCreated.InvokeAsync();
+        else
+        {
+            Navigation.NavigateTo($"{Routes.DecksView}");
+        }
     }
     private async Task AutoResize(ChangeEventArgs e, string id)
     {

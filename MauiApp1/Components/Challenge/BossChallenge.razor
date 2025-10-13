@@ -12,18 +12,23 @@
 @inject MauiSoundService SoundService
 @inject DatabaseService Database
 
-@if (isLoadingBossChallenge)
-{
-    <LoadingSpinner />
-}
-else if (BossSrsCard != null)
-{
-    <div class="boss-card-content transition-all duration-300 ease-in-out" style="border: 3px solid #e63946; background: linear-gradient(135deg, #f8edeb 0%, #e63946 100%); box-shadow: 0 0 20px #e6394688; filter: blur(@(isInputFocused ? "2px" : "0")); transform: scale(@(isInputFocused ? "0.95" : "1"));">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-            <h1 class="text-2xl font-bold text-[#e63946] flex items-center">
-                <span style="font-size:2rem;">👹</span> Boss Challenge!
-            </h1>
-            @if (_challengeState.ExpEarned.HasValue)
+<LoadingSpinner IsLoading="isLoadingBossChallenge">
+    @if (BossSrsCard != null)
+    {
+        <div class="boss-card-content transition-all duration-300 ease-in-out" style="border: 3px solid #e63946; background: linear-gradient(135deg, #f8edeb 0%, #e63946 100%); box-shadow: 0 0 20px #e6394688; filter: blur(@(isInputFocused ? "2px" : "0")); transform: scale(@(isInputFocused ? "0.95" : "1"));">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h1 class="text-2xl font-bold text-[#e63946] flex items-center">
+                    <span style="font-size:2rem;">👹</span> Boss Challenge!
+                </h1>
+                @if (_challengeState.ExpEarned.HasValue)
+                {
+                    <div class="exp-badge boss-exp">
+                        +@_challengeState.ExpEarned EXP
+                    </div>
+                }
+            </div>
+
+            @if (BossSrsCard.Repetitions == 0)
             {
                 <div class="exp-badge boss-exp">
                     +@_challengeState.ExpEarned EXP
@@ -31,59 +36,52 @@ else if (BossSrsCard != null)
             }
         </div>
 
-        @if (BossSrsCard.Repetitions == 0)
-        {
-            <div class="exp-badge boss-exp">
-                +@_challengeState.ExpEarned EXP
-            </div>
-        }
-    </div>
+        <p class="w-fit mb-5 mt-3 text-gray-950 animated-underline boss-underline">@BossSrsCard.NativeSample.Text</p>
+        <input class="w-full form-control mb-2 p-3 rounded-lg border border-red-300 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all" @bind="_challengeState.UserAnswer" placeholder="Resposta do Boss" @onfocus="() => isInputFocused = true" @onblur="() => isInputFocused = false" />
 
-    <p class="w-fit mb-5 mt-3 text-gray-950 animated-underline boss-underline">@BossSrsCard.NativeSample.Text</p>
-    <input class="w-full form-control mb-2 p-3 rounded-lg border border-red-300 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all" @bind="_challengeState.UserAnswer" placeholder="Resposta do Boss" @onfocus="() => isInputFocused = true" @onblur="() => isInputFocused = false" />
-
-    <div class="card-buttons transition-all duration-300 ease-in-out">
-        <div class="flex justify-between">
-            <div style="filter: blur(@(isInputFocused ? "2px" : "0")); transform: scale(@(isInputFocused ? "0.95" : "1"));">
-                <ButtonSecondary OnClick="SkipCard"><Translate Text="Pular"></Translate></ButtonSecondary>
+        <div class="card-buttons transition-all duration-300 ease-in-out">
+            <div class="flex justify-between">
+                <div style="filter: blur(@(isInputFocused ? "2px" : "0")); transform: scale(@(isInputFocused ? "0.95" : "1"));">
+                    <ButtonSecondary OnClick="SkipCard"><Translate Text="Pular"></Translate></ButtonSecondary>
+                </div>
+                <ButtonPrimary OnClick="CheckAnswer"><Translate Text="Conferir"></Translate></ButtonPrimary>
             </div>
-            <ButtonPrimary OnClick="CheckAnswer"><Translate Text="Conferir"></Translate></ButtonPrimary>
-        </div>
 
-    @if (_challengeState.Feedback is not null)
-    {
-        <div class="mt-4">
-            <div>
-                <span>@_challengeState.Feedback.MainMessage</span>
-            </div>
-            @if (_challengeState.Feedback.ExpectedAnswer is not null)
+            @if (_challengeState.Feedback is not null)
             {
-                <div class="text-sm text-gray-700 mt-2">
-                    <strong>Resposta esperada:</strong> @_challengeState.Feedback.ExpectedAnswer
+                <div class="mt-4">
+                    <div>
+                        <span>@_challengeState.Feedback.MainMessage</span>
+                    </div>
+                    @if (_challengeState.Feedback.ExpectedAnswer is not null)
+                    {
+                        <div class="text-sm text-gray-700 mt-2">
+                            <strong>Resposta esperada:</strong> @_challengeState.Feedback.ExpectedAnswer
+                        </div>
+                    }
+                    @if (_challengeState.Feedback.Hint is not null)
+                    {
+                        <div class="text-xs text-gray-500 mt-1">
+                            <strong>Dica:</strong> @_challengeState.Feedback.Hint
+                        </div>
+                    }
                 </div>
             }
-            @if (_challengeState.Feedback.Hint is not null)
+
+            @if (_challengeState.AnswerQuality != AnswerQuality.Perfect)
             {
-                <div class="text-xs text-gray-500 mt-1">
-                    <strong>Dica:</strong> @_challengeState.Feedback.Hint
+                <div class="mt-4 text-center">
+                    <p class="text-sm text-gray-600 mb-2"><Translate Text="Sua resposta estava correta?"></Translate></p>
+                    <button class="btn btn-sm btn-outline-danger" @onclick="ForceCorrectAnswer">
+                        <Translate Text="Sim, aceitar como resposta correta"></Translate>
+                    </button>
                 </div>
             }
+
+            <NextCardCountdown Countdown="@_challengeState.Countdown" />
         </div>
     }
-
-    @if (_challengeState.AnswerQuality != AnswerQuality.Perfect)
-    {
-        <div class="mt-4 text-center">
-            <p class="text-sm text-gray-600 mb-2"><Translate Text="Sua resposta estava correta?"></Translate></p>
-            <button class="btn btn-sm btn-outline-danger" @onclick="ForceCorrectAnswer">
-                <Translate Text="Sim, aceitar como resposta correta"></Translate>
-            </button>
-        </div>
-    }
-
-    <NextCardCountdown Countdown="@_challengeState.Countdown" />
-</div>
-}
+</LoadingSpinner>
 
 @code {
     [Parameter] public EventCallback<int> OnChallengeCompleted { get; set; }
