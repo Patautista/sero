@@ -22,6 +22,18 @@ namespace SupportServer
             {
                 return LanguageCode.Norwegian;
             }
+            if (code.Equals("vi", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new NotImplementedException();
+            }
+            if (code.Equals("de", StringComparison.OrdinalIgnoreCase))
+            {
+                return LanguageCode.German;
+            }
+            if (code.Equals("zh", StringComparison.OrdinalIgnoreCase) || code.Equals("zh-CN", StringComparison.OrdinalIgnoreCase) || code.Equals("zh-Hans", StringComparison.OrdinalIgnoreCase))
+            {
+                return LanguageCode.Chinese;
+            }
             return LanguageCode.English;
         }
         public static string NormalizeTargetLang(string code)
@@ -41,6 +53,18 @@ namespace SupportServer
             if (code.Equals("no", StringComparison.OrdinalIgnoreCase) || code.Equals("nb", StringComparison.OrdinalIgnoreCase))
             {
                 return LanguageCode.Norwegian;
+            }
+            if (code.Equals("vi", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new NotImplementedException();
+            }
+            if (code.Equals("de", StringComparison.OrdinalIgnoreCase))
+            {
+                return LanguageCode.German;
+            }
+            if (code.Equals("zh", StringComparison.OrdinalIgnoreCase) || code.Equals("zh-CN", StringComparison.OrdinalIgnoreCase) || code.Equals("zh-Hans", StringComparison.OrdinalIgnoreCase))
+            {
+                return LanguageCode.Chinese;
             }
             return LanguageCode.EnglishAmerican;
         }
