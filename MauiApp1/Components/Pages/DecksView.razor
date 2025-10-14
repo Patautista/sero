@@ -9,8 +9,15 @@
 @inject IJSRuntime JS
 
 <div class="card flex flex-col items-center mb-5 p-3">
-    <div class="mb-4 w-full max-w-xs">
-        <MauiApp1.Components.Shared.DeckPicker @bind-SelectedDeckId="selectedDeckId" />
+    <div class="mb-4 w-full max-w-xs flex gap-2">
+        <div class="flex-grow">
+            <MauiApp1.Components.Shared.DeckPicker @bind-SelectedDeckId="selectedDeckId" />
+        </div>
+        <button class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-2"
+                @onclick="ShowCreateDeckModal">
+            <i class="fa fa-plus"></i>
+            <span class="hidden sm:inline"><Translate Text="Novo Deck"></Translate></span>
+        </button>
     </div>
 </div>
 
@@ -22,15 +29,41 @@
         }
         else
         {
-            <div class="text-center text-gray-500 mt-8">Selecione um deck para visualizar.</div>
+            <div class="text-center text-gray-500 mt-8">
+                <p class="mb-4">Nenhum deck disponível.</p>
+                <button class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+                        @onclick="ShowCreateDeckModal">
+                    <i class="fa fa-plus mr-2"></i>
+                    <Translate Text="Criar Primeiro Deck"></Translate>
+                </button>
+            </div>
         }
     </LoadingSpinner>
 </div>
+
+@if (showCreateDeckModal)
+{
+    <div class="modal-backdrop-custom" @onclick="HideCreateDeckModal"></div>
+    <div class="modal fade show modal-animate" style="display:block;" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" @onclick:stopPropagation>
+                <div class="modal-header">
+                    <h5 class="modal-title"><Translate Text="Criar Novo Deck"></Translate></h5>
+                    <button type="button" class="close" @onclick="HideCreateDeckModal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <CreateDeck OnDeckCreated="OnDeckCreated" OnCancel="HideCreateDeckModal" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @code {
     private int selectedDeckId = 0;
     private int previousDeckId = 0;
     private bool isLoading = true;
+    private bool showCreateDeckModal = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -67,4 +100,71 @@
             StateHasChanged();
         }
     }
+
+    private void ShowCreateDeckModal()
+    {
+        showCreateDeckModal = true;
+    }
+
+    private void HideCreateDeckModal()
+    {
+        showCreateDeckModal = false;
+    }
+
+    private async Task OnDeckCreated(int newDeckId)
+    {
+        showCreateDeckModal = false;
+        
+        // Reload decks and select the newly created one
+        if (newDeckId > 0)
+        {
+            selectedDeckId = newDeckId;
+            previousDeckId = newDeckId;
+        }
+        
+        StateHasChanged();
+    }
 }
+
+<style>
+    .modal-backdrop-custom {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1040;
+    }
+
+    .modal {
+        z-index: 1050;
+    }
+
+    .modal-animate {
+        animation: slideIn 0.3s ease-out;
+    }
+
+    @@keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .close {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #6b7280;
+    }
+
+    .close:hover {
+        color: #374151;
+    }
+</style>

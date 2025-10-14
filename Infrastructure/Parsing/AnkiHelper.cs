@@ -198,6 +198,10 @@ namespace Infrastructure.Parsing
                 AvailableCodes.Portuguese or "por" or "portuguese" => Portuguese,
                 AvailableCodes.Norwegian or "nob" or "norwegian" => Nynorsk,
                 AvailableCodes.Italian or "ita" or "italian" => Italian,
+                AvailableCodes.English or "eng" or "english" => English,
+                AvailableCodes.Vietnamese or "vie" or "vietnamese" => Vietnamese,
+                AvailableCodes.Chinese or "zho" or "chinese" => Chinese,
+                AvailableCodes.German or "deu" or "german" => German,
                 _ => throw new ArgumentException($"Unsupported language code: {code}")
             };
         }
