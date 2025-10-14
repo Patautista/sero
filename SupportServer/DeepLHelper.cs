@@ -1,4 +1,5 @@
 ﻿using DeepL;
+using Infrastructure.Services;
 
 namespace SupportServer
 {
@@ -24,7 +25,7 @@ namespace SupportServer
             }
             if (code.Equals("vi", StringComparison.OrdinalIgnoreCase))
             {
-                throw new NotImplementedException();
+                return AvailableCodes.Vietnamese;
             }
             if (code.Equals("de", StringComparison.OrdinalIgnoreCase))
             {
@@ -56,7 +57,7 @@ namespace SupportServer
             }
             if (code.Equals("vi", StringComparison.OrdinalIgnoreCase))
             {
-                throw new NotImplementedException();
+                return AvailableCodes.Vietnamese;
             }
             if (code.Equals("de", StringComparison.OrdinalIgnoreCase))
             {
