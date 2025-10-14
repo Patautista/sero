@@ -33,7 +33,8 @@ namespace Infrastructure.Audio
             { "fi", "fi-FI" },
             { "nl", "nl-NL" },
             { "pl", "pl-PL" },
-            { "tr", "tr-TR" }
+            { "tr", "tr-TR" },
+            { "vi", "vi-VN" },
         };
 
         public GoogleSpeechService(TextToSpeechClient client, IAudioCache cache)
