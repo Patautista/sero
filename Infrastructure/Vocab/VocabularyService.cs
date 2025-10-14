@@ -104,17 +104,8 @@ public class VocabularyService
 
     public async Task<List<Word>> GetVocabWordsWithTagAsync(IEnumerable<string> texts)
     {
-        var language = Language.English;
-        if (TargetLanguage.TwoLetterISOLanguageName == AvailableCodes.Italian)
-        {
-            language = Language.Italian;
-            Catalyst.Models.Italian.Register();
-        }
-        if (TargetLanguage.TwoLetterISOLanguageName == AvailableCodes.Norwegian)
-        {
-            language = Language.Norwegian;
-            Catalyst.Models.Norwegian.Register();
-        }
+        var language = EnsureLanguageModel();
+        
         var nlp = await Pipeline.ForAsync(language);
 
         var combinedText = string.Join(" ", texts);
@@ -148,5 +139,41 @@ public class VocabularyService
         }
 
         return words;
+    }
+    private Language EnsureLanguageModel()
+    {
+        var language = Language.English;
+        if (TargetLanguage.TwoLetterISOLanguageName == AvailableCodes.Italian)
+        {
+            language = Language.Italian;
+            Catalyst.Models.Italian.Register();
+            return language;
+        }
+        if (TargetLanguage.TwoLetterISOLanguageName == AvailableCodes.Norwegian)
+        {
+            language = Language.Norwegian;
+            Catalyst.Models.Norwegian.Register();
+            return language;
+        }
+        if (TargetLanguage.TwoLetterISOLanguageName == AvailableCodes.German)
+        {
+            language = Language.German;
+            Catalyst.Models.German.Register();
+            return language;
+        }
+        if (TargetLanguage.TwoLetterISOLanguageName == AvailableCodes.Chinese)
+        {
+            language = Language.Chinese;
+            Catalyst.Models.Chinese.Register();
+            return language;
+        }
+        if (TargetLanguage.TwoLetterISOLanguageName == AvailableCodes.Vietnamese)
+        {
+            language = Language.Vietnamese;
+            Catalyst.Models.Vietnamese.Register();
+            return language;
+        }
+        Catalyst.Models.English.Register();
+        return language;
     }
 }

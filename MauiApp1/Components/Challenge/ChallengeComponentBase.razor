@@ -4,9 +4,11 @@
 @using Domain.Events
 @using MauiApp1.Services
 @using MauiApp1.Services.Audio
+@using Business.Interfaces
 @inject Business.AnswerEvaluator AnswerEvaluator
 @inject MauiSoundService SoundService
 @inject DatabaseService Database
+@inject ISettingsService SettingsService
 @inherits SmartComponent
 
 @code {
@@ -23,7 +25,8 @@
         public int? ExpEarned;
         public DateTime CardShownAt;
         public TimeSpan AnswerTime;
-        public bool NextCardCalled = true;
+        public bool NextCardCalled = false;
+        public bool HasAnswered = false;
     }
 
     protected ChallengeState _challengeState = new();
@@ -101,6 +104,16 @@
 
     protected void StartCountdown(int seconds)
     {
+        var autoSkipEnabled = SettingsService.StudyConfig.Value?.AutoSkip ?? true;
+        
+        if (!autoSkipEnabled)
+        {
+            // Don't start countdown, just mark that answer has been submitted
+            _challengeState.HasAnswered = true;
+            StateHasChanged();
+            return;
+        }
+
         _challengeState.Countdown = seconds;
         _challengeState.NextCardCalled = false;
 
@@ -124,6 +137,18 @@
             });
         };
         countdownTimer.Start();
+    }
+
+    protected async Task GoToNextCard()
+    {
+        if (_challengeState.NextCardCalled) return;
+        
+        _challengeState.NextCardCalled = true;
+        countdownTimer?.Stop();
+        countdownTimer?.Dispose();
+        countdownTimer = null;
+
+        await OnChallengeCompleted.InvokeAsync(_challengeState.ExpEarned ?? 0);
     }
 
     protected async Task SaveCardAnsweredEvent(bool isCorrect)

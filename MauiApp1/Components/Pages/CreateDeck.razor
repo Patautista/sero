@@ -1,0 +1,263 @@
+@using System.Globalization
+@using Business.Interfaces
+@using Business.MobileConfig
+@using Infrastructure.Data
+@using Infrastructure.Parsing
+@using Infrastructure.Services
+@using Microsoft.AspNetCore.Components.Forms
+@inject ISettingsService SettingsService
+@inject MobileDbContext DbContext
+
+<div class="create-deck-container">
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger mb-3">@errorMessage</div>
+    }
+
+    <div class="mb-3">
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+            <Translate Text="Nome do Deck"></Translate>
+        </label>
+        <input class="form-input w-full" @bind="deckName" placeholder="Ex: Vocabulário Básico" />
+    </div>
+
+    <div class="mb-3">
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+            <Translate Text="Descrição"></Translate>
+        </label>
+        <input class="form-input w-full" @bind="deckDescription" placeholder="Ex: Palavras essenciais para iniciantes" />
+    </div>
+
+    <div class="mb-3">
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+            <Translate Text="Idioma Alvo"></Translate>
+        </label>
+        <select class="form-select w-full" @bind="selectedTargetLanguage">
+            <option value=""><Translate Text="Selecione..."></Translate></option>
+            @foreach (var langCode in AvailabilityService.TargetLanguages)
+            {
+                <option value="@langCode">@(new CultureInfo(langCode).DisplayName.FirstCharToUpper())</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+            <Translate Text="Como deseja criar o deck?"></Translate>
+        </label>
+        <EditForm Model="@OptionModel">
+            <InputRadioGroup @bind-Value="OptionModel.SelectedOption" class="flex flex-col gap-2">
+                @foreach (var option in DeckOptions)
+                {
+                    <div>
+                        <InputRadio Value="@option.Value" />
+                        <label class="ml-2"><Translate Text="@option.Label"></Translate></label>
+                    </div>
+
+                    @if (option.Value == "anki" && OptionModel.SelectedOption == "anki")
+                    {
+                        <button type="button" class="btn btn-secondary mt-2" @onclick="PickAnkiFile">
+                            <Translate Text="Selecionar arquivo .apkg"></Translate>
+                        </button>
+
+                        @if (!string.IsNullOrEmpty(ankiFilePath))
+                        {
+                            <div class="mt-1 text-sm text-green-600">
+                                <i class="fa fa-check"></i> Arquivo selecionado: @Path.GetFileName(ankiFilePath)
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(ankiFileError))
+                        {
+                            <div class="text-danger text-sm mt-1">@ankiFileError</div>
+                        }
+                    }
+                }
+            </InputRadioGroup>
+        </EditForm>
+    </div>
+
+    <div class="flex gap-2 justify-end">
+        <button class="btn btn-secondary" @onclick="OnCancel">
+            <Translate Text="Cancelar"></Translate>
+        </button>
+        <ButtonPrimary OnClick="@CreateOrImportDeck" 
+                       Disabled="@(!IsValid())">
+            <Translate Text="Criar Deck"></Translate>
+        </ButtonPrimary>
+    </div>
+</div>
+
+@code {
+    [Parameter] public EventCallback<int> OnDeckCreated { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
+
+    private string deckName = "";
+    private string deckDescription = "";
+    private string selectedTargetLanguage = "";
+    private string? ankiFilePath;
+    private string ankiFileError = "";
+    private string errorMessage = "";
+
+    public DeckOptionModel OptionModel { get; set; } = new();
+    public List<Option> DeckOptions => GetDeckOptions();
+
+    public class DeckOptionModel
+    {
+        public string SelectedOption { get; set; } = "scratch";
+    }
+
+    public class Option
+    {
+        public string Value { get; set; }
+        public string Label { get; set; }
+    }
+
+    private List<Option> GetDeckOptions()
+    {
+        var options = new List<Option>
+        {
+            new Option { Value = "scratch", Label = "Começar do zero" },
+            new Option { Value = "anki", Label = "Importar de arquivo Anki (APKG)" }
+        };
+        if (selectedTargetLanguage == AvailableCodes.Italian)
+        {
+            options.Add(new Option { Value = "library", Label = "Importar do acervo" });
+        }
+        return options;
+    }
+
+    private async Task PickAnkiFile()
+    {
+        try
+        {
+            ankiFileError = "";
+            var customFileTypes = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
+            {
+                { DevicePlatform.Android, new[] { "*/*" } },
+                { DevicePlatform.WinUI, new[] { ".apkg" } },
+                { DevicePlatform.MacCatalyst, new[] { "apkg" } },
+                { DevicePlatform.iOS, new[] { "com.pkware.zip-archive", "public.data" } },
+            });
+
+            var options = new PickOptions
+            {
+                PickerTitle = "Selecione arquivo .apkg",
+                FileTypes = customFileTypes
+            };
+
+            var result = await FilePicker.Default.PickAsync(options);
+
+            if (result == null)
+            {
+                ankiFileError = "Nenhum arquivo selecionado.";
+            }
+            else if (!Path.GetExtension(result.FileName).Equals(".apkg", StringComparison.OrdinalIgnoreCase))
+            {
+                ankiFileError = "Formato inválido.";
+            }
+            else
+            {
+                ankiFilePath = result.FullPath ?? result.FileName;
+            }
+        }
+        catch (Exception ex)
+        {
+            ankiFileError = $"Erro ao selecionar arquivo: {ex.Message}";
+            Console.WriteLine(ex);
+        }
+    }
+
+    private bool IsValid()
+    {
+        if (string.IsNullOrWhiteSpace(selectedTargetLanguage))
+            return false;
+
+        if (OptionModel.SelectedOption == "anki")
+            return !string.IsNullOrEmpty(ankiFilePath) && string.IsNullOrEmpty(ankiFileError);
+
+        // For scratch and library options, name is required
+        return !string.IsNullOrWhiteSpace(deckName);
+    }
+
+    private async Task CreateOrImportDeck()
+    {
+        try
+        {
+            errorMessage = "";
+            
+            var config = SettingsService.StudyConfig.Value ?? new StudyConfig();
+            var appLanguage = config.SelectedLanguage?.Source.TwoLetterISOLanguageName ?? "pt";
+
+            // Import from Anki
+            if (OptionModel.SelectedOption == "anki" && !string.IsNullOrEmpty(ankiFilePath))
+            {
+                var ankiService = new AnkiHelper();
+                var cards = await ankiService.ReadApkg(ankiFilePath, appLanguage, selectedTargetLanguage);
+                
+                if (!cards.Any())
+                {
+                    errorMessage = "Nenhum card foi encontrado no arquivo Anki.";
+                    return;
+                }
+
+                await DbContext.Cards.AddRangeAsync(cards);
+                await DbContext.SaveChangesAsync();
+
+                // Get the deck ID from the first card
+                var firstCard = cards.First();
+                var deckId = firstCard.Deck?.Id ?? 0;
+                
+                await OnDeckCreated.InvokeAsync(deckId);
+            }
+            // Import from library (Italian only)
+            else if (OptionModel.SelectedOption == "library" && selectedTargetLanguage == AvailableCodes.Italian)
+            {
+                // This would require access to MobileDbContextInitialiser.SeedAsync()
+                errorMessage = "Importação do acervo ainda não implementada para este contexto.";
+            }
+            // Create empty deck
+            else
+            {
+                var deck = new Infrastructure.Data.Model.DeckTable
+                {
+                    Name = deckName,
+                    Description = deckDescription,
+                    TargetLanguage = selectedTargetLanguage,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                };
+
+                DbContext.Decks.Add(deck);
+                await DbContext.SaveChangesAsync();
+
+                await OnDeckCreated.InvokeAsync(deck.Id);
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Erro ao criar deck: {ex.Message}";
+            Console.WriteLine(ex);
+        }
+    }
+}
+
+<style>
+    .create-deck-container {
+        padding: 1rem;
+    }
+
+    .form-input, .form-select {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+    }
+
+    .form-input:focus, .form-select:focus {
+        outline: none;
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+</style>

@@ -26,6 +26,18 @@
                         </select>
                     </div>
 
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="autoSkipSwitch" @bind="config.AutoSkip">
+                            <label class="form-check-label" for="autoSkipSwitch">
+                                Pular automaticamente para o próximo card
+                            </label>
+                        </div>
+                        <small class="form-text text-muted">
+                            Quando desativado, você precisará clicar em "Próximo" após conferir a resposta.
+                        </small>
+                    </div>
+
                     <ButtonPrimary Type="submit">Salvar</ButtonPrimary>
 </EditForm>
 
@@ -35,12 +47,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        config = SettingsService.StudyConfig.Value
-                 ?? new StudyConfig
-                 {
-                     SelectedLanguage = new LanguagePair { Source = new("pt"), Target = new("it") },
-                     DifficultyLevel = DifficultyLevel.Beginner
-                 };
+        config = SettingsService.StudyConfig.Value ?? StudyConfig.Default;
 
         // Sync UI dropdown with current config
         var code = $"{config.SelectedLanguage.Source.TwoLetterISOLanguageName}-{config.SelectedLanguage.Target.TwoLetterISOLanguageName}";
