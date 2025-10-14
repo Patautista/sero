@@ -186,8 +186,8 @@
         var success = await DatabaseService.UpdateCardAsync(cardId, updatedDefinition);
         if (success)
         {
-            // Optionally refresh deck/cards
-            StateHasChanged();
+            // Reload cards to reflect changes
+            await ReloadCards();
         }
     }
 
@@ -239,10 +239,19 @@
         StateHasChanged();
     }
 
-    private void OnCardCreated()
+    private async Task OnCardCreated()
     {
         showCreateCardModal = false;
-        StateHasChanged();
+        await ReloadCards();
+    }
+
+    private async Task ReloadCards()
+    {
+        if (deck != null)
+        {
+            allCards = await DatabaseService.QuerySrsCardsAsync(deck.Id);
+            StateHasChanged();
+        }
     }
 }
 

@@ -73,11 +73,11 @@ namespace MauiApp1.Services
             }).OrderBy(c => c.DifficultyLevel).ToList();
 
             var userDifficulty = settingsService.StudyConfig.Value?.DifficultyLevel ?? DifficultyLevel.Advanced;
-            var allDueCards = cardWithStates.Where(s => s.NextReview <= DateTime.Today).ToList();
+            var filtered = cardWithStates.ToList();
 
             // Separate new vs review
-            var newCards = allDueCards.Where(c => c.Repetitions == 0).ToList();
-            var reviewCards = allDueCards.Where(c => c.Repetitions > 0).ToList();
+            var newCards = filtered.Where(c => c.Repetitions == 0).ToList();
+            var reviewCards = filtered.Where(c => c.Repetitions > 0).ToList();
 
             // Session-specific limits
             (int newLimit, int reviewLimit) = sessionMode switch
@@ -121,8 +121,52 @@ namespace MauiApp1.Services
             return tags.Select(t => t.ToDomain()).ToList();
         }
 
+        /// <summary>
+        /// Gets existing tags from the database or creates new ones if they don't exist.
+        /// Returns tracked TagTable entities ready to be associated with a card.
+        /// </summary>
+        private async Task<List<TagTable>> GetOrCreateTagsAsync(ICollection<Tag> tags)
+        {
+            if (tags == null || !tags.Any())
+                return new List<TagTable>();
+
+            var result = new List<TagTable>();
+            var tagNames = tags.Select(t => t.Name.Trim().ToLower()).Distinct().ToList();
+
+            // Get existing tags from database
+            var existingTags = await db.Tags
+                .Where(t => tagNames.Contains(t.Name))
+                .ToListAsync();
+
+            var existingTagNames = new HashSet<string>(existingTags.Select(t => t.Name), StringComparer.OrdinalIgnoreCase);
+
+            // Add existing tags
+            result.AddRange(existingTags);
+
+            // Create new tags for those that don't exist
+            foreach (var tag in tags)
+            {
+                var normalizedName = tag.Name.Trim().ToLower();
+                if (!existingTagNames.Contains(normalizedName))
+                {
+                    var newTag = new TagTable
+                    {
+                        Name = normalizedName,
+                        Type = string.IsNullOrWhiteSpace(tag.Type) ? "learningTopic" : tag.Type
+                    };
+                    db.Tags.Add(newTag);
+                    result.Add(newTag);
+                    existingTagNames.Add(normalizedName); // Prevent duplicates in the same batch
+                }
+            }
+
+            return result;
+        }
+
         public async Task<SrsCard> CreateCard(CardDefinition cardDefinition, int deckId)
         {
+            var tagTables = await GetOrCreateTagsAsync(cardDefinition.Tags);
+
             var cardTable = new CardTable
             {
                 Meaning = new MeaningTable
@@ -139,7 +183,7 @@ namespace MauiApp1.Services
                                 Text = cardDefinition.TargetSentence
                             },
                         },
-                    Tags = cardDefinition.Tags?.Select(tag => new TagTable { Name = tag.Name, Type = tag.Type }).ToList() ?? new(),
+                    Tags = tagTables,
                 },
                 Events = new List<EventTable>(),
                 UserCardState = new(),
@@ -216,11 +260,12 @@ namespace MauiApp1.Services
                 if (targetSentence != null)
                     targetSentence.Text = updatedDefinition.TargetSentence;
 
-                // Update tags
+                // Update tags - get or create tags
+                var tagTables = await GetOrCreateTagsAsync(updatedDefinition.Tags);
                 card.Meaning.Tags.Clear();
-                foreach (var tag in updatedDefinition.Tags)
+                foreach (var tag in tagTables)
                 {
-                    card.Meaning.Tags.Add(new TagTable { Name = tag.Name, Type = tag.Type });
+                    card.Meaning.Tags.Add(tag);
                 }
 
                 // Update difficulty

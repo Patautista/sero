@@ -13,6 +13,7 @@ namespace Business.MobileConfig
     {
         public string SelectedLanguageCode { get; set; }  // e.g. "it-pt"
         public DifficultyLevel DifficultyLevel { get; set; }
+        public bool AutoSkip { get; set; } = true;
         private LanguagePair _selectedLanguage;
 
         [JsonIgnore] // computed, not serialized
@@ -38,7 +39,8 @@ namespace Business.MobileConfig
         public static StudyConfig Default => new StudyConfig
         {
             SelectedLanguageCode = "it-pt",
-            DifficultyLevel = DifficultyLevel.Beginner
+            DifficultyLevel = DifficultyLevel.Beginner,
+            AutoSkip = true
         };
     }
 

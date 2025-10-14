@@ -39,7 +39,14 @@
         <div style="filter: blur(@(isInputFocused ? "2px" : "0")); transform: scale(@(isInputFocused ? "0.95" : "1"));">
             <ButtonSecondary OnClick="SkipCard"><Translate Text="Pular"></Translate></ButtonSecondary>
         </div>
-        <ButtonPrimary OnClick="CheckAnswer"><Translate Text="Conferir"></Translate></ButtonPrimary>
+        @if (_challengeState.HasAnswered)
+        {
+            <ButtonPrimary OnClick="GoToNextCard"><Translate Text="Próximo"></Translate></ButtonPrimary>
+        }
+        else
+        {
+            <ButtonPrimary OnClick="CheckAnswer"><Translate Text="Conferir"></Translate></ButtonPrimary>
+        }
     </div>
 
     @if (_challengeState.Feedback is not null)
