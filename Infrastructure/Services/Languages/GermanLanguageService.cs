@@ -19,4 +19,6 @@ public class GermanLanguageService : ILanguageService
     {
         Catalyst.Models.German.Register();
     }
+
+    public string GetDefaultRssFeedUrl() => "https://www.dw.com/de/top-themen/s-100135";
 }

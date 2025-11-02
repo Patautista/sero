@@ -19,4 +19,6 @@ public class VietnameseLanguageService : ILanguageService
     {
         Catalyst.Models.Vietnamese.Register();
     }
+
+    public string GetDefaultRssFeedUrl() => "https://vnexpress.net/rss/tin-moi-nhat.rss";
 }

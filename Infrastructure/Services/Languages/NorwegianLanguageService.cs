@@ -19,4 +19,6 @@ public class NorwegianLanguageService : ILanguageService
     {
         Catalyst.Models.Norwegian.Register();
     }
+
+    public string GetDefaultRssFeedUrl() => "https://www.nrk.no/toppsaker.rss";
 }

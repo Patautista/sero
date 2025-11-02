@@ -29,4 +29,9 @@ public interface ILanguageService
     /// Gets the two-letter ISO language code
     /// </summary>
     string LanguageCode { get; }
+
+    /// <summary>
+    /// Gets the default RSS feed URL for this language
+    /// </summary>
+    string GetDefaultRssFeedUrl();
 }

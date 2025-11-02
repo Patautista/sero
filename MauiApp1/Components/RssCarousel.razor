@@ -1,5 +1,6 @@
 @using System.Net.Http
 @using System.Xml.Linq
+@using Infrastructure.Services
 @using Microsoft.Maui.ApplicationModel
 @inject HttpClient Http
 @inherits SmartComponent
@@ -52,25 +53,11 @@
         
         if (string.IsNullOrEmpty(FeedUrl))
         {
-            // Default RSS feeds based on target language
-            FeedUrl = GetDefaultFeedUrl(TargetLanguageCode);
+            // Use the injected TargetLanguageService from SmartComponent
+            FeedUrl = TargetLanguageService.GetDefaultRssFeedUrl();
         }
 
         await LoadRssFeedAsync();
-    }
-
-    private string GetDefaultFeedUrl(string languageCode)
-    {
-        return languageCode switch
-        {
-            "en" => "https://rss.nytimes.com/services/xml/rss/nyt/World.xml",
-            "it" => "https://www.ansa.it/sito/notizie/mondo/mondo_rss.xml",
-            "no" => "https://www.nrk.no/toppsaker.rss",
-            "de" => "https://www.dw.com/de/top-themen/s-100135",
-            "vi" => "https://vnexpress.net/rss/tin-moi-nhat.rss",
-            "zh" => "http://news.baidu.com/n?cmd=4&class=civilnews&tn=rss",
-            _ => "https://rss.nytimes.com/services/xml/rss/nyt/World.xml"
-        };
     }
 
     private async Task LoadRssFeedAsync()

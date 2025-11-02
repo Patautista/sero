@@ -19,4 +19,6 @@ public class EnglishLanguageService : ILanguageService
     {
         Catalyst.Models.English.Register();
     }
+
+    public string GetDefaultRssFeedUrl() => "https://rss.nytimes.com/services/xml/rss/nyt/World.xml";
 }

@@ -19,4 +19,6 @@ public class ChineseLanguageService : ILanguageService
     {
         Catalyst.Models.Chinese.Register();
     }
+
+    public string GetDefaultRssFeedUrl() => "http://news.baidu.com/n?cmd=4&class=civilnews&tn=rss";
 }

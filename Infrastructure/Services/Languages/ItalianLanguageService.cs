@@ -19,4 +19,6 @@ public class ItalianLanguageService : ILanguageService
     {
         Catalyst.Models.Italian.Register();
     }
+
+    public string GetDefaultRssFeedUrl() => "https://www.ansa.it/sito/notizie/mondo/mondo_rss.xml";
 }
