@@ -1,0 +1,27 @@
+@page "/explore"
+@inherits SmartComponent
+
+<div class="p-4">
+    <h2 class="text-2xl font-bold mb-4 text-center text-indigo-700">
+        <Translate Text="Explorar"></Translate>
+    </h2>
+
+    <div class="mt-8">
+        <h3 class="text-xl font-semibold mb-3 text-center text-indigo-600">
+            <Translate Text="Notícias"></Translate>
+        </h3>
+        <RssCarousel MaxItems="5"></RssCarousel>
+    </div>
+
+    <div class="mt-8">
+        <h3 class="text-xl font-semibold mb-3 text-center text-indigo-600">
+            <Translate Text="Wikipédia"></Translate>
+        </h3>
+        <WikiCarousel></WikiCarousel>
+    </div>
+    
+</div>
+
+@code {
+    
+}

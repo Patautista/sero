@@ -56,14 +56,8 @@
     }
     private string GetAvailablePair()
     {
-        if(TargetLanguageCode == AvailableCodes.Italian)
-        {
-            return "enit";
-        }
-        else if(TargetLanguageCode == AvailableCodes.Norwegian)
-        {
-            return "enno";
-        }
-        return string.Empty;
+        var codes = new[] { AvailableCodes.English, TargetLanguageCode };
+        Array.Sort(codes);
+        return string.Concat(codes);
     }
 }

@@ -1,0 +1,19 @@
+@page "/search"
+@using Infrastructure.Services
+@inherits SmartComponent
+
+<div class="mb-5 mt-5 gap-2">
+    <div  class="card p-3 mb-2">
+        <MauiApp1.Components.Webscraping.WordSearch></MauiApp1.Components.Webscraping.WordSearch>
+    </div>
+    @if(TargetLanguageCode == AvailableCodes.Italian)
+    {
+        <div class="card p-3 mb-2">
+            <MauiApp1.Components.Webscraping.ConjugationLookup></MauiApp1.Components.Webscraping.ConjugationLookup>
+        </div>
+    }
+</div>
+
+@code {
+    
+}

@@ -20,7 +20,7 @@ internal class JsonReviewCardsConfiguration
 	/// The new interval is multiplied by a random number between -fuzz and fuzz
 	/// </summary>
 	[JsonPropertyName("fuzz")]
-	public int Fuzz { get; set; } // TODO What type is it???? Float or Int?
+	public float Fuzz { get; set; } // TODO What type is it???? Float or Int?
 
 	/// <summary>
 	/// Multiplication factor applied to the intervals Anki generates.

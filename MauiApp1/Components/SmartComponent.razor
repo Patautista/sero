@@ -2,6 +2,8 @@
 @using Business.Interfaces
 @using Business.MobileConfig
 @using CommunityToolkit.Maui.Alerts
+@using Infrastructure.Factories
+@using Infrastructure.Interfaces
 @using Infrastructure.Services
 @using MauiApp1.Services.Audio
 @using Microsoft.JSInterop
@@ -63,6 +65,7 @@
     protected string NativeLanguageCode => Nativelanguage.TwoLetterISOLanguageName;
     protected CultureInfo TargetLanguage => SettingsService?.StudyConfig?.Value?.SelectedLanguage?.Target;
     protected string TargetLanguageCode => TargetLanguage.TwoLetterISOLanguageName;
+    protected ILanguageService TargetLanguageService => LanguageServiceFactory.GetLanguageService(TargetLanguageCode);
     protected async Task<List<VocabularyService.Word>> GetTargetVocabularyAsync()
     {
         var allSentences = await Database.GetAllForeignSentencesAsync(TargetLanguageCode);

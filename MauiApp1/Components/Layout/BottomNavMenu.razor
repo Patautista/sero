@@ -1,0 +1,60 @@
+﻿@inject NavigationManager Navigation
+
+<div class="bottom-nav-menu fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200 z-50">
+    <nav class="flex justify-around items-center h-16">
+        <NavLink href="@Routes.SessionSelect" class="bottom-nav-item" Match="NavLinkMatch.All">
+            <div class="flex flex-col items-center">
+                <span class="text-2xl"><i class='fa fa-puzzle-piece'></i></span>
+                <span class="text-xs mt-1">Revisar</span>
+            </div>
+        </NavLink>
+
+        <NavLink href="@Routes.Explore" class="bottom-nav-item">
+            <div class="flex flex-col items-center">
+                <span class="text-2xl"><i class='fa fa-globe'></i></span>
+                <span class="text-xs mt-1">Explorar</span>
+            </div>
+        </NavLink>
+
+        <NavLink href="@Routes.Search" class="bottom-nav-item">
+            <div class="flex flex-col items-center">
+                <span class="text-2xl"><i class='fa fa-search'></i></span>
+                <span class="text-xs mt-1">Pesquisar</span>
+            </div>
+        </NavLink>
+    </nav>
+</div>
+
+<style>
+    .bottom-nav-menu {
+        max-width: 100%;
+    }
+
+    .bottom-nav-item {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
+        color: #6b7280; /* gray-500 */
+        transition: color 0.2s ease-in-out;
+        padding: 0.5rem;
+    }
+
+    .bottom-nav-item:hover {
+        color: #4f46e5; /* indigo-600 */
+    }
+
+    .bottom-nav-item.active {
+        color: #4f46e5; /* indigo-600 */
+        font-weight: 600;
+    }
+
+    .bottom-nav-item.active span:first-child {
+        transform: scale(1.1);
+    }
+</style>
+
+@code {
+    
+}

@@ -10,8 +10,6 @@
         <Translate Text="Nível atual:"></Translate> <b>@ExpCalculator.GetLevel(userExp)</b>
     </h2>
 
-    <WikiCarousel></WikiCarousel>
-
     <!-- Deck selection -->
     <div class="mb-4 w-full max-w-xs">
         <label class="block text-sm font-medium text-gray-700 mb-2">Selecione o Deck</label>
@@ -24,23 +22,17 @@
         </select>
     </div>
 
-    <div class="mt-4">
-        <ButtonPrimary OnClick="ShowModal" Class="w-full max-w-xs" Disabled="selectedDeckId == 0">
+    <div class="mt-4 flex gap-2 w-full max-w-xs">
+        <ButtonPrimary OnClick="ShowModal" Class="flex-1" Disabled="selectedDeckId == 0">
             <p class="text-white font-medium">🚀 <Translate Text="Iniciar revisão"></Translate></p>
         </ButtonPrimary>
+        
+        <button @onclick="NavigateToDeck" 
+                disabled="@(selectedDeckId == 0)"
+                class="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors duration-200">
+            <p class="text-white font-medium">📋 <Translate Text="Navegar deck"></Translate></p>
+        </button>
     </div>
-</div>
-
-<div class="mb-5 mt-5 gap-2">
-    <div  class="card p-3 mb-2">
-        <MauiApp1.Components.Webscraping.WordSearch></MauiApp1.Components.Webscraping.WordSearch>
-    </div>
-    @if(TargetLanguageCode == AvailableCodes.Italian)
-    {
-        <div class="card p-3 mb-2">
-            <MauiApp1.Components.Webscraping.ConjugationLookup></MauiApp1.Components.Webscraping.ConjugationLookup>
-        </div>
-    }
 </div>
     
 @if (showModal)
@@ -95,6 +87,14 @@
 
         Navigation.NavigateTo($"{Routes.CardsReview}?mode={mode}&deckId={selectedDeckId}");
         HideModal();
+    }
+
+    private void NavigateToDeck()
+    {
+        if (selectedDeckId == 0)
+            return;
+
+        Navigation.NavigateTo($"{Routes.DecksView}?deckId={selectedDeckId}");
     }
 
     protected override async Task OnInitializedAsync()

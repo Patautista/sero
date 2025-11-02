@@ -45,6 +45,6 @@ internal class JsonNewCardsConfiguration
 	/// <summary>
 	/// Seems to be unused in the code.
 	/// </summary>
-	[JsonPropertyName("separate")]
-	public int Separate { get; set; } // TODO What's the type?
+	//[JsonPropertyName("separate")]
+	//public int Separate { get; set; } // TODO What's the type?
 }

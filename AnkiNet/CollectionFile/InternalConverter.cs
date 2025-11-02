@@ -141,7 +141,7 @@ internal sealed class InternalConverter
                             IntDelays = new[] { 1, 4, 0 },
                             NewCardsPerDay = 20,
                             NewCardsShowOrder = 1,
-                            Separate = 0
+                            //Separate = 0
                         },
                         ReviewCardsConfiguration = new JsonReviewCardsConfiguration
                         {

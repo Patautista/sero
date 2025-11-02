@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace AnkiNet.CollectionFile.Model.Json;
 
@@ -31,11 +32,12 @@ internal class JsonConfiguration
 	[JsonPropertyName("sortType")]
 	public string SortType { get; set; }
 
-	/// <summary>
-	/// Id (as string) of the last note type (a.k.a. model) used
+    /// <summary>
+    /// Id (as string) of the last note type (a.k.a. model) used
     /// (i.e. either when creating a note, or changing the note type of a note).
-	/// </summary>
-	[JsonPropertyName("curModel")]
+    /// </summary>
+    [JsonConverter(typeof(StringToLongConverter))]
+    [JsonPropertyName("curModel")]
 	public long CurrentModel { get; set; }
 
 	/// <summary>
@@ -156,4 +158,22 @@ internal class JsonConfiguration
 	/// </summary>
 	[JsonPropertyName("activeCols")]
 	public string[] ActiveColumns { get; set; }
+}
+
+public class StringToLongConverter : JsonConverter<long>
+{
+    public override long Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        return reader.TokenType switch
+        {
+            JsonTokenType.String => long.TryParse(reader.GetString(), out var val) ? val : 0,
+            JsonTokenType.Number => reader.GetInt64(),
+            _ => 0
+        };
+    }
+
+    public override void Write(Utf8JsonWriter writer, long value, JsonSerializerOptions options)
+    {
+        writer.WriteNumberValue(value);
+    }
 }

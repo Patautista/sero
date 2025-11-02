@@ -1,0 +1,250 @@
+@using System.Net.Http
+@using System.Xml.Linq
+@using Microsoft.Maui.ApplicationModel
+@inject HttpClient Http
+@inherits SmartComponent
+
+<div class="p-4 flex justify-center w-full max-w-6xl mx-auto">
+    <LoadingSpinner IsLoading="_isLoading">
+        <RadzenCarousel Style="height:100%;width:100%;">
+            <Items>
+                @foreach (var item in _feedItems)
+                {
+                    <RadzenCarouselItem>
+                        <div @onclick="() => OpenLink(item.Link)"
+                             class="block bg-white shadow-md rounded-xl p-4 hover:shadow-lg transition h-full flex flex-col cursor-pointer">
+                            
+                            <h3 class="text-xl font-semibold mb-2 line-clamp-2">@item.Title</h3>
+
+                            @if (!string.IsNullOrEmpty(item.ImageUrl))
+                            {
+                                <img src="@item.ImageUrl" alt="@item.Title"
+                                     class="max-h-40 object-cover w-full mb-2 rounded-md mx-auto" />
+                            }
+
+                            <p class="text-gray-700 flex-grow overflow-hidden line-clamp-3">@item.Description</p>
+                            
+                            @if (item.PubDate.HasValue)
+                            {
+                                <p class="text-gray-500 text-sm mt-2">@item.PubDate.Value.ToString("MMM dd, yyyy")</p>
+                            }
+                        </div>
+                    </RadzenCarouselItem>
+                }
+            </Items>
+        </RadzenCarousel>
+    </LoadingSpinner>
+</div>
+
+@code {
+    [Parameter]
+    public string FeedUrl { get; set; } = string.Empty;
+
+    [Parameter]
+    public int MaxItems { get; set; } = 5;
+
+    private List<RssFeedItem> _feedItems = new();
+    private bool _isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        
+        if (string.IsNullOrEmpty(FeedUrl))
+        {
+            // Default RSS feeds based on target language
+            FeedUrl = GetDefaultFeedUrl(TargetLanguageCode);
+        }
+
+        await LoadRssFeedAsync();
+    }
+
+    private string GetDefaultFeedUrl(string languageCode)
+    {
+        return languageCode switch
+        {
+            "en" => "https://rss.nytimes.com/services/xml/rss/nyt/World.xml",
+            "it" => "https://www.ansa.it/sito/notizie/mondo/mondo_rss.xml",
+            "no" => "https://www.nrk.no/toppsaker.rss",
+            "de" => "https://www.dw.com/de/top-themen/s-100135",
+            "vi" => "https://vnexpress.net/rss/tin-moi-nhat.rss",
+            "zh" => "http://news.baidu.com/n?cmd=4&class=civilnews&tn=rss",
+            _ => "https://rss.nytimes.com/services/xml/rss/nyt/World.xml"
+        };
+    }
+
+    private async Task LoadRssFeedAsync()
+    {
+        try
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, FeedUrl);
+            request.Headers.UserAgent.ParseAdd("TriolingoApp/1.0 (https://github.com/tuapp)");
+
+            var response = await Http.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+
+            var xmlContent = await response.Content.ReadAsStringAsync();
+            _feedItems = ParseRssFeed(xmlContent);
+            
+            Console.WriteLine($"Total RSS items loaded: {_feedItems.Count}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading RSS feed: {ex.Message}");
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private List<RssFeedItem> ParseRssFeed(string xmlContent)
+    {
+        var items = new List<RssFeedItem>();
+        
+        try
+        {
+            var doc = XDocument.Parse(xmlContent);
+            var channel = doc.Root?.Element("channel");
+            
+            if (channel == null)
+            {
+                // Try Atom feed format
+                return ParseAtomFeed(doc);
+            }
+
+            var itemElements = channel.Elements("item").Take(MaxItems);
+
+            foreach (var item in itemElements)
+            {
+                var feedItem = new RssFeedItem
+                {
+                    Title = item.Element("title")?.Value ?? "No Title",
+                    Description = StripHtml(item.Element("description")?.Value ?? ""),
+                    Link = item.Element("link")?.Value ?? "",
+                    PubDate = TryParseDate(item.Element("pubDate")?.Value),
+                    ImageUrl = ExtractImageUrl(item)
+                };
+
+                items.Add(feedItem);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error parsing RSS feed: {ex.Message}");
+        }
+
+        return items;
+    }
+
+    private List<RssFeedItem> ParseAtomFeed(XDocument doc)
+    {
+        var items = new List<RssFeedItem>();
+        XNamespace atom = "http://www.w3.org/2005/Atom";
+
+        var entries = doc.Root?.Elements(atom + "entry").Take(MaxItems);
+
+        if (entries == null) return items;
+
+        foreach (var entry in entries)
+        {
+            var feedItem = new RssFeedItem
+            {
+                Title = entry.Element(atom + "title")?.Value ?? "No Title",
+                Description = StripHtml(entry.Element(atom + "summary")?.Value ?? entry.Element(atom + "content")?.Value ?? ""),
+                Link = entry.Element(atom + "link")?.Attribute("href")?.Value ?? "",
+                PubDate = TryParseDate(entry.Element(atom + "published")?.Value ?? entry.Element(atom + "updated")?.Value)
+            };
+
+            items.Add(feedItem);
+        }
+
+        return items;
+    }
+
+    private string ExtractImageUrl(XElement item)
+    {
+        // Define the media namespace
+        XNamespace media = "http://search.yahoo.com/mrss/";
+        
+        // Try to find media:content element with type="image/jpeg" or type="image/png"
+        var mediaContent = item.Elements(media + "content")
+            .FirstOrDefault(e => 
+            {
+                var type = e.Attribute("type")?.Value ?? "";
+                var medium = e.Attribute("medium")?.Value ?? "";
+                return type.StartsWith("image/") || medium == "image";
+            });
+        
+        if (mediaContent != null)
+        {
+            var url = mediaContent.Attribute("url")?.Value;
+            if (!string.IsNullOrEmpty(url))
+            {
+                return url;
+            }
+        }
+
+        // Try enclosure element
+        var enclosure = item.Element("enclosure");
+        if (enclosure != null && enclosure.Attribute("type")?.Value?.StartsWith("image/") == true)
+        {
+            return enclosure.Attribute("url")?.Value ?? "";
+        }
+
+        // Try media:thumbnail
+        var thumbnail = item.Elements(media + "thumbnail").FirstOrDefault();
+        if (thumbnail != null)
+        {
+            return thumbnail.Attribute("url")?.Value ?? "";
+        }
+
+        return "";
+    }
+
+    private DateTime? TryParseDate(string dateString)
+    {
+        if (string.IsNullOrEmpty(dateString)) return null;
+
+        if (DateTime.TryParse(dateString, out var result))
+        {
+            return result;
+        }
+
+        return null;
+    }
+
+    private string StripHtml(string html)
+    {
+        if (string.IsNullOrEmpty(html)) return "";
+
+        // Basic HTML stripping
+        var text = System.Text.RegularExpressions.Regex.Replace(html, "<.*?>", string.Empty);
+        text = System.Net.WebUtility.HtmlDecode(text);
+        
+        return text.Length > 200 ? text.Substring(0, 200) + "..." : text;
+    }
+
+    private async Task OpenLink(string url)
+    {
+        if (string.IsNullOrEmpty(url)) return;
+
+        try
+        {
+            await Browser.Default.OpenAsync(url, BrowserLaunchMode.SystemPreferred);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error opening link: {ex.Message}");
+        }
+    }
+
+    public class RssFeedItem
+    {
+        public string Title { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string Link { get; set; } = string.Empty;
+        public DateTime? PubDate { get; set; }
+        public string ImageUrl { get; set; } = string.Empty;
+    }
+}

@@ -1,7 +1,7 @@
 using Business.Interfaces;
+using Infrastructure.Factories;
 using Infrastructure.Services;
 using Lingua;
-using static Lingua.Language;
 
 namespace MauiApp1.Services
 {
@@ -31,8 +31,8 @@ namespace MauiApp1.Services
 
             try
             {
-                var targetLanguage = FromCode(targetCode);
-                var nativeLanguage = FromCode(nativeCode);
+                var targetLanguage = LanguageServiceFactory.GetLanguageService(targetCode).GetLinguaLanguage();
+                var nativeLanguage = LanguageServiceFactory.GetLanguageService(nativeCode).GetLinguaLanguage();
 
                 Directory.SetCurrentDirectory(AppContext.BaseDirectory);
 
@@ -64,17 +64,6 @@ namespace MauiApp1.Services
             return detected == nativeLanguageCode;
         }
 
-        private Language FromCode(string code)
-        {
-            return code.ToLower() switch
-            {
-                AvailableCodes.Portuguese or "por" or "portuguese" => Portuguese,
-                AvailableCodes.Norwegian or "nob" or "norwegian" => Nynorsk,
-                AvailableCodes.Italian or "ita" or "italian" => Italian,
-                _ => throw new ArgumentException($"Unsupported language code: {code}")
-            };
-        }
-
         private string ToCode(Language language)
         {
             return language switch
@@ -82,6 +71,10 @@ namespace MauiApp1.Services
                 Language.Portuguese => AvailableCodes.Portuguese,
                 Language.Nynorsk => AvailableCodes.Norwegian,
                 Language.Italian => AvailableCodes.Italian,
+                Language.English => AvailableCodes.English,
+                Language.German => AvailableCodes.German,
+                Language.Chinese => AvailableCodes.Chinese,
+                Language.Vietnamese => AvailableCodes.Vietnamese,
                 _ => throw new ArgumentException($"Unsupported language: {language}")
             };
         }

@@ -44,7 +44,10 @@
                 {
                     <span class="badge bg-indigo-200 text-slate-800 px-2 py-1 rounded-full text-xs font-medium">@tag.Name</span>
                 }
-                <span class="badge bg-green-200 text-green-800 px-2 py-1 rounded-full text-xs font-medium">@Card.DifficultyLevel</span>
+                @if (false)
+                {
+                    <span class="badge bg-green-200 text-green-800 px-2 py-1 rounded-full text-xs font-medium">@Card.DifficultyLevel</span>
+                }
             </div>
             <div class="text-xs text-gray-600">
                 <p class="mb-1">
@@ -68,15 +71,18 @@
                 <label class="block text-xs text-gray-600">Frase Alvo</label>
                 <input class="w-full px-2 py-1 border rounded" @bind="editModel.TargetSentence" />
             </div>
-            <div class="mb-2">
-                <label class="block text-xs text-gray-600">Dificuldade</label>
-                <select class="w-full px-2 py-1 border rounded" @bind="editModel.DifficultyLevel">
-                    @foreach (DifficultyLevel level in Enum.GetValues(typeof(DifficultyLevel)))
-                    {
-                        <option value="@level">@level</option>
-                    }
-                </select>
-            </div>
+            @if (false)
+            {
+                <div class="mb-2">
+                    <label class="block text-xs text-gray-600">Dificuldade</label>
+                    <select class="w-full px-2 py-1 border rounded" @bind="editModel.DifficultyLevel">
+                        @foreach (DifficultyLevel level in Enum.GetValues(typeof(DifficultyLevel)))
+                        {
+                            <option value="@level">@level</option>
+                        }
+                    </select>
+                </div>
+            }
             <div class="mb-2">
                 <label class="block text-xs text-gray-600">Tags (separadas por vírgula)</label>
                 <input class="w-full px-2 py-1 border rounded" @bind="tagsInput" />
