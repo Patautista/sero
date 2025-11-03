@@ -52,7 +52,7 @@
 
 		<!-- Sounds -->
 		<MauiAsset Include="Sounds\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
-		<MauiAsset Include="Resources\Raw\correct_answer.mp3"/>
+		<MauiAsset Include="Resources\Raw\correct_answer.mp3" />
 		
 		<!-- Custom Fonts -->
         <MauiFont Include="Resources\Fonts\*" />
@@ -79,7 +79,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Application\Business.csproj" />
+      <ProjectReference Include="..\AnkiNet\AnkiNet.csproj" />
+      <ProjectReference Include="..\Business\Business.csproj" />
       <ProjectReference Include="..\Domain\Domain.csproj" />
       <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
     </ItemGroup>

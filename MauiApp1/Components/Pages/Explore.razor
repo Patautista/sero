@@ -1,27 +1,276 @@
-@page "/explore"
+﻿@page "/explore"
+@using Business.Interfaces
+@using Business.MobileConfig
+@using RssFeedWidgetModel = Business.MobileConfig.RssFeedWidget
+@inject ISettingsService SettingsService
 @inherits SmartComponent
 
 <div class="p-4">
-    <h2 class="text-2xl font-bold mb-4 text-center text-indigo-700">
-        <Translate Text="Explorar"></Translate>
-    </h2>
-
-    <div class="mt-8">
-        <h3 class="text-xl font-semibold mb-3 text-center text-indigo-600">
-            <Translate Text="Not�cias"></Translate>
-        </h3>
-        <RssCarousel MaxItems="5"></RssCarousel>
+    <div class="flex items-center justify-between mb-4">
+        <h2 class="text-2xl font-bold text-indigo-700">
+            <Translate Text="Explorar"></Translate>
+        </h2>
     </div>
 
+    <!-- Edit Widget Modal -->
+    @if (_editingWidget != null)
+    {
+        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" @onclick="CancelEdit">
+            <div class="bg-white rounded-xl p-6 max-w-md w-full m-4" @onclick:stopPropagation="true">
+                <h3 class="text-xl font-bold mb-4 text-indigo-700">Editar Widget</h3>
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Título</label>
+                        <input @bind="_editingWidget.Title" 
+                               class="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">URL</label>
+                        <input @bind="_editingWidget.Url" 
+                               class="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Máximo de Itens</label>
+                        <input @bind="_editingWidget.MaxItems" 
+                               type="number" 
+                               min="1" 
+                               max="20"
+                               class="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                    </div>
+                    <div class="flex gap-2 pt-3">
+                        <button @onclick="SaveEdit"
+                                class="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                            Salvar
+                        </button>
+                        <button @onclick="CancelEdit"
+                                class="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Add Widget Modal -->
+    @if (_showAddModal)
+    {
+        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" @onclick="CancelAdd">
+            <div class="bg-white rounded-xl p-6 max-w-md w-full m-4" @onclick:stopPropagation="true">
+                <h3 class="text-xl font-bold mb-4 text-indigo-700">➕ Adicionar Novo Feed</h3>
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Título</label>
+                        <input @bind="_newWidgetTitle" 
+                               placeholder="ex: Notícias Tech"
+                               class="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">URL do Feed RSS</label>
+                        <input @bind="_newWidgetUrl" 
+                               placeholder="https://..."
+                               class="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Máximo de Itens</label>
+                        <input @bind="_newWidgetMaxItems" 
+                               type="number" 
+                               min="1" 
+                               max="20"
+                               class="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                    </div>
+                    <div class="flex gap-2 pt-3">
+                        <button @onclick="AddWidget"
+                                class="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                            Adicionar
+                        </button>
+                        <button @onclick="CancelAdd"
+                                class="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- RSS Feed Widgets -->
+    <div class="space-y-4">
+        @foreach (var widget in _widgets.OrderBy(w => w.DisplayOrder))
+        {
+            @if (widget.IsVisible)
+            {
+                <MauiApp1.Components.RssFeedWidget Widget="@widget"
+                               IsEditMode="@_isEditMode"
+                               OnEdit="@(w => StartEdit(w))" 
+                               OnDelete="@(w => DeleteWidget(w))"
+                               OnLongPress="@(w => EnableEditMode(w))" />
+            }
+        }
+
+        <!-- Add Widget Button -->
+        <div class="flex justify-center">
+            <button @onclick="ShowAddModal" 
+                    class="w-16 h-16 bg-indigo-600 text-white rounded-full shadow-lg hover:bg-indigo-700 hover:scale-110 transition flex items-center justify-center">
+                <span class="text-3xl leading-none">+</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Exit Edit Mode Button (floating) -->
+    @if (_isEditMode)
+    {
+        <div class="fixed bottom-8 right-8 z-40">
+            <button @onclick="ExitEditMode" 
+                    class="w-14 h-14 bg-green-600 text-white rounded-full shadow-2xl hover:bg-green-700 hover:scale-110 transition flex items-center justify-center">
+                <span class="text-2xl leading-none">✓</span>
+            </button>
+        </div>
+    }
+
+    <!-- Wikipedia Section -->
     <div class="mt-8">
         <h3 class="text-xl font-semibold mb-3 text-center text-indigo-600">
-            <Translate Text="Wikip�dia"></Translate>
+            <Translate Text="Wikipédia"></Translate>
         </h3>
         <WikiCarousel></WikiCarousel>
     </div>
-    
+
+    <!-- Empty State -->
+    @if (_widgets.Count == 0)
+    {
+        <div class="text-center p-12 bg-gray-50 rounded-xl mb-4">
+            <p class="text-gray-500 text-lg mb-4">
+                📰 Nenhum feed RSS configurado
+            </p>
+            <p class="text-gray-400 text-sm mb-4">
+                Clique no botão + abaixo para adicionar seus feeds favoritos
+            </p>
+        </div>
+    }
 </div>
 
 @code {
-    
+    private List<RssFeedWidgetModel> _widgets = new();
+    private bool _isEditMode = false;
+    private bool _showAddModal = false;
+    private RssFeedWidgetModel? _editingWidget = null;
+
+    // New widget fields
+    private string _newWidgetTitle = string.Empty;
+    private string _newWidgetUrl = string.Empty;
+    private int _newWidgetMaxItems = 5;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        LoadWidgets();
+    }
+
+    private void LoadWidgets()
+    {
+        var config = SettingsService.RssConfig.Value ?? RssConfig.Default;
+        _widgets = config.Widgets ?? new List<RssFeedWidgetModel>();
+    }
+
+    private void SaveWidgets()
+    {
+        var config = new RssConfig { Widgets = _widgets };
+        SettingsService.RssConfig.Update(config);
+    }
+
+    private void ShowAddModal()
+    {
+        _showAddModal = true;
+    }
+
+    private void CancelAdd()
+    {
+        _showAddModal = false;
+        _newWidgetTitle = string.Empty;
+        _newWidgetUrl = string.Empty;
+        _newWidgetMaxItems = 5;
+    }
+
+    private void AddWidget()
+    {
+        if (string.IsNullOrWhiteSpace(_newWidgetTitle) || string.IsNullOrWhiteSpace(_newWidgetUrl))
+            return;
+
+        var newWidget = new RssFeedWidgetModel
+        {
+            Title = _newWidgetTitle.Trim(),
+            Url = _newWidgetUrl.Trim(),
+            MaxItems = _newWidgetMaxItems,
+            DisplayOrder = _widgets.Count,
+            IsVisible = true
+        };
+
+        _widgets.Add(newWidget);
+        SaveWidgets();
+
+        // Reset and close
+        CancelAdd();
+        StateHasChanged();
+    }
+
+    private void EnableEditMode(RssFeedWidgetModel widget)
+    {
+        _isEditMode = true;
+        StateHasChanged();
+    }
+
+    private void ExitEditMode()
+    {
+        _isEditMode = false;
+        StateHasChanged();
+    }
+
+    private void StartEdit(RssFeedWidgetModel widget)
+    {
+        // Create a copy for editing
+        _editingWidget = new RssFeedWidgetModel
+        {
+            Id = widget.Id,
+            Title = widget.Title,
+            Url = widget.Url,
+            MaxItems = widget.MaxItems,
+            DisplayOrder = widget.DisplayOrder,
+            IsVisible = widget.IsVisible
+        };
+    }
+
+    private void SaveEdit()
+    {
+        if (_editingWidget == null) return;
+
+        var originalWidget = _widgets.FirstOrDefault(w => w.Id == _editingWidget.Id);
+        if (originalWidget != null)
+        {
+            originalWidget.Title = _editingWidget.Title;
+            originalWidget.Url = _editingWidget.Url;
+            originalWidget.MaxItems = _editingWidget.MaxItems;
+            
+            SaveWidgets();
+        }
+
+        _editingWidget = null;
+        StateHasChanged();
+    }
+
+    private void CancelEdit()
+    {
+        _editingWidget = null;
+    }
+
+    private async Task DeleteWidget(RssFeedWidgetModel widget)
+    {
+        var confirmed = await PromptConfirm($"Remover o widget '{widget.Title}'?");
+        if (confirmed)
+        {
+            _widgets.Remove(widget);
+            SaveWidgets();
+            StateHasChanged();
+        }
+    }
 }

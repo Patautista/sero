@@ -11,6 +11,7 @@ namespace Business.Interfaces
     {
         public ISettingProperty<ApiConfig?> ApiConfig { get; }
         public ISettingProperty<StudyConfig?> StudyConfig { get; }
+        public ISettingProperty<RssConfig?> RssConfig { get; }
     }
 
     public interface ISettingProperty<T>

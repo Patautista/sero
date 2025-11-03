@@ -1,0 +1,308 @@
+﻿@using System.Net.Http
+@using System.Xml.Linq
+@using Business.MobileConfig
+@using RssFeedWidgetModel = Business.MobileConfig.RssFeedWidget
+@using Microsoft.Maui.ApplicationModel
+@inject HttpClient Http
+@inherits SmartComponent
+
+<div class="bg-white rounded-xl shadow-lg p-4 mb-4 relative @(_isEditMode ? "ring-2 ring-indigo-400" : "")"
+     @onpointerdown="HandlePointerDown"
+     @onpointerup="HandlePointerUp"
+     @onpointercancel="HandlePointerCancel"
+     @onpointerleave="HandlePointerCancel">
+    
+    <!-- Delete Button (visible in edit mode) -->
+    @if (_isEditMode && OnDelete.HasDelegate)
+    {
+        <button @onclick="() => OnDelete.InvokeAsync(Widget)" 
+                class="absolute -top-2 -right-2 w-8 h-8 bg-red-500 text-white rounded-full shadow-lg hover:bg-red-600 transition flex items-center justify-center z-10">
+            <span class="text-xl leading-none">−</span>
+        </button>
+    }
+
+    <!-- Widget Header -->
+    <div class="flex items-center justify-between mb-3 border-b pb-2">
+        <h3 class="text-lg font-semibold text-indigo-700">@Widget.Title</h3>
+        @if (_isEditMode && OnEdit.HasDelegate)
+        {
+            <button @onclick="() => OnEdit.InvokeAsync(Widget)" 
+                    class="text-gray-500 hover:text-indigo-600 p-2 rounded-lg hover:bg-indigo-50 transition">
+                <span class="text-lg">✏️</span>
+            </button>
+        }
+    </div>
+
+    <!-- Content -->
+    <LoadingSpinner IsLoading="_isLoading">
+        @if (_feedItems.Count == 0 && !_isLoading)
+        {
+            <div class="text-center p-4 text-gray-500">
+                <p>Não foi possível carregar o feed.</p>
+            </div>
+        }
+        else
+        {
+            <RadzenCarousel Style="height:300px;width:100%;">
+                <Items>
+                    @foreach (var item in _feedItems)
+                    {
+                        <RadzenCarouselItem>
+                            <div @onclick="() => OpenLink(item.Link)"
+                                 class="block bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition h-full flex flex-col cursor-pointer">
+                                
+                                <h4 class="text-base font-semibold mb-2 line-clamp-2">@item.Title</h4>
+
+                                @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                {
+                                    <img src="@item.ImageUrl" alt="@item.Title"
+                                         class="max-h-32 object-cover w-full mb-2 rounded-md mx-auto" />
+                                }
+
+                                <p class="text-gray-700 text-sm flex-grow overflow-hidden line-clamp-2">@item.Description</p>
+                                
+                                @if (item.PubDate.HasValue)
+                                {
+                                    <p class="text-gray-500 text-xs mt-1">@item.PubDate.Value.ToString("MMM dd, yyyy")</p>
+                                }
+                            </div>
+                        </RadzenCarouselItem>
+                    }
+                </Items>
+            </RadzenCarousel>
+        }
+    </LoadingSpinner>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public Business.MobileConfig.RssFeedWidget Widget { get; set; } = null!;
+
+    [Parameter]
+    public bool IsEditMode { get; set; }
+
+    [Parameter]
+    public EventCallback<Business.MobileConfig.RssFeedWidget> OnEdit { get; set; }
+
+    [Parameter]
+    public EventCallback<Business.MobileConfig.RssFeedWidget> OnDelete { get; set; }
+
+    [Parameter]
+    public EventCallback<Business.MobileConfig.RssFeedWidget> OnLongPress { get; set; }
+
+    private List<RssFeedItem> _feedItems = new();
+    private bool _isLoading = true;
+    private bool _isEditMode => IsEditMode;
+    
+    private System.Threading.Timer? _longPressTimer;
+    private bool _isLongPressTriggered = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await LoadRssFeedAsync();
+    }
+
+    private void HandlePointerDown()
+    {
+        if (!IsEditMode && OnLongPress.HasDelegate)
+        {
+            _isLongPressTriggered = false;
+            _longPressTimer?.Dispose();
+            _longPressTimer = new System.Threading.Timer(_ =>
+            {
+                _isLongPressTriggered = true;
+                InvokeAsync(() =>
+                {
+                    OnLongPress.InvokeAsync(Widget);
+                    StateHasChanged();
+                });
+            }, null, 800, System.Threading.Timeout.Infinite);
+        }
+    }
+
+    private void HandlePointerUp()
+    {
+        _longPressTimer?.Dispose();
+        _longPressTimer = null;
+    }
+
+    private void HandlePointerCancel()
+    {
+        _longPressTimer?.Dispose();
+        _longPressTimer = null;
+        _isLongPressTriggered = false;
+    }
+
+    public void Dispose()
+    {
+        _longPressTimer?.Dispose();
+    }
+
+    private async Task LoadRssFeedAsync()
+    {
+        try
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, Widget.Url);
+            request.Headers.UserAgent.ParseAdd("TriolingoApp/1.0 (https://github.com/tuapp)");
+
+            var response = await Http.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+
+            var xmlContent = await response.Content.ReadAsStringAsync();
+            _feedItems = ParseRssFeed(xmlContent).Take(Widget.MaxItems).ToList();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading RSS feed: {ex.Message}");
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private List<RssFeedItem> ParseRssFeed(string xmlContent)
+    {
+        var items = new List<RssFeedItem>();
+        
+        try
+        {
+            var doc = XDocument.Parse(xmlContent);
+            var channel = doc.Root?.Element("channel");
+            
+            if (channel == null)
+            {
+                return ParseAtomFeed(doc);
+            }
+
+            var itemElements = channel.Elements("item");
+
+            foreach (var item in itemElements)
+            {
+                var feedItem = new RssFeedItem
+                {
+                    Title = item.Element("title")?.Value ?? "No Title",
+                    Description = StripHtml(item.Element("description")?.Value ?? ""),
+                    Link = item.Element("link")?.Value ?? "",
+                    PubDate = TryParseDate(item.Element("pubDate")?.Value),
+                    ImageUrl = ExtractImageUrl(item)
+                };
+
+                items.Add(feedItem);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error parsing RSS feed: {ex.Message}");
+        }
+
+        return items;
+    }
+
+    private List<RssFeedItem> ParseAtomFeed(XDocument doc)
+    {
+        var items = new List<RssFeedItem>();
+        XNamespace atom = "http://www.w3.org/2005/Atom";
+
+        var entries = doc.Root?.Elements(atom + "entry");
+
+        if (entries == null) return items;
+
+        foreach (var entry in entries)
+        {
+            var feedItem = new RssFeedItem
+            {
+                Title = entry.Element(atom + "title")?.Value ?? "No Title",
+                Description = StripHtml(entry.Element(atom + "summary")?.Value ?? entry.Element(atom + "content")?.Value ?? ""),
+                Link = entry.Element(atom + "link")?.Attribute("href")?.Value ?? "",
+                PubDate = TryParseDate(entry.Element(atom + "published")?.Value ?? entry.Element(atom + "updated")?.Value)
+            };
+
+            items.Add(feedItem);
+        }
+
+        return items;
+    }
+
+    private string ExtractImageUrl(XElement item)
+    {
+        XNamespace media = "http://search.yahoo.com/mrss/";
+        
+        var mediaContent = item.Elements(media + "content")
+            .FirstOrDefault(e => 
+            {
+                var type = e.Attribute("type")?.Value ?? "";
+                var medium = e.Attribute("medium")?.Value ?? "";
+                return type.StartsWith("image/") || medium == "image";
+            });
+        
+        if (mediaContent != null)
+        {
+            var url = mediaContent.Attribute("url")?.Value;
+            if (!string.IsNullOrEmpty(url))
+            {
+                return url;
+            }
+        }
+
+        var enclosure = item.Element("enclosure");
+        if (enclosure != null && enclosure.Attribute("type")?.Value?.StartsWith("image/") == true)
+        {
+            return enclosure.Attribute("url")?.Value ?? "";
+        }
+
+        var thumbnail = item.Elements(media + "thumbnail").FirstOrDefault();
+        if (thumbnail != null)
+        {
+            return thumbnail.Attribute("url")?.Value ?? "";
+        }
+
+        return "";
+    }
+
+    private DateTime? TryParseDate(string dateString)
+    {
+        if (string.IsNullOrEmpty(dateString)) return null;
+
+        if (DateTime.TryParse(dateString, out var result))
+        {
+            return result;
+        }
+
+        return null;
+    }
+
+    private string StripHtml(string html)
+    {
+        if (string.IsNullOrEmpty(html)) return "";
+
+        var text = System.Text.RegularExpressions.Regex.Replace(html, "<.*?>", string.Empty);
+        text = System.Net.WebUtility.HtmlDecode(text);
+        
+        return text.Length > 150 ? text.Substring(0, 150) + "..." : text;
+    }
+
+    private async Task OpenLink(string url)
+    {
+        if (string.IsNullOrEmpty(url)) return;
+
+        try
+        {
+            await Browser.Default.OpenAsync(url, BrowserLaunchMode.SystemPreferred);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error opening link: {ex.Message}");
+        }
+    }
+
+    public class RssFeedItem
+    {
+        public string Title { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string Link { get; set; } = string.Empty;
+        public DateTime? PubDate { get; set; }
+        public string ImageUrl { get; set; } = string.Empty;
+    }
+}

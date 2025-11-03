@@ -13,6 +13,11 @@ public class PortugueseLanguageService : ILanguageService
 
     public Language GetCatalystLanguage() => Language.Portuguese;
 
+    public string GetDefaultRssFeedUrl()
+    {
+        throw new NotImplementedException();
+    }
+
     public Lingua.Language GetLinguaLanguage() => Lingua.Language.Portuguese;
 
     public void RegisterLanguageModel()

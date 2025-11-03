@@ -35,7 +35,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\AnkiNet\AnkiNet.csproj" />
-	  <ProjectReference Include="..\Application\Business.csproj" />
+	  <ProjectReference Include="..\Business\Business.csproj" />
 	  <ProjectReference Include="..\Domain\Domain.csproj" />
 	</ItemGroup>
 

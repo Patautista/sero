@@ -8,15 +8,17 @@ namespace AppLogic.Web
     {
         private const string StudySectionKey = "StudyConfig";
         private const string ApiConfigKey = "ApiConfig";
+        private const string RssConfigKey = "RssConfig";
 
         public ISettingProperty<StudyConfig?> StudyConfig { get; }
-
         public ISettingProperty<ApiConfig?> ApiConfig { get; }
+        public ISettingProperty<RssConfig?> RssConfig { get; }
 
         public SettingsService()
         {
             ApiConfig = new SettingProperty<ApiConfig?>(ApiConfigKey);
             StudyConfig = new SettingProperty<StudyConfig?>(StudySectionKey);
+            RssConfig = new SettingProperty<RssConfig?>(RssConfigKey);
         }
 
         private class SettingProperty<T> : ISettingProperty<T>
