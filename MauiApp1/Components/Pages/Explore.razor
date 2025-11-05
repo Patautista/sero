@@ -2,7 +2,12 @@
 @using Business.Interfaces
 @using Business.MobileConfig
 @using RssFeedWidgetModel = Business.MobileConfig.RssFeedWidget
+@using System.Net.Http
+@using System.Xml.Linq
+@using System.Globalization
 @inject ISettingsService SettingsService
+@inject MauiApp1.Services.LanguageDetectionService LanguageDetector
+@inject HttpClient Http
 @inherits SmartComponent
 
 <div class="p-4">
@@ -11,6 +16,23 @@
             <Translate Text="Explorar"></Translate>
         </h2>
     </div>
+
+    <!-- Language Filter -->
+    @if (_availableLanguages.Count > 1)
+    {
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Filtrar por idioma</label>
+            <select @bind="_selectedLanguageFilter" 
+                    @bind:after="ApplyLanguageFilter"
+                    class="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="">Todos os idiomas</option>
+                @foreach (var lang in _availableLanguages.OrderBy(l => l.Value))
+                {
+                    <option value="@lang.Key">@lang.Value (@_languageCounts[lang.Key])</option>
+                }
+            </select>
+        </div>
+    }
 
     <!-- Edit Widget Modal -->
     @if (_editingWidget != null)
@@ -79,9 +101,22 @@
                                max="20"
                                class="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
                     </div>
+                    @if (_isDetectingLanguage)
+                    {
+                        <div class="text-sm text-indigo-600">
+                            🔍 Detectando idioma do feed...
+                        </div>
+                    }
+                    else if (!string.IsNullOrEmpty(_detectedLanguageMessage))
+                    {
+                        <div class="text-sm text-green-600">
+                            ✓ @_detectedLanguageMessage
+                        </div>
+                    }
                     <div class="flex gap-2 pt-3">
                         <button @onclick="AddWidget"
-                                class="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                                class="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+                                disabled="@_isDetectingLanguage">
                             Adicionar
                         </button>
                         <button @onclick="CancelAdd"
@@ -93,18 +128,37 @@
             </div>
         </div>
     }
-
+    <!-- Empty State -->
+    @if (_filteredWidgets.Count == 0)
+    {
+        <div class="text-center p-12 bg-gray-50 rounded-xl mb-4">
+            <p class="text-gray-500 text-lg mb-4">
+                📰 @(_widgets.Count == 0 ? "Nenhum feed RSS configurado" : "Nenhum feed encontrado para o idioma selecionado")
+            </p>
+            <p class="text-gray-400 text-sm mb-4">
+                @(_widgets.Count == 0 ? "Clique no botão + abaixo para adicionar seus feeds favoritos" : "Tente selecionar outro idioma ou adicione novos feeds")
+            </p>
+        </div>
+    }
     <!-- RSS Feed Widgets -->
     <div class="space-y-4">
-        @foreach (var widget in _widgets.OrderBy(w => w.DisplayOrder))
+        @foreach (var widget in _filteredWidgets.OrderBy(w => w.DisplayOrder))
         {
             @if (widget.IsVisible)
             {
-                <MauiApp1.Components.RssFeedWidget Widget="@widget"
-                               IsEditMode="@_isEditMode"
-                               OnEdit="@(w => StartEdit(w))" 
-                               OnDelete="@(w => DeleteWidget(w))"
-                               OnLongPress="@(w => EnableEditMode(w))" />
+                <div class="relative">
+                    @if (!string.IsNullOrEmpty(widget.LanguageCode))
+                    {
+                        <div class="absolute top-2 right-2 z-10 bg-indigo-100 text-indigo-700 text-xs px-2 py-1 rounded-full font-medium">
+                            @GetLanguageDisplayName(widget.LanguageCode)
+                        </div>
+                    }
+                    <MauiApp1.Components.RssFeedWidget Widget="@widget"
+                                   IsEditMode="@_isEditMode"
+                                   OnEdit="@(w => StartEdit(w))" 
+                                   OnDelete="@(w => DeleteWidget(w))"
+                                   OnLongPress="@(w => EnableEditMode(w))" />
+                </div>
             }
         }
 
@@ -136,22 +190,12 @@
         <WikiCarousel></WikiCarousel>
     </div>
 
-    <!-- Empty State -->
-    @if (_widgets.Count == 0)
-    {
-        <div class="text-center p-12 bg-gray-50 rounded-xl mb-4">
-            <p class="text-gray-500 text-lg mb-4">
-                📰 Nenhum feed RSS configurado
-            </p>
-            <p class="text-gray-400 text-sm mb-4">
-                Clique no botão + abaixo para adicionar seus feeds favoritos
-            </p>
-        </div>
-    }
+    
 </div>
 
 @code {
     private List<RssFeedWidgetModel> _widgets = new();
+    private List<RssFeedWidgetModel> _filteredWidgets = new();
     private bool _isEditMode = false;
     private bool _showAddModal = false;
     private RssFeedWidgetModel? _editingWidget = null;
@@ -160,11 +204,21 @@
     private string _newWidgetTitle = string.Empty;
     private string _newWidgetUrl = string.Empty;
     private int _newWidgetMaxItems = 5;
+    private bool _isDetectingLanguage = false;
+    private string _detectedLanguageMessage = string.Empty;
+    private string? _detectedLanguageCode = null;
+
+    // Language filtering
+    private string _selectedLanguageFilter = string.Empty;
+    private Dictionary<string, string> _availableLanguages = new();
+    private Dictionary<string, int> _languageCounts = new();
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
         LoadWidgets();
+        UpdateLanguageFilter();
+        ApplyLanguageFilter();
     }
 
     private void LoadWidgets()
@@ -179,6 +233,53 @@
         SettingsService.RssConfig.Update(config);
     }
 
+    private void UpdateLanguageFilter()
+    {
+        _availableLanguages.Clear();
+        _languageCounts.Clear();
+
+        foreach (var widget in _widgets)
+        {
+            if (!string.IsNullOrEmpty(widget.LanguageCode))
+            {
+                if (!_availableLanguages.ContainsKey(widget.LanguageCode))
+                {
+                    _availableLanguages[widget.LanguageCode] = GetLanguageDisplayName(widget.LanguageCode);
+                    _languageCounts[widget.LanguageCode] = 0;
+                }
+                _languageCounts[widget.LanguageCode]++;
+            }
+        }
+    }
+
+    private void ApplyLanguageFilter()
+    {
+        if (string.IsNullOrEmpty(_selectedLanguageFilter))
+        {
+            _filteredWidgets = _widgets.ToList();
+        }
+        else
+        {
+            _filteredWidgets = _widgets
+                .Where(w => w.LanguageCode == _selectedLanguageFilter)
+                .ToList();
+        }
+        StateHasChanged();
+    }
+
+    private string GetLanguageDisplayName(string languageCode)
+    {
+        try
+        {
+            var culture = new CultureInfo(languageCode);
+            return culture.DisplayName;
+        }
+        catch
+        {
+            return languageCode.ToUpperInvariant();
+        }
+    }
+
     private void ShowAddModal()
     {
         _showAddModal = true;
@@ -190,12 +291,23 @@
         _newWidgetTitle = string.Empty;
         _newWidgetUrl = string.Empty;
         _newWidgetMaxItems = 5;
+        _isDetectingLanguage = false;
+        _detectedLanguageMessage = string.Empty;
+        _detectedLanguageCode = null;
     }
 
-    private void AddWidget()
+    private async Task AddWidget()
     {
         if (string.IsNullOrWhiteSpace(_newWidgetTitle) || string.IsNullOrWhiteSpace(_newWidgetUrl))
             return;
+
+        // Detect language from RSS feed content before adding
+        if (_detectedLanguageCode == null)
+        {
+            await DetectFeedLanguage();
+            if (_isDetectingLanguage)
+                return; // Still detecting, wait for completion
+        }
 
         var newWidget = new RssFeedWidgetModel
         {
@@ -203,15 +315,144 @@
             Url = _newWidgetUrl.Trim(),
             MaxItems = _newWidgetMaxItems,
             DisplayOrder = _widgets.Count,
-            IsVisible = true
+            IsVisible = true,
+            LanguageCode = _detectedLanguageCode
         };
 
         _widgets.Add(newWidget);
         SaveWidgets();
+        UpdateLanguageFilter();
+        ApplyLanguageFilter();
 
         // Reset and close
         CancelAdd();
         StateHasChanged();
+    }
+
+    private async Task DetectFeedLanguage()
+    {
+        if (string.IsNullOrWhiteSpace(_newWidgetUrl))
+            return;
+
+        _isDetectingLanguage = true;
+        _detectedLanguageMessage = string.Empty;
+        StateHasChanged();
+
+        try
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, _newWidgetUrl);
+            request.Headers.UserAgent.ParseAdd("TriolingoApp/1.0 (https://github.com/tuapp)");
+
+            var response = await Http.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+
+            var xmlContent = await response.Content.ReadAsStringAsync();
+            var feedItems = ParseRssFeed(xmlContent);
+
+            // Collect text from feed items for language detection
+            var textSamples = feedItems
+                .Take(5) // Use first 5 items for detection
+                .Select(item => $"{item.Title} {item.Description}")
+                .Where(text => !string.IsNullOrWhiteSpace(text))
+                .ToList();
+
+            if (textSamples.Any())
+            {
+                var combinedText = string.Join(" ", textSamples);
+                _detectedLanguageCode = LanguageDetector.DetectLanguageCode(combinedText);
+
+                if (!string.IsNullOrEmpty(_detectedLanguageCode))
+                {
+                    _detectedLanguageMessage = $"Idioma detectado: {GetLanguageDisplayName(_detectedLanguageCode)}";
+                }
+                else
+                {
+                    _detectedLanguageMessage = "Não foi possível detectar o idioma automaticamente";
+                }
+            }
+            else
+            {
+                _detectedLanguageMessage = "Feed vazio - idioma não detectado";
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error detecting feed language: {ex.Message}");
+            _detectedLanguageMessage = "Erro ao detectar idioma do feed";
+        }
+        finally
+        {
+            _isDetectingLanguage = false;
+            StateHasChanged();
+        }
+    }
+
+    private List<FeedItem> ParseRssFeed(string xmlContent)
+    {
+        var items = new List<FeedItem>();
+        
+        try
+        {
+            var doc = XDocument.Parse(xmlContent);
+            var channel = doc.Root?.Element("channel");
+            
+            if (channel == null)
+            {
+                return ParseAtomFeed(doc);
+            }
+
+            var itemElements = channel.Elements("item");
+
+            foreach (var item in itemElements)
+            {
+                var feedItem = new FeedItem
+                {
+                    Title = item.Element("title")?.Value ?? "",
+                    Description = StripHtml(item.Element("description")?.Value ?? "")
+                };
+
+                items.Add(feedItem);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error parsing RSS feed: {ex.Message}");
+        }
+
+        return items;
+    }
+
+    private List<FeedItem> ParseAtomFeed(XDocument doc)
+    {
+        var items = new List<FeedItem>();
+        XNamespace atom = "http://www.w3.org/2005/Atom";
+
+        var entries = doc.Root?.Elements(atom + "entry");
+
+        if (entries == null) return items;
+
+        foreach (var entry in entries)
+        {
+            var feedItem = new FeedItem
+            {
+                Title = entry.Element(atom + "title")?.Value ?? "",
+                Description = StripHtml(entry.Element(atom + "summary")?.Value ?? entry.Element(atom + "content")?.Value ?? "")
+            };
+
+            items.Add(feedItem);
+        }
+
+        return items;
+    }
+
+    private string StripHtml(string html)
+    {
+        if (string.IsNullOrEmpty(html)) return "";
+
+        var text = System.Text.RegularExpressions.Regex.Replace(html, "<.*?>", string.Empty);
+        text = System.Net.WebUtility.HtmlDecode(text);
+        
+        return text.Length > 300 ? text.Substring(0, 300) : text;
     }
 
     private void EnableEditMode(RssFeedWidgetModel widget)
@@ -236,7 +477,8 @@
             Url = widget.Url,
             MaxItems = widget.MaxItems,
             DisplayOrder = widget.DisplayOrder,
-            IsVisible = widget.IsVisible
+            IsVisible = widget.IsVisible,
+            LanguageCode = widget.LanguageCode
         };
     }
 
@@ -270,7 +512,15 @@
         {
             _widgets.Remove(widget);
             SaveWidgets();
+            UpdateLanguageFilter();
+            ApplyLanguageFilter();
             StateHasChanged();
         }
+    }
+
+    private class FeedItem
+    {
+        public string Title { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
     }
 }

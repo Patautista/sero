@@ -2,6 +2,7 @@
 @using Business.Interfaces
 @using Business.MobileConfig
 @using CommunityToolkit.Maui.Alerts
+@using Infrastructure.Data.Model
 @using Infrastructure.Factories
 @using Infrastructure.Interfaces
 @using Infrastructure.Services
@@ -15,6 +16,7 @@
 @inject IJSRuntime JS
 
 @code{
+    protected DeckTable? selectedDeck = null;
     protected string Translate(string text, string lang = "pt")
     {
         return ApiService.GetNativeTranslationAsync(text, lang).Result;
@@ -52,6 +54,28 @@
         {
             return false;
         }
+    }
+    protected virtual async Task OnDeckChanged(int deckId)
+    {        
+        if (deckId > 0)
+        {
+            selectedDeck = await DatabaseService.GetDeckByIdAsync(deckId);
+            
+            if (selectedDeck != null)
+            {
+                if (!string.IsNullOrWhiteSpace(selectedDeck.TargetLanguage))
+                {
+                    UpdateTargetLanguageFromDeck(selectedDeck.TargetLanguage);
+                }
+
+            }
+        }
+        else
+        {
+            selectedDeck = null;
+        }
+        
+        StateHasChanged();
     }
     protected void UpdateTargetLanguageFromDeck(string targetLanguageCode)
     {

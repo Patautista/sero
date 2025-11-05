@@ -1,8 +1,11 @@
 @using Infrastructure.Data.Model
+@using Business.Interfaces
+@using Business.MobileConfig
 @inject MauiApp1.Services.DatabaseService DatabaseService
+@inject ISettingsService SettingsService
 
-<label class="block text-sm font-medium text-gray-700 mb-2">Selecione o Deck</label>
-<select @onchange="OnDeckChanged" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500">
+ <!-- <label class="block text-sm font-medium text-gray-700 mb-2">Selecione o Deck</label> -->
+<select @bind="SelectedDeckId" @bind:after="OnDeckChangedAfterBind" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500">
     <option value="0">-- Escolha um deck --</option>
     @foreach (var deck in decks)
     {
@@ -19,14 +22,35 @@
     protected override async Task OnInitializedAsync()
     {
         decks = await DatabaseService.GetAllDecksAsync();
+        
+        // Initialize with the last used deck if available
+        if (SelectedDeckId == 0)
+        {
+            var lastDeckId = SettingsService.StudyConfig.Value?.LastSelectedDeckId ?? 0;
+            
+            if (lastDeckId > 0 && decks.Any(d => d.Id == lastDeckId))
+            {
+                SelectedDeckId = lastDeckId;
+            }
+            else if (decks.Any())
+            {
+                SelectedDeckId = decks[0].Id;
+            }
+            
+            await SelectedDeckIdChanged.InvokeAsync(SelectedDeckId);
+        }
     }
 
-    private async Task OnDeckChanged(ChangeEventArgs e)
+    private async Task OnDeckChangedAfterBind()
     {
-        if (int.TryParse(e.Value?.ToString(), out var deckId))
+        // Save the selected deck to settings
+        if (SelectedDeckId > 0)
         {
-            SelectedDeckId = deckId;
-            await SelectedDeckIdChanged.InvokeAsync(deckId);
+            var config = SettingsService.StudyConfig.Value ?? StudyConfig.Default;
+            config.LastSelectedDeckId = SelectedDeckId;
+            SettingsService.StudyConfig.Update(config);
         }
+        
+        await SelectedDeckIdChanged.InvokeAsync(SelectedDeckId);
     }
 }

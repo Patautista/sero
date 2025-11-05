@@ -14,6 +14,7 @@ namespace Business.MobileConfig
         public string SelectedLanguageCode { get; set; }  // e.g. "it-pt"
         public DifficultyLevel DifficultyLevel { get; set; }
         public bool AutoSkip { get; set; } = true;
+        public int LastSelectedDeckId { get; set; } = 0;
         private LanguagePair _selectedLanguage;
 
         [JsonIgnore] // computed, not serialized
@@ -40,7 +41,8 @@ namespace Business.MobileConfig
         {
             SelectedLanguageCode = "it-pt",
             DifficultyLevel = DifficultyLevel.Beginner,
-            AutoSkip = true
+            AutoSkip = true,
+            LastSelectedDeckId = 0
         };
     }
 

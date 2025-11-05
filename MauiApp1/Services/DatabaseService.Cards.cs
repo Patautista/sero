@@ -21,6 +21,45 @@ namespace MauiApp1.Services
     {
         private string _nativeCode => settingsService.StudyConfig.Value.SelectedLanguage.Source.TwoLetterISOLanguageName;
         private string _targetCode => settingsService.StudyConfig.Value.SelectedLanguage.Target.TwoLetterISOLanguageName;
+        
+        public async Task<(int newCards, int reviewCards)> GetDeckCardCountsAsync(int deckId, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var cards = await db.Cards
+                    .Where(c => c.DeckId == deckId)
+                    .Include(c => c.UserCardState)
+                    .Include(c => c.Events)
+                    .ToListAsync(cancellationToken);
+
+                // Ensure UserCardState exists for all cards
+                foreach (var card in cards)
+                {
+                    if (card.UserCardState == null)
+                    {
+                        card.UserCardState = new SrsCardStateTable()
+                        {
+                            CardId = card.Id,
+                            UserId = UserTable.Default.Id,
+                        };
+                        await db.UserCardStates.AddAsync(card.UserCardState, cancellationToken);
+                    }
+                }
+                await db.SaveChangesAsync(cancellationToken);
+
+                // Count new vs review cards
+                var newCards = cards.Count(c => !c.Events.Any(e => e.Name == nameof(CardAnsweredEvent)));
+                var reviewCards = cards.Count(c => c.Events.Any(e => e.Name == nameof(CardAnsweredEvent)));
+
+                return (newCards, reviewCards);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return (0, 0);
+            }
+        }
+        
         public async Task<ICollection<SrsCard>> GetDueCards(int deckId, ReviewSessionMode sessionMode, int exp, CancellationToken cancellationToken = default)
         {
             var cards = new List<CardTable>();

@@ -46,9 +46,27 @@ public partial class DatabaseService(MobileDbContext db, ISettingsService settin
         model.CardSkippedData = cardSkippedEvents;
         return model;
     }
-    public async Task<DeckTable?> GetFirstDeckAsync()
+    public async Task<DeckTable?> GetLastUsedDeckAsync()
     {
-        if (!await db.Decks.AnyAsync())
+        // Try to get the last selected deck from settings
+        var lastDeckId = settingsService.StudyConfig.Value?.LastSelectedDeckId ?? 0;
+        
+        DeckTable? deck = null;
+        
+        // If we have a last selected deck ID, try to get it
+        if (lastDeckId > 0)
+        {
+            deck = await db.Decks.Include(d => d.Cards).FirstOrDefaultAsync(d => d.Id == lastDeckId);
+        }
+        
+        // If we couldn't find the last deck, get the first one
+        if (deck == null)
+        {
+            deck = await db.Decks.Include(d => d.Cards).FirstOrDefaultAsync();
+        }
+        
+        // If no decks exist, create a default one
+        if (deck == null)
         {
             var defaultDeck = new DeckTable
             {
@@ -57,8 +75,16 @@ public partial class DatabaseService(MobileDbContext db, ISettingsService settin
             };
             db.Decks.Add(defaultDeck);
             await db.SaveChangesAsync();
+            deck = defaultDeck;
         }
-        return await db.Decks.Include(d => d.Cards).FirstOrDefaultAsync();
+        
+        return deck;
+    }
+    
+    public async Task<DeckTable?> GetFirstDeckAsync()
+    {
+        // Redirect to GetLastUsedDeckAsync for backward compatibility
+        return await GetLastUsedDeckAsync();
     }
     public async Task<List<DeckTable>> GetAllDecksAsync()
     {

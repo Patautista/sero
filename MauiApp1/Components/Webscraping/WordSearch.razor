@@ -3,10 +3,9 @@
 @using Infrastructure.Services
 @inherits SmartComponent
 
-<div class="gap-2">
-    <h3>Lookup term (Dict.cc)</h3>
-    <input @bind="searchWord" placeholder="Enter a word" />
-    <ButtonPrimary OnClick="Search">Search</ButtonPrimary>
+<div class="gap-2 p-2">
+    <h3 class="mb-3"><Translate Text="Dicionário (Dict.cc)" /></h3>
+    <ButtonPrimary OnClick="OpenModal"><Translate Text="Buscar" /></ButtonPrimary>
 </div>
 
 @if (showModal)
@@ -15,17 +14,58 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Results for "@searchWord"</h5>
+                    <h5 class="modal-title">
+                        @if (isSearching)
+                        {
+                            <Translate Text="Digite o termo de busca" />
+                        }
+                        else
+                        {
+                            <Translate Text="Resultados para " />
+                            @searchWord
+                        }
+                    </h5>
                     <button type="button" class="btn-close" @onclick="CloseModal"></button>
                 </div>
                 <div class="modal-body">
-                    @if (!string.IsNullOrEmpty(translationsHtml))
+                    @if (isSearching)
                     {
-                        @((MarkupString)translationsHtml)
+                        <div class="mb-3">
+                            <input id="searchInput" 
+                                   class="form-control" 
+                                   @bind="searchWord" 
+                                   @bind:event="oninput"
+                                   @onkeypress="HandleKeyPress"
+                                   placeholder="@Translate("Escreva uma palavra")" 
+                                   autofocus />
+                        </div>
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="button" class="btn btn-secondary" @onclick="CloseModal"><Translate Text="Cancelar" /></button>
+                            <ButtonPrimary OnClick="Search" Disabled="@(string.IsNullOrWhiteSpace(searchWord))"><Translate Text="Buscar" /></ButtonPrimary>
+                        </div>
+                    }
+                    else if (isLoading)
+                    {
+                        <div class="text-center py-4">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden"><Translate Text="Loading..." /></span>
+                            </div>
+                            <p class="mt-2"><Translate Text="Searching..." /></p>
+                        </div>
                     }
                     else
                     {
-                        <p>No results found</p>
+                        @if (!string.IsNullOrEmpty(translationsHtml))
+                        {
+                            @((MarkupString)translationsHtml)
+                        }
+                        else
+                        {
+                            <p><Translate Text="No results found" /></p>
+                        }
+                        <div class="d-flex justify-content-end gap-2 mt-3">
+                            <ButtonPrimary OnClick="StartNewSearch"><Translate Text="New Search" /></ButtonPrimary>
+                        </div>
                     }
                 </div>
             </div>
@@ -37,9 +77,26 @@
     private string searchWord;
     private string translationsHtml;
     private bool showModal = false;
+    private bool isSearching = true;
+    private bool isLoading = false;
+
+    private void OpenModal()
+    {
+        searchWord = string.Empty;
+        translationsHtml = string.Empty;
+        isSearching = true;
+        isLoading = false;
+        showModal = true;
+    }
 
     private async Task Search()
     {
+        if (string.IsNullOrWhiteSpace(searchWord))
+            return;
+
+        isSearching = false;
+        isLoading = true;
+        
         var client = new DictCcClient(new DictCcConfig
         {
             LanguagePair = GetAvailablePair(),
@@ -48,12 +105,33 @@
         });
 
         translationsHtml = await client.GetHtmlTranslationsAsync(searchWord);
-        showModal = true;
+        isLoading = false;
     }
+
+    private void StartNewSearch()
+    {
+        searchWord = string.Empty;
+        translationsHtml = string.Empty;
+        isSearching = true;
+    }
+
     private void CloseModal()
     {
         showModal = false;
+        searchWord = string.Empty;
+        translationsHtml = string.Empty;
+        isSearching = true;
+        isLoading = false;
     }
+
+    private async Task HandleKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !string.IsNullOrWhiteSpace(searchWord))
+        {
+            await Search();
+        }
+    }
+
     private string GetAvailablePair()
     {
         var codes = new[] { AvailableCodes.English, TargetLanguageCode };

@@ -227,6 +227,34 @@
 
     private string ExtractImageUrl(XElement item)
     {
+        // Try VG-specific namespace tags first
+        XNamespace vg = "http://www.vg.no/namespace";
+        var vgImg = item.Element(vg + "img")?.Value;
+        if (!string.IsNullOrEmpty(vgImg))
+        {
+            return vgImg;
+        }
+
+        var vgArticleImg = item.Element(vg + "articleImg")?.Value;
+        if (!string.IsNullOrEmpty(vgArticleImg))
+        {
+            return vgArticleImg;
+        }
+
+        // Try standard image tags
+        var imageElement = item.Element("image")?.Value;
+        if (!string.IsNullOrEmpty(imageElement))
+        {
+            return imageElement;
+        }
+
+        var imgRegular = item.Element("imgRegular")?.Value;
+        if (!string.IsNullOrEmpty(imgRegular))
+        {
+            return imgRegular;
+        }
+
+        // Try Media RSS namespace
         XNamespace media = "http://search.yahoo.com/mrss/";
         
         var mediaContent = item.Elements(media + "content")
@@ -246,12 +274,19 @@
             }
         }
 
+        // Try enclosure with more flexible type checking
         var enclosure = item.Element("enclosure");
-        if (enclosure != null && enclosure.Attribute("type")?.Value?.StartsWith("image/") == true)
+        if (enclosure != null)
         {
-            return enclosure.Attribute("url")?.Value ?? "";
+            var type = enclosure.Attribute("type")?.Value ?? "";
+            // Check for both "image/" and "img/" prefixes
+            if (type.StartsWith("image/") || type.StartsWith("img/"))
+            {
+                return enclosure.Attribute("url")?.Value ?? "";
+            }
         }
 
+        // Try media:thumbnail
         var thumbnail = item.Elements(media + "thumbnail").FirstOrDefault();
         if (thumbnail != null)
         {

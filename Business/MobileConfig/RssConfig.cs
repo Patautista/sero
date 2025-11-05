@@ -21,5 +21,6 @@ namespace Business.MobileConfig
         public bool IsVisible { get; set; } = true;
         public int MaxItems { get; set; } = 5;
         public int DisplayOrder { get; set; } = 0;
+        public string? LanguageCode { get; set; } = null;
     }
 }

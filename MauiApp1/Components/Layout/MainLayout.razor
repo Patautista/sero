@@ -10,9 +10,17 @@
     </div>
 
     <main>
-        <article class="content px-4 bg-indigo-200 h-screen w-screen">
+        <article class="content px-4 bg-indigo-200 h-screen w-screen pb-20">
             @Body
         </article>
         <BottomNavMenu />
     </main>
 </div>
+
+<style>
+    /* Ensure content doesn't get hidden behind fixed bottom navigation */
+    .content {
+        overflow-y: auto;
+        padding-bottom: 5rem; /* 80px - provides space above the 64px bottom nav */
+    }
+</style>

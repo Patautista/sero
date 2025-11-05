@@ -3,6 +3,7 @@
 @using Business.Model
 @using CommunityToolkit.Maui.Storage
 @using Infrastructure.Data.Model
+@using Microsoft.AspNetCore.WebUtilities
 @inherits SmartComponent
 @inject MauiApp1.Services.DatabaseService DatabaseService
 @inject ISettingsService SettingsService
@@ -72,12 +73,24 @@
         
         isLoading = true;
         
-        // Set the first deck as selected by default
-        var decks = await DatabaseService.GetAllDecksAsync();
-        if (decks != null && decks.Any())
+        // Check if deckId was passed as a query parameter
+        var uri = new Uri(Navigation.Uri);
+        var queryParams = QueryHelpers.ParseQuery(uri.Query);
+        
+        if (queryParams.TryGetValue("deckId", out var deckIdValue) && int.TryParse(deckIdValue, out var deckId))
         {
-            selectedDeckId = decks.First().Id;
+            selectedDeckId = deckId;
             previousDeckId = selectedDeckId;
+        }
+        else
+        {
+            // Set the first deck as selected by default only if no deckId was provided
+            var deck = await DatabaseService.GetLastUsedDeckAsync();
+            if (deck != null)
+            {
+                selectedDeckId = deck.Id;
+                previousDeckId = selectedDeckId;
+            }
         }
         
         isLoading = false;

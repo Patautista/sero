@@ -5,11 +5,11 @@
 @inject IJSRuntime JS
 @inherits SmartComponent
 
-<div class="deck-container">
+<div class="deck-container" @onclick="HandleContainerClick">
     <h1 class="text-3xl font-bold mb-4 text-center text-indigo-700">@deck?.Name</h1>
     <p class="text-center text-gray-600 mb-6">@deck?.Description</p>
 
-    <div class="flex gap-2 mb-6 justify-center">
+    <div class="flex gap-2 mb-6 justify-center" @onclick:stopPropagation>
         <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
                 @onclick="ShowCreateCardModal">
             <i class="fa fa-plus"></i> Adicionar card
@@ -20,21 +20,23 @@
         </button>
     </div>
 
-    <div class="mb-6 flex justify-center">
+    <div class="mb-6 flex justify-center" @onclick:stopPropagation>
         <input type="text" class="search-input px-4 py-2 rounded-lg border border-gray-300 w-full max-w-md"
                placeholder="@Translate("Buscar cards...")" @bind="searchTerm" @bind:event="oninput" />
     </div>
 
     <MauiApp1.Components.LoadingSpinner IsLoading="@isLoading">
-        <div class="card-gallery grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="card-gallery grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" @onclick:stopPropagation>
             @if (filteredCards.Any())
             {
                 @foreach (var card in filteredCards)
                 {
                     <MauiApp1.Components.User.CardSummary
                         Card="card"
+                        IsEditMode="cardInEditMode?.CardId == card.CardId"
                         OnDelete="() => PromptDelete(card)"
-                        OnEditConfirm="(def) => ConfirmEditCard(card.CardId, def)" />
+                        OnEditConfirm="(def) => ConfirmEditCard(card.CardId, def)"
+                        OnLongPress="(c) => HandleLongPress(c)" />
                 }
             }
             else
@@ -102,6 +104,7 @@
     private bool showCreateCardModal = false;
     private string exportMessage = "";
     private bool isLoading = true;
+    private SrsCard? cardInEditMode = null;
 
     // For deletion
     private SrsCard? cardToDelete;
@@ -115,8 +118,8 @@
         }
         else
         {
-            deck = await DatabaseService.GetFirstDeckAsync();
-            DeckId = deck.Id;
+            deck = await DatabaseService.GetLastUsedDeckAsync();
+            DeckId = deck?.Id ?? 0;
         }
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -141,6 +144,26 @@
                 card.SentencesInTargetLanguage.Any(s => s.Text.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
                 card.Tags.Any(t => t.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
             ).OrderBy(c => c.NextReview);
+
+    private void HandleLongPress(SrsCard card)
+    {
+        cardInEditMode = card;
+        StateHasChanged();
+    }
+
+    private void HandleContainerClick()
+    {
+        if (cardInEditMode != null)
+        {
+            ExitEditMode();
+        }
+    }
+
+    private void ExitEditMode()
+    {
+        cardInEditMode = null;
+        StateHasChanged();
+    }
 
     // Deletion logic
     private void PromptDelete(SrsCard card)

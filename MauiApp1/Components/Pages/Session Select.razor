@@ -1,6 +1,7 @@
 ﻿@page "/session-select"
 @using Infrastructure.Data.Model
 @using Infrastructure.Services
+@using MauiApp1.Components.Shared
 @inject NavigationManager Navigation
 @inject MauiApp1.Services.DatabaseService DatabaseService
 @inherits SmartComponent
@@ -12,15 +13,29 @@
 
     <!-- Deck selection -->
     <div class="mb-4 w-full max-w-xs">
-        <label class="block text-sm font-medium text-gray-700 mb-2">Selecione o Deck</label>
-        <select @onchange="OnDeckChanged" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500">
-            <option value="0">-- Escolha um deck --</option>
-            @foreach (var deck in decks)
-            {
-                <option value="@deck.Id">@deck.Name</option>
-            }
-        </select>
+        <DeckPicker SelectedDeckIdChanged="OnDeckChanged" />
     </div>
+
+    <!-- Deck info display -->
+    @if (selectedDeck != null)
+    {
+        <div class="mb-4 w-full max-w-xs p-3 bg-indigo-50 rounded-lg border border-indigo-200">
+            <div class="space-y-2">
+                <div class="flex justify-between items-center">
+                    <span class="text-sm font-medium text-gray-700">Idioma alvo:</span>
+                    <span class="text-sm font-semibold text-indigo-700">@TargetLanguage.DisplayName.FirstCharToUpper()</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-sm font-medium text-gray-700"><Translate Text="Novos cards:"></Translate></span>
+                    <span class="badge bg-gradient-to-r from-indigo-500 to-indigo-700">@deckNewCards</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-sm font-medium text-gray-700"><Translate Text="Cards para revisar:"></Translate></span>
+                    <span class="badge bg-gradient-to-r from-green-500 to-green-700">@deckReviewCards</span>
+                </div>
+            </div>
+        </div>
+    }
 
     <div class="mt-4 flex gap-2 w-full max-w-xs">
         <ButtonPrimary OnClick="ShowModal" Class="flex-1" Disabled="selectedDeckId == 0">
@@ -67,8 +82,10 @@
 @code {
     private bool showModal = false;
     private int userExp;
-    private List<DeckTable> decks = new();
     private int selectedDeckId = 0;
+    private DeckTable? selectedDeck = null;
+    private int deckNewCards = 0;
+    private int deckReviewCards = 0;
 
     private void ShowModal()
     {
@@ -100,19 +117,36 @@
     protected override async Task OnInitializedAsync()
     {
         userExp = await DatabaseService.GetUserExpAsync();
-        decks = await DatabaseService.GetAllDecksAsync();
     }
 
-    private void OnDeckChanged(ChangeEventArgs e)
+    private async Task OnDeckChanged(int deckId)
     {
-        if (int.TryParse(e.Value?.ToString(), out var deckId))
+        selectedDeckId = deckId;
+        
+        if (deckId > 0)
         {
-            selectedDeckId = deckId;
-            var deck = decks.FirstOrDefault(d => d.Id == deckId);
-            if (deck != null && !string.IsNullOrWhiteSpace(deck.TargetLanguage))
+            selectedDeck = await DatabaseService.GetDeckByIdAsync(deckId);
+            
+            if (selectedDeck != null)
             {
-                UpdateTargetLanguageFromDeck(deck.TargetLanguage);
+                if (!string.IsNullOrWhiteSpace(selectedDeck.TargetLanguage))
+                {
+                    UpdateTargetLanguageFromDeck(selectedDeck.TargetLanguage);
+                }
+
+                // Fetch card counts for the selected deck
+                var (newCards, reviewCards) = await DatabaseService.GetDeckCardCountsAsync(deckId);
+                deckNewCards = newCards;
+                deckReviewCards = reviewCards;
             }
         }
+        else
+        {
+            selectedDeck = null;
+            deckNewCards = 0;
+            deckReviewCards = 0;
+        }
+        
+        StateHasChanged();
     }
 }
