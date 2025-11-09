@@ -2,6 +2,7 @@
 @using Infrastructure.Vocab.Models
 @using Infrastructure.Services
 @using System.Globalization
+@inject NavigationManager Navigation
 @inherits SmartComponent
 
 <div class="gap-2 p-2">
@@ -73,7 +74,13 @@
                                     <div class="list-group-item">
                                         <div class="d-flex w-100 justify-content-between align-items-start">
                                             <div class="flex-grow-1">
-                                                <h6 class="mb-1">@sentence.Text</h6>
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <h6 class="mb-1 flex-grow-1">@sentence.Text</h6>
+                                                      <ButtonPrimary 
+                                                            OnClick="() => AddToDeck(sentence.Text)">
+                                                        <i class="fa fa-plus"></i>
+                                                    </ButtonPrimary>
+                                                </div>
                                                 @if (IsApiLive && sentenceTranslations.ContainsKey(sentence.Id))
                                                 {
                                                     <p class="text-muted mb-1 fst-italic">
@@ -87,7 +94,6 @@
                                                     </div>
                                                 }
                                             </div>
-                                            <small class="badge bg-primary ms-2">@sentence.Language</small>
                                         </div>
                                         <small class="text-muted">ID: @sentence.Id</small>
                                     </div>
@@ -194,6 +200,18 @@
             isLoadingTranslations = false;
             StateHasChanged();
         }
+    }
+
+    private void AddToDeck(string sentenceText)
+    {
+        // URL encode the sentence text to safely pass it as a parameter
+        var encodedText = Uri.EscapeDataString(sentenceText);
+        
+        // Navigate to CreateCard page with the sentence pre-filled
+        Navigation.NavigateTo($"/create-card/{encodedText}");
+        
+        // Close the modal
+        CloseModal();
     }
 
     private void StartNewSearch()
