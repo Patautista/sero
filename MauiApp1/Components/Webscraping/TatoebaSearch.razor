@@ -1,0 +1,238 @@
+@using Infrastructure.Vocab
+@using Infrastructure.Vocab.Models
+@using Infrastructure.Services
+@using System.Globalization
+@inherits SmartComponent
+
+<div class="gap-2 p-2">
+    <h3 class="mb-3"><Translate Text="Buscar exemplos (Tatoeba)" /></h3>
+    <ButtonPrimary OnClick="OpenModal"><Translate Text="Buscar" /></ButtonPrimary>
+</div>
+
+@if (showModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,.5);">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        @if (isSearching)
+                        {
+                            <Translate Text="Digite o termo de busca" />
+                        }
+                        else
+                        {
+                            <Translate Text="Resultados para " />
+                            @searchQuery
+                        }
+                    </h5>
+                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                </div>
+                <div class="modal-body">
+                    @if (isSearching)
+                    {
+                        <div class="mb-3">
+                            <input id="searchInput" 
+                                   class="form-control" 
+                                   @bind="searchQuery" 
+                                   @bind:event="oninput"
+                                   @onkeypress="HandleKeyPress"
+                                   placeholder="@Translate("Escreva uma palavra ou frase")" 
+                                   autofocus />
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" @bind="exactSearch" id="exactSearchCheck">
+                            <label class="form-check-label" for="exactSearchCheck">
+                                <Translate Text="Exact search" />
+                            </label>
+                        </div>
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="button" class="btn btn-secondary" @onclick="CloseModal"><Translate Text="Cancelar" /></button>
+                            <ButtonPrimary OnClick="Search" Disabled="@(string.IsNullOrWhiteSpace(searchQuery))"><Translate Text="Buscar" /></ButtonPrimary>
+                        </div>
+                    }
+                    else if (isLoading)
+                    {
+                        <div class="text-center py-4">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden"><Translate Text="Loading..." /></span>
+                            </div>
+                            <p class="mt-2"><Translate Text="Searching..." /></p>
+                        </div>
+                    }
+                    else
+                    {
+                        @if (searchResult != null && searchResult.Data != null && searchResult.Data.Any())
+                        {
+                            <div class="mb-3">
+                                <p class="text-muted"><Translate Text="Total results: " /> @searchResult.Total</p>
+                            </div>
+                            <div class="list-group">
+                                @foreach (var sentence in searchResult.Data)
+                                {
+                                    <div class="list-group-item">
+                                        <div class="d-flex w-100 justify-content-between align-items-start">
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-1">@sentence.Text</h6>
+                                                @if (IsApiLive && sentenceTranslations.ContainsKey(sentence.Id))
+                                                {
+                                                    <p class="text-muted mb-1 fst-italic">
+                                                        @sentenceTranslations[sentence.Id]
+                                                    </p>
+                                                }
+                                                else if (IsApiLive && isLoadingTranslations)
+                                                {
+                                                    <div class="spinner-border spinner-border-sm text-muted" role="status">
+                                                        <span class="visually-hidden"><Translate Text="Loading..." /></span>
+                                                    </div>
+                                                }
+                                            </div>
+                                            <small class="badge bg-primary ms-2">@sentence.Language</small>
+                                        </div>
+                                        <small class="text-muted">ID: @sentence.Id</small>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <p><Translate Text="No results found" /></p>
+                        }
+                        <div class="d-flex justify-content-end gap-2 mt-3">
+                            <ButtonPrimary OnClick="StartNewSearch"><Translate Text="New Search" /></ButtonPrimary>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private string searchQuery;
+    private bool exactSearch = true;
+    private SentenceSearchResult searchResult;
+    private Dictionary<int, string> sentenceTranslations = new();
+    private bool showModal = false;
+    private bool isSearching = true;
+    private bool isLoading = false;
+    private bool isLoadingTranslations = false;
+
+    private void OpenModal()
+    {
+        searchQuery = string.Empty;
+        searchResult = null;
+        sentenceTranslations.Clear();
+        isSearching = true;
+        isLoading = false;
+        isLoadingTranslations = false;
+        exactSearch = true;
+        showModal = true;
+    }
+
+    private async Task Search()
+    {
+        if (string.IsNullOrWhiteSpace(searchQuery))
+            return;
+
+        isSearching = false;
+        isLoading = true;
+
+        using var client = new TatoebaApiClient();
+        searchResult = await client.SearchSentencesAsync(
+            language: GetTargetLanguageCode(),
+            query: searchQuery,
+            exactSearch: exactSearch
+        );
+
+        isLoading = false;
+
+        // Load translations if API is available
+        if (IsApiLive && searchResult?.Data != null && searchResult.Data.Any())
+        {
+            await LoadTranslationsAsync();
+        }
+    }
+
+    private async Task LoadTranslationsAsync()
+    {
+        isLoadingTranslations = true;
+        sentenceTranslations.Clear();
+
+        try
+        {
+            var translationTasks = searchResult.Data.Select(async sentence =>
+            {
+                var translation = await TranslateAsync(
+                    sentence.Text, 
+                    TargetLanguageCode
+                );
+                
+                if (!string.IsNullOrEmpty(translation) && translation != sentence.Text)
+                {
+                    return (sentence.Id, translation);
+                }
+                return (sentence.Id, (string)null);
+            });
+
+            var results = await Task.WhenAll(translationTasks);
+
+            foreach (var (id, translation) in results)
+            {
+                if (!string.IsNullOrEmpty(translation))
+                {
+                    sentenceTranslations[id] = translation;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading translations: {ex.Message}");
+        }
+        finally
+        {
+            isLoadingTranslations = false;
+            StateHasChanged();
+        }
+    }
+
+    private void StartNewSearch()
+    {
+        searchQuery = string.Empty;
+        searchResult = null;
+        sentenceTranslations.Clear();
+        isSearching = true;
+        isLoadingTranslations = false;
+    }
+
+    private void CloseModal()
+    {
+        showModal = false;
+        searchQuery = string.Empty;
+        searchResult = null;
+        sentenceTranslations.Clear();
+        isSearching = true;
+        isLoading = false;
+        isLoadingTranslations = false;
+    }
+
+    private async Task HandleKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !string.IsNullOrWhiteSpace(searchQuery))
+        {
+            await Search();
+        }
+    }
+
+    private string GetTargetLanguageCode()
+    {
+        // Map your internal language codes to Tatoeba ISO codes
+        // Tatoeba uses ISO 639-3 codes (e.g., "eng", "por", "ita", "deu", "fra")
+        if(TargetLanguageCode == "no")
+        {
+            return new CultureInfo("nb").ThreeLetterISOLanguageName;
+        }
+
+        return TargetLanguage.ThreeLetterISOLanguageName;
+    }
+}

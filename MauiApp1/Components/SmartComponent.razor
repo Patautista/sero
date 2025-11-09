@@ -21,6 +21,10 @@
     {
         return ApiService.GetNativeTranslationAsync(text, lang).Result;
     }
+    protected async Task<string> TranslateAsync(string text, string lang = "pt")
+    {
+        return await ApiService.GetNativeTranslationAsync(text, lang);
+    }
     protected async Task PlayVoiceClip(string text, string lang)
     {
         if (!IsApiLive) return;
