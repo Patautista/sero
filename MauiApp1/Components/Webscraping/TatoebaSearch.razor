@@ -44,7 +44,7 @@
                         <div class="form-check mb-3">
                             <input class="form-check-input" type="checkbox" @bind="exactSearch" id="exactSearchCheck">
                             <label class="form-check-label" for="exactSearchCheck">
-                                <Translate Text="Exact search" />
+                                <Translate Text="Busca exata" />
                             </label>
                         </div>
                         <div class="d-flex justify-content-end gap-2">
@@ -56,9 +56,9 @@
                     {
                         <div class="text-center py-4">
                             <div class="spinner-border" role="status">
-                                <span class="visually-hidden"><Translate Text="Loading..." /></span>
+                                <span class="visually-hidden"><Translate Text="Carregando..." /></span>
                             </div>
-                            <p class="mt-2"><Translate Text="Searching..." /></p>
+                            <p class="mt-2"><Translate Text="Buscando..." /></p>
                         </div>
                     }
                     else
@@ -90,12 +90,11 @@
                                                 else if (IsApiLive && isLoadingTranslations)
                                                 {
                                                     <div class="spinner-border spinner-border-sm text-muted" role="status">
-                                                        <span class="visually-hidden"><Translate Text="Loading..." /></span>
+                                                        <span class="visually-hidden"><Translate Text="Carregando..." /></span>
                                                     </div>
                                                 }
                                             </div>
                                         </div>
-                                        <small class="text-muted">ID: @sentence.Id</small>
                                     </div>
                                 }
                             </div>

@@ -26,5 +26,6 @@ namespace Business.Model
         public int Interval { get; set; } = 1;  // in days
         public DateTime NextReview { get; set; } = DateTime.Today;
         public DateTime LastReviewed { get; set; } = DateTime.MinValue;
+        public DateTime CreatedIn { get; set; } = DateTime.Now;
     }
 }

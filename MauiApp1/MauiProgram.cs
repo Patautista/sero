@@ -47,6 +47,7 @@ namespace MauiApp1
             builder.Services.AddSingleton<VocabularyService>();            
             builder.Services.AddSingleton<SharedTextService>();            
             builder.Services.AddSingleton<LanguageDetectionService>();
+            builder.Services.AddSingleton<AudioCachePreloadService>();
 
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();

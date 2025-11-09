@@ -17,6 +17,7 @@ namespace Infrastructure.Data.Model
         public int DeckId { get; set; }
         public DeckTable Deck { get; set; }
         public MeaningTable Meaning { get; set; }
+        public DateTime CreatedIn { get; set; } = DateTime.Now;
         public SrsCardStateTable? UserCardState { get; set; }
         //[InverseProperty(nameof(EventTable.Card))]
         public ICollection<EventTable> Events { get; set; }

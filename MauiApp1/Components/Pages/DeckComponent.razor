@@ -20,9 +20,19 @@
         </button>
     </div>
 
-    <div class="mb-6 flex justify-center" @onclick:stopPropagation>
+    <div class="mb-6 flex flex-col md:flex-row gap-4 justify-center items-center" @onclick:stopPropagation>
         <input type="text" class="search-input px-4 py-2 rounded-lg border border-gray-300 w-full max-w-md"
                placeholder="@Translate("Buscar cards...")" @bind="searchTerm" @bind:event="oninput" />
+        
+        <div class="flex items-center gap-2">
+            <label class="text-gray-700 font-medium">Ordenar por:</label>
+            <select class="px-4 py-2 rounded-lg border border-gray-300 bg-white"
+                    @bind="sortOption">
+                <option value="nextReview">Próxima revisão</option>
+                <option value="newest">Mais novos</option>
+                <option value="oldest">Mais antigos</option>
+            </select>
+        </div>
     </div>
 
     <MauiApp1.Components.LoadingSpinner IsLoading="@isLoading">
@@ -101,6 +111,7 @@
     private Infrastructure.Data.Model.DeckTable? deck;
     private ICollection<SrsCard> allCards = new List<SrsCard>();
     private string searchTerm = "";
+    private string sortOption = "nextReview";
     private bool showCreateCardModal = false;
     private string exportMessage = "";
     private bool isLoading = true;
@@ -136,14 +147,27 @@
         }
     }
 
-    private IEnumerable<SrsCard> filteredCards =>
-        string.IsNullOrWhiteSpace(searchTerm)
-            ? allCards
-            : allCards.Where(card =>
-                card.SentencesInNativeLanguage.Any(s => s.Text.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-                card.SentencesInTargetLanguage.Any(s => s.Text.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-                card.Tags.Any(t => t.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-            ).OrderBy(c => c.NextReview);
+    private IEnumerable<SrsCard> filteredCards
+    {
+        get
+        {
+            var cards = string.IsNullOrWhiteSpace(searchTerm)
+                ? allCards
+                : allCards.Where(card =>
+                    card.SentencesInNativeLanguage.Any(s => s.Text.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                    card.SentencesInTargetLanguage.Any(s => s.Text.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                    card.Tags.Any(t => t.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                );
+
+            return sortOption switch
+            {
+                "newest" => cards.OrderByDescending(c => c.CreatedIn),
+                "oldest" => cards.OrderBy(c => c.CreatedIn),
+                "nextReview" => cards.OrderBy(c => c.NextReview),
+                _ => cards.OrderBy(c => c.NextReview)
+            };
+        }
+    }
 
     private void HandleLongPress(SrsCard card)
     {

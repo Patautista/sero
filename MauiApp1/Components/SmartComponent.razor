@@ -13,6 +13,7 @@
 @inject ISettingsService SettingsService
 @inject Infrastructure.Services.VocabularyService VocabularyService
 @inject MauiApp1.Services.DatabaseService Database
+@inject AudioCachePreloadService AudioCachePreloadService
 @inject IJSRuntime JS
 
 @code{
@@ -72,11 +73,15 @@
                     UpdateTargetLanguageFromDeck(selectedDeck.TargetLanguage);
                 }
 
+                // Start preloading audio for this deck in the background
+                _ = AudioCachePreloadService.StartPreloadingAsync(deckId, selectedDeck.TargetLanguage);
             }
         }
         else
         {
             selectedDeck = null;
+            // Stop preloading if deck is deselected
+            await AudioCachePreloadService.StopPreloadingAsync();
         }
         
         StateHasChanged();

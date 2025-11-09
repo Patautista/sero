@@ -109,6 +109,7 @@ namespace MauiApp1.Services
                 Interval = x.UserCardState.Interval,
                 NextReview = x.UserCardState.NextReview,
                 LastReviewed = x.UserCardState.LastReviewed,
+                CreatedIn = x.CreatedIn
             }).OrderBy(c => c.DifficultyLevel).ToList();
 
             var userDifficulty = settingsService.StudyConfig.Value?.DifficultyLevel ?? DifficultyLevel.Advanced;

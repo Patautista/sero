@@ -122,23 +122,17 @@
     private async Task OnDeckChanged(int deckId)
     {
         selectedDeckId = deckId;
-        
+
         if (deckId > 0)
         {
             selectedDeck = await DatabaseService.GetDeckByIdAsync(deckId);
-            
-            if (selectedDeck != null)
-            {
-                if (!string.IsNullOrWhiteSpace(selectedDeck.TargetLanguage))
-                {
-                    UpdateTargetLanguageFromDeck(selectedDeck.TargetLanguage);
-                }
 
-                // Fetch card counts for the selected deck
-                var (newCards, reviewCards) = await DatabaseService.GetDeckCardCountsAsync(deckId);
-                deckNewCards = newCards;
-                deckReviewCards = reviewCards;
-            }
+            await base.OnDeckChanged(deckId);
+
+            // Fetch card counts for the selected deck
+            var (newCards, reviewCards) = await DatabaseService.GetDeckCardCountsAsync(deckId);
+            deckNewCards = newCards;
+            deckReviewCards = reviewCards;
         }
         else
         {
