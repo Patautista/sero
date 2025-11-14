@@ -1,6 +1,8 @@
 using Catalyst;
 using Infrastructure.Interfaces;
+using Infrastructure.Lookup;
 using Infrastructure.Services;
+using Infrastructure.Vocab;
 using Mosaik.Core;
 
 namespace Infrastructure.Services.Languages;
@@ -21,4 +23,23 @@ public class ItalianLanguageService : ILanguageService
     }
 
     public string GetDefaultRssFeedUrl() => "https://www.ansa.it/sito/notizie/mondo/mondo_rss.xml";
+
+    public IEnumerable<IDefinitionProvider> GetDefinitionProviders()
+    {
+        IDefinitionProvider[] providers =
+        [
+            new CambridgeClient(new CambridgeConfig { LanguagePair = "english-italian" }),
+            new DictCcClient(new DictCcConfig { LanguagePair = "enit" })
+        ];
+        return providers;
+    }
+
+    public IEnumerable<IExampleProvider> GetExampleProviders()
+    {
+        IExampleProvider[] providers =
+        [
+            new TatoebaApiClient(LanguageCode)
+        ];
+        return providers;
+    }
 }

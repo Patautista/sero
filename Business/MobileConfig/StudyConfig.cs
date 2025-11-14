@@ -15,6 +15,7 @@ namespace Business.MobileConfig
         public DifficultyLevel DifficultyLevel { get; set; }
         public bool AutoSkip { get; set; } = true;
         public int LastSelectedDeckId { get; set; } = 0;
+        public string? SelectedTargetLanguageFilter { get; set; } = null; // NEW: Filter for global language picker
         private LanguagePair _selectedLanguage;
 
         [JsonIgnore] // computed, not serialized
@@ -42,7 +43,8 @@ namespace Business.MobileConfig
             SelectedLanguageCode = "it-pt",
             DifficultyLevel = DifficultyLevel.Beginner,
             AutoSkip = true,
-            LastSelectedDeckId = 0
+            LastSelectedDeckId = 0,
+            SelectedTargetLanguageFilter = null
         };
     }
 

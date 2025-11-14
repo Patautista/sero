@@ -21,4 +21,14 @@ public class GermanLanguageService : ILanguageService
     }
 
     public string GetDefaultRssFeedUrl() => "https://www.dw.com/de/top-themen/s-100135";
+
+    public IEnumerable<IDefinitionProvider> GetDefinitionProviders()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IEnumerable<IExampleProvider> GetExampleProviders()
+    {
+        throw new NotImplementedException();
+    }
 }

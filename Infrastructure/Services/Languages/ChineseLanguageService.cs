@@ -21,4 +21,14 @@ public class ChineseLanguageService : ILanguageService
     }
 
     public string GetDefaultRssFeedUrl() => "http://news.baidu.com/n?cmd=4&class=civilnews&tn=rss";
+
+    public IEnumerable<IDefinitionProvider> GetDefinitionProviders()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IEnumerable<IExampleProvider> GetExampleProviders()
+    {
+        throw new NotImplementedException();
+    }
 }

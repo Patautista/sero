@@ -17,15 +17,26 @@
         </h2>
     </div>
 
+    <!-- Global Language Filter Info -->
+    @if (!string.IsNullOrEmpty(_globalLanguageFilter))
+    {
+        <div class="mb-4 p-3 bg-indigo-50 rounded-lg border border-indigo-200">
+            <p class="text-sm text-indigo-700">
+                🌍 Filtrando por: <strong>@GetLanguageDisplayName(_globalLanguageFilter)</strong>
+                <span class="text-xs text-gray-500 ml-2">(Altere no menu para ver todos os idiomas)</span>
+            </p>
+        </div>
+    }
+
     <!-- Language Filter -->
     @if (_availableLanguages.Count > 1)
     {
         <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Filtrar por idioma</label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Filtrar por idioma do feed</label>
             <select @bind="_selectedLanguageFilter" 
                     @bind:after="ApplyLanguageFilter"
                     class="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <option value="">Todos os idiomas</option>
+                <option value="">Todos os feeds visíveis</option>
                 @foreach (var lang in _availableLanguages.OrderBy(l => l.Value))
                 {
                     <option value="@lang.Key">@lang.Value (@_languageCounts[lang.Key])</option>
@@ -210,12 +221,18 @@
 
     // Language filtering
     private string _selectedLanguageFilter = string.Empty;
+    private string _globalLanguageFilter = string.Empty;
     private Dictionary<string, string> _availableLanguages = new();
     private Dictionary<string, int> _languageCounts = new();
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        
+        // Get global language filter from settings
+        var config = SettingsService.StudyConfig.Value;
+        _globalLanguageFilter = config?.SelectedTargetLanguageFilter ?? string.Empty;
+        
         LoadWidgets();
         UpdateLanguageFilter();
         ApplyLanguageFilter();
@@ -238,7 +255,12 @@
         _availableLanguages.Clear();
         _languageCounts.Clear();
 
-        foreach (var widget in _widgets)
+        // Only show widgets matching global filter (if set)
+        var widgetsToConsider = string.IsNullOrEmpty(_globalLanguageFilter)
+            ? _widgets
+            : _widgets.Where(w => w.LanguageCode == _globalLanguageFilter).ToList();
+
+        foreach (var widget in widgetsToConsider)
         {
             if (!string.IsNullOrEmpty(widget.LanguageCode))
             {
@@ -254,13 +276,19 @@
 
     private void ApplyLanguageFilter()
     {
+        // First apply global language filter
+        var baseWidgets = string.IsNullOrEmpty(_globalLanguageFilter)
+            ? _widgets
+            : _widgets.Where(w => w.LanguageCode == _globalLanguageFilter).ToList();
+
+        // Then apply local feed filter
         if (string.IsNullOrEmpty(_selectedLanguageFilter))
         {
-            _filteredWidgets = _widgets.ToList();
+            _filteredWidgets = baseWidgets.ToList();
         }
         else
         {
-            _filteredWidgets = _widgets
+            _filteredWidgets = baseWidgets
                 .Where(w => w.LanguageCode == _selectedLanguageFilter)
                 .ToList();
         }

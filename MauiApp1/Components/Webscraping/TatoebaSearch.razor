@@ -1,5 +1,5 @@
 @using Infrastructure.Vocab
-@using Infrastructure.Vocab.Models
+@using Infrastructure.Interfaces
 @using Infrastructure.Services
 @using System.Globalization
 @inject NavigationManager Navigation
@@ -63,28 +63,34 @@
                     }
                     else
                     {
-                        @if (searchResult != null && searchResult.Data != null && searchResult.Data.Any())
+                        @if (searchResult != null && searchResult.Examples != null && searchResult.Examples.Any())
                         {
                             <div class="mb-3">
-                                <p class="text-muted"><Translate Text="Total results: " /> @searchResult.Total</p>
+                                <p class="text-muted"><Translate Text="Total results: " /> @searchResult.TotalResults</p>
                             </div>
                             <div class="list-group">
-                                @foreach (var sentence in searchResult.Data)
+                                @foreach (var example in searchResult.Examples)
                                 {
                                     <div class="list-group-item">
                                         <div class="d-flex w-100 justify-content-between align-items-start">
                                             <div class="flex-grow-1">
                                                 <div class="d-flex align-items-center gap-2">
-                                                    <h6 class="mb-1 flex-grow-1">@sentence.Text</h6>
-                                                      <ButtonPrimary 
-                                                            OnClick="() => AddToDeck(sentence.Text)">
+                                                    <h6 class="mb-1 flex-grow-1">@example.Text</h6>
+                                                    <ButtonPrimary 
+                                                        OnClick="() => AddToDeck(example.Text)">
                                                         <i class="fa fa-plus"></i>
                                                     </ButtonPrimary>
                                                 </div>
-                                                @if (IsApiLive && sentenceTranslations.ContainsKey(sentence.Id))
+                                                @if (!string.IsNullOrEmpty(example.Translation))
                                                 {
                                                     <p class="text-muted mb-1 fst-italic">
-                                                        @sentenceTranslations[sentence.Id]
+                                                        @example.Translation
+                                                    </p>
+                                                }
+                                                else if (IsApiLive && !string.IsNullOrEmpty(example.Id) && sentenceTranslations.ContainsKey(example.Id))
+                                                {
+                                                    <p class="text-muted mb-1 fst-italic">
+                                                        @sentenceTranslations[example.Id]
                                                     </p>
                                                 }
                                                 else if (IsApiLive && isLoadingTranslations)
@@ -92,6 +98,10 @@
                                                     <div class="spinner-border spinner-border-sm text-muted" role="status">
                                                         <span class="visually-hidden"><Translate Text="Carregando..." /></span>
                                                     </div>
+                                                }
+                                                @if (!string.IsNullOrEmpty(example.Source))
+                                                {
+                                                    <small class="text-muted">@example.Source</small>
                                                 }
                                             </div>
                                         </div>
@@ -104,7 +114,7 @@
                             <p><Translate Text="No results found" /></p>
                         }
                         <div class="d-flex justify-content-end gap-2 mt-3">
-                            <ButtonPrimary OnClick="StartNewSearch"><Translate Text="New Search" /></ButtonPrimary>
+                            <ButtonPrimary OnClick="StartNewSearch"><Translate Text="Nova busca" /></ButtonPrimary>
                         </div>
                     }
                 </div>
@@ -112,12 +122,12 @@
         </div>
     </div>
 }
-
+    
 @code {
     private string searchQuery;
     private bool exactSearch = true;
-    private SentenceSearchResult searchResult;
-    private Dictionary<int, string> sentenceTranslations = new();
+    private ExampleSearchResult searchResult;
+    private Dictionary<string, string> sentenceTranslations = new();
     private bool showModal = false;
     private bool isSearching = true;
     private bool isLoading = false;
@@ -143,17 +153,26 @@
         isSearching = false;
         isLoading = true;
 
-        using var client = new TatoebaApiClient();
-        searchResult = await client.SearchSentencesAsync(
-            language: GetTargetLanguageCode(),
+        // Get the first available example provider
+        var provider = TargetLanguageService.GetExampleProviders().FirstOrDefault();
+        
+        if (provider == null)
+        {
+            isLoading = false;
+            isSearching = true;
+            return;
+        }
+
+        searchResult = await provider.SearchExamplesAsync(
             query: searchQuery,
-            exactSearch: exactSearch
+            languageCode: GetTargetLanguageCode(),
+            exactMatch: exactSearch
         );
 
         isLoading = false;
 
-        // Load translations if API is available
-        if (IsApiLive && searchResult?.Data != null && searchResult.Data.Any())
+        // Load translations if API is available and provider doesn't include them
+        if (IsApiLive && !provider.SupportsTranslations && searchResult?.Examples != null && searchResult.Examples.Any())
         {
             await LoadTranslationsAsync();
         }
@@ -166,27 +185,31 @@
 
         try
         {
-            var translationTasks = searchResult.Data.Select(async sentence =>
-            {
-                var translation = await TranslateAsync(
-                    sentence.Text, 
-                    TargetLanguageCode
-                );
-                
-                if (!string.IsNullOrEmpty(translation) && translation != sentence.Text)
+            var translationTasks = searchResult.Examples
+                .Where(e => string.IsNullOrEmpty(e.Translation)) // Only translate if no translation exists
+                .Select(async example =>
                 {
-                    return (sentence.Id, translation);
-                }
-                return (sentence.Id, (string)null);
-            });
+                    var translation = await TranslateAsync(
+                        example.Text, 
+                        TargetLanguageCode
+                    );
+                    
+                    if (!string.IsNullOrEmpty(translation) && translation != example.Text)
+                    {
+                        // Use the example's ID if available, otherwise use the text as key
+                        var key = example.Id ?? example.Text;
+                        return (key, translation);
+                    }
+                    return ((string)null, (string)null);
+                });
 
             var results = await Task.WhenAll(translationTasks);
 
-            foreach (var (id, translation) in results)
+            foreach (var (key, translation) in results)
             {
-                if (!string.IsNullOrEmpty(translation))
+                if (!string.IsNullOrEmpty(key) && !string.IsNullOrEmpty(translation))
                 {
-                    sentenceTranslations[id] = translation;
+                    sentenceTranslations[key] = translation;
                 }
             }
         }
@@ -203,11 +226,37 @@
 
     private void AddToDeck(string sentenceText)
     {
-        // URL encode the sentence text to safely pass it as a parameter
+        // URL encode the sentence text and translation to safely pass them as parameters
         var encodedText = Uri.EscapeDataString(sentenceText);
         
-        // Navigate to CreateCard page with the sentence pre-filled
-        Navigation.NavigateTo($"/create-card/{encodedText}");
+        // Check if we have a translation available for this sentence
+        var example = searchResult.Examples.FirstOrDefault(e => e.Text == sentenceText);
+        string navigationUrl;
+        
+        // Try to get translation from example itself, or from our loaded translations
+        string translation = example?.Translation;
+        if (string.IsNullOrEmpty(translation) && example?.Id != null && sentenceTranslations.ContainsKey(example.Id))
+        {
+            translation = sentenceTranslations[example.Id];
+        }
+        else if (string.IsNullOrEmpty(translation) && sentenceTranslations.ContainsKey(sentenceText))
+        {
+            translation = sentenceTranslations[sentenceText];
+        }
+        
+        if (!string.IsNullOrEmpty(translation))
+        {
+            var encodedTranslation = Uri.EscapeDataString(translation);
+            // Navigate with both text and translation, plus redirect back to search
+            navigationUrl = $"/create-card/{encodedText}/{encodedTranslation}?redirect=/search";
+        }
+        else
+        {
+            // Navigate with just the text and redirect parameter
+            navigationUrl = $"/create-card/{encodedText}?redirect=/search";
+        }
+        
+        Navigation.NavigateTo(navigationUrl);
         
         // Close the modal
         CloseModal();
@@ -243,8 +292,8 @@
 
     private string GetTargetLanguageCode()
     {
-        // Map your internal language codes to Tatoeba ISO codes
-        // Tatoeba uses ISO 639-3 codes (e.g., "eng", "por", "ita", "deu", "fra")
+        // Map your internal language codes to ISO 639-3 codes
+        // (e.g., "eng", "por", "ita", "deu", "fra", "nob")
         if(TargetLanguageCode == "no")
         {
             return new CultureInfo("nb").ThreeLetterISOLanguageName;

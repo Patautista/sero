@@ -1,6 +1,8 @@
 using Catalyst;
 using Infrastructure.Interfaces;
+using Infrastructure.Lookup;
 using Infrastructure.Services;
+using Infrastructure.Vocab;
 using Mosaik.Core;
 
 namespace Infrastructure.Services.Languages;
@@ -21,4 +23,22 @@ public class VietnameseLanguageService : ILanguageService
     }
 
     public string GetDefaultRssFeedUrl() => "https://vnexpress.net/rss/tin-moi-nhat.rss";
+
+    public IEnumerable<IDefinitionProvider> GetDefinitionProviders()
+    {
+        IDefinitionProvider[] providers =
+        [
+            new CambridgeClient(new CambridgeConfig { LanguagePair = "english-vietnamese" })
+        ];
+        return providers;
+    }
+
+    public IEnumerable<IExampleProvider> GetExampleProviders()
+    {
+        IExampleProvider[] providers =
+        [
+            new TatoebaApiClient(LanguageCode)
+        ];
+        return providers;
+    }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Mosaik.Core;
 using Lingua;
 
@@ -34,4 +35,16 @@ public interface ILanguageService
     /// Gets the default RSS feed URL for this language
     /// </summary>
     string GetDefaultRssFeedUrl();
+
+    /// <summary>
+    /// Gets available definition providers for this language
+    /// </summary>
+    /// <returns>List of definition providers configured for this language</returns>
+    IEnumerable<IDefinitionProvider> GetDefinitionProviders();
+
+    /// <summary>
+    /// Gets available example sentence providers for this language
+    /// </summary>
+    /// <returns>List of example providers configured for this language</returns>
+    IEnumerable<IExampleProvider> GetExampleProviders();
 }

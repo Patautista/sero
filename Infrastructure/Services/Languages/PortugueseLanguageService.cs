@@ -1,6 +1,8 @@
 using Catalyst;
 using Infrastructure.Interfaces;
+using Infrastructure.Lookup;
 using Infrastructure.Services;
+using Infrastructure.Vocab;
 using Mosaik.Core;
 
 namespace Infrastructure.Services.Languages;
@@ -24,5 +26,23 @@ public class PortugueseLanguageService : ILanguageService
     {
         //Catalyst.Models.Portuguese.Register();
         throw new NotImplementedException("Portuguese model registration is not implemented yet.");
+    }
+    public IEnumerable<IDefinitionProvider> GetDefinitionProviders()
+    {
+        IDefinitionProvider[] providers =
+        [
+            new CambridgeClient(new CambridgeConfig { LanguagePair = "english-portuguese" }),
+            new DictCcClient(new DictCcConfig { LanguagePair = "enpt" })
+        ];
+        return providers;
+    }
+
+    public IEnumerable<IExampleProvider> GetExampleProviders()
+    {
+        IExampleProvider[] providers =
+        [
+            new TatoebaApiClient(LanguageCode)
+        ];
+        return providers;
     }
 }

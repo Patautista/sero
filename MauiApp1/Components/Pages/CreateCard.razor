@@ -1,5 +1,6 @@
 ﻿@page "/create-card"
 @page "/create-card/{SharedText}"
+@page "/create-card/{SharedText}/{Translation}"
 @using System.Globalization
 @using Business.Interfaces
 @using Business.Model
@@ -183,6 +184,13 @@
     [Parameter]
     public string? SharedText { get; set; }
 
+    [Parameter]
+    public string? Translation { get; set; }
+
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "redirect")]
+    public string? RedirectURL { get; set; }
+
     private CardDefinition card = new()
     {
         Tags = new List<Tag>()
@@ -224,6 +232,13 @@
         {
             primarySentence = Uri.UnescapeDataString(SharedText);
             DetectAndSetPrimaryLanguage(primarySentence);
+            
+            // If Translation is provided, auto-fill it
+            if (!string.IsNullOrWhiteSpace(Translation))
+            {
+                translatedSentence = Uri.UnescapeDataString(Translation);
+            }
+            
             StateHasChanged();
         }
         else
@@ -261,6 +276,12 @@
 
             // Detect language and set primary language automatically
             DetectAndSetPrimaryLanguage(primarySentence);
+            
+            // If Translation is provided, auto-fill it
+            if (!string.IsNullOrWhiteSpace(Translation))
+            {
+                translatedSentence = Uri.UnescapeDataString(Translation);
+            }
         }
     }
 
@@ -426,7 +447,14 @@
 
         // Invoke callback after card creation
         if (OnCardCreated.HasDelegate)
+        {
             await OnCardCreated.InvokeAsync();
+        }
+        else if (!string.IsNullOrWhiteSpace(RedirectURL))
+        {
+            // Use custom redirect URL if provided
+            Navigation.NavigateTo(RedirectURL);
+        }
         else
         {
             Navigation.NavigateTo($"{Routes.DecksView}");

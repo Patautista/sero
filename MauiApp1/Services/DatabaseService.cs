@@ -105,4 +105,12 @@ public partial class DatabaseService(MobileDbContext db, ISettingsService settin
     {
         return await db.Decks.FindAsync(deckId);
     }
+    public async Task<List<string>> GetDistinctTargetLanguagesAsync()
+    {
+        return await db.Decks
+            .Where(d => !string.IsNullOrEmpty(d.TargetLanguage))
+            .Select(d => d.TargetLanguage)
+            .Distinct()
+            .ToListAsync();
+    }
 }
