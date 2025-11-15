@@ -28,8 +28,8 @@ public class ItalianLanguageService : ILanguageService
     {
         IDefinitionProvider[] providers =
         [
-            new CambridgeClient(new CambridgeConfig { LanguagePair = "english-italian" }),
-            new DictCcClient(new DictCcConfig { LanguagePair = "enit" })
+            new DictCcClient(new DictCcConfig { LanguagePair = "enit" }),
+            //new CambridgeClient(new CambridgeConfig { LanguagePair = "english-italian" }),
         ];
         return providers;
     }

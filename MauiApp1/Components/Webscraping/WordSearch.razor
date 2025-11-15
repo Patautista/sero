@@ -96,15 +96,10 @@
 
         isSearching = false;
         isLoading = true;
-        
-        var client = new DictCcClient(new DictCcConfig
-        {
-            LanguagePair = GetAvailablePair(),
-            MaxResults = 20,
-            EnableCaching = false
-        });
 
-        translationsHtml = await client.GetHtmlTranslationsAsync(searchWord);
+        var client = TargetLanguageService.GetDefinitionProviders().First();
+
+        translationsHtml = await client.GetDefinitionsHtmlAsync(searchWord);
         isLoading = false;
     }
 

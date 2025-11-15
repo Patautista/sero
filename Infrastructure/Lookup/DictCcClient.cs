@@ -7,6 +7,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
     public class DictCcClient : IDefinitionProvider
@@ -51,37 +52,71 @@
             var rows = doc.DocumentNode.SelectNodes("//tr[contains(@id,'tr')]");
             if (rows == null) return result;
 
-            // Create a single entry since Dict.cc doesn't distinguish by part of speech
-            var entry = new DefinitionEntry
-            {
-                Headword = word,
-                PartOfSpeech = null,
-                Pronunciation = null,
-                Meanings = new List<DefinitionMeaning>()
-            };
+            // Group translations by part of speech
+            var entriesByPos = new Dictionary<string, DefinitionEntry>();
 
             foreach (var row in rows.Take(_config.MaxResults))
             {
-                var cells = row.SelectNodes(".//td");
+                var cells = row.SelectNodes(".//td[contains(@class,'td7nl')]");
                 if (cells == null || cells.Count < 2) continue;
 
-                var sourceText = CleanText(cells[0].InnerText);
-                var targetText = CleanText(cells[1].InnerText);
+                // Extract source (first language) cell
+                var sourceCell = cells[0];
+                var sourceText = ExtractMainText(sourceCell);
+                var sourcePosInfo = ExtractPartOfSpeech(sourceCell);
+                var sourceContext = ExtractContext(sourceCell);
 
-                if (!string.IsNullOrWhiteSpace(sourceText) && !string.IsNullOrWhiteSpace(targetText))
+                // Extract target (second language) cell
+                var targetCell = cells[1];
+                var targetText = ExtractMainText(targetCell);
+                var targetPosInfo = ExtractPartOfSpeech(targetCell);
+
+                if (string.IsNullOrWhiteSpace(sourceText) || string.IsNullOrWhiteSpace(targetText))
+                    continue;
+
+                // Determine part of speech (prefer source language)
+                var partOfSpeech = NormalizePartOfSpeech(sourcePosInfo ?? targetPosInfo);
+
+                // Use part of speech as grouping key, or "general" if none
+                var entryKey = partOfSpeech ?? "general";
+
+                // Get or create entry for this part of speech
+                if (!entriesByPos.TryGetValue(entryKey, out var entry))
                 {
-                    entry.Meanings.Add(new DefinitionMeaning
+                    entry = new DefinitionEntry
                     {
-                        Definition = sourceText,
-                        Translation = targetText,
-                        Examples = new List<string>()
-                    });
+                        Headword = word,
+                        PartOfSpeech = partOfSpeech,
+                        Pronunciation = null,
+                        Meanings = new List<DefinitionMeaning>()
+                    };
+                    entriesByPos[entryKey] = entry;
                 }
+
+                // Add the meaning to the appropriate entry
+                var meaning = new DefinitionMeaning
+                {
+                    Definition = CleanText(sourceText),
+                    Translation = CleanText(targetText),
+                    Examples = new List<string>()
+                };
+
+                // Add context as a prefix to definition if available
+                if (!string.IsNullOrWhiteSpace(sourceContext))
+                {
+                    meaning.Definition = $"[{sourceContext}] {meaning.Definition}";
+                }
+
+                entry.Meanings.Add(meaning);
             }
 
-            if (entry.Meanings.Any())
+            // Add all entries that have meanings
+            foreach (var entry in entriesByPos.Values)
             {
-                result.Entries.Add(entry);
+                if (entry.Meanings.Any())
+                {
+                    result.Entries.Add(entry);
+                }
             }
 
             return result;
@@ -165,6 +200,137 @@
 
         #region Helper Methods
 
+        /// <summary>
+        /// Extracts the main text from a cell, excluding part of speech tags and context markers
+        /// </summary>
+        private string ExtractMainText(HtmlNode cell)
+        {
+            // Clone the cell to avoid modifying the original
+            var clone = cell.CloneNode(true);
+
+            // Remove var tags (part of speech markers)
+            var varNodes = clone.SelectNodes(".//var")?.ToList();
+            if (varNodes != null)
+            {
+                foreach (var varNode in varNodes)
+                {
+                    varNode.Remove();
+                }
+            }
+
+            // Remove dfn tags (context/subject markers) - we extract these separately
+            var dfnNodes = clone.SelectNodes(".//dfn")?.ToList();
+            if (dfnNodes != null)
+            {
+                foreach (var dfnNode in dfnNodes)
+                {
+                    dfnNode.Remove();
+                }
+            }
+
+            // Remove kbd tags (brackets and explanatory text)
+            var kbdNodes = clone.SelectNodes(".//kbd")?.ToList();
+            if (kbdNodes != null)
+            {
+                foreach (var kbdNode in kbdNodes)
+                {
+                    kbdNode.Remove();
+                }
+            }
+
+            // Remove abbr tags (verb prefix indicators like "å")
+            var abbrNodes = clone.SelectNodes(".//abbr")?.ToList();
+            if (abbrNodes != null)
+            {
+                foreach (var abbrNode in abbrNodes)
+                {
+                    // Keep the text content but remove the tag
+                    var textNode = clone.OwnerDocument.CreateTextNode(abbrNode.InnerText);
+                    abbrNode.ParentNode.ReplaceChild(textNode, abbrNode);
+                }
+            }
+
+            return CleanText(clone.InnerText);
+        }
+
+        /// <summary>
+        /// Extracts part of speech information from var tags
+        /// </summary>
+        private string? ExtractPartOfSpeech(HtmlNode cell)
+        {
+            var varNodes = cell.SelectNodes(".//var");
+            if (varNodes == null || !varNodes.Any()) return null;
+
+            // Collect all part of speech markers
+            var posList = new List<string>();
+            
+            foreach (var varNode in varNodes)
+            {
+                var text = varNode.InnerText.Trim();
+                // Remove curly braces and clean up
+                text = text.Replace("{", "").Replace("}", "").Trim();
+                
+                if (!string.IsNullOrWhiteSpace(text))
+                {
+                    posList.Add(text);
+                }
+            }
+
+            return posList.Any() ? string.Join(", ", posList) : null;
+        }
+
+        /// <summary>
+        /// Extracts context/subject information from dfn tags
+        /// </summary>
+        private string? ExtractContext(HtmlNode cell)
+        {
+            var dfnNode = cell.SelectSingleNode(".//dfn");
+            if (dfnNode == null) return null;
+
+            var title = dfnNode.GetAttributeValue("title", null);
+            return title;
+        }
+
+        /// <summary>
+        /// Normalizes part of speech abbreviations to full forms
+        /// </summary>
+        private string? NormalizePartOfSpeech(string? pos)
+        {
+            if (string.IsNullOrWhiteSpace(pos)) return null;
+
+            // Handle multiple parts of speech separated by commas or slashes
+            if (pos.Contains(",") || pos.Contains("/"))
+            {
+                var parts = pos.Split(new[] { ',', '/' }, StringSplitOptions.RemoveEmptyEntries)
+                               .Select(p => NormalizeSinglePos(p.Trim()))
+                               .Where(p => !string.IsNullOrEmpty(p));
+                return string.Join(", ", parts);
+            }
+
+            return NormalizeSinglePos(pos);
+        }
+
+        /// <summary>
+        /// Normalizes a single part of speech abbreviation
+        /// </summary>
+        private string? NormalizeSinglePos(string pos)
+        {
+            if (string.IsNullOrWhiteSpace(pos)) return null;
+
+            return pos.ToLower() switch
+            {
+                "adj" => "adjective",
+                "adv" => "adverb",
+                "n" => "noun",
+                "v" => "verb",
+                "m" => "masculine noun",
+                "f" => "feminine noun",
+                "m/f" => "masculine/feminine noun",
+                "pl" => "plural",
+                _ => pos // Return as-is if not recognized
+            };
+        }
+
         private async Task<string> FetchWithRetryAsync(string url)
         {
             for (int i = 0; i < _config.MaxRetries; i++)
@@ -208,6 +374,7 @@
                 .Replace("\r", " ")
                 .Replace("\t", " ");
 
+            // Remove multiple spaces
             while (cleaned.Contains("  "))
             {
                 cleaned = cleaned.Replace("  ", " ");

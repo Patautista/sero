@@ -30,8 +30,8 @@ public class NorwegianLanguageService : ILanguageService
     {
         IDefinitionProvider[] providers =
         [
-            new CambridgeClient(new CambridgeConfig { LanguagePair = "english-norwegian" }),
-            new DictCcClient(new DictCcConfig { LanguagePair = "enno" })
+            new DictCcClient(new DictCcConfig { LanguagePair = "enno" }),
+            //new CambridgeClient(new CambridgeConfig { LanguagePair = "english-norwegian" }),
         ];
         return providers;
     }
