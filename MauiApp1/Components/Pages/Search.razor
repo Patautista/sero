@@ -1,22 +1,527 @@
-@page "/search"
+﻿@page "/search"
 @using Infrastructure.Services
+@using Infrastructure.Interfaces
+@using Infrastructure.Vocab
+@using Infrastructure.Lookup
+@using System.Globalization
+@inject NavigationManager Navigation
 @inherits SmartComponent
 
-<div class="mb-5 mt-5 gap-2">
-    <div  class="card p-3 mb-2">
-        <MauiApp1.Components.Webscraping.WordSearch></MauiApp1.Components.Webscraping.WordSearch>
+<div class="mb-5 mt-5">
+    <div class="card p-4">
+        <h3 class="mb-4"><Translate Text="Busca Unificada" /></h3>
+        
+        <!-- Search Input -->
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+                <Translate Text="Termo de busca" />
+            </label>
+            <input id="searchInput" 
+                   class="form-control" 
+                   @bind="searchQuery" 
+                   @bind:event="oninput"
+                   @onkeypress="HandleKeyPress"
+                   placeholder="@Translate("Escreva uma palavra ou frase")" />
+        </div>
+
+        <!-- Search Type Selection (Button-like) -->
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+                <Translate Text="Tipo de busca" />
+            </label>
+            <div class="flex items-center space-x-4">
+                <span @onclick="ToggleDefinitions"
+                      class="cursor-pointer px-3 py-1 rounded-lg transition
+                            @(searchDefinitions ? "bg-indigo-600 text-white font-semibold shadow" : "bg-gray-100 text-gray-700")">
+                    <i class="fa fa-book me-1"></i>
+                    <Translate Text="Definições" />
+                </span>
+                <span @onclick="ToggleExamples"
+                      class="cursor-pointer px-3 py-1 rounded-lg transition
+                            @(searchExamples ? "bg-indigo-600 text-white font-semibold shadow" : "bg-gray-100 text-gray-700")">
+                    <i class="fa fa-lightbulb me-1"></i>
+                    <Translate Text="Exemplos" />
+                </span>
+            </div>
+        </div>
+
+        <!-- Definition Provider Selection -->
+        @if (searchDefinitions && availableDefinitionProviders.Any())
+        {
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    <Translate Text="Provedor de definições" />
+                </label>
+                <select class="form-select" @bind="selectedDefinitionProvider">
+                    @foreach (var provider in availableDefinitionProviders)
+                    {
+                        <option value="@provider.ProviderName">@provider.ProviderName</option>
+                    }
+                </select>
+            </div>
+        }
+
+        <!-- Example Provider Selection -->
+        @if (searchExamples && availableExampleProviders.Any())
+        {
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    <Translate Text="Provedor de exemplos" />
+                </label>
+                <select class="form-select" @bind="selectedExampleProvider">
+                    @foreach (var provider in availableExampleProviders)
+                    {
+                        <option value="@provider.ProviderName">@provider.ProviderName</option>
+                    }
+                </select>
+            </div>
+            <div class="mb-4">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" @bind="exactSearch" id="exactSearchCheck">
+                    <label class="form-check-label" for="exactSearchCheck">
+                        <Translate Text="Busca exata" />
+                    </label>
+                </div>
+            </div>
+        }
+
+        <!-- Search Button -->
+        <div class="mb-4">
+            <ButtonPrimary OnClick="PerformSearch" Disabled="@(!CanSearch())">
+                <i class="fa fa-search me-2"></i>
+                <Translate Text="Buscar" />
+            </ButtonPrimary>
+        </div>
+
+        <!-- Loading State -->
+        @if (isLoading)
+        {
+            <div class="text-center py-4">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden"><Translate Text="Carregando..." /></span>
+                </div>
+                <p class="mt-2"><Translate Text="Buscando..." /></p>
+            </div>
+        }
+
+        <!-- Results Section -->
+        @if (!isLoading && (definitionResult != null || exampleResult != null))
+        {
+            <div class="mt-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">
+                        <Translate Text="Resultados para " /> <strong>@searchQuery</strong>
+                    </h5>
+                    <button type="button" 
+                            class="btn btn-sm btn-outline-secondary"
+                            @onclick="ClearResults">
+                        <i class="fa fa-times me-1"></i>
+                        <Translate Text="Limpar" />
+                    </button>
+                </div>
+
+                <!-- Definitions Section -->
+                @if (searchDefinitions && definitionResult != null)
+                {
+                    <div class="mb-4">
+                        <h4 class="mb-3">
+                            <i class="fa fa-book me-2"></i>
+                            <Translate Text="Definições" />
+                            <small class="text-muted ms-2">(@definitionResult.ProviderName)</small>
+                        </h4>
+                        
+                        @if (definitionResult.Entries != null && definitionResult.Entries.Any())
+                        {
+                            @foreach (var entry in definitionResult.Entries)
+                            {
+                                <div class="card mb-3">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">
+                                            @entry.Headword
+                                            @if (!string.IsNullOrEmpty(entry.PartOfSpeech))
+                                            {
+                                                <span class="badge bg-primary ms-2">@entry.PartOfSpeech</span>
+                                            }
+                                            @if (!string.IsNullOrEmpty(entry.Pronunciation))
+                                            {
+                                                <small class="text-muted ms-2">/@entry.Pronunciation/</small>
+                                            }
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        @if (entry.Meanings != null && entry.Meanings.Any())
+                                        {
+                                            <div class="list-group list-group-flush">
+                                                @foreach (var meaning in entry.Meanings)
+                                                {
+                                                    <div class="list-group-item">
+                                                        <div class="d-flex justify-content-between align-items-start">
+                                                            <div class="flex-grow-1">
+                                                                @if (!string.IsNullOrEmpty(meaning.Definition))
+                                                                {
+                                                                    <div class="mb-1">
+                                                                        <span class="text-primary fw-semibold">@meaning.Definition</span>
+                                                                    </div>
+                                                                }
+                                                                @if (!string.IsNullOrEmpty(meaning.Translation))
+                                                                {
+                                                                    <div class="mb-2">
+                                                                        <span class="text-success">→ @meaning.Translation</span>
+                                                                    </div>
+                                                                }
+                                                                @if (meaning.Examples != null && meaning.Examples.Any())
+                                                                {
+                                                                    <div class="mt-2">
+                                                                        <small class="text-muted d-block mb-1">
+                                                                            <Translate Text="Examples:" />
+                                                                        </small>
+                                                                        @foreach (var example in meaning.Examples)
+                                                                        {
+                                                                            <div class="ms-3 mb-1">
+                                                                                <small class="text-muted fst-italic">• @example</small>
+                                                                            </div>
+                                                                        }
+                                                                    </div>
+                                                                }
+                                                            </div>
+                                                            <div class="ms-2">
+                                                                <ButtonPrimary OnClick="() => AddToDeck(meaning.Definition, meaning.Translation)">
+                                                                    <i class="fa fa-plus"></i>
+                                                                </ButtonPrimary>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <p class="text-muted mb-0"><Translate Text="No meanings available" /></p>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p class="text-muted"><Translate Text="No results found" /></p>
+                        }
+                    </div>
+                }
+
+                <!-- Examples Section -->
+                @if (searchExamples && exampleResult != null)
+                {
+                    <div class="mb-4">
+                        <h4 class="mb-3">
+                            <i class="fa fa-lightbulb me-2"></i>
+                            <Translate Text="Exemplos" />
+                            <small class="text-muted ms-2">(<Translate Text="Total results: " /> @exampleResult.TotalResults)</small>
+                        </h4>
+                        
+                        @if (exampleResult.Examples != null && exampleResult.Examples.Any())
+                        {
+                            <div class="list-group">
+                                @foreach (var example in exampleResult.Examples)
+                                {
+                                    <div class="list-group-item">
+                                        <div class="d-flex w-100 justify-content-between align-items-start">
+                                            <div class="flex-grow-1">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <h6 class="mb-1 flex-grow-1">@example.Text</h6>
+                                                    <ButtonPrimary 
+                                                        OnClick="() => AddToDeck(example.Text, GetExampleTranslation(example))">
+                                                        <i class="fa fa-plus"></i>
+                                                    </ButtonPrimary>
+                                                </div>
+                                                @{
+                                                    var translation = GetExampleTranslation(example);
+                                                }
+                                                @if (!string.IsNullOrEmpty(translation))
+                                                {
+                                                    <p class="text-muted mb-1 fst-italic">
+                                                        @translation
+                                                    </p>
+                                                }
+                                                else if (IsApiLive && isLoadingTranslations)
+                                                {
+                                                    <div class="spinner-border spinner-border-sm text-muted" role="status">
+                                                        <span class="visually-hidden"><Translate Text="Carregando..." /></span>
+                                                    </div>
+                                                }
+                                                @if (!string.IsNullOrEmpty(example.Source))
+                                                {
+                                                    <small class="text-muted">@example.Source</small>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="text-muted"><Translate Text="No results found" /></p>
+                        }
+                    </div>
+                }
+            </div>
+        }
     </div>
-    <div class="card p-3 mb-2">
-        <MauiApp1.Components.Webscraping.TatoebaSearch></MauiApp1.Components.Webscraping.TatoebaSearch>
-    </div>
-    @if(TargetLanguageCode == AvailableCodes.Italian)
+    
+    @if(TargetLanguageService.HasConjugationTable)
     {
-        <div class="card p-3 mb-2">
+        <div class="card p-3 mb-2 mt-3">
             <MauiApp1.Components.Webscraping.ConjugationLookup></MauiApp1.Components.Webscraping.ConjugationLookup>
         </div>
     }
 </div>
 
 @code {
+    private string searchQuery = string.Empty;
+    private bool searchDefinitions = true;
+    private bool searchExamples = true;
+    private bool exactSearch = true;
     
+    private List<IDefinitionProvider> availableDefinitionProviders = new();
+    private List<IExampleProvider> availableExampleProviders = new();
+    
+    private string selectedDefinitionProvider = string.Empty;
+    private string selectedExampleProvider = string.Empty;
+    
+    private DefinitionResult? definitionResult;
+    private ExampleSearchResult? exampleResult;
+    private Dictionary<string, string> sentenceTranslations = new();
+    
+    private bool isLoading = false;
+    private bool isLoadingTranslations = false;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        LoadProviders();
+    }
+
+    private void LoadProviders()
+    {
+        availableDefinitionProviders = TargetLanguageService.GetDefinitionProviders().ToList();
+        availableExampleProviders = TargetLanguageService.GetExampleProviders().ToList();
+        
+        selectedDefinitionProvider = availableDefinitionProviders.FirstOrDefault()?.ProviderName ?? string.Empty;
+        selectedExampleProvider = availableExampleProviders.FirstOrDefault()?.ProviderName ?? string.Empty;
+    }
+
+    private void ToggleDefinitions()
+    {
+        searchDefinitions = !searchDefinitions;
+    }
+
+    private void ToggleExamples()
+    {
+        searchExamples = !searchExamples;
+    }
+
+    private bool CanSearch()
+    {
+        if (string.IsNullOrWhiteSpace(searchQuery))
+            return false;
+        
+        if (!searchDefinitions && !searchExamples)
+            return false;
+        
+        if (searchDefinitions && string.IsNullOrEmpty(selectedDefinitionProvider))
+            return false;
+        
+        if (searchExamples && string.IsNullOrEmpty(selectedExampleProvider))
+            return false;
+        
+        return true;
+    }
+
+    private async Task PerformSearch()
+    {
+        if (!CanSearch())
+            return;
+
+        isLoading = true;
+        definitionResult = null;
+        exampleResult = null;
+        sentenceTranslations.Clear();
+
+        try
+        {
+            var tasks = new List<Task>();
+
+            if (searchDefinitions)
+            {
+                tasks.Add(SearchDefinitionsAsync());
+            }
+
+            if (searchExamples)
+            {
+                tasks.Add(SearchExamplesAsync());
+            }
+
+            await Task.WhenAll(tasks);
+
+            // Load translations if needed
+            if (IsApiLive && searchExamples && exampleResult?.Examples != null && exampleResult.Examples.Any())
+            {
+                var provider = availableExampleProviders.FirstOrDefault(p => p.ProviderName == selectedExampleProvider);
+                if (provider != null && !provider.SupportsTranslations)
+                {
+                    await LoadTranslationsAsync();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error during search: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task SearchDefinitionsAsync()
+    {
+        try
+        {
+            var provider = availableDefinitionProviders.FirstOrDefault(p => p.ProviderName == selectedDefinitionProvider);
+            if (provider != null)
+            {
+                definitionResult = await provider.GetDefinitionsAsync(searchQuery);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error searching definitions: {ex.Message}");
+            definitionResult = null;
+        }
+    }
+
+    private async Task SearchExamplesAsync()
+    {
+        try
+        {
+            var provider = availableExampleProviders.FirstOrDefault(p => p.ProviderName == selectedExampleProvider);
+            if (provider != null)
+            {
+                exampleResult = await provider.SearchExamplesAsync(
+                    query: searchQuery,
+                    languageCode: GetTargetLanguageCode(),
+                    exactMatch: exactSearch
+                );
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error searching examples: {ex.Message}");
+            exampleResult = null;
+        }
+    }
+
+    private async Task LoadTranslationsAsync()
+    {
+        isLoadingTranslations = true;
+        sentenceTranslations.Clear();
+
+        try
+        {
+            var translationTasks = exampleResult!.Examples
+                .Where(e => string.IsNullOrEmpty(e.Translation))
+                .Select(async example =>
+                {
+                    var translation = await TranslateAsync(example.Text, TargetLanguageCode);
+                    
+                    if (!string.IsNullOrEmpty(translation) && translation != example.Text)
+                    {
+                        var key = example.Id ?? example.Text;
+                        return (key, translation);
+                    }
+                    return ((string?)null, (string?)null);
+                });
+
+            var results = await Task.WhenAll(translationTasks);
+
+            foreach (var (key, translation) in results)
+            {
+                if (!string.IsNullOrEmpty(key) && !string.IsNullOrEmpty(translation))
+                {
+                    sentenceTranslations[key] = translation;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading translations: {ex.Message}");
+        }
+        finally
+        {
+            isLoadingTranslations = false;
+            StateHasChanged();
+        }
+    }
+
+    private string? GetExampleTranslation(ExampleSentence example)
+    {
+        if (!string.IsNullOrEmpty(example.Translation))
+            return example.Translation;
+        
+        if (example.Id != null && sentenceTranslations.ContainsKey(example.Id))
+            return sentenceTranslations[example.Id];
+        
+        if (sentenceTranslations.ContainsKey(example.Text))
+            return sentenceTranslations[example.Text];
+        
+        return null;
+    }
+
+    private void AddToDeck(string sourceText, string? translation)
+    {
+        if (string.IsNullOrWhiteSpace(sourceText))
+            return;
+
+        var encodedSource = Uri.EscapeDataString(sourceText);
+        string navigationUrl;
+        
+        if (!string.IsNullOrWhiteSpace(translation))
+        {
+            var encodedTranslation = Uri.EscapeDataString(translation);
+            navigationUrl = $"/create-card/{encodedSource}/{encodedTranslation}?redirect=/search";
+        }
+        else
+        {
+            navigationUrl = $"/create-card/{encodedSource}?redirect=/search";
+        }
+        
+        Navigation.NavigateTo(navigationUrl);
+    }
+
+    private void ClearResults()
+    {
+        searchQuery = string.Empty;
+        definitionResult = null;
+        exampleResult = null;
+        sentenceTranslations.Clear();
+    }
+
+    private async Task HandleKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && CanSearch())
+        {
+            await PerformSearch();
+        }
+    }
+
+    private string GetTargetLanguageCode()
+    {
+        if (TargetLanguageCode == "no")
+        {
+            return new CultureInfo("nb").ThreeLetterISOLanguageName;
+        }
+
+        return TargetLanguage.ThreeLetterISOLanguageName;
+    }
 }
