@@ -250,7 +250,33 @@
                 }
             }
 
-            return CleanText(clone.InnerText);
+            var text = CleanText(clone.InnerText);
+            
+            // Remove leading numbers (e.g., "3hair" -> "hair", "12word" -> "word")
+            text = RemoveLeadingNumber(text);
+            
+            return text;
+        }
+
+        /// <summary>
+        /// Removes leading numbers from text (e.g., "3hair" -> "hair")
+        /// </summary>
+        private static string RemoveLeadingNumber(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return text;
+
+            // Match one or more digits at the start of the string followed by any character
+            // This handles cases like "3hair", "12word", etc.
+            var match = Regex.Match(text, @"^(\d+)(.+)$");
+            
+            if (match.Success && match.Groups.Count >= 3)
+            {
+                // Return the text after the number
+                return match.Groups[2].Value;
+            }
+
+            return text;
         }
 
         /// <summary>

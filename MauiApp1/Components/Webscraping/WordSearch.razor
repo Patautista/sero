@@ -1,6 +1,8 @@
 ﻿@page "/dict"
 @using Infrastructure.Lookup
+@using Infrastructure.Interfaces
 @using Infrastructure.Services
+@inject NavigationManager Navigation
 @inherits SmartComponent
 
 <div class="gap-2 p-2">
@@ -55,9 +57,83 @@
                     }
                     else
                     {
-                        @if (!string.IsNullOrEmpty(translationsHtml))
+                        @if (definitionResult != null && definitionResult.Entries != null && definitionResult.Entries.Any())
                         {
-                            @((MarkupString)translationsHtml)
+                            <div class="mb-3">
+                                <small class="text-muted">
+                                    <Translate Text="Source: " /> @definitionResult.ProviderName
+                                </small>
+                            </div>
+
+                            @foreach (var entry in definitionResult.Entries)
+                            {
+                                <div class="card mb-3">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">
+                                            @entry.Headword
+                                            @if (!string.IsNullOrEmpty(entry.PartOfSpeech))
+                                            {
+                                                <span class="badge bg-primary ms-2">@entry.PartOfSpeech</span>
+                                            }
+                                            @if (!string.IsNullOrEmpty(entry.Pronunciation))
+                                            {
+                                                <small class="text-muted ms-2">/@entry.Pronunciation/</small>
+                                            }
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        @if (entry.Meanings != null && entry.Meanings.Any())
+                                        {
+                                            <div class="list-group list-group-flush">
+                                                @foreach (var meaning in entry.Meanings)
+                                                {
+                                                    <div class="list-group-item">
+                                                        <div class="d-flex justify-content-between align-items-start">
+                                                            <div class="flex-grow-1">
+                                                                @if (!string.IsNullOrEmpty(meaning.Definition))
+                                                                {
+                                                                    <div class="mb-1">
+                                                                        <span class="text-primary fw-semibold">@meaning.Definition</span>
+                                                                    </div>
+                                                                }
+                                                                @if (!string.IsNullOrEmpty(meaning.Translation))
+                                                                {
+                                                                    <div class="mb-2">
+                                                                        <span class="text-success">→ @meaning.Translation</span>
+                                                                    </div>
+                                                                }
+                                                                @if (meaning.Examples != null && meaning.Examples.Any())
+                                                                {
+                                                                    <div class="mt-2">
+                                                                        <small class="text-muted d-block mb-1">
+                                                                            <Translate Text="Examples:" />
+                                                                        </small>
+                                                                        @foreach (var example in meaning.Examples)
+                                                                        {
+                                                                            <div class="ms-3 mb-1">
+                                                                                <small class="text-muted fst-italic">• @example</small>
+                                                                            </div>
+                                                                        }
+                                                                    </div>
+                                                                }
+                                                            </div>
+                                                            <div class="ms-2">
+                                                                <ButtonPrimary OnClick="() => AddToDeck(meaning.Definition, meaning.Translation)">
+                                                                    <i class="fa fa-plus"></i>
+                                                                </ButtonPrimary>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <p class="text-muted mb-0"><Translate Text="No meanings available" /></p>
+                                        }
+                                    </div>
+                                </div>
+                            }
                         }
                         else
                         {
@@ -75,7 +151,7 @@
 
 @code {
     private string searchWord;
-    private string translationsHtml;
+    private DefinitionResult definitionResult;
     private bool showModal = false;
     private bool isSearching = true;
     private bool isLoading = false;
@@ -83,7 +159,7 @@
     private void OpenModal()
     {
         searchWord = string.Empty;
-        translationsHtml = string.Empty;
+        definitionResult = null;
         isSearching = true;
         isLoading = false;
         showModal = true;
@@ -97,16 +173,52 @@
         isSearching = false;
         isLoading = true;
 
-        var client = TargetLanguageService.GetDefinitionProviders().First();
+        try
+        {
+            var provider = TargetLanguageService.GetDefinitionProviders().FirstOrDefault();
+            
+            if (provider == null)
+            {
+                isLoading = false;
+                isSearching = true;
+                return;
+            }
 
-        translationsHtml = await client.GetDefinitionsHtmlAsync(searchWord);
-        isLoading = false;
+            definitionResult = await provider.GetDefinitionsAsync(searchWord);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error searching for word: {ex.Message}");
+            definitionResult = null;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void AddToDeck(string sourceText, string translation)
+    {
+        if (string.IsNullOrWhiteSpace(sourceText) || string.IsNullOrWhiteSpace(translation))
+            return;
+
+        // URL encode the texts to safely pass them as parameters
+        var encodedSource = Uri.EscapeDataString(sourceText);
+        var encodedTranslation = Uri.EscapeDataString(translation);
+        
+        // Navigate with both text and translation, plus redirect back to search
+        var navigationUrl = $"/create-card/{encodedSource}/{encodedTranslation}?redirect=/dict";
+        
+        Navigation.NavigateTo(navigationUrl);
+        
+        // Close the modal
+        CloseModal();
     }
 
     private void StartNewSearch()
     {
         searchWord = string.Empty;
-        translationsHtml = string.Empty;
+        definitionResult = null;
         isSearching = true;
     }
 
@@ -114,7 +226,7 @@
     {
         showModal = false;
         searchWord = string.Empty;
-        translationsHtml = string.Empty;
+        definitionResult = null;
         isSearching = true;
         isLoading = false;
     }
