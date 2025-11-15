@@ -24,13 +24,22 @@
     <!-- Widget Header -->
     <div class="flex items-center justify-between mb-3 border-b pb-2">
         <h3 class="text-lg font-semibold text-indigo-700">@Widget.Title</h3>
-        @if (_isEditMode && OnEdit.HasDelegate)
-        {
-            <button @onclick="() => OnEdit.InvokeAsync(Widget)" 
-                    class="text-gray-500 hover:text-indigo-600 p-2 rounded-lg hover:bg-indigo-50 transition">
-                <span class="text-lg">✏️</span>
-            </button>
-        }
+        <div class="flex items-center gap-2">
+            @if (_isEditMode && OnEdit.HasDelegate)
+            {
+                <button @onclick="() => OnEdit.InvokeAsync(Widget)" 
+                        class="text-gray-500 hover:text-indigo-600 p-2 rounded-lg hover:bg-indigo-50 transition">
+                    <span class="text-lg">✏️</span>
+                </button>
+            }
+            @if (!_isEditMode && _feedItems.Count > 0)
+            {
+                <button @onclick="ShowModal" 
+                        class="text-sm text-indigo-600 hover:text-indigo-800 font-medium px-3 py-1 rounded-lg hover:bg-indigo-50 transition">
+                    Ver tudo →
+                </button>
+            }
+        </div>
     </div>
 
     <!-- Content -->
@@ -43,36 +52,89 @@
         }
         else
         {
-            <RadzenCarousel Style="height:300px;width:100%;">
-                <Items>
+            <!-- Continuous Horizontal Scroll -->
+            <div class="overflow-x-auto overflow-y-hidden -mx-2 px-2 scrollbar-hide">
+                <div class="flex gap-3 pb-2" style="width: max-content;">
                     @foreach (var item in _feedItems)
                     {
-                        <RadzenCarouselItem>
-                            <div @onclick="() => OpenLink(item.Link)"
-                                 class="block bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition h-full flex flex-col cursor-pointer">
-                                
-                                <h4 class="text-base font-semibold mb-2 line-clamp-2">@item.Title</h4>
+                        <div @onclick="() => OpenLink(item.Link)"
+                             class="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition flex flex-col cursor-pointer shadow-sm hover:shadow-md"
+                             style="min-width: 200px; max-width: 200px; height: 260px;">
+                            
+                            @if (!string.IsNullOrEmpty(item.ImageUrl))
+                            {
+                                <img src="@item.ImageUrl" alt="@item.Title"
+                                     class="w-full h-32 object-cover mb-2 rounded-md" />
+                            }
 
-                                @if (!string.IsNullOrEmpty(item.ImageUrl))
-                                {
-                                    <img src="@item.ImageUrl" alt="@item.Title"
-                                         class="max-h-32 object-cover w-full mb-2 rounded-md mx-auto" />
-                                }
+                            <h4 class="text-sm font-semibold mb-1 line-clamp-2">@item.Title</h4>
 
-                                <p class="text-gray-700 text-sm flex-grow overflow-hidden line-clamp-2">@item.Description</p>
-                                
-                                @if (item.PubDate.HasValue)
-                                {
-                                    <p class="text-gray-500 text-xs mt-1">@item.PubDate.Value.ToString("MMM dd, yyyy")</p>
-                                }
-                            </div>
-                        </RadzenCarouselItem>
+                            <p class="text-gray-700 text-xs flex-grow overflow-hidden line-clamp-3">@item.Description</p>
+                            
+                            @if (item.PubDate.HasValue)
+                            {
+                                <p class="text-gray-500 text-xs mt-1">@item.PubDate.Value.ToString("MMM dd, yyyy")</p>
+                            }
+                        </div>
                     }
-                </Items>
-            </RadzenCarousel>
+                </div>
+            </div>
         }
     </LoadingSpinner>
 </div>
+
+<!-- Modal for showing all items -->
+@if (_showModal)
+{
+    <div class="modal-backdrop-custom" @onclick="HideModal"></div>
+    <div class="modal fade show modal-animate" style="display:block;" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document" style="max-width: 800px;">
+            <div class="modal-content" @onclick:stopPropagation>
+                <div class="modal-header">
+                    <h5 class="modal-title text-indigo-700 font-semibold">@Widget.Title</h5>
+                    <button type="button" class="close text-2xl" @onclick="HideModal">&times;</button>
+                </div>
+                <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                    <div class="flex flex-col gap-3">
+                        @foreach (var item in _feedItems)
+                        {
+                            <div @onclick="() => OpenLink(item.Link)"
+                                 class="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition cursor-pointer shadow-sm hover:shadow-md">
+                                
+                                <div class="flex gap-3">
+                                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                    {
+                                        <img src="@item.ImageUrl" alt="@item.Title"
+                                             class="w-24 h-24 object-cover rounded-md flex-shrink-0" />
+                                    }
+                                    
+                                    <div class="flex-1 min-w-0">
+                                        <h4 class="text-base font-semibold mb-2">@item.Title</h4>
+                                        <p class="text-gray-700 text-sm mb-2">@item.Description</p>
+                                        @if (item.PubDate.HasValue)
+                                        {
+                                            <p class="text-gray-500 text-xs">@item.PubDate.Value.ToString("MMM dd, yyyy HH:mm")</p>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+</style>
 
 @code {
     [Parameter, EditorRequired]
@@ -93,6 +155,7 @@
     private List<RssFeedItem> _feedItems = new();
     private bool _isLoading = true;
     private bool _isEditMode => IsEditMode;
+    private bool _showModal = false;
     
     private System.Threading.Timer? _longPressTimer;
     private bool _isLongPressTriggered = false;
@@ -132,6 +195,18 @@
         _longPressTimer?.Dispose();
         _longPressTimer = null;
         _isLongPressTriggered = false;
+    }
+
+    private void ShowModal()
+    {
+        _showModal = true;
+        StateHasChanged();
+    }
+
+    private void HideModal()
+    {
+        _showModal = false;
+        StateHasChanged();
     }
 
     public void Dispose()

@@ -37,7 +37,7 @@ public class VietnameseLanguageService : ILanguageService
     {
         IExampleProvider[] providers =
         [
-            new TatoebaApiClient(LanguageCode)
+            new TatoebaApiClient(new TatoebaConfig { TargetLanguageCode = LanguageCode })
         ];
         return providers;
     }

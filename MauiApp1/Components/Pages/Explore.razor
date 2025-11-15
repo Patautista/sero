@@ -10,7 +10,7 @@
 @inject HttpClient Http
 @inherits SmartComponent
 
-<div class="p-4">
+<div class="">
     <div class="flex items-center justify-between mb-4">
         <h2 class="text-2xl font-bold text-indigo-700">
             <Translate Text="Explorar"></Translate>
@@ -158,12 +158,6 @@
             @if (widget.IsVisible)
             {
                 <div class="relative">
-                    @if (!string.IsNullOrEmpty(widget.LanguageCode))
-                    {
-                        <div class="absolute top-2 right-2 z-10 bg-indigo-100 text-indigo-700 text-xs px-2 py-1 rounded-full font-medium">
-                            @GetLanguageDisplayName(widget.LanguageCode)
-                        </div>
-                    }
                     <MauiApp1.Components.RssFeedWidget Widget="@widget"
                                    IsEditMode="@_isEditMode"
                                    OnEdit="@(w => StartEdit(w))" 

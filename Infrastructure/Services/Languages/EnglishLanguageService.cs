@@ -33,7 +33,7 @@ public class EnglishLanguageService : ILanguageService
     {
         IExampleProvider[] providers =
          [
-            new TatoebaApiClient(LanguageCode), 
+            new TatoebaApiClient(new TatoebaConfig { TargetLanguageCode = LanguageCode }), 
             new CambridgeClient(new CambridgeConfig { LanguagePair = "english" })
          ];
         return providers;

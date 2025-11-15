@@ -38,7 +38,7 @@ public class ItalianLanguageService : ILanguageService
     {
         IExampleProvider[] providers =
         [
-            new TatoebaApiClient(LanguageCode)
+            new TatoebaApiClient(new TatoebaConfig { TargetLanguageCode = LanguageCode })
         ];
         return providers;
     }
