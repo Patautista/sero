@@ -169,16 +169,42 @@
                                                                         <span class="text-success">→ @meaning.Translation</span>
                                                                     </div>
                                                                 }
+                                                                else
+                                                                {
+                                                                    @* Show API-translated definition if available *@
+                                                                    var translatedDef = GetDefinitionTranslation(meaning.Definition);
+                                                                    @if (!string.IsNullOrEmpty(translatedDef))
+                                                                    {
+                                                                        <div class="mb-2">
+                                                                            <span class="text-success">→ @translatedDef</span>
+                                                                        </div>
+                                                                    }
+                                                                    else if (IsApiLive && isLoadingTranslations)
+                                                                    {
+                                                                        <div class="spinner-border spinner-border-sm text-muted" role="status">
+                                                                            <span class="visually-hidden"><Translate Text="Traduzindo..." /></span>
+                                                                        </div>
+                                                                    }
+                                                                }
                                                                 @if (meaning.Examples != null && meaning.Examples.Any())
                                                                 {
                                                                     <div class="mt-2">
                                                                         <small class="text-muted d-block mb-1">
-                                                                            <Translate Text="Examples:" />
+                                                                            <Translate Text="Exemplos:" />
                                                                         </small>
                                                                         @foreach (var example in meaning.Examples)
                                                                         {
                                                                             <div class="ms-3 mb-1">
                                                                                 <small class="text-muted fst-italic">• @example</small>
+                                                                                @* Show translated example if available *@
+                                                                                @{
+                                                                                    var translatedExample = GetDefinitionExampleTranslation(example);
+                                                                                }
+                                                                                @if (!string.IsNullOrEmpty(translatedExample))
+                                                                                {
+                                                                                    <br />
+                                                                                    <small class="text-success fst-italic ms-2">→ @translatedExample</small>
+                                                                                }
                                                                             </div>
                                                                         }
                                                                     </div>
@@ -246,7 +272,7 @@
                                                 else if (IsApiLive && isLoadingTranslations)
                                                 {
                                                     <div class="spinner-border spinner-border-sm text-muted" role="status">
-                                                        <span class="visually-hidden"><Translate Text="Carregando..." /></span>
+                                                        <span class="visually-hidden"><Translate Text="Traduzindo resultados..." /></span>
                                                     </div>
                                                 }
                                                 @if (!string.IsNullOrEmpty(example.Source))
@@ -292,6 +318,7 @@
     private DefinitionResult? definitionResult;
     private ExampleSearchResult? exampleResult;
     private Dictionary<string, string> sentenceTranslations = new();
+    private Dictionary<string, string> definitionTranslations = new(); // NEW: Cache for definition translations
     
     private bool isLoading = false;
     private bool isLoadingTranslations = false;
@@ -347,6 +374,7 @@
         definitionResult = null;
         exampleResult = null;
         sentenceTranslations.Clear();
+        definitionTranslations.Clear(); // Clear definition translations
 
         try
         {
@@ -365,12 +393,29 @@
             await Task.WhenAll(tasks);
 
             // Load translations if needed
-            if (IsApiLive && searchExamples && exampleResult?.Examples != null && exampleResult.Examples.Any())
+            if (IsApiLive)
             {
-                var provider = availableExampleProviders.FirstOrDefault(p => p.ProviderName == selectedExampleProvider);
-                if (provider != null && !provider.SupportsTranslations)
+                var translationTasks = new List<Task>();
+
+                // Translate definitions
+                if (searchDefinitions && definitionResult?.Entries != null && definitionResult.Entries.Any())
                 {
-                    await LoadTranslationsAsync();
+                    translationTasks.Add(LoadDefinitionTranslationsAsync());
+                }
+
+                // Translate examples
+                if (searchExamples && exampleResult?.Examples != null && exampleResult.Examples.Any())
+                {
+                    var provider = availableExampleProviders.FirstOrDefault(p => p.ProviderName == selectedExampleProvider);
+                    if (provider != null && !provider.SupportsTranslations)
+                    {
+                        translationTasks.Add(LoadTranslationsAsync());
+                    }
+                }
+
+                if (translationTasks.Any())
+                {
+                    await Task.WhenAll(translationTasks);
                 }
             }
         }
@@ -420,6 +465,110 @@
             Console.WriteLine($"Error searching examples: {ex.Message}");
             exampleResult = null;
         }
+    }
+
+    // NEW: Load translations for definitions
+    private async Task LoadDefinitionTranslationsAsync()
+    {
+        isLoadingTranslations = true;
+        definitionTranslations.Clear();
+
+        try
+        {
+            var translationTasks = new List<Task<(string key, string? translation)>>();
+
+            foreach (var entry in definitionResult!.Entries)
+            {
+                foreach (var meaning in entry.Meanings)
+                {
+                    // Only translate if definition language is specified and translation is empty
+                    if (!string.IsNullOrEmpty(meaning.DefinitionLanguage) && 
+                        string.IsNullOrEmpty(meaning.Translation))
+                    {
+                        translationTasks.Add(TranslateDefinitionAsync(meaning));
+                    }
+
+                    // Translate examples in definitions
+                    if (meaning.Examples != null && meaning.Examples.Any())
+                    {
+                        foreach (var example in meaning.Examples)
+                        {
+                            translationTasks.Add(TranslateTextAsync(
+                                example, 
+                                meaning.DefinitionLanguage ?? TargetLanguageCode, 
+                                $"def_example_{example}"));
+                        }
+                    }
+                }
+            }
+
+            var results = await Task.WhenAll(translationTasks);
+
+            foreach (var (key, translation) in results)
+            {
+                if (!string.IsNullOrEmpty(key) && !string.IsNullOrEmpty(translation))
+                {
+                    definitionTranslations[key] = translation;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading definition translations: {ex.Message}");
+        }
+        finally
+        {
+            isLoadingTranslations = false;
+            StateHasChanged();
+        }
+    }
+
+    // Helper method to translate a definition meaning
+    private async Task<(string key, string? translation)> TranslateDefinitionAsync(DefinitionMeaning meaning)
+    {
+        try
+        {
+            var key = $"def_{meaning.Definition}";
+            var translation = await TranslateAsync(
+                meaning.Definition, 
+                meaning.DefinitionLanguage ?? TargetLanguageCode);
+            
+            return (key, translation != meaning.Definition ? translation : null);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error translating definition: {ex.Message}");
+            return (string.Empty, null);
+        }
+    }
+
+    // NEW: Generic helper to translate text with a custom key
+    private async Task<(string key, string? translation)> TranslateTextAsync(string text, string sourceLanguage, string cacheKey)
+    {
+        try
+        {
+            var translation = await TranslateAsync(text, sourceLanguage);
+            return (cacheKey, translation != text ? translation : null);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error translating text: {ex.Message}");
+            return (string.Empty, null);
+        }
+    }
+
+    // NEW: Get translation for a definition
+    private string? GetDefinitionTranslation(string definition)
+    {
+        var key = $"def_{definition}";
+        return definitionTranslations.ContainsKey(key) ? definitionTranslations[key] : null;
+    }
+
+    // NEW: Get translation for a definition example
+    private string? GetDefinitionExampleTranslation(string example)
+    {
+        var key = $"def_example_{example}";
+        return definitionTranslations.ContainsKey(key) ? definitionTranslations[key] : null;
     }
 
     private async Task LoadTranslationsAsync()
@@ -505,6 +654,7 @@
         definitionResult = null;
         exampleResult = null;
         sentenceTranslations.Clear();
+        definitionTranslations.Clear(); // Clear definition translations
     }
 
     private async Task HandleKeyPress(KeyboardEventArgs e)

@@ -97,6 +97,7 @@
                 var meaning = new DefinitionMeaning
                 {
                     Definition = CleanText(sourceText),
+                    DefinitionLanguage = "en", // Assuming English as source language
                     Translation = CleanText(targetText),
                     Examples = new List<string>()
                 };

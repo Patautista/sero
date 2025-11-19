@@ -86,6 +86,7 @@ namespace Infrastructure.Lookup
                     Meanings = e.Meanings.Select(m => new DefinitionMeaning
                     {
                         Definition = m.Definition,
+                        DefinitionLanguage = "en",
                         Translation = m.Translation,
                         Examples = m.Examples.ToList()
                     }).ToList()

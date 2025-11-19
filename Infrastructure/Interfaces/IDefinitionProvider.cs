@@ -67,7 +67,9 @@ namespace Infrastructure.Interfaces
     public record DefinitionMeaning
     {
         public string Definition { get; set; } = string.Empty;
+        public string DefinitionLanguage { get; set; } = string.Empty;
         public string Translation { get; set; } = string.Empty;
+        public string TranslationLanguage { get; set; } = string.Empty;
         public ICollection<string> Examples { get; set; } = new List<string>();
     }
 

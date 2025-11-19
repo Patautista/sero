@@ -31,6 +31,7 @@ public class NorwegianLanguageService : ILanguageService
         IDefinitionProvider[] providers =
         [
             new DictCcClient(new DictCcConfig { LanguagePair = "enno" }),
+            new OrdbokeneClient(),
             //new CambridgeClient(new CambridgeConfig { LanguagePair = "english-norwegian" }),
         ];
         return providers;
@@ -49,6 +50,7 @@ public class NorwegianLanguageService : ILanguageService
                 DefaultExactSearch = false,
                 DefaultPageSize = 10
             }),
+            new OrdbokeneClient(),
             new CambridgeClient(new CambridgeConfig { LanguagePair = "english-norwegian" })
         ];
         return providers;
