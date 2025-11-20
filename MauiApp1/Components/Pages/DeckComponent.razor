@@ -6,18 +6,40 @@
 @inherits SmartComponent
 
 <div class="deck-container" @onclick="HandleContainerClick">
-    <h1 class="text-3xl font-bold mb-4 text-center text-indigo-700">@deck?.Name</h1>
-    <p class="text-center text-gray-600 mb-6">@deck?.Description</p>
-
-    <div class="flex gap-2 mb-6 justify-center" @onclick:stopPropagation>
-        <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                @onclick="ShowCreateCardModal">
-            <i class="fa fa-plus"></i> Adicionar card
-        </button>
-        <button class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
-                @onclick="ExportDeck">
-            <i class="fa fa-file"></i> Exportar
-        </button>
+    <div class="flex justify-between items-start mb-2">
+        <div class="flex-1">
+            <h1 class="text-3xl font-bold mb-2 text-center text-indigo-700">@deck?.Name</h1>
+            <p class="text-center text-sm text-gray-500 mb-2">
+                @allCards.Count @(allCards.Count == 1 ? "card" : "cards")
+            </p>
+            <p class="text-center text-gray-600 mb-6">@deck?.Description</p>
+        </div>
+        
+        <!-- Cog icon dropdown menu -->
+        <div class="relative" @onclick:stopPropagation>
+            <button class="p-2 text-gray-600 hover:text-indigo-700 hover:bg-gray-100 rounded-full transition-colors"
+                    @onclick="ToggleDropdown">
+                <i class="fa fa-cog text-xl"></i>
+            </button>
+            
+            @if (showDropdown)
+            {
+                <div class="dropdown-menu">
+                    <button class="dropdown-item" @onclick="ShowCreateCardModal">
+                        <i class="fa fa-plus mr-2"></i>
+                        Adicionar card
+                    </button>
+                    <button class="dropdown-item" @onclick="ExportDeck">
+                        <i class="fa fa-file mr-2"></i>
+                        Exportar deck
+                    </button>
+                    <button class="dropdown-item" @onclick="ShowCreateDeckModal">
+                        <i class="fa fa-plus-circle mr-2"></i>
+                        Criar novo deck
+                    </button>
+                </div>
+            }
+        </div>
     </div>
 
     <div class="mb-6 flex flex-col md:flex-row gap-4 justify-center items-center" @onclick:stopPropagation>
@@ -25,7 +47,7 @@
                placeholder="@Translate("Buscar cards...")" @bind="searchTerm" @bind:event="oninput" />
         
         <div class="flex items-center gap-2">
-            <label class="text-gray-700 font-medium">Ordenar por:</label>
+            <label class="text-gray-700 font-medium">Ordenar:</label>
             <select class="px-4 py-2 rounded-lg border border-gray-300 bg-white"
                     @bind="sortOption">
                 <option value="nextReview">Próxima revisão</option>
@@ -97,6 +119,24 @@
     </div>
 }
 
+@if (showCreateDeckModal)
+{
+    <div class="modal-backdrop-custom" @onclick="HideCreateDeckModal"></div>
+    <div class="modal fade show modal-animate" style="display:block;" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" @onclick:stopPropagation>
+                <div class="modal-header">
+                    <h5 class="modal-title"><Translate Text="Criar Novo Deck"></Translate></h5>
+                    <button type="button" class="close" @onclick="HideCreateDeckModal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <MauiApp1.Components.Pages.CreateDeck OnDeckCreated="OnDeckCreatedFromDropdown" OnCancel="HideCreateDeckModal" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 @if (!string.IsNullOrEmpty(exportMessage))
 {
     <div class="fixed bottom-4 right-4 bg-indigo-600 text-white px-4 py-2 rounded shadow-lg z-50">
@@ -113,6 +153,8 @@
     private string searchTerm = "";
     private string sortOption = "nextReview";
     private bool showCreateCardModal = false;
+    private bool showCreateDeckModal = false;
+    private bool showDropdown = false;
     private string exportMessage = "";
     private bool isLoading = true;
     private SrsCard? cardInEditMode = null;
@@ -177,6 +219,11 @@
 
     private void HandleContainerClick()
     {
+        if (showDropdown)
+        {
+            showDropdown = false;
+        }
+
         if (cardInEditMode != null)
         {
             ExitEditMode();
@@ -186,6 +233,12 @@
     private void ExitEditMode()
     {
         cardInEditMode = null;
+        StateHasChanged();
+    }
+
+    private void ToggleDropdown()
+    {
+        showDropdown = !showDropdown;
         StateHasChanged();
     }
 
@@ -240,6 +293,7 @@
 
     private void ShowCreateCardModal()
     {
+        showDropdown = false;
         showCreateCardModal = true;
     }
 
@@ -248,8 +302,27 @@
         showCreateCardModal = false;
     }
 
+    private void ShowCreateDeckModal()
+    {
+        showDropdown = false;
+        showCreateDeckModal = true;
+    }
+
+    private void HideCreateDeckModal()
+    {
+        showCreateDeckModal = false;
+    }
+
+    private async Task OnDeckCreatedFromDropdown(int newDeckId)
+    {
+        HideCreateDeckModal();
+        // Optionally navigate to the new deck or refresh
+        StateHasChanged();
+    }
+
     private async Task ExportDeck()
     {
+        showDropdown = false;
         exportMessage = "";
         deck = await DatabaseService.GetDeckByIdAsync(DeckId);
         if (deck == null || deck.Cards == null || !deck.Cards.Any())
@@ -310,12 +383,50 @@
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         max-width: 1200px;
         margin: auto;
+        position: relative;
     }
     .search-input {
         font-size: 1rem;
     }
     .card-gallery {
         margin-top: 20px;
+    }
+    
+    .dropdown-menu {
+        display: block;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        margin-top: 0.5rem;
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        min-width: 200px;
+        z-index: 1000;
+        overflow: hidden;
+    }
+    
+    .dropdown-item {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background: none;
+        border: none;
+        text-align: left;
+        font-size: 0.875rem;
+        color: #374151;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    
+    .dropdown-item:hover {
+        background-color: #f3f4f6;
+    }
+    
+    .dropdown-item i {
+        color: #6366f1;
     }
 }
 </style>

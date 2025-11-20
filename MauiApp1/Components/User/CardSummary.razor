@@ -7,7 +7,17 @@
      @onpointercancel="HandlePointerCancel"
      @onpointerleave="HandlePointerCancel">
     
-    <!-- Delete Button (visible in edit mode) -->
+    <!-- Edit Button (visible in edit mode, left side) -->
+    @if (_isEditMode && OnEditConfirm.HasDelegate)
+    {
+        <button class="absolute -top-2 -left-2 w-8 h-8 bg-indigo-500 text-white rounded-full shadow-lg hover:bg-indigo-600 transition flex items-center justify-center z-10"
+                @onclick="EnableEditMode"
+                title="Editar cartão">
+            <span class="text-lg leading-none">✏️</span>
+        </button>
+    }
+    
+    <!-- Delete Button (visible in edit mode, right side) -->
     @if (_isEditMode && OnDelete.HasDelegate)
     {
         <button @onclick="OnDeleteClicked" 
@@ -17,16 +27,7 @@
         </button>
     }
 
-    <div class="p-4">
-        @if (_isEditMode && OnEditConfirm.HasDelegate)
-        {
-            <button class="absolute top-2 right-2 text-indigo-600 hover:text-indigo-800 p-2 rounded-lg hover:bg-indigo-50 transition"
-                    @onclick="EnableEditMode"
-                    title="Editar cartão">
-                <span class="text-lg">✏️</span>
-            </button>
-        }
-
+    <div class="p-3">
         @if (!isEditMode)
         {
             <p class="text-sm text-gray-500 mb-2">
@@ -40,16 +41,19 @@
                     <i class="fa fa-play-circle"></i>
                 </button>
             </p>
-            <div class="flex flex-wrap gap-1 mb-2">
-                @foreach (var tag in Card.Tags)
-                {
-                    <span class="badge bg-indigo-200 text-slate-800 px-2 py-1 rounded-full text-xs font-medium">@tag.Name</span>
-                }
-                @if (false)
-                {
-                    <span class="badge bg-green-200 text-green-800 px-2 py-1 rounded-full text-xs font-medium">@Card.DifficultyLevel</span>
-                }
-            </div>
+            @if (Card.Tags.Count() > 0)
+            {
+                <div class="flex flex-wrap gap-1 mb-2">
+                    @foreach (var tag in Card.Tags)
+                    {
+                        <span class="badge bg-indigo-200 text-slate-800 px-2 py-1 rounded-full text-xs font-medium">@tag.Name</span>
+                    }
+                    @if (false)
+                    {
+                        <span class="badge bg-green-200 text-green-800 px-2 py-1 rounded-full text-xs font-medium">@Card.DifficultyLevel</span>
+                    }
+                </div>
+            }
             <div class="text-xs text-gray-600">
                 <p class="mb-1">
                     <span class="font-medium"><Translate Text="Próxima Revisão:"></Translate></span> @Card.NextReview.ToString("MMM dd, yyyy")
