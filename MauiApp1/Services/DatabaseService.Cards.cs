@@ -49,7 +49,7 @@ namespace MauiApp1.Services
 
                 // Count new vs review cards
                 var newCards = cards.Count(c => !c.Events.Any(e => e.Name == nameof(CardAnsweredEvent)));
-                var reviewCards = cards.Count(c => c.Events.Any(e => e.Name == nameof(CardAnsweredEvent)));
+                var reviewCards = cards.Count(c => c.Events.Any(e => e.Name == nameof(CardAnsweredEvent)) && c.UserCardState.NextReview.CompareTo(DateTime.Now) < 0);
 
                 return (newCards, reviewCards);
             }
