@@ -117,7 +117,7 @@ namespace MauiApp1.Services
 
             // Separate new vs review
             var newCards = filtered.Where(c => c.Repetitions == 0).ToList();
-            var reviewCards = filtered.Where(c => c.Repetitions > 0).ToList();
+            var reviewCards = filtered.Where(c => c.Repetitions > 0 && c.NextReview.CompareTo(DateTime.Now) < 0).ToList();
 
             // Session-specific limits
             (int newLimit, int reviewLimit) = sessionMode switch

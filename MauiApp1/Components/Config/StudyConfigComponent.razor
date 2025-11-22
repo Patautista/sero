@@ -57,7 +57,7 @@
     private async Task ApplyStudyConfig()
     {
         // Map dropdown code back to LanguagePair
-        var lang = AvailabilityService.TargetLanguages.FirstOrDefault(l => l == selectedLanguageCode);
+        var lang = AvailabilityService.TargetLanguages.FirstOrDefault(l => l == selectedLanguageCode.Split('-').Skip(1).FirstOrDefault()) ?? AvailableCodes.Italian;
         config.SelectedLanguage = new LanguagePair
         {
             Source = config.SelectedLanguage.Source,
