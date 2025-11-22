@@ -168,6 +168,10 @@
         if (DeckId > 0)
         {
             deck = await DatabaseService.GetOnlyDeckById(DeckId);
+            if (deck.TargetLanguage != TargetLanguageCode)
+            {
+                deck = (await DatabaseService.GetDecksByTargetLanguageAsync(TargetLanguageCode)).First();
+            }
         }
         else
         {

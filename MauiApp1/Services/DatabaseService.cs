@@ -90,6 +90,10 @@ public partial class DatabaseService(MobileDbContext db, ISettingsService settin
     {
         return await db.Decks.OrderBy(d => d.Name).ToListAsync();
     }
+    public async Task<List<DeckTable>> GetDecksByTargetLanguageAsync(string langCode)
+    {
+        return await db.Decks.Where(d => d.TargetLanguage == langCode).OrderBy(d => d.Name).ToListAsync();
+    }
     public async Task<DeckTable?> GetDeckByIdAsync(int deckId)
     {
         return await db.Decks

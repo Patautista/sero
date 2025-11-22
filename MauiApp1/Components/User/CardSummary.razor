@@ -37,6 +37,7 @@
                 <span>@Card.TargetSample.Text</span>
                 <button class="text-indigo-600 hover:text-indigo-800 transition-colors"
                         @onclick="PlayTargetAudio"
+                        @onclick:stopPropagation="true"
                         title="Reproduzir áudio">
                     <i class="fa fa-play-circle"></i>
                 </button>
@@ -54,17 +55,20 @@
                     }
                 </div>
             }
-            <div class="text-xs text-gray-600">
-                <p class="mb-1">
-                    <span class="font-medium"><Translate Text="Próxima Revisão:"></Translate></span> @Card.NextReview.ToString("MMM dd, yyyy")
-                </p>
-                @if (Card.LastReviewed != DateTime.MinValue)
-                {
-                    <p>
-                        <span class="font-medium"><Translate Text="Última Revisão:"></Translate></span> @Card.LastReviewed.ToString("MMM dd, yyyy")
+            @if (_isDetailMode)
+            {
+                <div class="text-xs text-gray-600">
+                    <p class="mb-1">
+                        <span class="font-medium"><Translate Text="Próxima Revisão:"></Translate></span> @Card.NextReview.ToString("MMM dd, yyyy")
                     </p>
-                }
-            </div>
+                    @if (Card.LastReviewed != DateTime.MinValue)
+                    {
+                        <p>
+                            <span class="font-medium"><Translate Text="Última Revisão:"></Translate></span> @Card.LastReviewed.ToString("MMM dd, yyyy")
+                        </p>
+                    }
+                </div>
+            }
         }
         else
         {
@@ -126,6 +130,7 @@
 
     private bool isEditMode = false;
     private bool _isEditMode => IsEditMode;
+    private bool _isDetailMode = false;
     private CardDefinition editModel = new();
     private string tagsInput = "";
 
@@ -154,6 +159,13 @@
     {
         _longPressTimer?.Dispose();
         _longPressTimer = null;
+        
+        // Toggle detail mode on tap (only if not in edit mode and long press wasn't triggered)
+        if (!IsEditMode && !_isLongPressTriggered)
+        {
+            _isDetailMode = !_isDetailMode;
+            StateHasChanged();
+        }
     }
 
     private void HandlePointerCancel()
