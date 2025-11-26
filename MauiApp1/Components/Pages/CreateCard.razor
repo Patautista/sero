@@ -6,6 +6,7 @@
 @using Business.Model
 @using Infrastructure.Data.Model
 @using MauiApp1.Services
+@using MauiApp1.Components.Shared
 @inject IJSRuntime JS
 @inject ISettingsService SettingsService
 @inject ApiService ApiService
@@ -59,14 +60,13 @@
         <label class="block text-sm font-medium text-gray-700 mb-2">
             Frase em @(primaryLanguage == LanguageDetected.Target ? TargetLanguage?.DisplayName : Nativelanguage?.DisplayName)
         </label>
-        <textarea @bind="primarySentence"
-                  @oninput="@(e => AutoResize(e, "primarySentenceArea"))"
-                  id="primarySentenceArea"
-                  class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 @(showValidation && string.IsNullOrWhiteSpace(primarySentence) ? "border-red-500" : "")"
-                  placeholder="Insira a frase"
-                  rows="1"
-                  maxlength="80"
-                  style="overflow:hidden;resize:none;height:@PrimaryTextAreaHeight"></textarea>
+        <AutoResizeTextArea Value="@primarySentence"
+                           ValueChanged="@((string val) => { primarySentence = val; StateHasChanged(); })"
+                           Id="primarySentenceArea"
+                           CssClass="@GetPrimarySentenceCssClass()"
+                           Placeholder="Insira a frase"
+                           MinRows="1"
+                           MaxLength="80" />
         <div class="flex justify-between items-center mt-1">
             @if (showValidation && string.IsNullOrWhiteSpace(primarySentence))
             {
@@ -97,16 +97,14 @@
     <div class="mt-4">
         <label class="block text-sm font-medium text-gray-700 mb-2">@Translate("Tradução para") @(primaryLanguage == LanguageDetected.Target ? Nativelanguage?.DisplayName : TargetLanguage?.DisplayName)</label>
         <LoadingText IsLoading="@isTranslating" Lines="2">
-            <textarea @bind="translatedSentence"
-                      @oninput="@(e => AutoResize(e, "translatedSentenceArea"))"
-                      id="translatedSentenceArea"
-                      class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 @(showValidation && string.IsNullOrWhiteSpace(translatedSentence) ? "border-red-500" : "")"
-                      placeholder="@Translate("Tradução")"
-                      rows="1"
-                      maxlength="80"
-                      style="overflow:hidden;resize:none;height:@TranslatedTextAreaHeight"
-                      disabled="@isTranslating">
-            </textarea>
+            <AutoResizeTextArea Value="@translatedSentence"
+                   ValueChanged="@((string val) => { translatedSentence = val; StateHasChanged(); })"
+                   Id="translatedSentenceArea"
+                   CssClass="@GetTranslatedSentenceCssClass()"
+                   Placeholder="@Translate("Tradução")"
+                   MinRows="1"
+                   MaxLength="80"
+                   Disabled="@isTranslating" />
         </LoadingText>
         <div class="flex justify-between items-center mt-1">
             @if (showValidation && string.IsNullOrWhiteSpace(translatedSentence))
@@ -460,27 +458,13 @@
             Navigation.NavigateTo($"{Routes.DecksView}");
         }
     }
-    private async Task AutoResize(ChangeEventArgs e, string id)
-    {
-        await JS.InvokeVoidAsync("autoResizeTextArea", id);
-    }
 
     private void ToggleTag(Tag tag, bool isChecked)
     {
         if (isChecked) selectedTags.Add(tag);
         else selectedTags.Remove(tag);
     }
-    private string PrimaryTextAreaHeight
-    {
-        get
-        {
-            if (string.IsNullOrEmpty(primarySentence))
-                return "2.5em";
-            var lines = primarySentence.Split('\n').Length;
-            int approxLines = lines + (int)Math.Ceiling(primarySentence.Length / 60D);
-            return $"{Math.Max(approxLines * 2.5, 2.5)}em".Replace(",", ".");
-        }
-    }
+
     protected override async Task OnDeckChanged(int deckId)
     {
         SelectedDeckId = deckId;
@@ -488,25 +472,14 @@
         await base.OnDeckChanged(deckId);
         this.OnParametersSet();
     }
-    private string TranslatedTextAreaHeight
+
+    private string GetPrimarySentenceCssClass()
     {
-        get
-        {
-            if (string.IsNullOrEmpty(translatedSentence))
-                return "2.5em";
-            var lines = translatedSentence.Split('\n').Length;
-            int approxLines = lines + (int)Math.Ceiling(translatedSentence.Length / 60D);
-            return $"{Math.Max(approxLines * 2.5, 2.5)}em".Replace(",", ".");
-        }
+        return $"w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500{(showValidation && string.IsNullOrWhiteSpace(primarySentence) ? " border-red-500" : "")}";
+    }
+
+    private string GetTranslatedSentenceCssClass()
+    {
+        return $"w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500{(showValidation && string.IsNullOrWhiteSpace(translatedSentence) ? " border-red-500" : "")}";
     }
 }
-
-<script>
-  window.autoResizeTextArea = (id) => {
-    var el = document.getElementById(id);
-    if (el) {
-      el.style.height = 'auto';
-      el.style.height = (el.scrollHeight) + 'px';
-    }
-  }
-</script>

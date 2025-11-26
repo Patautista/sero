@@ -1,0 +1,97 @@
+@* Auto-resizing textarea component *@
+
+<textarea @bind="value"
+          @oninput="@(e => { value = e.Value?.ToString() ?? ""; OnValueChanged(); })"
+          @onfocus="OnFocus"
+          @onblur="OnBlur"
+          id="@Id"
+          class="@CssClass"
+          placeholder="@Placeholder"
+          rows="@MinRows"
+          maxlength="@MaxLength"
+          disabled="@Disabled"
+          style="overflow:hidden;resize:none;height:@CalculatedHeight"></textarea>
+
+@code {
+    private string value = "";
+
+    [Parameter]
+    public string Value
+    {
+        get => value;
+        set
+        {
+            if (this.value != value)
+            {
+                this.value = value;
+            }
+        }
+    }
+
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+
+    [Parameter]
+    public string Id { get; set; } = Guid.NewGuid().ToString();
+
+    [Parameter]
+    public string CssClass { get; set; } = "w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500";
+
+    [Parameter]
+    public string Placeholder { get; set; } = "";
+
+    [Parameter]
+    public int MinRows { get; set; } = 1;
+
+    [Parameter]
+    public int MaxLength { get; set; } = 80;
+
+    [Parameter]
+    public bool Disabled { get; set; } = false;
+
+    [Parameter]
+    public EventCallback OnFocusChanged { get; set; }
+
+    [Parameter]
+    public double CharsPerLine { get; set; } = 60.0;
+
+    private const double BaseLineHeightEm = 2.5;
+
+    private string CalculatedHeight
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(value))
+                return $"{BaseLineHeightEm}em".Replace(",", ".");
+            
+            var lines = value.Split('\n').Length;
+            int approxLines = lines + (int)Math.Ceiling(value.Length / CharsPerLine);
+            return $"{Math.Max(approxLines * BaseLineHeightEm, BaseLineHeightEm)}em".Replace(",", ".");
+        }
+    }
+
+    private async Task OnValueChanged()
+    {
+        if (ValueChanged.HasDelegate)
+        {
+            await ValueChanged.InvokeAsync(value);
+        }
+        StateHasChanged();
+    }
+
+    private async Task OnFocus()
+    {
+        if (OnFocusChanged.HasDelegate)
+        {
+            await OnFocusChanged.InvokeAsync();
+        }
+    }
+
+    private async Task OnBlur()
+    {
+        if (OnFocusChanged.HasDelegate)
+        {
+            await OnFocusChanged.InvokeAsync();
+        }
+    }
+}

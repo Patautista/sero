@@ -6,6 +6,7 @@
 @using Domain.Events
 @using MauiApp1.Services
 @using MauiApp1.Services.Audio
+@using MauiApp1.Components.Shared
 @inject Business.AnswerEvaluator AnswerEvaluator
 @inherits SmartComponent
 @inject ApiService ApiService
@@ -37,7 +38,15 @@
         </div>
 
         <p class="w-fit mb-5 mt-3 text-gray-950 animated-underline boss-underline">@BossSrsCard.NativeSample.Text</p>
-        <input class="w-full form-control mb-2 p-3 rounded-lg border border-red-300 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all" @bind="_challengeState.UserAnswer" placeholder="Resposta do Boss" @onfocus="() => isInputFocused = true" @onblur="() => isInputFocused = false" />
+        
+        <AutoResizeTextArea Value="@_challengeState.UserAnswer"
+                           ValueChanged="@((string val) => { _challengeState.UserAnswer = val; StateHasChanged(); })"
+                           CssClass="w-full form-control mb-2 p-2 rounded-lg border border-red-300 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all"
+                           Placeholder="Resposta do Boss"
+                           OnFocusChanged="ToggleFocusState"
+                           MinRows="1"
+                           MaxLength="200"
+                           CharsPerLine="50.0" />
 
         <div class="card-buttons transition-all duration-300 ease-in-out">
             <div class="flex justify-between">
@@ -141,6 +150,12 @@
         BossSrsCard = await Database.CreateCard(BossCardDefinition, deckId);
 
         isLoadingBossChallenge = false;
+        StateHasChanged();
+    }
+
+    private void ToggleFocusState()
+    {
+        isInputFocused = !isInputFocused;
         StateHasChanged();
     }
 
