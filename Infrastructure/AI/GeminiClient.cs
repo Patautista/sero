@@ -39,6 +39,10 @@ namespace Infrastructure.AI
                     new { text = prompt }
                 }
             }
+        },
+        generationConfig = new
+        {
+            responseMimeType = "application/json"
         }
             };
 
