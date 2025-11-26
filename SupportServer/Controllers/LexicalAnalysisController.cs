@@ -1,6 +1,7 @@
 using Infrastructure.AI;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace SupportServer.Controllers
@@ -85,7 +86,28 @@ Input Language: {language}";
             if (string.IsNullOrWhiteSpace(response))
                 return StatusCode(500, "Failed to generate lexical analysis.");
 
-            return Ok(response);
+            try
+            {
+                // Deserialize the LLM response to ensure it's valid JSON
+                var analysisResponse = JsonSerializer.Deserialize<LexicalAnalysisResponse>(response, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                if (analysisResponse == null || analysisResponse.Items == null)
+                {
+                    return StatusCode(500, "Invalid response format from AI.");
+                }
+
+                // Return the structured object
+                return Ok(analysisResponse);
+            }
+            catch (JsonException ex)
+            {
+                Console.WriteLine($"JSON deserialization error: {ex.Message}");
+                Console.WriteLine($"Response was: {response}");
+                return StatusCode(500, "Failed to parse AI response.");
+            }
         }
     }
 }

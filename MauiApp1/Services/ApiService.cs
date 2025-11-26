@@ -221,8 +221,8 @@ namespace MauiApp1.Services
                     return null;
                 }
 
-                var jsonResponse = await response.Content.ReadAsStringAsync();
-                var analysisResponse = JsonSerializer.Deserialize<LexicalAnalysisResponse>(jsonResponse);
+                // Directly deserialize from JSON response
+                var analysisResponse = await response.Content.ReadFromJsonAsync<LexicalAnalysisResponse>();
                 return analysisResponse;
             }
             catch (Exception ex)
