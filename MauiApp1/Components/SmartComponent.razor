@@ -99,7 +99,7 @@
     protected CultureInfo TargetLanguage => SettingsService?.StudyConfig?.Value?.SelectedLanguage?.Target;
     protected string TargetLanguageCode => TargetLanguage.TwoLetterISOLanguageName;
     protected ILanguageService TargetLanguageService => LanguageServiceFactory.GetLanguageService(TargetLanguageCode);
-    protected async Task<List<VocabularyService.Word>> GetTargetVocabularyAsync()
+    protected async Task<List<VocabularyService.Token>> GetTargetVocabularyAsync()
     {
         var allSentences = await Database.GetAllForeignSentencesAsync(TargetLanguageCode);
         var vocabWords = await VocabularyService.GetVocabWordsWithTagAsync(allSentences);

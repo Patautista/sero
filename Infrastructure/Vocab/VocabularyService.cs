@@ -89,13 +89,14 @@ public class VocabularyService
         return posVocab.ToDictionary(kv => kv.Key, kv => kv.Value.Count);
     }
 
-    public class Word
+    public class Token
     {
         public string Text { get; set; } = string.Empty;
+        public string Lemma { get; set; } = string.Empty;
         public string PartOfSpeech { get; set; } = string.Empty;
     }
 
-    public async Task<List<Word>> GetVocabWordsWithTagAsync(IEnumerable<string> texts)
+    public async Task<List<Token>> GetVocabWordsWithTagAsync(IEnumerable<string> texts)
     {
         var language = EnsureLanguageModel();
         
@@ -105,7 +106,7 @@ public class VocabularyService
         var doc = new Document(combinedText, language);
         nlp.ProcessSingle(doc);
 
-        var words = new List<Word>();
+        var words = new List<Token>();
 
         var seen = new HashSet<(string, string)>();
 
@@ -122,9 +123,10 @@ public class VocabularyService
                 // Avoid duplicates (word + pos)
                 if (seen.Add((wordText, pos)))
                 {
-                    words.Add(new Word
+                    words.Add(new Token
                     {
                         Text = wordText,
+                        Lemma = token.Lemma,
                         PartOfSpeech = pos
                     });
                 }
