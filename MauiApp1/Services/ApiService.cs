@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace MauiApp1.Services
@@ -201,5 +202,52 @@ namespace MauiApp1.Services
             
             return isAlive;
         }
+
+        public async Task<LexicalAnalysisResponse?> GetLexicalAnalysisAsync(string text, string languageCode)
+        {
+            try
+            {
+                var request = new
+                {
+                    Text = text,
+                    Language = languageCode
+                };
+
+                var response = await _httpClient.PostAsJsonAsync("/api/LexicalAnalysis/analyze", request);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"Lexical Analysis API error: {response.StatusCode}");
+                    return null;
+                }
+
+                var jsonResponse = await response.Content.ReadAsStringAsync();
+                var analysisResponse = JsonSerializer.Deserialize<LexicalAnalysisResponse>(jsonResponse);
+                return analysisResponse;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error during lexical analysis: {ex.Message}");
+                return null;
+            }
+        }
+    }
+
+    public class LexicalChunk
+    {
+        [JsonPropertyName("chunk")]
+        public string Chunk { get; set; } = string.Empty;
+
+        [JsonPropertyName("translation")]
+        public string Translation { get; set; } = string.Empty;
+
+        [JsonPropertyName("note")]
+        public string Note { get; set; } = string.Empty;
+    }
+
+    public class LexicalAnalysisResponse
+    {
+        [JsonPropertyName("items")]
+        public List<LexicalChunk> Items { get; set; } = new();
     }
 }

@@ -16,5 +16,6 @@ namespace MauiApp1
         public static string DecksView = "decks"; // Added route for deck visualization
         public static string Explore = "explore"; // Added route for WikiCarousel
         public static string Search = "search"; // Added route for WordSearch
+        public static string Analysis = "analysis"; // Added route for text analysis
     }
 }

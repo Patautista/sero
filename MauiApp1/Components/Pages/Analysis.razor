@@ -1,0 +1,381 @@
+@page "/analysis"
+@page "/analysis/{EncodedText}"
+@page "/analysis/{EncodedText}/{EncodedTranslation}"
+@using System.Globalization
+@using Business.Interfaces
+@using Infrastructure.Interfaces
+@using Infrastructure.Services
+@using Infrastructure.Vocab
+@using MauiApp1.Services
+@using MauiApp1.Components.Shared
+@inject IJSRuntime JS
+@inject ISettingsService SettingsService
+@inject ApiService ApiService
+@inject NavigationManager Navigation
+@inherits SmartComponent
+
+<div class="card-creation-container p-6 bg-white rounded-lg shadow-lg max-w-2xl mx-auto mb-4">
+    <h2 class="text-2xl font-bold mb-6 text-indigo-700"><Translate Text="Análise de Texto"></Translate></h2>
+
+    <!-- Input Section -->
+    @if (string.IsNullOrWhiteSpace(analysisText))
+    {
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+                <Translate Text="Texto para análise"></Translate>
+            </label>
+            <AutoResizeTextArea Value="@inputText"
+                               ValueChanged="@((string val) => { inputText = val; StateHasChanged(); })"
+                               Id="analysisInput"
+                               CssClass="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+                               Placeholder="@Translate("Digite ou cole o texto em " + TargetLanguage?.DisplayName)"
+                               MinRows="3"
+                               MaxLength="500" />
+        </div>
+        
+        <div class="flex justify-center mb-4">
+            <ButtonPrimary OnClick="StartAnalysis" Disabled="@string.IsNullOrWhiteSpace(inputText)">
+                <i class="fa fa-search me-2"></i>
+                <Translate Text="Analisar"></Translate>
+            </ButtonPrimary>
+        </div>
+    }
+    else
+    {
+        <!-- Definition Display Area -->
+        @if (selectedChunk != null && !string.IsNullOrWhiteSpace(selectedChunk.Chunk))
+        {
+            <div class="mb-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h4 class="text-lg font-semibold text-blue-800">@selectedChunk.Chunk</h4>
+                    <button type="button" class="btn-close btn-sm" @onclick="ClearDefinition"></button>
+                </div>
+                
+                @if (!string.IsNullOrWhiteSpace(selectedChunk.Translation))
+                {
+                    <div class="mb-2">
+                        <span class="text-success fw-bold">?? @selectedChunk.Translation</span>
+                    </div>
+                }
+                
+                @if (!string.IsNullOrWhiteSpace(selectedChunk.Note))
+                {
+                    <div class="mb-2 p-2 bg-white rounded border border-blue-100">
+                        <small class="text-muted">?? @selectedChunk.Note</small>
+                    </div>
+                }
+                
+                @if (string.IsNullOrWhiteSpace(selectedChunk.Translation) && string.IsNullOrWhiteSpace(selectedChunk.Note))
+                {
+                    <p class="text-muted small mb-0"><Translate Text="Sem informações adicionais"></Translate></p>
+                }
+            </div>
+        }
+
+        <!-- Main Sentence with Word Blocks -->
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+                <Translate Text="Texto em"></Translate> @TargetLanguage?.DisplayName
+            </label>
+            <div class="p-4 bg-gray-50 rounded-lg border border-gray-300">
+                @if (isAnalyzing)
+                {
+                    <div class="text-center py-4">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden"><Translate Text="Analisando..." /></span>
+                        </div>
+                    </div>
+                }
+                else if (lexicalChunks != null && lexicalChunks.Any())
+                {
+                    <div class="flex flex-wrap gap-2">
+                        @foreach (var chunk in lexicalChunks)
+                        {
+                            <span @onclick="() => OnChunkClick(chunk)" 
+                                  class="@GetChunkBlockClass(chunk)"
+                                  style="cursor: pointer; display: inline-block;">
+                                @chunk.Chunk
+                            </span>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-lg">@analysisText</p>
+                }
+            </div>
+        </div>
+
+        <!-- Translation -->
+        @if (IsApiLive && !string.IsNullOrWhiteSpace(translatedText))
+        {
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    <Translate Text="Tradução para"></Translate> @Nativelanguage?.DisplayName
+                </label>
+                <div class="p-4 bg-gray-50 rounded-lg border border-gray-300">
+                    <p class="text-lg">@translatedText</p>
+                </div>
+            </div>
+        }
+        else if (IsApiLive && isTranslating)
+        {
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    <Translate Text="Tradução para"></Translate> @Nativelanguage?.DisplayName
+                </label>
+                <div class="p-4 bg-gray-50 rounded-lg border border-gray-300">
+                    <div class="text-center py-2">
+                        <div class="spinner-border spinner-border-sm" role="status">
+                            <span class="visually-hidden"><Translate Text="Traduzindo..." /></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- Action Buttons -->
+        <div class="mt-6 flex gap-2">
+            <button @onclick="AddToDeck"
+                    class="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                <i class="fa fa-plus me-2"></i>
+                <Translate Text="Adicionar ao Deck"></Translate>
+            </button>
+            <button @onclick="Reset"
+                    class="flex-1 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">
+                <i class="fa fa-refresh me-2"></i>
+                <Translate Text="Novo Texto"></Translate>
+            </button>
+        </div>
+
+        <!-- Chunk Statistics -->
+        @if (lexicalChunks != null && lexicalChunks.Any())
+        {
+            <div class="mt-4 p-3 bg-indigo-50 rounded-lg">
+                <small class="text-gray-600">
+                    <i class="fa fa-info-circle me-1"></i>
+                    <Translate Text="Total de chunks"></Translate>: @lexicalChunks.Count
+                    @if (lexicalChunks.Count(c => !string.IsNullOrWhiteSpace(c.Note)) > 0)
+                    {
+                        <span class="ms-2">
+                            | <Translate Text="Com notas"></Translate>: @lexicalChunks.Count(c => !string.IsNullOrWhiteSpace(c.Note))
+                        </span>
+                    }
+                </small>
+            </div>
+        }
+
+        @if (!IsApiLive)
+        {
+            <div class="mt-4 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                <small class="text-yellow-800">
+                    <i class="fa fa-exclamation-triangle me-1"></i>
+                    <Translate Text="API offline - recursos limitados"></Translate>
+                </small>
+            </div>
+        }
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string? EncodedText { get; set; }
+
+    [Parameter]
+    public string? EncodedTranslation { get; set; }
+
+    private string inputText = string.Empty;
+    private string analysisText = string.Empty;
+    private string translatedText = string.Empty;
+    private List<LexicalChunk>? lexicalChunks;
+    
+    private LexicalChunk? selectedChunk;
+    private bool isAnalyzing = false;
+    private bool isTranslating = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        // If text is provided via URL parameter, use it
+        if (!string.IsNullOrWhiteSpace(EncodedText))
+        {
+            analysisText = Uri.UnescapeDataString(EncodedText);
+            inputText = analysisText;
+            await AnalyzeText();
+            
+            // If translation is provided, use it
+            if (!string.IsNullOrWhiteSpace(EncodedTranslation))
+            {
+                translatedText = Uri.UnescapeDataString(EncodedTranslation);
+            }
+            else if (IsApiLive)
+            {
+                await TranslateText();
+            }
+        }
+    }
+
+    private async Task StartAnalysis()
+    {
+        if (string.IsNullOrWhiteSpace(inputText))
+            return;
+
+        analysisText = inputText;
+        await AnalyzeText();
+
+        if (IsApiLive)
+        {
+            await TranslateText();
+        }
+    }
+
+    private async Task AnalyzeText()
+    {
+        isAnalyzing = true;
+        lexicalChunks = null;
+        selectedChunk = null;
+        StateHasChanged();
+
+        try
+        {
+            // Check if API is available first
+            var isApiAvailable = await ApiService.IsAvailable();
+            
+            if (isApiAvailable)
+            {
+                // Use LexicalAnalysisController via ApiService
+                var response = await ApiService.GetLexicalAnalysisAsync(analysisText, TargetLanguageCode);
+                
+                if (response != null && response.Items != null && response.Items.Any())
+                {
+                    lexicalChunks = response.Items;
+                }
+                else
+                {
+                    // Fallback to basic split if API returns empty
+                    FallbackToBasicSplit();
+                }
+            }
+            else
+            {
+                // API is offline, use basic split
+                FallbackToBasicSplit();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error analyzing text: {ex.Message}");
+            // Fallback: split by spaces if analysis fails
+            FallbackToBasicSplit();
+        }
+        finally
+        {
+            isAnalyzing = false;
+            StateHasChanged();
+        }
+    }
+
+    private void FallbackToBasicSplit()
+    {
+        lexicalChunks = analysisText
+            .Split(new[] { ' ', '.', ',', ';', ':', '-', '!', '?', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)
+            .Select(w => new LexicalChunk 
+            { 
+                Chunk = w, 
+                Translation = string.Empty,
+                Note = string.Empty
+            })
+            .ToList();
+    }
+
+    private async Task TranslateText()
+    {
+        if (string.IsNullOrWhiteSpace(analysisText))
+            return;
+
+        isTranslating = true;
+        StateHasChanged();
+
+        try
+        {
+            translatedText = await ApiService.GetTranslationAsync(
+                analysisText, 
+                TargetLanguageCode, 
+                NativeLanguageCode
+            );
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error translating text: {ex.Message}");
+            translatedText = string.Empty;
+        }
+        finally
+        {
+            isTranslating = false;
+            StateHasChanged();
+        }
+    }
+
+    private void OnChunkClick(LexicalChunk chunk)
+    {
+        if (chunk == null)
+            return;
+
+        selectedChunk = chunk;
+        StateHasChanged();
+    }
+
+    private void ClearDefinition()
+    {
+        selectedChunk = null;
+    }
+
+    private string GetChunkBlockClass(LexicalChunk chunk)
+    {
+        var baseClasses = "px-2 py-1 rounded transition-all";
+        
+        if (selectedChunk != null && selectedChunk.Chunk == chunk.Chunk)
+        {
+            return $"{baseClasses} bg-indigo-600 text-white font-semibold shadow";
+        }
+        
+        // Highlight chunks with notes differently
+        if (!string.IsNullOrWhiteSpace(chunk.Note))
+        {
+            return $"{baseClasses} bg-yellow-100 border border-yellow-400 hover:bg-yellow-200 hover:border-yellow-500";
+        }
+        
+        return $"{baseClasses} bg-white border border-gray-300 hover:bg-indigo-100 hover:border-indigo-400";
+    }
+
+    private void AddToDeck()
+    {
+        if (string.IsNullOrWhiteSpace(analysisText))
+            return;
+
+        var encodedSource = Uri.EscapeDataString(analysisText);
+        string navigationUrl;
+        
+        if (!string.IsNullOrWhiteSpace(translatedText))
+        {
+            var encodedTranslation = Uri.EscapeDataString(translatedText);
+            navigationUrl = $"/create-card/{encodedSource}/{encodedTranslation}?redirect=/analysis";
+        }
+        else
+        {
+            navigationUrl = $"/create-card/{encodedSource}?redirect=/analysis";
+        }
+        
+        Navigation.NavigateTo(navigationUrl);
+    }
+
+    private void Reset()
+    {
+        inputText = string.Empty;
+        analysisText = string.Empty;
+        translatedText = string.Empty;
+        lexicalChunks = null;
+        selectedChunk = null;
+    }
+}
