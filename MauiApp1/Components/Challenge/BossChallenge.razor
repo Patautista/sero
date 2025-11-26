@@ -28,14 +28,14 @@
                     </div>
                 }
             </div>
-
-            @if (BossSrsCard.Repetitions == 0)
-            {
-                <div class="exp-badge boss-exp">
-                    +@_challengeState.ExpEarned EXP
-                </div>
-            }
         </div>
+
+        @if (BossSrsCard.Repetitions == 0 && !isInputFocused)
+        {
+            <div class="exp-badge boss-exp transition-all duration-300 ease-in-out">
+                +@_challengeState.ExpEarned EXP
+            </div>
+        }
 
         <p class="w-fit mb-5 mt-3 text-gray-950 animated-underline boss-underline">@BossSrsCard.NativeSample.Text</p>
         

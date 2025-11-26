@@ -21,17 +21,17 @@
             </div>
         }
     </div>
-
-    <!-- Resposta para card novo -->
-    @if (CurrentCard.Repetitions == 0)
-    {
-        <div class="bg-sky-100 border-l-4 border-sky-500 text-sky-800 p-3 rounded-lg shadow-md mb-4" role="alert">
-            <p class="mb-0 text-sm font-medium">
-                Novo card! Resposta: <strong class="font-semibold">@CurrentCard.TargetSample.Text</strong>
-            </p>
-        </div>
-    }
 </div>
+
+<!-- Resposta para card novo -->
+@if (CurrentCard.Repetitions == 0 && !isInputFocused)
+{
+    <div class="bg-sky-100 border-l-4 border-sky-500 text-sky-800 p-3 rounded-lg shadow-md mb-4 transition-all duration-300 ease-in-out" role="alert">
+        <p class="mb-0 text-sm font-medium">
+            Novo card! Resposta: <strong class="font-semibold">@CurrentCard.TargetSample.Text</strong>
+        </p>
+    </div>
+}
 
 <!-- Botão para reproduzir áudio -->
 <div class="w-full flex justify-center mb-5 mt-3">
