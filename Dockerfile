@@ -12,7 +12,7 @@ WORKDIR /src
 
 # Copy csproj files for restore
 COPY ["SupportServer/SupportServer.csproj", "SupportServer/"]
-COPY ["Application/Business.csproj", "Application/"]
+COPY ["Business/Business.csproj", "Application/"]
 COPY ["Domain/Domain.csproj", "Domain/"]
 COPY ["AnkiNet/AnkiNet.csproj", "AnkiNet/"]
 COPY ["Infrastructure/Infrastructure.csproj", "Infrastructure/"]
