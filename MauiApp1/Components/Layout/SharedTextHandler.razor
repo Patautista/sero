@@ -12,16 +12,12 @@
 
     private async void OnTextReceived(object? sender, string text)
     {
-        // Get the first available deck or let user select later
-        var decks = await DatabaseService.GetAllDecksAsync();
-        var firstDeck = decks.FirstOrDefault();
-        
         var encodedText = Uri.EscapeDataString(text);
         
-        // Navigate to create card page with the shared text
+        // Navigate to selection page where user can choose to analyze or create card
         await MainThread.InvokeOnMainThreadAsync(() =>
         {
-            Navigation.NavigateTo($"{Routes.CreateCard}/{encodedText}");
+            Navigation.NavigateTo($"/shared-text-select/{encodedText}");
         });
     }
 
