@@ -22,8 +22,9 @@ namespace MauiApp1.Services
         private readonly MobileTranslationCache _translationCache;
         private readonly ISettingsService _settingsService;
         private readonly ApiStatusCache _statusCache;
+        private readonly LexicalAnalysisCache _lexicalAnalysisCache;
 
-        public ApiService(HttpClient httpClient, ISettingsService settingsService, MobileTranslationCache translationCache, ApiStatusCache statusCache)
+        public ApiService(HttpClient httpClient, ISettingsService settingsService, MobileTranslationCache translationCache, ApiStatusCache statusCache, LexicalAnalysisCache lexicalAnalysisCache)
         {
             try
             {
@@ -37,6 +38,7 @@ namespace MauiApp1.Services
                 _translationCache = translationCache;
                 _settingsService = settingsService;
                 _statusCache = statusCache;
+                _lexicalAnalysisCache = lexicalAnalysisCache;
             }
             catch
             {
@@ -207,6 +209,15 @@ namespace MauiApp1.Services
         {
             try
             {
+                // 1. Try cache first
+                var cached = await _lexicalAnalysisCache.GetAsync(text, languageCode);
+                if (cached != null)
+                {
+                    Console.WriteLine("Lexical analysis retrieved from cache");
+                    return cached;
+                }
+
+                // 2. Cache miss - call API
                 var request = new
                 {
                     Text = text,
@@ -221,8 +232,16 @@ namespace MauiApp1.Services
                     return null;
                 }
 
-                // Directly deserialize from JSON response
+                // 3. Deserialize from JSON response
                 var analysisResponse = await response.Content.ReadFromJsonAsync<LexicalAnalysisResponse>();
+                
+                if (analysisResponse != null)
+                {
+                    // 4. Cache the result
+                    await _lexicalAnalysisCache.SetAsync(text, languageCode, analysisResponse);
+                    Console.WriteLine("Lexical analysis cached successfully");
+                }
+
                 return analysisResponse;
             }
             catch (Exception ex)

@@ -1,1 +1,1 @@
-dotnet publish -f net8.0-android -c Release -p:TrimMode=partial -p:NoWarn=true -p:RunAOTCompilation=false
+dotnet publish -f net8.0-android -c Release -p:NoWarn=true -p:TrimMode=partial -p:RunAOTCompilation=false

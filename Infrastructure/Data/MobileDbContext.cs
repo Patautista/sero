@@ -22,6 +22,7 @@ namespace Infrastructure.Data
         public DbSet<SentenceTable> Sentences { get; set; }
         public DbSet<TagTable> Tags { get; set; }
         public DbSet<MeaningTable> Meanings { get; set; }
+        public DbSet<LexicalAnalysisTable> LexicalAnalyses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -45,6 +46,15 @@ namespace Infrastructure.Data
                 e.Property(t => t.Name).HasMaxLength(128).IsRequired();
                 e.Property(t => t.Type).HasMaxLength(64).IsRequired();
                 e.HasIndex(t => t.Name).IsUnique(); // optional but nice
+            });
+
+            // LexicalAnalysis configuration
+            modelBuilder.Entity<LexicalAnalysisTable>(e =>
+            {
+                e.HasKey(l => l.Id);
+                e.HasIndex(l => new { l.NormalizedText, l.LanguageCode }).IsUnique();
+                e.Property(l => l.NormalizedText).HasMaxLength(512).IsRequired();
+                e.Property(l => l.LanguageCode).HasMaxLength(10).IsRequired();
             });
 
             modelBuilder.Entity<EventTable>()

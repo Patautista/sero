@@ -2,11 +2,8 @@
 @using Business.Interfaces
 @using Business.MobileConfig
 @using RssFeedWidgetModel = Business.MobileConfig.RssFeedWidget
-@using System.Net.Http
-@using System.Xml.Linq
 @using System.Globalization
 @inject ISettingsService SettingsService
-@inject MauiApp1.Services.LanguageDetectionService LanguageDetector
 @inject HttpClient Http
 @inherits SmartComponent
 
@@ -96,22 +93,9 @@
                                max="20"
                                class="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
                     </div>
-                    @if (_isDetectingLanguage)
-                    {
-                        <div class="text-sm text-indigo-600">
-                            🔍 Detectando idioma do feed...
-                        </div>
-                    }
-                    else if (!string.IsNullOrEmpty(_detectedLanguageMessage))
-                    {
-                        <div class="text-sm text-green-600">
-                            ✓ @_detectedLanguageMessage
-                        </div>
-                    }
                     <div class="flex gap-2 pt-3">
                         <button @onclick="AddWidget"
-                                class="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
-                                disabled="@_isDetectingLanguage">
+                                class="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
                             Adicionar
                         </button>
                         <button @onclick="CancelAdd"
@@ -193,23 +177,15 @@
     private string _newWidgetTitle = string.Empty;
     private string _newWidgetUrl = string.Empty;
     private int _newWidgetMaxItems = 5;
-    private bool _isDetectingLanguage = false;
-    private string _detectedLanguageMessage = string.Empty;
-    private string? _detectedLanguageCode = null;
 
     // Language filtering
     private string _selectedLanguageFilter = string.Empty;
-    private string _globalLanguageFilter = string.Empty;
     private Dictionary<string, string> _availableLanguages = new();
     private Dictionary<string, int> _languageCounts = new();
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        
-        // Get global language filter from settings
-        var config = SettingsService.StudyConfig.Value;
-        _globalLanguageFilter = config?.SelectedTargetLanguageFilter ?? string.Empty;
         
         LoadWidgets();
         UpdateLanguageFilter();
@@ -234,9 +210,7 @@
         _languageCounts.Clear();
 
         // Only show widgets matching global filter (if set)
-        var widgetsToConsider = string.IsNullOrEmpty(_globalLanguageFilter)
-            ? _widgets
-            : _widgets.Where(w => w.LanguageCode == _globalLanguageFilter).ToList();
+        var widgetsToConsider = _widgets.Where(w => w.LanguageCode == TargetLanguageCode).ToList();
 
         foreach (var widget in widgetsToConsider)
         {
@@ -254,22 +228,7 @@
 
     private void ApplyLanguageFilter()
     {
-        // First apply global language filter
-        var baseWidgets = string.IsNullOrEmpty(_globalLanguageFilter)
-            ? _widgets
-            : _widgets.Where(w => w.LanguageCode == _globalLanguageFilter).ToList();
-
-        // Then apply local feed filter
-        if (string.IsNullOrEmpty(_selectedLanguageFilter))
-        {
-            _filteredWidgets = baseWidgets.ToList();
-        }
-        else
-        {
-            _filteredWidgets = baseWidgets
-                .Where(w => w.LanguageCode == _selectedLanguageFilter)
-                .ToList();
-        }
+        _filteredWidgets = _widgets.Where(w => w.LanguageCode == TargetLanguageCode).ToList();
         StateHasChanged();
     }
 
@@ -297,23 +256,12 @@
         _newWidgetTitle = string.Empty;
         _newWidgetUrl = string.Empty;
         _newWidgetMaxItems = 5;
-        _isDetectingLanguage = false;
-        _detectedLanguageMessage = string.Empty;
-        _detectedLanguageCode = null;
     }
 
-    private async Task AddWidget()
+    private void AddWidget()
     {
         if (string.IsNullOrWhiteSpace(_newWidgetTitle) || string.IsNullOrWhiteSpace(_newWidgetUrl))
             return;
-
-        // Detect language from RSS feed content before adding
-        if (_detectedLanguageCode == null)
-        {
-            await DetectFeedLanguage();
-            if (_isDetectingLanguage)
-                return; // Still detecting, wait for completion
-        }
 
         var newWidget = new RssFeedWidgetModel
         {
@@ -322,7 +270,7 @@
             MaxItems = _newWidgetMaxItems,
             DisplayOrder = _widgets.Count,
             IsVisible = true,
-            LanguageCode = _detectedLanguageCode
+            LanguageCode = TargetLanguageCode
         };
 
         _widgets.Add(newWidget);
@@ -333,132 +281,6 @@
         // Reset and close
         CancelAdd();
         StateHasChanged();
-    }
-
-    private async Task DetectFeedLanguage()
-    {
-        if (string.IsNullOrWhiteSpace(_newWidgetUrl))
-            return;
-
-        _isDetectingLanguage = true;
-        _detectedLanguageMessage = string.Empty;
-        StateHasChanged();
-
-        try
-        {
-            var request = new HttpRequestMessage(HttpMethod.Get, _newWidgetUrl);
-            request.Headers.UserAgent.ParseAdd("TriolingoApp/1.0 (https://github.com/tuapp)");
-
-            var response = await Http.SendAsync(request);
-            response.EnsureSuccessStatusCode();
-
-            var xmlContent = await response.Content.ReadAsStringAsync();
-            var feedItems = ParseRssFeed(xmlContent);
-
-            // Collect text from feed items for language detection
-            var textSamples = feedItems
-                .Take(5) // Use first 5 items for detection
-                .Select(item => $"{item.Title} {item.Description}")
-                .Where(text => !string.IsNullOrWhiteSpace(text))
-                .ToList();
-
-            if (textSamples.Any())
-            {
-                var combinedText = string.Join(" ", textSamples);
-                _detectedLanguageCode = LanguageDetector.DetectLanguageCode(combinedText);
-
-                if (!string.IsNullOrEmpty(_detectedLanguageCode))
-                {
-                    _detectedLanguageMessage = $"Idioma detectado: {GetLanguageDisplayName(_detectedLanguageCode)}";
-                }
-                else
-                {
-                    _detectedLanguageMessage = "Não foi possível detectar o idioma automaticamente";
-                }
-            }
-            else
-            {
-                _detectedLanguageMessage = "Feed vazio - idioma não detectado";
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error detecting feed language: {ex.Message}");
-            _detectedLanguageMessage = "Erro ao detectar idioma do feed";
-        }
-        finally
-        {
-            _isDetectingLanguage = false;
-            StateHasChanged();
-        }
-    }
-
-    private List<FeedItem> ParseRssFeed(string xmlContent)
-    {
-        var items = new List<FeedItem>();
-        
-        try
-        {
-            var doc = XDocument.Parse(xmlContent);
-            var channel = doc.Root?.Element("channel");
-            
-            if (channel == null)
-            {
-                return ParseAtomFeed(doc);
-            }
-
-            var itemElements = channel.Elements("item");
-
-            foreach (var item in itemElements)
-            {
-                var feedItem = new FeedItem
-                {
-                    Title = item.Element("title")?.Value ?? "",
-                    Description = StripHtml(item.Element("description")?.Value ?? "")
-                };
-
-                items.Add(feedItem);
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error parsing RSS feed: {ex.Message}");
-        }
-
-        return items;
-    }
-
-    private List<FeedItem> ParseAtomFeed(XDocument doc)
-    {
-        var items = new List<FeedItem>();
-        XNamespace atom = "http://www.w3.org/2005/Atom";
-
-        var entries = doc.Root?.Elements(atom + "entry");
-
-        if (entries == null) return items;
-
-        foreach (var entry in entries)
-        {
-            var feedItem = new FeedItem
-            {
-                Title = entry.Element(atom + "title")?.Value ?? "",
-                Description = StripHtml(entry.Element(atom + "summary")?.Value ?? entry.Element(atom + "content")?.Value ?? "")
-            };
-
-            items.Add(feedItem);
-        }
-
-        return items;
-    }
-
-    private string StripHtml(string html)
-    {
-        if (string.IsNullOrEmpty(html)) return "";
-
-        var text = System.Text.RegularExpressions.Regex.Replace(html, "<.*?>", string.Empty);
-        text = System.Net.WebUtility.HtmlDecode(text);
-        
-        return text.Length > 300 ? text.Substring(0, 300) : text;
     }
 
     private void EnableEditMode(RssFeedWidgetModel widget)
@@ -522,11 +344,5 @@
             ApplyLanguageFilter();
             StateHasChanged();
         }
-    }
-
-    private class FeedItem
-    {
-        public string Title { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
     }
 }

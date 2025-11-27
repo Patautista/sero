@@ -60,6 +60,45 @@ namespace MauiApp1.Services.Audio
             }
         }
 
+        /// <summary>
+        /// Preloads (caches) audio for a text without playing it
+        /// </summary>
+        public async Task<bool> PreloadVoiceClipAsync(string text, string lang, VoiceGender voiceGender = VoiceGender.Female)
+        {
+            try
+            {
+                var key = _audioCache.ComputeCacheKey(text, lang, voiceGender);
+                
+                // Check if already cached
+                byte[]? audioData = await _audioCache.GetBytesAsync(key);
+                if (audioData != null)
+                {
+                    // Already cached
+                    return true;
+                }
+
+                // Fetch from TTSController
+                var voice = voiceGender == VoiceGender.Male ? "male" : "female";
+                audioData = await _apiService.GetTTSAsync(text, lang, voice);
+
+                if (audioData != null && audioData.Length > 0)
+                {
+                    await _audioCache.SetAsync(key, audioData);
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine($"Failed to preload audio for: {text}");
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to preload audio for '{text}': {ex.Message}");
+                return false;
+            }
+        }
+
         public async Task PlayCorrectAnswer()
         {
             try

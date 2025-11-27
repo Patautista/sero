@@ -7,11 +7,13 @@
 @using Infrastructure.Services
 @using Infrastructure.Vocab
 @using MauiApp1.Services
+@using MauiApp1.Services.Audio
 @using MauiApp1.Components.Shared
 @inject IJSRuntime JS
 @inject ISettingsService SettingsService
 @inject ApiService ApiService
 @inject NavigationManager Navigation
+@inject MauiSoundService SoundService
 @inherits SmartComponent
 
 <div class="card-creation-container p-6 bg-white rounded-lg shadow-lg max-w-2xl mx-auto mb-4">
@@ -43,42 +45,34 @@
     else
     {
         <!-- Definition Display Area -->
-        @if (selectedChunk != null && !string.IsNullOrWhiteSpace(selectedChunk.Chunk))
+        @if (selectedItem != null && !string.IsNullOrWhiteSpace(selectedItem.AiInsight.Chunk))
         {
             <div class="mb-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
                 <div class="d-flex justify-content-between align-items-start mb-2">
-                    <h4 class="text-lg font-semibold text-blue-800">@selectedChunk.Chunk</h4>
+                    <h4 class="text-lg font-semibold text-blue-800">@selectedItem.AiInsight.Chunk</h4>
                     <button type="button" class="btn-close btn-sm" @onclick="ClearDefinition"></button>
                 </div>
 
-                @if (!string.IsNullOrWhiteSpace(selectedChunk.Translation))
+                @if (!string.IsNullOrWhiteSpace(selectedItem.AiInsight.Translation))
                 {
                     <div class="mb-2">
-                        <span class="text-success fw-bold">🔤 @selectedChunk.Translation</span>
+                        <span class="text-success fw-bold">🔤 @selectedItem.AiInsight.Translation</span>
                     </div>
                 }
 
-                @if (!string.IsNullOrWhiteSpace(selectedChunk.Note))
+                @if (!string.IsNullOrWhiteSpace(selectedItem.AiInsight.Note))
                 {
                     <div class="mb-2 p-2 bg-white rounded border border-blue-100">
-                        <small class="text-muted">💡 @selectedChunk.Note</small>
+                        <small class="text-muted">💡 @selectedItem.AiInsight.Note</small>
                     </div>
                 }
 
-                @if (isLoadingComponents)
-                {
-                    <div class="text-center py-2">
-                        <div class="spinner-border spinner-border-sm" role="status">
-                            <span class="visually-hidden"><Translate Text="Analisando componentes..." /></span>
-                        </div>
-                    </div>
-                }
-                else if (chunkComponents != null && chunkComponents.Any())
+                @if (selectedItem.IsCompound && selectedItem.Components != null)
                 {
                     <!-- Compound expression: show lemmatized components -->
                     <div class="mt-3 p-2 bg-white rounded border border-blue-100">
                         <div class="d-flex flex-wrap gap-2">
-                            @foreach (var component in chunkComponents)
+                            @foreach (var component in selectedItem.Components)
                             {
                                 <div class="badge bg-secondary">
                                     @component.Lemma
@@ -91,15 +85,18 @@
                         </div>
                     </div>
                 }
-                else if (singleWordPos != null)
+                else if (!string.IsNullOrWhiteSpace(selectedItem.SingleWordPos))
                 {
                     <!-- Single word: show POS tag -->
                     <div class="mt-2">
-                        <span class="badge bg-primary"><Translate Text="@singleWordPos" Lang=@AvailableCodes.English/></span>
+                        <span class="badge bg-primary"><Translate Text="@selectedItem.SingleWordPos" Lang=@AvailableCodes.English/></span>
                     </div>
                 }
 
-                @if (string.IsNullOrWhiteSpace(selectedChunk.Translation) && string.IsNullOrWhiteSpace(selectedChunk.Note) && !chunkComponents?.Any() == true && singleWordPos == null)
+                @if (string.IsNullOrWhiteSpace(selectedItem.AiInsight.Translation) && 
+                     string.IsNullOrWhiteSpace(selectedItem.AiInsight.Note) && 
+                     selectedItem.Components == null && 
+                     string.IsNullOrWhiteSpace(selectedItem.SingleWordPos))
                 {
                     <p class="text-muted small mb-0"><Translate Text="Sem informações adicionais"></Translate></p>
                 }
@@ -113,15 +110,15 @@
             </label>
             <LoadingSpinner IsLoading="@isAnalyzing">
                 <div class="p-4 bg-gray-50 rounded-lg border border-gray-300">
-                    @if (lexicalChunks != null && lexicalChunks.Any())
+                    @if (analysisItems.Any())
                     {
                         <div class="flex flex-wrap gap-2">
-                            @foreach (var chunk in lexicalChunks)
+                            @foreach (var item in analysisItems)
                             {
-                                <span @onclick="() => OnChunkClick(chunk)"
-                                      class="@GetChunkBlockClass(chunk)"
+                                <span @onclick="() => OnItemClick(item)"
+                                      class="@GetItemBlockClass(item)"
                                       style="cursor: pointer; display: inline-block;">
-                                    @chunk.Chunk
+                                    @item.AiInsight.Chunk
                                 </span>
                             }
                         </div>
@@ -164,16 +161,16 @@
         </div>
 
         <!-- Chunk Statistics -->
-        @if (lexicalChunks != null && lexicalChunks.Any())
+        @if (analysisItems.Any())
         {
             <div class="mt-4 p-3 bg-indigo-50 rounded-lg">
                 <small class="text-gray-600">
                     <i class="fa fa-info-circle me-1"></i>
-                    <Translate Text="Total de chunks"></Translate>: @lexicalChunks.Count
-                    @if (lexicalChunks.Count(c => !string.IsNullOrWhiteSpace(c.Note)) > 0)
+                    <Translate Text="Total de chunks"></Translate>: @analysisItems.Count
+                    @if (analysisItems.Count(item => !string.IsNullOrWhiteSpace(item.AiInsight.Note)) > 0)
                     {
                         <span class="ms-2">
-                            | <Translate Text="Com notas"></Translate>: @lexicalChunks.Count(c => !string.IsNullOrWhiteSpace(c.Note))
+                            | <Translate Text="Com notas"></Translate>: @analysisItems.Count(item => !string.IsNullOrWhiteSpace(item.AiInsight.Note))
                         </span>
                     }
                 </small>
@@ -202,12 +199,8 @@
     private string inputText = string.Empty;
     private string analysisText = string.Empty;
     private string translatedText = string.Empty;
-    private List<LexicalChunk>? lexicalChunks;
 
-    private LexicalChunk? selectedChunk;
-    private List<VocabularyService.Token>? chunkComponents;
-    private string? singleWordPos;
-    private bool isLoadingComponents = false;
+    private AnalysisItem? selectedItem;
     private bool isAnalyzing = false;
     private bool isTranslating = false;
     private VocabularyService? vocabularyService;
@@ -215,14 +208,14 @@
     // Store all vocabulary tokens from the text
     private List<VocabularyService.Token> allVocabTokens = new();
     
-    // HashSet of analysis items correlating API chunks with POS tokens
-    private HashSet<AnalysisItem> analysisItems = new();
+    // List of analysis items correlating API chunks with POS tokens (ordered)
+    private List<AnalysisItem> analysisItems = new();
 
     private class AnalysisItem
     {
-        public LexicalChunk ApiChunk { get; set; } = null!;
+        public LexicalChunk AiInsight { get; set; } = null!;
         public List<VocabularyService.Token> VocabTokens { get; set; } = new();
-        public string NormalizedKey => ApiChunk.Chunk.Trim().ToLowerInvariant();
+        public string NormalizedKey => AiInsight.Chunk.Trim().ToLowerInvariant();
 
         // Convenience properties for display
         public bool IsCompound => VocabTokens.Count > 1;
@@ -301,10 +294,7 @@
     private async Task AnalyzeText()
     {
         isAnalyzing = true;
-        lexicalChunks = null;
-        selectedChunk = null;
-        chunkComponents = null;
-        singleWordPos = null;
+        selectedItem = null;
         allVocabTokens.Clear();
         analysisItems.Clear();
         await InvokeAsync(StateHasChanged);
@@ -330,34 +320,113 @@
 
                 if (response != null && response.Items != null && response.Items.Any())
                 {
-                    lexicalChunks = response.Items;
                     // Create analysis items correlating API chunks with vocab tokens
-                    CorrelateApiChunksWithVocabTokens();
+                    CorrelateApiChunksWithVocabTokens(response.Items);
                 }
                 else
                 {
                     // Fallback to basic split if API returns empty
-                    FallbackToBasicSplit();
-                    CorrelateBasicChunksWithVocabTokens();
+                    var basicChunks = CreateBasicChunks();
+                    CorrelateBasicChunksWithVocabTokens(basicChunks);
                 }
             }
             else
             {
                 // API is offline, just wait for POS analysis to complete
                 await posTask;
-                FallbackToBasicSplit();
-                CorrelateBasicChunksWithVocabTokens();
+                var basicChunks = CreateBasicChunks();
+                CorrelateBasicChunksWithVocabTokens(basicChunks);
+            }
+
+            // Preload audio for all chunks after analysis completes
+            if (IsApiLive && analysisItems.Any())
+            {
+                _ = PreloadChunkAudioAsync();
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error analyzing text: {ex.Message}");
-            FallbackToBasicSplit();
+            var basicChunks = CreateBasicChunks();
+            CorrelateBasicChunksWithVocabTokens(basicChunks);
         }
         finally
         {
             isAnalyzing = false;
             await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    /// <summary>
+    /// Preloads audio for all chunks in parallel
+    /// </summary>
+    private async Task PreloadChunkAudioAsync()
+    {
+        try
+        {
+            Console.WriteLine($"Starting audio preload for {analysisItems.Count} chunks");
+            
+            // Create preload tasks for all unique chunks
+            var preloadTasks = analysisItems
+                .Select(item => item.AiInsight.Chunk.Trim())
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .Select(chunk => PreloadSingleChunkAudioAsync(chunk))
+                .ToList();
+
+            // Execute all preload tasks in parallel
+            await Task.WhenAll(preloadTasks);
+            
+            Console.WriteLine($"Audio preload completed for {preloadTasks.Count} unique chunks");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error during audio preload: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Preloads audio for a single chunk
+    /// </summary>
+    private async Task PreloadSingleChunkAudioAsync(string chunk)
+    {
+        try
+        {
+            // Use the sound service to preload (cache) the audio
+            await SoundService.PreloadVoiceClipAsync(chunk, TargetLanguageCode);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error preloading audio for chunk '{chunk}': {ex.Message}");
+        }
+    }
+
+    private async Task OnItemClick(AnalysisItem item)
+    {
+        if (item == null)
+            return;
+
+        selectedItem = item;
+        StateHasChanged();
+
+        // Play audio for the clicked chunk
+        if (IsApiLive && !string.IsNullOrWhiteSpace(item.AiInsight.Chunk))
+        {
+            _ = PlayChunkAudioAsync(item.AiInsight.Chunk);
+        }
+    }
+
+    /// <summary>
+    /// Plays audio for a chunk (fire and forget)
+    /// </summary>
+    private async Task PlayChunkAudioAsync(string chunk)
+    {
+        try
+        {
+            await PlayVoiceClip(chunk.Trim(), TargetLanguageCode);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error playing audio for chunk '{chunk}': {ex.Message}");
         }
     }
 
@@ -382,7 +451,7 @@
         }
     }
 
-    private void CorrelateApiChunksWithVocabTokens()
+    private void CorrelateApiChunksWithVocabTokens(List<LexicalChunk> lexicalChunks)
     {
         if (lexicalChunks == null || !allVocabTokens.Any())
             return;
@@ -397,6 +466,12 @@
         {
             var cleanChunk = chunk.Chunk.Trim();
             
+            // Skip chunks that are exclusively punctuation
+            if (IsExclusivelyPunctuation(cleanChunk))
+            {
+                continue;
+            }
+            
             // Find where this chunk appears in the text starting from current position
             int chunkStartIndex = analysisText.IndexOf(cleanChunk, currentTextIndex, StringComparison.OrdinalIgnoreCase);
             
@@ -410,7 +485,7 @@
             
             var item = new AnalysisItem
             {
-                ApiChunk = chunk,
+                AiInsight = chunk,
                 VocabTokens = new List<VocabularyService.Token>()
             };
 
@@ -437,10 +512,7 @@
                 chunkStartIndex = tokenStartIndex + tokenText.Length;
             }
 
-            if (item.VocabTokens.Any())
-            {
-                analysisItems.Add(item);
-            }
+            analysisItems.Add(item);
 
             // Move current text index to the end of this chunk
             currentTextIndex = chunkEndIndex;
@@ -449,7 +521,7 @@
         Console.WriteLine($"Correlated {analysisItems.Count} API chunks with vocabulary tokens using index-based approach");
     }
 
-    private void CorrelateBasicChunksWithVocabTokens()
+    private void CorrelateBasicChunksWithVocabTokens(List<LexicalChunk> lexicalChunks)
     {
         if (lexicalChunks == null || !allVocabTokens.Any())
             return;
@@ -461,29 +533,44 @@
         {
             var cleanChunk = chunk.Chunk.Trim();
 
+            // Skip chunks that are exclusively punctuation
+            if (IsExclusivelyPunctuation(cleanChunk))
+            {
+                continue;
+            }
+
             // Find matching token(s) by text
             var matchingTokens = allVocabTokens
                 .Where(t => t.Text.Trim().Equals(cleanChunk, StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
-            if (matchingTokens.Any())
+            var item = new AnalysisItem
             {
-                var item = new AnalysisItem
-                {
-                    ApiChunk = chunk,
-                    VocabTokens = matchingTokens
-                };
-                
-                analysisItems.Add(item);
-            }
+                AiInsight = chunk,
+                VocabTokens = matchingTokens
+            };
+            
+            analysisItems.Add(item);
         }
 
         Console.WriteLine($"Correlated {analysisItems.Count} basic chunks with vocabulary tokens");
     }
 
-    private void FallbackToBasicSplit()
+    /// <summary>
+    /// Checks if a string consists exclusively of punctuation characters
+    /// </summary>
+    private bool IsExclusivelyPunctuation(string text)
     {
-        lexicalChunks = analysisText
+        if (string.IsNullOrWhiteSpace(text))
+            return true;
+
+        // Check if all characters are punctuation or whitespace
+        return text.All(c => char.IsPunctuation(c) || char.IsWhiteSpace(c));
+    }
+
+    private List<LexicalChunk> CreateBasicChunks()
+    {
+        return analysisText
             .Split(new[] { ' ', '.', ',', ';', ':', '-', '!', '?', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)
             .Select(w => new LexicalChunk
             {
@@ -522,107 +609,22 @@
         }
     }
 
-    private async Task OnChunkClick(LexicalChunk chunk)
-    {
-        if (chunk == null)
-            return;
-
-        selectedChunk = chunk;
-        chunkComponents = null;
-        singleWordPos = null;
-        isLoadingComponents = false; // No loading needed since we already have the data
-        StateHasChanged();
-
-        try
-        {
-            var cleanChunk = chunk.Chunk.Trim();
-
-            // Find the analysis item for this chunk
-            var analysisItem = analysisItems.FirstOrDefault(item => 
-                item.ApiChunk.Chunk.Trim().Equals(cleanChunk, StringComparison.OrdinalIgnoreCase));
-
-            if (analysisItem != null)
-            {
-                // Use correlated results from AnalysisItem
-                chunkComponents = analysisItem.Components;
-                singleWordPos = analysisItem.SingleWordPos;
-                Console.WriteLine($"Using correlated POS analysis for '{cleanChunk}' (IsCompound: {analysisItem.IsCompound})");
-            }
-            else
-            {
-                // Fallback: analyze if not correlated (shouldn't happen in normal flow)
-                Console.WriteLine($"Warning: No correlated POS for '{cleanChunk}', performing on-demand analysis");
-                isLoadingComponents = true;
-                StateHasChanged();
-                await AnalyzeChunkPosAsync(cleanChunk);
-                isLoadingComponents = false;
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error displaying chunk components: {ex.Message}");
-        }
-        finally
-        {
-            StateHasChanged();
-        }
-    }
-
-    private async Task AnalyzeChunkPosAsync(string cleanChunk)
-    {
-        // Initialize vocabulary service if needed
-        if (vocabularyService == null)
-        {
-            vocabularyService = new VocabularyService(TargetLanguageCode);
-        }
-
-        // Check if it's a compound expression (contains spaces or multiple words)
-        var wordCount = cleanChunk.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Length;
-
-        // Get tokens for this chunk
-        var tokens = await vocabularyService.GetVocabWordsWithTagAsync(new[] { cleanChunk });
-
-        if (tokens.Any())
-        {
-            // Create a new analysis item for this on-demand analysis
-            var item = new AnalysisItem
-            {
-                ApiChunk = new LexicalChunk
-                {
-                    Chunk = cleanChunk,
-                    Translation = string.Empty,
-                    Note = string.Empty
-                },
-                VocabTokens = tokens
-            };
-
-            // Add to the set (will replace if already exists due to equality check)
-            analysisItems.Add(item);
-
-            // Update display
-            chunkComponents = item.Components;
-            singleWordPos = item.SingleWordPos;
-        }
-    }
-
     private void ClearDefinition()
     {
-        selectedChunk = null;
-        chunkComponents = null;
-        singleWordPos = null;
+        selectedItem = null;
     }
 
-    private string GetChunkBlockClass(LexicalChunk chunk)
+    private string GetItemBlockClass(AnalysisItem item)
     {
         var baseClasses = "px-2 py-1 rounded transition-all";
 
-        if (selectedChunk != null && selectedChunk.Chunk == chunk.Chunk)
+        if (selectedItem != null && selectedItem.NormalizedKey == item.NormalizedKey)
         {
             return $"{baseClasses} bg-indigo-600 text-white font-semibold shadow";
         }
 
         // Highlight chunks with notes differently
-        if (!string.IsNullOrWhiteSpace(chunk.Note))
+        if (!string.IsNullOrWhiteSpace(item.AiInsight.Note))
         {
             return $"{baseClasses} bg-yellow-100 border border-yellow-400 hover:bg-yellow-200 hover:border-yellow-500";
         }
@@ -656,10 +658,7 @@
         inputText = string.Empty;
         analysisText = string.Empty;
         translatedText = string.Empty;
-        lexicalChunks = null;
-        selectedChunk = null;
-        chunkComponents = null;
-        singleWordPos = null;
+        selectedItem = null;
         allVocabTokens.Clear();
         analysisItems.Clear();
     }
