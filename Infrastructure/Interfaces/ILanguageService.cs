@@ -47,4 +47,10 @@ public interface ILanguageService
     /// </summary>
     /// <returns>List of example providers configured for this language</returns>
     IEnumerable<IExampleProvider> GetExampleProviders();
+
+    /// <summary>
+    /// Gets available transcription providers for this language
+    /// </summary>
+    /// <returns>List of transcription providers configured for this language</returns>
+    IEnumerable<ITranscriptionProvider> GetTranscriptionProviders();
 }

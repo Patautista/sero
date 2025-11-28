@@ -1,6 +1,7 @@
 using Catalyst;
 using Infrastructure.Interfaces;
 using Infrastructure.Services;
+using Infrastructure.Vocab;
 using Mosaik.Core;
 
 namespace Infrastructure.Services.Languages;
@@ -30,5 +31,14 @@ public class GermanLanguageService : ILanguageService
     public IEnumerable<IExampleProvider> GetExampleProviders()
     {
         throw new NotImplementedException();
+    }
+
+    public IEnumerable<ITranscriptionProvider> GetTranscriptionProviders()
+    {
+        ITranscriptionProvider[] providers =
+        [
+            new ToIpaClient("de-DE")
+        ];
+        return providers;
     }
 }

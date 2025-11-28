@@ -41,4 +41,13 @@ public class VietnameseLanguageService : ILanguageService
         ];
         return providers;
     }
+
+    public IEnumerable<ITranscriptionProvider> GetTranscriptionProviders()
+    {
+        ITranscriptionProvider[] providers =
+        [
+            new ToIpaClient("vi-C")
+        ];
+        return providers;
+    }
 }

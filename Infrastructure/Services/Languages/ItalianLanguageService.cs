@@ -42,4 +42,13 @@ public class ItalianLanguageService : ILanguageService
         ];
         return providers;
     }
+
+    public IEnumerable<ITranscriptionProvider> GetTranscriptionProviders()
+    {
+        ITranscriptionProvider[] providers =
+        [
+            new ToIpaClient("it-IT")
+        ];
+        return providers;
+    }
 }

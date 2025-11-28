@@ -45,4 +45,10 @@ public class PortugueseLanguageService : ILanguageService
         ];
         return providers;
     }
+
+    public IEnumerable<ITranscriptionProvider> GetTranscriptionProviders()
+    {
+        // Portuguese is not supported by toIPA
+        return Array.Empty<ITranscriptionProvider>();
+    }
 }

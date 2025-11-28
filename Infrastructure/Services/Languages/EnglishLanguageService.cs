@@ -38,4 +38,13 @@ public class EnglishLanguageService : ILanguageService
          ];
         return providers;
     }
+
+    public IEnumerable<ITranscriptionProvider> GetTranscriptionProviders()
+    {
+        ITranscriptionProvider[] providers =
+        [
+            new ToIpaClient("en-US")
+        ];
+        return providers;
+    }
 }

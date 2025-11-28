@@ -55,4 +55,13 @@ public class NorwegianLanguageService : ILanguageService
         ];
         return providers;
     }
+
+    public IEnumerable<ITranscriptionProvider> GetTranscriptionProviders()
+    {
+        ITranscriptionProvider[] providers =
+        [
+            new ToIpaClient("nb-NO")
+        ];
+        return providers;
+    }
 }
