@@ -9,6 +9,9 @@ namespace Infrastructure.Services.Languages;
 
 public class VietnameseLanguageService : ILanguageService
 {
+    private const string XPF_RULES_URL = "https://cohenpr-xpf.github.io/XPF/conv_resources/rules/vi.rules";
+    private ITranscriptionProvider? _xpfProvider;
+
     public string LanguageCode => AvailableCodes.Vietnamese;
 
     public bool HasConjugationTable => false;
@@ -44,9 +47,16 @@ public class VietnameseLanguageService : ILanguageService
 
     public IEnumerable<ITranscriptionProvider> GetTranscriptionProviders()
     {
+        // Lazy-initialize the XPF provider
+        _xpfProvider ??= new XpfTranscriptor(
+            new Uri(XPF_RULES_URL),
+            "Vietnamese XPF",
+            LanguageCode
+        );
+
         ITranscriptionProvider[] providers =
         [
-            new ToIpaClient("vi-C")
+            _xpfProvider
         ];
         return providers;
     }

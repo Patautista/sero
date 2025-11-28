@@ -1,0 +1,575 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="__className_03e9fc">
+
+<head>
+
+</head>
+
+<body class="antialiased h-dvh">
+    <div hidden="">
+        <!--$-->
+        <!--/$-->
+    </div>
+    <script>
+		((a,b,c,d,e,f,g,h)=>{let i=document.documentElement,j=["light","dark"];function k(b){var c;(Array.isArray(a)?a:[a]).forEach(a=>{let c="class"===a,d=c&&f?e.map(a=>f[a]||a):e;c?(i.classList.remove(...d),i.classList.add(f&&f[b]?f[b]:b)):i.setAttribute(a,b)}),c=b,h&&j.includes(c)&&(i.style.colorScheme=c)}if(d)k(d);else try{let a=localStorage.getItem(b)||c,d=g&&"system"===a?window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light":a;k(d)}catch(a){}})("class","theme","system",null,["light","dark"],null,true,true)
+    </script>
+    <div class="min-h-screen flex flex-col bg-white dark:bg-gray-950 text-black dark:text-white">
+        <header class="sticky top-0 z-50 bg-gray-50 dark:bg-gray-800 shadow-md transition-colors h-16">
+            <div class="container mx-auto px-4 h-full flex items-center justify-between">
+                <div class="text-2xl font-bold"><a href="/">toIPA</a></div>
+                <div class="hidden md:flex">
+                    <nav aria-label="Main" data-orientation="horizontal" dir="ltr"
+                         class="relative z-10 flex max-w-max flex-1 items-center justify-center">
+                        <div style="position:relative">
+                            <ul data-orientation="horizontal"
+                                class="group flex flex-1 list-none items-center justify-center space-x-1" dir="ltr">
+                                <li><a data-radix-collection-item="" href="/">Home</a></li>
+                                <li>
+                                    <button id="radix-_R_iqivb_-trigger-radix-_R_16iqivb_" data-state="closed" aria-expanded="false" aria-controls="radix-_R_iqivb_-content-radix-_R_16iqivb_" class="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden disabled:pointer-events-none disabled:opacity-50 data-active:bg-accent/50 data-[state=open]:bg-accent/50 group" data-radix-collection-item="">IPA Chart<!-- --> <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" class="relative top-[1px] ml-1 h-3 w-3 transition duration-300 group-data-[state=open]:rotate-180" aria-hidden="true"><path d="M3.13523 6.15803C3.3241 5.95657 3.64052 5.94637 3.84197 6.13523L7.5 9.56464L11.158 6.13523C11.3595 5.94637 11.6759 5.95657 11.8648 6.15803C12.0536 6.35949 12.0434 6.67591 11.842 6.86477L7.84197 10.6148C7.64964 10.7951 7.35036 10.7951 7.15803 10.6148L3.15803 6.86477C2.95657 6.67591 2.94637 6.35949 3.13523 6.15803Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg></button>
+                                </li>
+                                <li><a data-radix-collection-item="" href="/blog">Blog</a></li>
+                            </ul>
+                        </div>
+                        <div class="absolute left-0 top-full flex justify-center"></div>
+                    </nav>
+                </div>
+                <div class="flex flex-row items-center gap-4">
+                    <button type="button" role="combobox" aria-controls="radix-_R_2qqivb_" aria-expanded="false" aria-autocomplete="none" dir="ltr" data-state="closed" class="flex h-9 items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs ring-offset-background placeholder:text-muted-foreground focus:outline-hidden focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1 w-fit"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe w-4 h-4 mr-1" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg><span style="pointer-events:none"></span><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 opacity-50" aria-hidden="true"><path d="M4.93179 5.43179C4.75605 5.60753 4.75605 5.89245 4.93179 6.06819C5.10753 6.24392 5.39245 6.24392 5.56819 6.06819L7.49999 4.13638L9.43179 6.06819C9.60753 6.24392 9.89245 6.24392 10.0682 6.06819C10.2439 5.89245 10.2439 5.60753 10.0682 5.43179L7.81819 3.18179C7.73379 3.0974 7.61933 3.04999 7.49999 3.04999C7.38064 3.04999 7.26618 3.0974 7.18179 3.18179L4.93179 5.43179ZM10.0682 9.56819C10.2439 9.39245 10.2439 9.10753 10.0682 8.93179C9.89245 8.75606 9.60753 8.75606 9.43179 8.93179L7.49999 10.8636L5.56819 8.93179C5.39245 8.75606 5.10753 8.75606 4.93179 8.93179C4.75605 9.10753 4.75605 9.39245 4.93179 9.56819L7.18179 11.8182C7.35753 11.9939 7.64245 11.9939 7.81819 11.8182L10.0682 9.56819Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg></button><select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"></select><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground h-9 w-9" type="button" id="radix-_R_4qqivb_" aria-haspopup="menu" aria-expanded="false" data-state="closed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"><path d="M7.5 0C7.77614 0 8 0.223858 8 0.5V2.5C8 2.77614 7.77614 3 7.5 3C7.22386 3 7 2.77614 7 2.5V0.5C7 0.223858 7.22386 0 7.5 0ZM2.1967 2.1967C2.39196 2.00144 2.70854 2.00144 2.90381 2.1967L4.31802 3.61091C4.51328 3.80617 4.51328 4.12276 4.31802 4.31802C4.12276 4.51328 3.80617 4.51328 3.61091 4.31802L2.1967 2.90381C2.00144 2.70854 2.00144 2.39196 2.1967 2.1967ZM0.5 7C0.223858 7 0 7.22386 0 7.5C0 7.77614 0.223858 8 0.5 8H2.5C2.77614 8 3 7.77614 3 7.5C3 7.22386 2.77614 7 2.5 7H0.5ZM2.1967 12.8033C2.00144 12.608 2.00144 12.2915 2.1967 12.0962L3.61091 10.682C3.80617 10.4867 4.12276 10.4867 4.31802 10.682C4.51328 10.8772 4.51328 11.1938 4.31802 11.3891L2.90381 12.8033C2.70854 12.9986 2.39196 12.9986 2.1967 12.8033ZM12.5 7C12.2239 7 12 7.22386 12 7.5C12 7.77614 12.2239 8 12.5 8H14.5C14.7761 8 15 7.77614 15 7.5C15 7.22386 14.7761 7 14.5 7H12.5ZM10.682 4.31802C10.4867 4.12276 10.4867 3.80617 10.682 3.61091L12.0962 2.1967C12.2915 2.00144 12.608 2.00144 12.8033 2.1967C12.9986 2.39196 12.9986 2.70854 12.8033 2.90381L11.3891 4.31802C11.1938 4.51328 10.8772 4.51328 10.682 4.31802ZM8 12.5C8 12.2239 7.77614 12 7.5 12C7.22386 12 7 12.2239 7 12.5V14.5C7 14.7761 7.22386 15 7.5 15C7.77614 15 8 14.7761 8 14.5V12.5ZM10.682 10.682C10.8772 10.4867 11.1938 10.4867 11.3891 10.682L12.8033 12.0962C12.9986 12.2915 12.9986 12.608 12.8033 12.8033C12.608 12.9986 12.2915 12.9986 12.0962 12.8033L10.682 11.3891C10.4867 11.1938 10.4867 10.8772 10.682 10.682ZM5.5 7.5C5.5 6.39543 6.39543 5.5 7.5 5.5C8.60457 5.5 9.5 6.39543 9.5 7.5C9.5 8.60457 8.60457 9.5 7.5 9.5C6.39543 9.5 5.5 8.60457 5.5 7.5ZM7.5 4.5C5.84315 4.5 4.5 5.84315 4.5 7.5C4.5 9.15685 5.84315 10.5 7.5 10.5C9.15685 10.5 10.5 9.15685 10.5 7.5C10.5 5.84315 9.15685 4.5 7.5 4.5Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" class="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"><path d="M2.89998 0.499976C2.89998 0.279062 2.72089 0.0999756 2.49998 0.0999756C2.27906 0.0999756 2.09998 0.279062 2.09998 0.499976V1.09998H1.49998C1.27906 1.09998 1.09998 1.27906 1.09998 1.49998C1.09998 1.72089 1.27906 1.89998 1.49998 1.89998H2.09998V2.49998C2.09998 2.72089 2.27906 2.89998 2.49998 2.89998C2.72089 2.89998 2.89998 2.72089 2.89998 2.49998V1.89998H3.49998C3.72089 1.89998 3.89998 1.72089 3.89998 1.49998C3.89998 1.27906 3.72089 1.09998 3.49998 1.09998H2.89998V0.499976ZM5.89998 3.49998C5.89998 3.27906 5.72089 3.09998 5.49998 3.09998C5.27906 3.09998 5.09998 3.27906 5.09998 3.49998V4.09998H4.49998C4.27906 4.09998 4.09998 4.27906 4.09998 4.49998C4.09998 4.72089 4.27906 4.89998 4.49998 4.89998H5.09998V5.49998C5.09998 5.72089 5.27906 5.89998 5.49998 5.89998C5.72089 5.89998 5.89998 5.72089 5.89998 5.49998V4.89998H6.49998C6.72089 4.89998 6.89998 4.72089 6.89998 4.49998C6.89998 4.27906 6.72089 4.09998 6.49998 4.09998H5.89998V3.49998ZM1.89998 6.49998C1.89998 6.27906 1.72089 6.09998 1.49998 6.09998C1.27906 6.09998 1.09998 6.27906 1.09998 6.49998V7.09998H0.499976C0.279062 7.09998 0.0999756 7.27906 0.0999756 7.49998C0.0999756 7.72089 0.279062 7.89998 0.499976 7.89998H1.09998V8.49998C1.09998 8.72089 1.27906 8.89997 1.49998 8.89997C1.72089 8.89997 1.89998 8.72089 1.89998 8.49998V7.89998H2.49998C2.72089 7.89998 2.89998 7.72089 2.89998 7.49998C2.89998 7.27906 2.72089 7.09998 2.49998 7.09998H1.89998V6.49998ZM8.54406 0.98184L8.24618 0.941586C8.03275 0.917676 7.90692 1.1655 8.02936 1.34194C8.17013 1.54479 8.29981 1.75592 8.41754 1.97445C8.91878 2.90485 9.20322 3.96932 9.20322 5.10022C9.20322 8.37201 6.82247 11.0878 3.69887 11.6097C3.45736 11.65 3.20988 11.6772 2.96008 11.6906C2.74563 11.702 2.62729 11.9535 2.77721 12.1072C2.84551 12.1773 2.91535 12.2458 2.98667 12.3128L3.05883 12.3795L3.31883 12.6045L3.50684 12.7532L3.62796 12.8433L3.81491 12.9742L3.99079 13.089C4.11175 13.1651 4.23536 13.2375 4.36157 13.3059L4.62496 13.4412L4.88553 13.5607L5.18837 13.6828L5.43169 13.7686C5.56564 13.8128 5.70149 13.8529 5.83857 13.8885C5.94262 13.9155 6.04767 13.9401 6.15405 13.9622C6.27993 13.9883 6.40713 14.0109 6.53544 14.0298L6.85241 14.0685L7.11934 14.0892C7.24637 14.0965 7.37436 14.1002 7.50322 14.1002C11.1483 14.1002 14.1032 11.1453 14.1032 7.50023C14.1032 7.25044 14.0893 7.00389 14.0623 6.76131L14.0255 6.48407C13.991 6.26083 13.9453 6.04129 13.8891 5.82642C13.8213 5.56709 13.7382 5.31398 13.6409 5.06881L13.5279 4.80132L13.4507 4.63542L13.3766 4.48666C13.2178 4.17773 13.0353 3.88295 12.8312 3.60423L12.6782 3.40352L12.4793 3.16432L12.3157 2.98361L12.1961 2.85951L12.0355 2.70246L11.8134 2.50184L11.4925 2.24191L11.2483 2.06498L10.9562 1.87446L10.6346 1.68894L10.3073 1.52378L10.1938 1.47176L9.95488 1.3706L9.67791 1.2669L9.42566 1.1846L9.10075 1.09489L8.83599 1.03486L8.54406 0.98184ZM10.4032 5.30023C10.4032 4.27588 10.2002 3.29829 9.83244 2.40604C11.7623 3.28995 13.1032 5.23862 13.1032 7.50023C13.1032 10.593 10.596 13.1002 7.50322 13.1002C6.63646 13.1002 5.81597 12.9036 5.08355 12.5522C6.5419 12.0941 7.81081 11.2082 8.74322 10.0416C8.87963 10.2284 9.10028 10.3497 9.34928 10.3497C9.76349 10.3497 10.0993 10.0139 10.0993 9.59971C10.0993 9.24256 9.84965 8.94373 9.51535 8.86816C9.57741 8.75165 9.63653 8.63334 9.6926 8.51332C9.88358 8.63163 10.1088 8.69993 10.35 8.69993C11.0403 8.69993 11.6 8.14028 11.6 7.44993C11.6 6.75976 11.0406 6.20024 10.3505 6.19993C10.3853 5.90487 10.4032 5.60464 10.4032 5.30023Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg><span class="sr-only">Toggle theme</span></button>
+                </div>
+                <div class="md:hidden">
+                    <button aria-label="Toggle Menu" type="button" id="radix-_R_12qivb_" aria-haspopup="menu" aria-expanded="false" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu w-6 h-6" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button>
+                </div>
+            </div>
+        </header>
+        <main class="container mx-auto flex-1 flex items-stretch bg-white dark:bg-gray-900"
+              style="min-height:calc(100vh - 9rem)">
+            <div class="w-full flex flex-col items-center py-5 md:py-10 px-3 lg:px-40">
+                <div class="w-full py-10 flex flex-col gap-y-10">
+                    <h1 class="text-center text-3xl font-sans leading-tight min-h-[2.25rem]">
+                        Australian English IPA
+                        Transcription
+                    </h1>
+                    <div class="content-isolated">
+                        <div class="p-2 flex flex-col gap-y-4">
+                            <div class="relative w-full">
+                                <textarea class="flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 shadow-xs placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 lg:h-20 h-40 pl-4 pr-14 pt-4 pb-14 text-md" placeholder="Enter text to translate...">hello</textarea><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground absolute right-2 top-2 h-9 w-9"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x h-4 w-4" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg><span class="sr-only">Clear Input</span></button>
+                                <div class="absolute right-2 bottom-2">
+                                    <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-9 w-9 relative" aria-label="text to speech" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="radix-_R_3b5fiv5ubsqivb_" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-speech" aria-hidden="true"><path d="M8.8 20v-4.1l1.9.2a2.3 2.3 0 0 0 2.164-2.1V8.3A5.37 5.37 0 0 0 2 8.25c0 2.8.656 3.054 1 4.55a5.77 5.77 0 0 1 .029 2.758L2 20"></path><path d="M19.8 17.8a7.5 7.5 0 0 0 .003-10.603"></path><path d="M17 15a3.5 3.5 0 0 0-.025-4.975"></path></svg></button>
+                                </div>
+                                <div class="absolute right-14 bottom-3.5">
+                                    5
+                                    <!-- -->/5000
+                                </div>
+                            </div>
+                            <div class="w-full flex flex-row-reverse gap-x-3">
+                                <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 h-9 px-4 py-2 lg:w-40 w-32">Transcribe</button><button type="button" role="combobox" aria-controls="radix-_R_2j5fiv5ubsqivb_" aria-expanded="false" aria-autocomplete="none" dir="ltr" data-state="closed" class="flex h-9 items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs ring-offset-background placeholder:text-muted-foreground focus:outline-hidden focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1 lg:w-60 w-40 false"><span style="pointer-events:none"></span><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 opacity-50" aria-hidden="true"><path d="M4.93179 5.43179C4.75605 5.60753 4.75605 5.89245 4.93179 6.06819C5.10753 6.24392 5.39245 6.24392 5.56819 6.06819L7.49999 4.13638L9.43179 6.06819C9.60753 6.24392 9.89245 6.24392 10.0682 6.06819C10.2439 5.89245 10.2439 5.60753 10.0682 5.43179L7.81819 3.18179C7.73379 3.0974 7.61933 3.04999 7.49999 3.04999C7.38064 3.04999 7.26618 3.0974 7.18179 3.18179L4.93179 5.43179ZM10.0682 9.56819C10.2439 9.39245 10.2439 9.10753 10.0682 8.93179C9.89245 8.75606 9.60753 8.75606 9.43179 8.93179L7.49999 10.8636L5.56819 8.93179C5.39245 8.75606 5.10753 8.75606 4.93179 8.93179C4.75605 9.10753 4.75605 9.39245 4.93179 9.56819L7.18179 11.8182C7.35753 11.9939 7.64245 11.9939 7.81819 11.8182L10.0682 9.56819Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg></button><select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"></select>
+                            </div>
+                            <div class="rounded-xl border bg-card text-card-foreground shadow-sm w-full">
+                                <div class="p-4">
+                                    <div class="flex flex-col gap-2">
+                                        <div class="paragraph flex flex-wrap gap-2">
+                                            <div class="flex flex-row gap-1">
+                                                <div hidden="" class="source text-current/70 text-thin italic">
+                                                    hello
+                                                </div>
+                                                <div class="pronunciation underline cursor-pointer" data-state="closed">
+                                                    həˈləʉ
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="flex flex-row-reverse gap-x-2 items-center">
+                                            <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-9 w-9 relative" aria-label="Copy to clipboard"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy h-4 w-4" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg><span class="sr-only">Copy to clipboard</span></button><button type="button" role="combobox" aria-controls="radix-_R_19r5fiv5ubsqivb_" aria-expanded="false" aria-autocomplete="none" dir="ltr" data-state="closed" class="flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs ring-offset-background placeholder:text-muted-foreground focus:outline-hidden focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1 max-w-min"><span style="pointer-events:none"></span><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 opacity-50" aria-hidden="true"><path d="M4.93179 5.43179C4.75605 5.60753 4.75605 5.89245 4.93179 6.06819C5.10753 6.24392 5.39245 6.24392 5.56819 6.06819L7.49999 4.13638L9.43179 6.06819C9.60753 6.24392 9.89245 6.24392 10.0682 6.06819C10.2439 5.89245 10.2439 5.60753 10.0682 5.43179L7.81819 3.18179C7.73379 3.0974 7.61933 3.04999 7.49999 3.04999C7.38064 3.04999 7.26618 3.0974 7.18179 3.18179L4.93179 5.43179ZM10.0682 9.56819C10.2439 9.39245 10.2439 9.10753 10.0682 8.93179C9.89245 8.75606 9.60753 8.75606 9.43179 8.93179L7.49999 10.8636L5.56819 8.93179C5.39245 8.75606 5.10753 8.75606 4.93179 8.93179C4.75605 9.10753 4.75605 9.39245 4.93179 9.56819L7.18179 11.8182C7.35753 11.9939 7.64245 11.9939 7.81819 11.8182L10.0682 9.56819Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg></button><select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"></select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="rounded-xl border bg-card text-card-foreground shadow-sm w-full">
+                                <div class="flex flex-col space-y-1.5 p-6 px-4">
+                                    <h3 class="font-semibold leading-none tracking-tight">Similar Words</h3>
+                                </div>
+                                <div class="p-6 pt-0 px-4">
+                                    <div class="flex flex-col gap-2">
+                                        <div class="flex flex-wrap gap-2">
+                                            <a href="/transcribe/en-AU/Helle">Helle</a><span class="pronunciation">/<!-- -->ˈheliː<!-- -->/</span>
+                                        </div>
+                                        <div class="flex flex-wrap gap-2">
+                                            <a href="/transcribe/en-AU/hella">hella</a><span class="pronunciation">/<!-- -->ˈhelə<!-- -->/</span>
+                                        </div>
+                                        <div class="flex flex-wrap gap-2">
+                                            <a href="/transcribe/en-AU/hollo">hollo</a><span class="pronunciation">/<!-- -->ˈhɔləʉ<!-- -->/</span>
+                                        </div>
+                                        <div class="flex flex-wrap gap-2">
+                                            <a href="/transcribe/en-AU/yello">yello</a><span class="pronunciation">/<!-- -->ˈjeləʉ<!-- -->/</span>
+                                        </div>
+                                        <div class="flex flex-wrap gap-2">
+                                            <a href="/transcribe/en-AU/hullo">hullo</a><span class="pronunciation">/<!-- -->ˈhɐləʉ<!-- -->/</span><span class="pronunciation">/<!-- -->həˈləʉ<!-- -->/</span>
+                                        </div>
+                                        <div class="flex flex-wrap gap-2">
+                                            <a href="/transcribe/en-AU/cello">cello</a><span class="pronunciation">/<!-- -->ˈt͡ʃeləʉ<!-- -->/</span>
+                                        </div>
+                                        <div class="flex flex-wrap gap-2">
+                                            <a href="/transcribe/en-AU/helo">helo</a><span class="pronunciation">/<!-- -->ˈheləʉ<!-- -->/</span>
+                                        </div>
+                                        <div class="flex flex-wrap gap-2">
+                                            <a href="/transcribe/en-AU/rello">rello</a><span class="pronunciation">/<!-- -->ˈɹeləʉ<!-- -->/</span>
+                                        </div>
+                                        <div class="flex flex-wrap gap-2">
+                                            <a href="/transcribe/en-AU/hell">hell</a><span class="pronunciation">/<!-- -->hel<!-- -->/</span>
+                                        </div>
+                                        <div class="flex flex-wrap gap-2">
+                                            <a href="/transcribe/en-AU/hallo">hallo</a><span class="pronunciation">/<!-- -->hɐˈləʉ<!-- -->/</span><span class="pronunciation">/<!-- -->hə-<!-- -->/</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="rounded-xl border bg-card text-card-foreground shadow-sm w-full">
+                                <div class="flex flex-col space-y-1.5 p-6 px-4">
+                                    <h3 class="font-semibold leading-none tracking-tight">Items</h3>
+                                </div>
+                                <div class="p-6 pt-0 px-4">
+                                    <div class="flex flex-col gap-2">
+                                        <div class="flex flex-wrap gap-2">
+                                            <a href="/item/Q21172725/Hello">Hello</a><span class="text-current/60 italic">Original song written and composed by Adele and Greg Kurstin</span>
+                                        </div>
+                                        <div class="flex flex-wrap gap-2">
+                                            <a href="/item/Q98815142/hello">hello</a><span class="text-current/60 italic">salutation or greeting in the English language</span>
+                                        </div>
+                                        <div class="flex flex-wrap gap-2">
+                                            <a href="/item/Q39073989/Hello">Hello</a><span class="text-current/60 italic">2017 film by Vikram Kumar</span>
+                                        </div>
+                                        <div class="flex flex-wrap gap-2">
+                                            <a href="/item/Q1603052/Hello">Hello</a><span class="text-current/60 italic">original song written, composed, and performed by Lionel Richie in 1983</span>
+                                        </div>
+                                        <div class="flex flex-wrap gap-2">
+                                            <a href="/item/Q4062658/Hello">Hello</a><span class="text-current/60 italic">2008 film by Atul Agnihotri</span>
+                                        </div>
+                                        <div class="flex flex-wrap gap-2">
+                                            <a href="/item/Q701752/Hello">Hello</a><span class="text-current/60 italic">2010 single by Martin Solveig</span>
+                                        </div>
+                                        <div class="flex flex-wrap gap-2">
+                                            <a href="/item/Q944919/Hello">Hello</a><span class="text-current/60 italic">English band</span>
+                                        </div>
+                                        <div class="flex flex-wrap gap-2">
+                                            <a href="/item/Q85766168/Hello">Hello</a><span class="text-current/60 italic">2017 Bengali web series</span>
+                                        </div>
+                                        <div class="flex flex-wrap gap-2">
+                                            <a href="/item/Q5708575/Hello">Hello</a><span class="text-current/60 italic">1995 single by Masaharu Fukuyama</span>
+                                        </div>
+                                        <div class="flex flex-wrap gap-2">
+                                            <a href="/item/Q5708553/Hello">Hello</a><span class="text-current/60 italic">1999 Tamil film directed by K. Selva Bharathy</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display:block;min-height:250px" class="my-6" aria-label="advertisement">
+                            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8083504117242291"
+                                 data-ad-slot="2900179592" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                        </div>
+                        <div class="relative w-full overflow-auto">
+                            <table class="caption-bottom text-sm w-full lg:w-1/2 min-h-[20rem]">
+                                <caption class="mt-4 text-muted-foreground text-2xl font-semibold mb-4">
+                                    Phonemes
+                                </caption>
+                                <thead class="[&amp;_tr]:border-b">
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            Symbol
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-left">
+                                            Examples
+                                        </td>
+                                    </tr>
+                                </thead>
+                                <tbody class="[&amp;_tr:last-child]:border-0">
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] font-bold text-left bg-accent"
+                                            colSpan="2">
+                                            Consonants
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            p
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/pack"><span><b>p</b>ack</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            b
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/back"><span><b>b</b>ack</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            t
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/tie"><span><b>t</b>ie</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            d
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/do"><span><b>d</b>o</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            t͡ʃ
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/chicken"><span><b>ch</b>icken</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            d͡ʒ
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/judge"><span>jud<b>ge</b></span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            k
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/class"><span><b>c</b>lass</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            ɡ
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/glass"><span><b>g</b>lass</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            f
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/foot"><span><b>f</b>oot</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            v
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/van"><span><b>v</b>an</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            θ
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/throw"><span><b>th</b>row</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            ð
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/though"><span><b>th</b>ough</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            s
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/sing"><span><b>s</b>ing</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            z
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/zoo"><span><b>z</b>oo</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            ʃ
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/shoe"><span><b>sh</b>oe</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            ʒ
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/measure"><span>mea<b>s</b>ure</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            m
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/man"><span><b>m</b>an</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            n
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/sun"><span>su<b>n</b></span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            ŋ
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/sing"><span>si<b>ng</b></span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            h
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/hot"><span><b>h</b>ot</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            l
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/lot"><span><b>l</b>ot</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            ɹ
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/run"><span><b>r</b>un</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            j
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/yes"><span><b>y</b>es</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            w
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/wet"><span><b>w</b>et</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] font-bold text-left bg-accent"
+                                            colSpan="2">
+                                            Vowels
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            ʌ
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/strut"><span>str<b>u</b>t</span></a>, <a href="/transcribe/en-AU/bud"><span>b<b>u</b>d</span></a>, <a href="/transcribe/en-AU/hud"><span>h<b>u</b>d</span></a>, <a href="/transcribe/en-AU/cup"><span>c<b>u</b>p</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            ʌː
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/bath"><span>b<b>a</b>th</span></a>, <a href="/transcribe/en-AU/palm"><span>p<b>a</b>lm</span></a>, <a href="/transcribe/en-AU/start"><span>st<b>ar</b>t</span></a>, <a href="/transcribe/en-AU/bard"><span>b<b>ar</b>d</span></a>, <a href="/transcribe/en-AU/hard"><span>h<b>ar</b>d</span></a>, <a href="/transcribe/en-AU/father"><span>f<b>a</b>ther</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            æ
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/trap"><span>tr<b>a</b>p</span></a>, <a href="/transcribe/en-AU/lad"><span>l<b>a</b>d</span></a>, <a href="/transcribe/en-AU/had"><span>h<b>a</b>d</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            e
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/dress"><span>dr<b>e</b>ss</span></a>, <a href="/transcribe/en-AU/bed"><span>b<b>e</b>d</span></a>, <a href="/transcribe/en-AU/head"><span>h<b>ea</b>d</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            ɜː
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/nurse"><span>n<b>ur</b>se</span></a>, <a href="/transcribe/en-AU/bird"><span>b<b>ir</b>d</span></a>, <a href="/transcribe/en-AU/heard"><span>h<b>ear</b>d</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            ə
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/about"><span><b>a</b>bout</span></a>, <a href="/transcribe/en-AU/winter"><span>wint<b>er</b></span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            ɪ
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/kit"><span>k<b>i</b>t</span></a>, <a href="/transcribe/en-AU/bid"><span>b<b>i</b>d</span></a>, <a href="/transcribe/en-AU/hid"><span>h<b>i</b>d</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            iː
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/fleece"><span>fl<b>ee</b>ce</span></a>, <a href="/transcribe/en-AU/bead"><span>b<b>ea</b>d</span></a>, <a href="/transcribe/en-AU/heat"><span>h<b>ea</b>t</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            i
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/happy"><span>happ<b>y</b></span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            ɔː
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/thought"><span>th<b>ou</b>ght</span></a>, <a href="/transcribe/en-AU/north"><span>n<b>or</b>th</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            ɔ
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/lot"><span>l<b>o</b>t</span></a>, <a href="/transcribe/en-AU/cloth"><span>cl<b>o</b>th</span></a>, <a href="/transcribe/en-AU/body"><span>b<b>o</b>dy</span></a>, <a href="/transcribe/en-AU/hot"><span>h<b>o</b>t</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            uː
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/goose"><span>g<b>oo</b>se</span></a>, <a href="/transcribe/en-AU/boo"><span>b<b>oo</b></span></a>, <a href="/transcribe/en-AU/who&#x27;d"><span>wh<b>o</b>'d</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            ʊ
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/foot"><span>f<b>oo</b>t</span></a>, <a href="/transcribe/en-AU/hood"><span>h<b>oo</b>d</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] font-bold text-left bg-accent text-sm"
+                                            colSpan="2">
+                                            Diphthongs
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            ɑe
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/price"><span>pr<b>i</b>ce</span></a>, <a href="/transcribe/en-AU/bite"><span>b<b>i</b>te</span></a>, <a href="/transcribe/en-AU/hide"><span>h<b>i</b>de</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            æe
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/face"><span>f<b>a</b>ce</span></a>, <a href="/transcribe/en-AU/bait"><span>b<b>ai</b>t</span></a>, <a href="/transcribe/en-AU/hade"><span>h<b>a</b>de</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            æɔ
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/mouth"><span>m<b>ou</b>th</span></a>, <a href="/transcribe/en-AU/bowed"><span>b<b>ow</b>ed</span></a>, <a href="/transcribe/en-AU/how&#x27;d"><span>h<b>ow</b>'d</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            eə
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/square"><span>squ<b>are</b></span></a>, <a href="/transcribe/en-AU/bared"><span>b<b>are</b>d</span></a>, <a href="/transcribe/en-AU/haired"><span>h<b>aire</b>d</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            oʊ
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/goat"><span>g<b>oa</b>t</span></a>, <a href="/transcribe/en-AU/bode"><span>b<b>o</b>de</span></a>, <a href="/transcribe/en-AU/hoed"><span>h<b>oe</b>d</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            ɪə
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/near"><span>n<b>ear</b></span></a>, <a href="/transcribe/en-AU/beard"><span>b<b>ear</b>d</span></a>, <a href="/transcribe/en-AU/hear"><span>h<b>ear</b></span></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px] text-center">
+                                            oɪ
+                                        </td>
+                                        <td class="p-2 align-middle [&amp;:has([role=checkbox])]:pr-0 [&amp;&gt;[role=checkbox]]:translate-y-[2px]">
+                                            <a href="/transcribe/en-AU/choice"><span>ch<b>oi</b>ce</span></a>, <a href="/transcribe/en-AU/boy"><span>b<b>oy</b></span></a>, <a href="/transcribe/en-AU/voice"><span>v<b>oi</b>ce</span></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!--$-->
+                <!--/$-->
+            </div>
+        </main>
+        <footer class="h-20 flex flex-col justify-center items-center text-center bg-gray-50 dark:bg-gray-800 shadow-md">
+            <p>© 2025 toIPA. All rights reserved.</p>
+            <div class="mt-2 space-x-4">
+                <a class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm"
+                   href="/privacy-policy">Privacy Policy</a><a class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm"
+                                                               href="/terms-of-service">Terms and Conditions</a>
+            </div>
+        </footer>
+    </div>
+</body>
+
+</html>

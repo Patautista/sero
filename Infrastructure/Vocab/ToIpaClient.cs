@@ -82,7 +82,15 @@ namespace Infrastructure.Vocab
                 var pronunciationNode = htmlDoc.DocumentNode
                     .SelectSingleNode("//div[@class='paragraph flex flex-wrap gap-2']");
 
-                pronunciationNode?.SelectSingleNode(".//*[@hidden]")?.Remove();
+                // Remove hidden elements
+                var hiddenNodes = pronunciationNode?.SelectNodes(".//*[@hidden]");
+                if (hiddenNodes != null)
+                {
+                    foreach (var node in hiddenNodes)
+                    {
+                        node.Remove();
+                    }
+                }
 
                 if (pronunciationNode != null)
                 {

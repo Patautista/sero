@@ -6,6 +6,7 @@
 @using Infrastructure.Interfaces
 @using Infrastructure.Services
 @using Infrastructure.Vocab
+@using Infrastructure.Factories
 @using MauiApp1.Services
 @using MauiApp1.Services.Audio
 @using MauiApp1.Components.Shared
@@ -49,7 +50,13 @@
         {
             <div class="mb-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
                 <div class="d-flex justify-content-between align-items-start mb-2">
-                    <h4 class="text-lg font-semibold text-blue-800">@selectedItem.AiInsight.Chunk</h4>
+                    <div class="d-flex gap-2 align-items-center flex-wrap">
+                        <h4 class="text-lg font-semibold text-blue-800 mb-0">@selectedItem.AiInsight.Chunk</h4>
+                        @if (!string.IsNullOrWhiteSpace(selectedItem.Transcription))
+                        {
+                            <span class="text-gray-500 text-sm">/@selectedItem.Transcription/</span>
+                        }
+                    </div>
                     <button type="button" class="btn-close btn-sm" @onclick="ClearDefinition"></button>
                 </div>
 
@@ -117,8 +124,8 @@
                             {
                                 <span @onclick="() => OnItemClick(item)"
                                       class="@GetItemBlockClass(item)"
-                                      style="cursor: pointer; display: inline-block;">
-                                    @item.AiInsight.Chunk
+                                      style="cursor: pointer; display: inline-flex; flex-direction: column; align-items: flex-start;">
+                                    <span>@item.AiInsight.Chunk</span>
                                 </span>
                             }
                         </div>
@@ -215,6 +222,7 @@
     {
         public LexicalChunk AiInsight { get; set; } = null!;
         public List<VocabularyService.Token> VocabTokens { get; set; } = new();
+        public string? Transcription { get; set; }
         public string NormalizedKey => AiInsight.Chunk.Trim().ToLowerInvariant();
 
         // Convenience properties for display
@@ -338,6 +346,9 @@
                 CorrelateBasicChunksWithVocabTokens(basicChunks);
             }
 
+            // Load transcriptions after analysis completes
+            await LoadTranscriptionsAsync();
+
             // Preload audio for all chunks after analysis completes
             if (IsApiLive && analysisItems.Any())
             {
@@ -354,6 +365,70 @@
         {
             isAnalyzing = false;
             await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    /// <summary>
+    /// Loads transcriptions for all analysis items
+    /// </summary>
+    private async Task LoadTranscriptionsAsync()
+    {
+        try
+        {
+            // Get transcription provider for the target language
+            if (!LanguageServiceFactory.TryGetLanguageService(TargetLanguageCode, out var languageService))
+            {
+                Console.WriteLine($"No language service found for {TargetLanguageCode}");
+                return;
+            }
+
+            var transcriptionProviders = languageService.GetTranscriptionProviders();
+            var transcriptionProvider = transcriptionProviders?.FirstOrDefault();
+
+            if (transcriptionProvider == null)
+            {
+                Console.WriteLine($"No transcription provider available for {TargetLanguageCode}");
+                return;
+            }
+
+            Console.WriteLine($"Loading transcriptions using {transcriptionProvider.ProviderName}");
+
+            // Load transcriptions for each item in parallel
+            var transcriptionTasks = analysisItems.Select(async item =>
+            {
+                try
+                {
+                    string? transcription;
+                    
+                    if (item.IsCompound && item.Components != null)
+                    {
+                        // For compound expressions, get transcription of all lemmas
+                        var lemmas = item.Components.Select(c => c.Lemma).Where(l => !string.IsNullOrWhiteSpace(l));
+                        transcription = await transcriptionProvider.GetTranscriptionAsync(lemmas);
+                    }
+                    else
+                    {
+                        // For single words, transcribe the chunk directly
+                        transcription = await transcriptionProvider.GetTranscriptionAsync(item.AiInsight.Chunk);
+                    }
+
+                    item.Transcription = transcription;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error loading transcription for '{item.AiInsight.Chunk}': {ex.Message}");
+                }
+            });
+
+            await Task.WhenAll(transcriptionTasks);
+            
+            Console.WriteLine($"Transcriptions loaded for {analysisItems.Count(i => !string.IsNullOrWhiteSpace(i.Transcription))} items");
+            
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading transcriptions: {ex.Message}");
         }
     }
 
@@ -541,7 +616,7 @@
 
             // Find matching token(s) by text
             var matchingTokens = allVocabTokens
-                .Where(t => t.Text.Trim().Equals(cleanChunk, StringComparison.OrdinalIgnoreCase))
+                .Where(t => string.Equals(t.Text.Trim(), cleanChunk, StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
             var item = new AnalysisItem
