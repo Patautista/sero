@@ -82,10 +82,8 @@ namespace Infrastructure.Audio
             {
                 voiceSelection.Name = voiceName;
             }
-            else
-            {
-                voiceSelection.SsmlGender = sslmGender;
-            }
+            voiceSelection.SsmlGender = sslmGender;
+
 
             // Specify the type of audio file
             var audioConfig = new AudioConfig
