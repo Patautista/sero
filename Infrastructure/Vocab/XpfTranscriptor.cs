@@ -215,6 +215,9 @@ public class XpfTranscriptor : ITranscriptionProvider
         if (words.TryGetValue(source, out var saved))
             return saved;
 
+        // Clean punctuation marks
+        source = source.RemovePunctuation().Trim();
+
         // Pré-processamento
         foreach (var (from, to) in pre)
             source = Regex.Replace(source, from, to);
