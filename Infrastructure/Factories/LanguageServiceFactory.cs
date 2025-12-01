@@ -1,4 +1,4 @@
-using Infrastructure.Interfaces;
+using Infrastructure.Languages.Interface;
 using Infrastructure.Services;
 using Infrastructure.Services.Languages;
 

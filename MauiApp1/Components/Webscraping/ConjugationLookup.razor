@@ -77,7 +77,7 @@
     {
         var options = new WiktionaryOptions
         {
-            Language = TargetLanguage.EnglishName.FirstCharToUpper(),
+            TargetLanguage = TargetLanguage,
         };
         var client = new WiktionaryClient(options);
 

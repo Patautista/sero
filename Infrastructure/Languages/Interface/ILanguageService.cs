@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using Mosaik.Core;
 using Lingua;
+using Infrastructure.Interfaces;
 
-namespace Infrastructure.Interfaces;
+namespace Infrastructure.Languages.Interface;
 
 public interface ILanguageService
 {

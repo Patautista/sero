@@ -2,7 +2,7 @@ using Infrastructure.Interfaces;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
-namespace Infrastructure.Vocab;
+namespace Infrastructure.Services.Vocab;
 
 public class Rule
 {
@@ -118,9 +118,9 @@ public class XpfTranscriptor : ITranscriptionProvider
     /// </summary>
     public XpfTranscriptor(string rulesPath, string providerName = "XpfTranscriptor", string languageCode = "unknown")
     {
-        this.ProviderName = providerName;
-        this.LanguageCode = languageCode;
-        this.rulesContent = File.ReadAllText(rulesPath);
+        ProviderName = providerName;
+        LanguageCode = languageCode;
+        rulesContent = File.ReadAllText(rulesPath);
         var rules = LoadRules(rulesContent);
         Init(rules);
     }
@@ -130,9 +130,9 @@ public class XpfTranscriptor : ITranscriptionProvider
     /// </summary>
     public XpfTranscriptor(Uri rulesUri, string providerName = "XpfTranscriptor", string languageCode = "unknown")
     {
-        this.ProviderName = providerName;
-        this.LanguageCode = languageCode;
-        this.rulesContent = DownloadRulesAsync(rulesUri).GetAwaiter().GetResult();
+        ProviderName = providerName;
+        LanguageCode = languageCode;
+        rulesContent = DownloadRulesAsync(rulesUri).GetAwaiter().GetResult();
         var rules = LoadRules(rulesContent);
         Init(rules);
     }
@@ -184,8 +184,8 @@ public class XpfTranscriptor : ITranscriptionProvider
 
     public bool SupportsLanguage(string languageCode)
     {
-        return this.LanguageCode.Equals(languageCode, StringComparison.OrdinalIgnoreCase) || 
-               this.LanguageCode == "unknown";
+        return LanguageCode.Equals(languageCode, StringComparison.OrdinalIgnoreCase) || 
+               LanguageCode == "unknown";
     }
 
     public Task<string?> GetTranscriptionAsync(string word)

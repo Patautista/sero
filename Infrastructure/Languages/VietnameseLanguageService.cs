@@ -4,6 +4,7 @@ using Infrastructure.Lookup;
 using Infrastructure.Services;
 using Infrastructure.Vocab;
 using Mosaik.Core;
+using System.Globalization;
 
 namespace Infrastructure.Services.Languages;
 
@@ -31,7 +32,7 @@ public class VietnameseLanguageService : ILanguageService
     {
         IDefinitionProvider[] providers =
         [
-            new CambridgeClient(new CambridgeConfig { LanguagePair = "english-vietnamese" })
+            new WiktionaryClient(new WiktionaryOptions { TargetLanguage = new CultureInfo("vi") , EnableCaching = false}),
         ];
         return providers;
     }

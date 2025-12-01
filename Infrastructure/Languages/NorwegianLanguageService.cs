@@ -32,6 +32,7 @@ public class NorwegianLanguageService : ILanguageService
         [
             new DictCcClient(new DictCcConfig { LanguagePair = "enno" }),
             new OrdbokeneClient(),
+            new WiktionaryClient(new WiktionaryOptions { TargetLanguage = new CultureInfo("nb") }),
             //new CambridgeClient(new CambridgeConfig { LanguagePair = "english-norwegian" }),
         ];
         return providers;

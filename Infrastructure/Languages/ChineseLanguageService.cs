@@ -1,27 +1,28 @@
 using Catalyst;
 using Infrastructure.Interfaces;
+using Infrastructure.Languages.Interface;
 using Infrastructure.Services;
 using Infrastructure.Vocab;
 using Mosaik.Core;
 
-namespace Infrastructure.Services.Languages;
+namespace Infrastructure.Languages;
 
-public class GermanLanguageService : ILanguageService
+public class ChineseLanguageService : ILanguageService
 {
-    public string LanguageCode => AvailableCodes.German;
+    public string LanguageCode => AvailableCodes.Chinese;
 
     public bool HasConjugationTable => false;
 
-    public Language GetCatalystLanguage() => Language.German;
+    public Language GetCatalystLanguage() => Language.Chinese;
 
-    public Lingua.Language GetLinguaLanguage() => Lingua.Language.German;
+    public Lingua.Language GetLinguaLanguage() => Lingua.Language.Chinese;
 
     public void RegisterLanguageModel()
     {
-        Catalyst.Models.German.Register();
+        Catalyst.Models.Chinese.Register();
     }
 
-    public string GetDefaultRssFeedUrl() => "https://www.dw.com/de/top-themen/s-100135";
+    public string GetDefaultRssFeedUrl() => "http://news.baidu.com/n?cmd=4&class=civilnews&tn=rss";
 
     public IEnumerable<IDefinitionProvider> GetDefinitionProviders()
     {
@@ -37,7 +38,7 @@ public class GermanLanguageService : ILanguageService
     {
         ITranscriptionProvider[] providers =
         [
-            new ToIpaClient("de-DE")
+            new ToIpaClient("zh-CN")
         ];
         return providers;
     }

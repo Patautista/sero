@@ -1,11 +1,12 @@
 using Catalyst;
 using Infrastructure.Interfaces;
+using Infrastructure.Languages.Interface;
 using Infrastructure.Lookup;
 using Infrastructure.Services;
 using Infrastructure.Vocab;
 using Mosaik.Core;
 
-namespace Infrastructure.Services.Languages;
+namespace Infrastructure.Languages;
 
 public class PortugueseLanguageService : ILanguageService
 {
@@ -31,8 +32,8 @@ public class PortugueseLanguageService : ILanguageService
     {
         IDefinitionProvider[] providers =
         [
-            new CambridgeClient(new CambridgeConfig { LanguagePair = "english-portuguese" }),
-            new DictCcClient(new DictCcConfig { LanguagePair = "enpt" })
+            new DictCcClient(new DictCcConfig { LanguagePair = "enpt" }),
+            new WiktionaryClient(new WiktionaryOptions { TargetLanguage = new System.Globalization.CultureInfo("pt") }),
         ];
         return providers;
     }

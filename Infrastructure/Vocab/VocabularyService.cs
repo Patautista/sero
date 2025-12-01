@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Language = Mosaik.Core.Language;
 
-namespace Infrastructure.Services;
+namespace Infrastructure.Vocab;
 
 public class VocabularyService
 {
@@ -51,7 +51,7 @@ public class VocabularyService
     public int GetVocabularyCount(IEnumerable<string> texts)
     {
         var combinedText = string.Join(" ", texts).ToLower();
-        var words = combinedText.Split(new char[] { ' ', '.', ',', ';', ':', '-', '!', '?' }, System.StringSplitOptions.RemoveEmptyEntries);
+        var words = combinedText.Split(new char[] { ' ', '.', ',', ';', ':', '-', '!', '?' }, StringSplitOptions.RemoveEmptyEntries);
         var vocab = new HashSet<string>(words);
         return vocab.Count;
     }

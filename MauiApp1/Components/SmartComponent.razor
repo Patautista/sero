@@ -5,13 +5,16 @@
 @using Infrastructure.Data.Model
 @using Infrastructure.Factories
 @using Infrastructure.Interfaces
+@using Infrastructure.Languages.Interface
 @using Infrastructure.Services
+@using Infrastructure.Services.Vocab
+@using Infrastructure.Vocab
 @using MauiApp1.Services.Audio
 @using Microsoft.JSInterop
 @inject ApiService ApiService
 @inject MauiSoundService SoundService
 @inject ISettingsService SettingsService
-@inject Infrastructure.Services.VocabularyService VocabularyService
+@inject VocabularyService VocabularyService
 @inject MauiApp1.Services.DatabaseService Database
 @inject AudioCachePreloadService AudioCachePreloadService
 @inject IJSRuntime JS

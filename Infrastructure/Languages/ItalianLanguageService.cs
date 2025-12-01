@@ -1,11 +1,12 @@
 using Catalyst;
 using Infrastructure.Interfaces;
+using Infrastructure.Languages.Interface;
 using Infrastructure.Lookup;
 using Infrastructure.Services;
 using Infrastructure.Vocab;
 using Mosaik.Core;
 
-namespace Infrastructure.Services.Languages;
+namespace Infrastructure.Languages;
 
 public class ItalianLanguageService : ILanguageService
 {
@@ -29,7 +30,7 @@ public class ItalianLanguageService : ILanguageService
         IDefinitionProvider[] providers =
         [
             new DictCcClient(new DictCcConfig { LanguagePair = "enit" }),
-            //new CambridgeClient(new CambridgeConfig { LanguagePair = "english-italian" }),
+            new WiktionaryClient(new WiktionaryOptions { TargetLanguage = new System.Globalization.CultureInfo("it") }),
         ];
         return providers;
     }

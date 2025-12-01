@@ -1,11 +1,12 @@
 using Catalyst;
 using Infrastructure.Interfaces;
+using Infrastructure.Languages.Interface;
 using Infrastructure.Lookup;
 using Infrastructure.Services;
 using Infrastructure.Vocab;
 using Mosaik.Core;
 
-namespace Infrastructure.Services.Languages;
+namespace Infrastructure.Languages;
 
 public class EnglishLanguageService : ILanguageService
 {
