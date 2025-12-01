@@ -1,4 +1,4 @@
-﻿using Infrastructure.Interfaces;
+﻿using Business.Interfaces;
 using Infrastructure.Vocab.Models;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Vocab
+namespace Business.Vocab
 {
     public class OrdbokeneClient : IDefinitionProvider, IExampleProvider, IDisposable
     {
@@ -163,6 +163,31 @@ namespace Infrastructure.Vocab
                             }
                         }
 
+                        try
+                        {
+                            foreach (var definition in article.Body.Definitions ?? new List<BodyElement>())
+                            {
+                                if (definition?.Elements == null) continue;
+
+                                var defText = ExtractDefinitionText(definition);
+                                var examples = ExtractExamples(definition);
+
+                                if (!string.IsNullOrWhiteSpace(defText))
+                                {
+                                    var meaning = new DefinitionMeaning
+                                    {
+                                        Definition = defText,
+                                        DefinitionLanguage = "nb", // Norwegian Bokmål
+                                        Translation = "", // Monolingual dictionary
+                                        Examples = examples
+                                    };
+
+                                    entry.Meanings.Add(meaning);
+                                }
+                            }
+                        }
+                        finally{}
+
                         if (entry.Meanings.Any())
                         {
                             result.Entries.Add(entry);
@@ -172,6 +197,7 @@ namespace Infrastructure.Vocab
             }
             catch (Exception)
             {
+                Console.WriteLine("");
                 // Return empty result on error
             }
 

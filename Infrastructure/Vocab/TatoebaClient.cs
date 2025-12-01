@@ -1,4 +1,4 @@
-﻿using Infrastructure.Interfaces;
+﻿using Business.Interfaces;
 using Infrastructure.Vocab.Models;
 using System;
 using System.Collections.Generic;

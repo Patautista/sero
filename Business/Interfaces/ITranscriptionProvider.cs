@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Infrastructure.Interfaces
+namespace Business.Interfaces
 {
     /// <summary>
     /// Interface for phonetic transcription providers (IPA, pinyin, etc.)

@@ -1,5 +1,5 @@
+using Business.Interfaces;
 using Catalyst;
-using Infrastructure.Interfaces;
 using Infrastructure.Languages.Interface;
 using Infrastructure.Services;
 using Infrastructure.Vocab;

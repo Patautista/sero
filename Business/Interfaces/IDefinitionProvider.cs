@@ -1,6 +1,5 @@
-namespace Infrastructure.Interfaces
+namespace Business.Interfaces
 {
-    using Infrastructure.Lookup;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 

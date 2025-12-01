@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Mosaik.Core;
 using Lingua;
-using Infrastructure.Interfaces;
+using Business.Interfaces;
 
 namespace Infrastructure.Languages.Interface;
 

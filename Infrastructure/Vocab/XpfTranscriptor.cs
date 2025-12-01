@@ -1,8 +1,8 @@
-using Infrastructure.Interfaces;
+using Business.Interfaces;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
-namespace Infrastructure.Services.Vocab;
+namespace Infrastructure.Vocab;
 
 public class Rule
 {

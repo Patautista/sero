@@ -1,7 +1,7 @@
 namespace Infrastructure.Lookup
 {
+    using Business.Interfaces;
     using HtmlAgilityPack;
-    using Infrastructure.Interfaces;
     using System;
     using System.Collections.Generic;
     using System.Globalization;

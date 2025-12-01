@@ -3,13 +3,12 @@
 @page "/analysis/{EncodedText}/{EncodedTranslation}"
 @using System.Globalization
 @using Business.Interfaces
-@using Infrastructure.Interfaces
+@using Infrastructure.Factories
 @using Infrastructure.Services
 @using Infrastructure.Vocab
-@using Infrastructure.Factories
+@using MauiApp1.Components.Shared
 @using MauiApp1.Services
 @using MauiApp1.Services.Audio
-@using MauiApp1.Components.Shared
 @inject IJSRuntime JS
 @inject ISettingsService SettingsService
 @inject ApiService ApiService

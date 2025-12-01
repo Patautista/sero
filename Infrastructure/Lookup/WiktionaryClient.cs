@@ -1,5 +1,5 @@
 ﻿using HtmlAgilityPack;
-using Infrastructure.Interfaces;
+using Business.Interfaces;
 using Microsoft.EntityFrameworkCore.Update.Internal;
 using System;
 using System.Collections.Concurrent;
@@ -13,7 +13,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace Infrastructure.Lookup
+namespace Business.Lookup
 {
     public class WiktionaryOptions
     {

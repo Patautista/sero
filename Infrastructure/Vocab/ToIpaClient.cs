@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
-using Infrastructure.Interfaces;
+using Business.Interfaces;
 
 namespace Infrastructure.Vocab
 {

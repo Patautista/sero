@@ -1,12 +1,13 @@
 using Catalyst;
-using Infrastructure.Interfaces;
 using Infrastructure.Languages.Interface;
-using Infrastructure.Lookup;
+using Business.Lookup;
 using Infrastructure.Services;
-using Infrastructure.Vocab;
+using Business.Vocab;
 using Mosaik.Core;
+using Business.Interfaces;
+using Infrastructure.Vocab;
 
-namespace Infrastructure.Languages;
+namespace Business.Languages;
 
 public class ItalianLanguageService : ILanguageService
 {

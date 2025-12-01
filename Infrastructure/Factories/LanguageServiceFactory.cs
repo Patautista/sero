@@ -1,6 +1,7 @@
 using Infrastructure.Languages.Interface;
 using Infrastructure.Services;
-using Infrastructure.Services.Languages;
+using Infrastructure.Languages;
+using Business.Languages;
 
 namespace Infrastructure.Factories;
 

@@ -1,5 +1,8 @@
+using Business.Interfaces;
+using Business.Lookup;
+using Business.Vocab;
 using Catalyst;
-using Infrastructure.Interfaces;
+using Infrastructure.Languages.Interface;
 using Infrastructure.Lookup;
 using Infrastructure.Services;
 using Infrastructure.Vocab;
@@ -7,7 +10,7 @@ using Mosaik.Core;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace Infrastructure.Services.Languages;
+namespace Infrastructure.Languages;
 
 public class NorwegianLanguageService : ILanguageService
 {

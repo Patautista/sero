@@ -1,4 +1,4 @@
-namespace Infrastructure.Interfaces
+namespace Business.Interfaces
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
