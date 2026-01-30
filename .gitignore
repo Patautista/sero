@@ -3,6 +3,8 @@
 *.DS_Store
 *.db
 
+SupportServer/voice_cache/
+
 #Visual Studio files
 *.filters
 .vs/
