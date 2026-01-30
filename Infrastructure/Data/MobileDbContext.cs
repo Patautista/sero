@@ -23,6 +23,7 @@ namespace Infrastructure.Data
         public DbSet<TagTable> Tags { get; set; }
         public DbSet<MeaningTable> Meanings { get; set; }
         public DbSet<LexicalAnalysisTable> LexicalAnalyses { get; set; }
+        public DbSet<LexicalAnalysisHistoryTable> LexicalAnalysisHistory { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -55,6 +56,17 @@ namespace Infrastructure.Data
                 e.HasIndex(l => new { l.NormalizedText, l.LanguageCode }).IsUnique();
                 e.Property(l => l.NormalizedText).HasMaxLength(512).IsRequired();
                 e.Property(l => l.LanguageCode).HasMaxLength(10).IsRequired();
+            });
+
+            // LexicalAnalysisHistory configuration
+            modelBuilder.Entity<LexicalAnalysisHistoryTable>(e =>
+            {
+                e.HasKey(h => h.Id);
+                e.HasOne(h => h.LexicalAnalysisCache)
+                    .WithMany()
+                    .HasForeignKey(h => h.LexicalAnalysisCacheId)
+                    .OnDelete(DeleteBehavior.Cascade);
+                e.HasIndex(h => h.AnalyzedAt);
             });
 
             modelBuilder.Entity<EventTable>()

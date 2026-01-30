@@ -141,7 +141,6 @@ namespace Business.Vocab
                             Meanings = new List<DefinitionMeaning>()
                         };
 
-                        // Extract definitions and examples
                         foreach (var definition in article.Body.Definitions.FirstOrDefault()?.Elements ?? new List<BodyElement>())
                         {
                             if (definition?.Elements == null) continue;

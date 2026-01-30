@@ -1,0 +1,186 @@
+@using MauiApp1.Services.Cache
+@using MauiApp1.Components.Shared
+@inject LexicalAnalysisCache AnalysisCache
+@inject NavigationManager Navigation
+
+<div class="analysis-history-container bg-white rounded-lg shadow-lg p-4 mb-4">
+    <h3 class="text-xl font-semibold mb-4 text-gray-800">
+        <i class="fa fa-history me-2"></i>
+        <Translate Text="Histórico de Análises"></Translate>
+    </h3>
+
+    @if (isLoading && !historyItems.Any())
+    {
+        <div class="text-center py-4">
+            <LoadingSpinner IsLoading="true" />
+        </div>
+    }
+    else if (!historyItems.Any())
+    {
+        <div class="text-center py-4 text-gray-500">
+            <i class="fa fa-inbox text-4xl mb-2"></i>
+            <p><Translate Text="Nenhuma análise realizada ainda"></Translate></p>
+        </div>
+    }
+    else
+    {
+        <div class="space-y-2">
+            @foreach (var item in historyItems)
+            {
+                <div @onclick="() => NavigateToAnalysis(item)"
+                     class="history-item p-3 bg-gray-50 rounded-lg border border-gray-200 hover:bg-indigo-50 hover:border-indigo-300 cursor-pointer transition-all">
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <p class="text-gray-800 font-medium line-clamp-2 mb-1">
+                                @GetDisplayText(item.OriginalText)
+                            </p>
+                            <div class="flex items-center gap-2 text-sm text-gray-500">
+                                <span class="badge bg-secondary text-xs">@item.LanguageCode.ToUpper()</span>
+                                <span>•</span>
+                                <span title="@item.AnalyzedAt.ToLocalTime().ToString("g")">
+                                    @GetRelativeTime(item.AnalyzedAt)
+                                </span>
+                            </div>
+                        </div>
+                        <i class="fa fa-chevron-right text-gray-400"></i>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @if (hasMore)
+        {
+            <div class="text-center mt-4">
+                @if (isLoadingMore)
+                {
+                    <button disabled class="px-4 py-2 text-gray-400 cursor-not-allowed">
+                        <i class="fa fa-spinner fa-spin me-2"></i>
+                        <Translate Text="Carregando..."></Translate>
+                    </button>
+                }
+                else
+                {
+                    <button @onclick="LoadMore"
+                            class="px-4 py-2 text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 rounded transition-all">
+                        <i class="fa fa-chevron-down me-2"></i>
+                        <Translate Text="Carregar mais 3"></Translate>
+                    </button>
+                }
+            </div>
+        }
+    }
+</div>
+
+<style>
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
+
+@code {
+    private List<LexicalAnalysisHistoryItem> historyItems = new();
+    private bool isLoading = true;
+    private bool isLoadingMore = false;
+    private bool hasMore = false;
+    private int currentPage = 0;
+    private const int PageSize = 3;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadHistory();
+    }
+
+    private async Task LoadHistory()
+    {
+        try
+        {
+            isLoading = true;
+            StateHasChanged();
+
+            var items = await AnalysisCache.GetHistoryAsync(0, PageSize);
+            historyItems = items;
+
+            var totalCount = await AnalysisCache.GetHistoryCountAsync();
+            hasMore = totalCount > PageSize;
+
+            currentPage = 0;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading history: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadMore()
+    {
+        try
+        {
+            isLoadingMore = true;
+            StateHasChanged();
+
+            currentPage++;
+            var skip = currentPage * PageSize;
+            var items = await AnalysisCache.GetHistoryAsync(skip, PageSize);
+            
+            historyItems.AddRange(items);
+
+            var totalCount = await AnalysisCache.GetHistoryCountAsync();
+            hasMore = historyItems.Count < totalCount;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading more history: {ex.Message}");
+        }
+        finally
+        {
+            isLoadingMore = false;
+            StateHasChanged();
+        }
+    }
+
+    private void NavigateToAnalysis(LexicalAnalysisHistoryItem item)
+    {
+        var encodedText = Uri.EscapeDataString(item.OriginalText);
+        Navigation.NavigateTo($"{Routes.Analysis}/{encodedText}");
+    }
+
+    private string GetDisplayText(string text)
+    {
+        const int maxLength = 100;
+        if (string.IsNullOrEmpty(text))
+            return string.Empty;
+
+        if (text.Length <= maxLength)
+            return text;
+
+        return text.Substring(0, maxLength) + "...";
+    }
+
+    private string GetRelativeTime(DateTime dateTime)
+    {
+        var timeSpan = DateTime.UtcNow - dateTime;
+
+        if (timeSpan.TotalMinutes < 1)
+            return "agora";
+        if (timeSpan.TotalMinutes < 60)
+            return $"{(int)timeSpan.TotalMinutes}m atrás";
+        if (timeSpan.TotalHours < 24)
+            return $"{(int)timeSpan.TotalHours}h atrás";
+        if (timeSpan.TotalDays < 7)
+            return $"{(int)timeSpan.TotalDays}d atrás";
+        if (timeSpan.TotalDays < 30)
+            return $"{(int)(timeSpan.TotalDays / 7)}sem atrás";
+        if (timeSpan.TotalDays < 365)
+            return $"{(int)(timeSpan.TotalDays / 30)}m atrás";
+        
+        return $"{(int)(timeSpan.TotalDays / 365)}a atrás";
+    }
+}

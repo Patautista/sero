@@ -80,9 +80,11 @@
                         <div class="d-flex flex-wrap gap-2">
                             @foreach (var component in selectedItem.Components)
                             {
-                                <div class="badge bg-secondary">
+                                <div class="badge bg-secondary component-badge" 
+                                     @onclick="(e) => OnComponentClick(component.Lemma, e)"
+                                     @onclick:stopPropagation="true">
                                     @component.Lemma
-                                    @if (!string.IsNullOrWhiteSpace(component.PartOfSpeech))
+                                    @if (!string.IsNullOrWhiteSpace(component.PartOfSpeech) && false)
                                     {
                                         <span class="ms-1 opacity-75">(<Translate Text="@component.PartOfSpeech" Lang=@AvailableCodes.English/>)</span>
                                     }
@@ -195,6 +197,32 @@
     }
 </div>
 
+<!-- Definition Tooltip Component -->
+<DefinitionTooltip IsVisible="@showComponentTooltip"
+                   IsLoading="@isLoadingComponentDef"
+                   DefinitionResult="@componentDefinitionResult"
+                   X="@tooltipX"
+                   Y="@tooltipY"
+                   OnClose="@CloseComponentTooltip" />
+
+<style>
+    .component-badge {
+        cursor: pointer;
+        transition: all 0.2s ease;
+        user-select: none;
+    }
+
+    .component-badge:hover {
+        transform: scale(1.05);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        background-color: #6366f1 !important;
+    }
+
+    .component-badge:active {
+        transform: scale(0.95);
+    }
+</style>
+
 @code {
     [Parameter]
     public string? EncodedText { get; set; }
@@ -210,10 +238,10 @@
     private bool isAnalyzing = false;
     private bool isTranslating = false;
     private VocabularyService? vocabularyService;
-    
+
     // Store all vocabulary tokens from the text
     private List<VocabularyService.Token> allVocabTokens = new();
-    
+
     // List of analysis items correlating API chunks with POS tokens (ordered)
     private List<AnalysisItem> analysisItems = new();
 
@@ -240,6 +268,14 @@
         }
     }
 
+    // Component tooltip state
+    private bool showComponentTooltip = false;
+    private bool isLoadingComponentDef = false;
+    private DefinitionResult? componentDefinitionResult = null;
+    private double tooltipX = 0;
+    private double tooltipY = 0;
+    private string currentComponentWord = string.Empty;
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
@@ -249,7 +285,7 @@
         {
             analysisText = Uri.UnescapeDataString(EncodedText);
             inputText = analysisText;
-            
+
             // If translation is provided, use it
             if (!string.IsNullOrWhiteSpace(EncodedTranslation))
             {
@@ -276,7 +312,10 @@
         {
             await AnalyzeText();
 
-            // Translate automatically if API is live and no translation provided
+        });
+        // Translate automatically if API is live and no translation provided
+        _ = Task.Run(async () =>
+        {
             if (IsApiLive && string.IsNullOrWhiteSpace(translatedText))
             {
                 await TranslateText();
@@ -489,6 +528,101 @@
         }
     }
 
+    private async Task OnComponentClick(string lemma, MouseEventArgs e)
+    {
+        if (string.IsNullOrWhiteSpace(lemma))
+            return;
+
+        // Calculate tooltip position relative to the clicked element
+        tooltipX = e.ClientX;
+        tooltipY = e.ClientY;
+
+        // Don't reload if clicking the same word
+        if (currentComponentWord == lemma && componentDefinitionResult != null)
+        {
+            showComponentTooltip = !showComponentTooltip;
+            StateHasChanged();
+            return;
+        }
+
+        currentComponentWord = lemma;
+        showComponentTooltip = true;
+        isLoadingComponentDef = true;
+        componentDefinitionResult = null;
+        StateHasChanged();
+
+        try
+        {
+            // Get the first available definition provider
+            var definitionProvider = TargetLanguageService.GetDefinitionProviders().FirstOrDefault();
+            
+            if (definitionProvider != null)
+            {
+                componentDefinitionResult = await definitionProvider.GetDefinitionsAsync(lemma);
+                
+                // If no results, create a placeholder
+                if (componentDefinitionResult == null)
+                {
+                    componentDefinitionResult = new DefinitionResult
+                    {
+                        Word = lemma,
+                        ProviderName = definitionProvider.ProviderName,
+                        Entries = new List<DefinitionEntry>()
+                    };
+                }
+            }
+            else
+            {
+                // No provider available
+                componentDefinitionResult = new DefinitionResult
+                {
+                    Word = lemma,
+                    ProviderName = "N/A",
+                    Entries = new List<DefinitionEntry>()
+                };
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading component definition for '{lemma}': {ex.Message}");
+            componentDefinitionResult = new DefinitionResult
+            {
+                Word = lemma,
+                ProviderName = "Error",
+                Entries = new List<DefinitionEntry>()
+            };
+        }
+        finally
+        {
+            isLoadingComponentDef = false;
+            StateHasChanged();
+        }
+    }
+
+    private void CloseComponentTooltip()
+    {
+        showComponentTooltip = false;
+        StateHasChanged();
+    }
+
+    private string GetItemBlockClass(AnalysisItem item)
+    {
+        var baseClasses = "px-2 py-1 rounded transition-all";
+
+        if (selectedItem != null && selectedItem.NormalizedKey == item.NormalizedKey)
+        {
+            return $"{baseClasses} bg-indigo-600 text-white font-semibold shadow";
+        }
+
+        // Highlight chunks with notes differently
+        if (!string.IsNullOrWhiteSpace(item.AiInsight.Note))
+        {
+            return $"{baseClasses} bg-yellow-100 border border-yellow-400 hover:bg-yellow-200 hover:border-yellow-500";
+        }
+
+        return $"{baseClasses} bg-white border border-gray-300 hover:bg-indigo-100 hover:border-indigo-400";
+    }
+
     /// <summary>
     /// Plays audio for a chunk (fire and forget)
     /// </summary>
@@ -502,6 +636,42 @@
         {
             Console.WriteLine($"Error playing audio for chunk '{chunk}': {ex.Message}");
         }
+    }
+
+    private void AddToDeck()
+    {
+        if (string.IsNullOrWhiteSpace(analysisText))
+            return;
+
+        var encodedSource = Uri.EscapeDataString(analysisText);
+        string navigationUrl;
+
+        if (!string.IsNullOrWhiteSpace(translatedText))
+        {
+            var encodedTranslation = Uri.EscapeDataString(translatedText);
+            navigationUrl = $"/create-card/{encodedSource}/{encodedTranslation}?redirect=/analysis";
+        }
+        else
+        {
+            navigationUrl = $"/create-card/{encodedSource}?redirect=/analysis";
+        }
+
+        Navigation.NavigateTo(navigationUrl);
+    }
+
+    private void Reset()
+    {
+        inputText = string.Empty;
+        analysisText = string.Empty;
+        translatedText = string.Empty;
+        selectedItem = null;
+        allVocabTokens.Clear();
+        analysisItems.Clear();
+    }
+
+    private void ClearDefinition()
+    {
+        selectedItem = null;
     }
 
     private async Task PerformBatchPosAnalysisAsync(string text)
@@ -681,59 +851,5 @@
             isTranslating = false;
             await InvokeAsync(StateHasChanged);
         }
-    }
-
-    private void ClearDefinition()
-    {
-        selectedItem = null;
-    }
-
-    private string GetItemBlockClass(AnalysisItem item)
-    {
-        var baseClasses = "px-2 py-1 rounded transition-all";
-
-        if (selectedItem != null && selectedItem.NormalizedKey == item.NormalizedKey)
-        {
-            return $"{baseClasses} bg-indigo-600 text-white font-semibold shadow";
-        }
-
-        // Highlight chunks with notes differently
-        if (!string.IsNullOrWhiteSpace(item.AiInsight.Note))
-        {
-            return $"{baseClasses} bg-yellow-100 border border-yellow-400 hover:bg-yellow-200 hover:border-yellow-500";
-        }
-
-        return $"{baseClasses} bg-white border border-gray-300 hover:bg-indigo-100 hover:border-indigo-400";
-    }
-
-    private void AddToDeck()
-    {
-        if (string.IsNullOrWhiteSpace(analysisText))
-            return;
-
-        var encodedSource = Uri.EscapeDataString(analysisText);
-        string navigationUrl;
-
-        if (!string.IsNullOrWhiteSpace(translatedText))
-        {
-            var encodedTranslation = Uri.EscapeDataString(translatedText);
-            navigationUrl = $"/create-card/{encodedSource}/{encodedTranslation}?redirect=/analysis";
-        }
-        else
-        {
-            navigationUrl = $"/create-card/{encodedSource}?redirect=/analysis";
-        }
-
-        Navigation.NavigateTo(navigationUrl);
-    }
-
-    private void Reset()
-    {
-        inputText = string.Empty;
-        analysisText = string.Empty;
-        translatedText = string.Empty;
-        selectedItem = null;
-        allVocabTokens.Clear();
-        analysisItems.Clear();
     }
 }

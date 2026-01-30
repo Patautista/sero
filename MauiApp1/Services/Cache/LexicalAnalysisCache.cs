@@ -58,6 +58,28 @@ namespace MauiApp1.Services.Cache
                 if (cached == null)
                     return null;
 
+                // Create history entry (fire and forget)
+                _ = Task.Run(async () =>
+                {
+                    try
+                    {
+                        var historyEntry = new LexicalAnalysisHistoryTable
+                        {
+                            LexicalAnalysisCacheId = cached.Id,
+                            AnalyzedAt = DateTime.UtcNow
+                        };
+                        
+                        _dbContext.LexicalAnalysisHistory.Add(historyEntry);
+                        await _dbContext.SaveChangesAsync();
+                        
+                        Console.WriteLine($"History entry created for analysis Id: {cached.Id}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error creating history entry: {ex.Message}");
+                    }
+                });
+
                 // Update last accessed time (fire and forget)
                 _ = Task.Run(async () =>
                 {
@@ -164,5 +186,62 @@ namespace MauiApp1.Services.Cache
                 Console.WriteLine($"Error cleaning up old cache entries: {ex.Message}");
             }
         }
+
+        /// <summary>
+        /// Gets analysis history with pagination
+        /// </summary>
+        public async Task<List<LexicalAnalysisHistoryItem>> GetHistoryAsync(int skip = 0, int take = 3)
+        {
+            try
+            {
+                var history = await _dbContext.LexicalAnalysisHistory
+                    .Include(h => h.LexicalAnalysisCache)
+                    .OrderByDescending(h => h.AnalyzedAt)
+                    .Skip(skip)
+                    .Take(take)
+                    .Select(h => new LexicalAnalysisHistoryItem
+                    {
+                        Id = h.Id,
+                        OriginalText = h.LexicalAnalysisCache!.OriginalText,
+                        LanguageCode = h.LexicalAnalysisCache.LanguageCode,
+                        AnalyzedAt = h.AnalyzedAt
+                    })
+                    .ToListAsync();
+
+                return history;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving history: {ex.Message}");
+                return new List<LexicalAnalysisHistoryItem>();
+            }
+        }
+
+        /// <summary>
+        /// Gets the total count of history entries
+        /// </summary>
+        public async Task<int> GetHistoryCountAsync()
+        {
+            try
+            {
+                return await _dbContext.LexicalAnalysisHistory.CountAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting history count: {ex.Message}");
+                return 0;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Represents a history item for display
+    /// </summary>
+    public class LexicalAnalysisHistoryItem
+    {
+        public int Id { get; set; }
+        public string OriginalText { get; set; } = string.Empty;
+        public string LanguageCode { get; set; } = string.Empty;
+        public DateTime AnalyzedAt { get; set; }
     }
 }
