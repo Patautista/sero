@@ -5,6 +5,8 @@ using Google.Cloud.TextToSpeech.V1;
 using Infrastructure.AI;
 using Infrastructure.Audio;
 using Infrastructure.Data;
+using Infrastructure.Data.Model.Server;
+using Infrastructure.Storage;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,27 +40,57 @@ builder.Services.AddScoped<ElevenLabsClient>(sp =>
     return new ElevenLabsClient(apiKey);
 });
 
-// Add ServerDbContext with environment-specific provider
-if (builder.Environment.IsDevelopment())
+// Configure Cloudflare R2 Client
+var cloudflareConfig = builder.Configuration.GetSection("CloudflareR2").Get<CloudflareR2Config>();
+builder.Services.AddSingleton(sp =>
 {
-    var sqliteConn = builder.Configuration.GetConnectionString("Sqlite");
-    builder.Services.AddDbContext<ServerDbContext>(options =>
-        options.UseSqlite(sqliteConn));
-}
-else
-{
-    var pgConn = builder.Configuration.GetConnectionString("Postgres");
-    builder.Services.AddDbContext<ServerDbContext>(options =>
-        options.UseNpgsql(pgConn));
-}
+    if (cloudflareConfig == null)
+        throw new InvalidOperationException("CloudflareR2 configuration is missing");
+        
+    return new CloudflareR2Client(
+        cloudflareConfig.AccountId,
+        cloudflareConfig.AccessKeyId,
+        cloudflareConfig.SecretAccessKey,
+        cloudflareConfig.BucketName
+    );
+});
+
+// Use in-memory database instead of SQLite/PostgreSQL
+builder.Services.AddDbContext<ServerDbContext>(options =>
+    options.UseInMemoryDatabase("ServerDb"));
 
 var app = builder.Build();
 
-// Run EF Core migrations at startup
+// Load API access data from Cloudflare R2 at startup
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ServerDbContext>();
-    db.Database.Migrate();
+    var r2Client = scope.ServiceProvider.GetRequiredService<CloudflareR2Client>();
+    
+    try
+    {
+        // Download API access data from Cloudflare R2
+        var apiAccessFile = cloudflareConfig?.ApiAccessFile ?? "ApiAccess.json";
+        var apiAccessList = await r2Client.DownloadJsonAsync<List<ApiAccess>>(apiAccessFile);
+        
+        if (apiAccessList != null && apiAccessList.Any())
+        {
+            // Populate in-memory database
+            await db.ApiAccesses.AddRangeAsync(apiAccessList);
+            await db.SaveChangesAsync();
+            
+            app.Logger.LogInformation($"Loaded {apiAccessList.Count} API access records from Cloudflare R2");
+        }
+        else
+        {
+            app.Logger.LogWarning("No API access records found in Cloudflare R2");
+        }
+    }
+    catch (Exception ex)
+    {
+        app.Logger.LogError(ex, "Failed to load API access data from Cloudflare R2");
+        throw;
+    }
 }
 
 // Configure the HTTP request pipeline.
