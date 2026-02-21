@@ -16,7 +16,6 @@ COPY ["Business/Business.csproj", "Application/"]
 COPY ["Domain/Domain.csproj", "Domain/"]
 COPY ["AnkiNet/AnkiNet.csproj", "AnkiNet/"]
 COPY ["Infrastructure/Infrastructure.csproj", "Infrastructure/"]
-COPY SupportServer/appsettings.Production.json /app/appsettings.Production.json
 
 # Copy embedded SQL files explicitly
 COPY AnkiNet/CollectionFile/Database/sql/ AnkiNet/CollectionFile/Database/Sql/
