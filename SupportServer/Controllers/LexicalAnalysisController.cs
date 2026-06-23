@@ -10,9 +10,9 @@ namespace SupportServer.Controllers
     [Route("api/[controller]")]
     public class LexicalAnalysisController : ControllerBase
     {
-        private readonly IPromptClient _promptClient;
+        private readonly GeminiClient _promptClient;
 
-        public LexicalAnalysisController(IPromptClient promptClient)
+        public LexicalAnalysisController(GeminiClient promptClient)
         {
             _promptClient = promptClient;
         }

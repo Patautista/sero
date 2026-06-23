@@ -5,7 +5,6 @@ using Google.Cloud.TextToSpeech.V1;
 using Infrastructure.AI;
 using Infrastructure.Audio;
 using Infrastructure.Data;
-using Infrastructure.Data.Model.Server;
 using Infrastructure.Storage;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,7 +27,7 @@ builder.Services.AddScoped<DeepLClient>(sp =>
     var apiKey = builder.Configuration.GetSection("DeepL:ApiKey").Value;
     return new DeepLClient(apiKey);
 });
-builder.Services.AddScoped<IPromptClient, GeminiClient>(sp =>
+builder.Services.AddScoped<GeminiClient>(sp =>
 {
     var apiKey = builder.Configuration.GetSection("Gemini:ApiKey").Value;
     return new GeminiClient(apiKey);

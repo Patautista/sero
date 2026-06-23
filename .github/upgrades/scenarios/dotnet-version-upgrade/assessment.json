@@ -1,0 +1,3664 @@
+{
+  "settings": {
+    "components": {
+      "code": true,
+      "binaries": false
+    },
+    "targetId": "net10.0",
+    "targetDisplayName": ".NETCoreApp,Version=v10.0"
+  },
+  "analysisStartTime": "2026-06-21T19:22:08.8547687Z",
+  "analysisEndTime": "2026-06-21T19:22:18.7730254Z",
+  "privacyModeHelpUrl": "https://go.microsoft.com/fwlink/?linkid=2270980",
+  "stats": {
+    "summary": {
+      "projects": 9,
+      "issues": 7,
+      "incidents": 125,
+      "effort": 125
+    },
+    "charts": {
+      "severity": {
+        "Mandatory": 12,
+        "Optional": 1,
+        "Potential": 112,
+        "Information": 0
+      },
+      "category": {
+        "NuGet": 13,
+        "Project": 9,
+        "Api": 103
+      }
+    }
+  },
+  "projects": [
+    {
+      "path": "AnkiNet\\AnkiNet.csproj",
+      "startingProject": true,
+      "issues": 2,
+      "storyPoints": 2,
+      "properties": {
+        "appName": "AnkiNet",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net8.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 57,
+        "numberOfCodeFiles": 51,
+        "linesTotal": 2720,
+        "linesOfCode": 2644,
+        "totalApiScanned": 4908,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "ec2b4af6-299a-40ba-b6b8-755e79fa58ea",
+          "ruleId": "NuGet.0002",
+          "projectPath": "AnkiNet\\AnkiNet.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Data.Sqlite, 7.0.10\n\nRecommendation:\n\nRemove Microsoft.Data.Sqlite, and replace with new package Microsoft.Data.Sqlite 10.0.9",
+              "protected": "Microsoft.Data.Sqlite, 7.0.10\n\nRecommendation:\n\nRemove Microsoft.Data.Sqlite, and replace with new package Microsoft.Data.Sqlite 10.0.9"
+            },
+            "kind": "File",
+            "path": "AnkiNet\\AnkiNet.csproj",
+            "snippet": "Microsoft.Data.Sqlite, 7.0.10\n\nRecommendation:\n\nRemove Microsoft.Data.Sqlite, and replace with new package Microsoft.Data.Sqlite 10.0.9",
+            "protectedSnippet": "Microsoft.Data.Sqlite, 7.0.10\n\nRecommendation:\n\nRemove Microsoft.Data.Sqlite, and replace with new package Microsoft.Data.Sqlite 10.0.9",
+            "label": "Microsoft.Data.Sqlite 7.0.10",
+            "properties": {
+              "PackageId": "Microsoft.Data.Sqlite",
+              "PackageVersion": "7.0.10",
+              "PackageNewVersion": "10.0.9",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "0bbc8a6b-aa4d-46d5-9cc6-cbbfd6f91cf0",
+          "ruleId": "Project.0002",
+          "projectPath": "AnkiNet\\AnkiNet.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net8.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net8.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "AnkiNet\\AnkiNet.csproj",
+            "snippet": "Current target framework: net8.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net8.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net8.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "Business\\Business.csproj",
+      "startingProject": true,
+      "issues": 3,
+      "storyPoints": 3,
+      "properties": {
+        "appName": "Business",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net8.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 25,
+        "numberOfCodeFiles": 25,
+        "linesTotal": 847,
+        "linesOfCode": 847,
+        "totalApiScanned": 750,
+        "minLinesOfCodeToChange": 1,
+        "maxLinesOfCodeToChange": 1
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "61802f7b-9da1-4b39-8484-20d6acb63494",
+          "ruleId": "NuGet.0002",
+          "projectPath": "Business\\Business.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Extensions.Configuration.Abstractions, 8.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.Configuration.Abstractions, and replace with new package Microsoft.Extensions.Configuration.Abstractions 10.0.9",
+              "protected": "Microsoft.Extensions.Configuration.Abstractions, 8.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.Configuration.Abstractions, and replace with new package Microsoft.Extensions.Configuration.Abstractions 10.0.9"
+            },
+            "kind": "File",
+            "path": "Business\\Business.csproj",
+            "snippet": "Microsoft.Extensions.Configuration.Abstractions, 8.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.Configuration.Abstractions, and replace with new package Microsoft.Extensions.Configuration.Abstractions 10.0.9",
+            "protectedSnippet": "Microsoft.Extensions.Configuration.Abstractions, 8.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.Configuration.Abstractions, and replace with new package Microsoft.Extensions.Configuration.Abstractions 10.0.9",
+            "label": "Microsoft.Extensions.Configuration.Abstractions 8.0.0",
+            "properties": {
+              "PackageId": "Microsoft.Extensions.Configuration.Abstractions",
+              "PackageVersion": "8.0.0",
+              "PackageNewVersion": "10.0.9",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "ed84d7f0-6b9c-4ef1-89ea-b3316ed67e16",
+          "ruleId": "Project.0002",
+          "projectPath": "Business\\Business.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net8.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net8.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "Business\\Business.csproj",
+            "snippet": "Current target framework: net8.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net8.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net8.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        },
+        {
+          "incidentId": "a1657c1a-0a05-4d5e-8dfb-a38f55bb7e81",
+          "ruleId": "Api.0001",
+          "description": "API is unavailable in net8.0 ",
+          "projectPath": "Business\\Business.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "services.AddMediatR(cfg =\u003E\r\n            {\r\n                cfg.RegisterServicesFromAssembly(typeof(IMediator).Assembly);\r\n            });",
+              "protected": "T:Microsoft.Extensions.DependencyInjection.ServiceCollectionExtensions"
+            },
+            "kind": "File",
+            "path": "Business\\CoreDI.cs",
+            "snippet": "services.AddMediatR(cfg =\u003E\r\n            {\r\n                cfg.RegisterServicesFromAssembly(typeof(IMediator).Assembly);\r\n            });",
+            "protectedSnippet": "T:Microsoft.Extensions.DependencyInjection.ServiceCollectionExtensions",
+            "label": "T:Microsoft.Extensions.DependencyInjection.ServiceCollectionExtensions",
+            "line": 15,
+            "column": 12
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "ConsoleTests\\DataPipelines.csproj",
+      "startingProject": true,
+      "issues": 1,
+      "storyPoints": 1,
+      "properties": {
+        "appName": "DataPipelines",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net8.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 1,
+        "numberOfCodeFiles": 0,
+        "linesTotal": 16,
+        "linesOfCode": 0,
+        "totalApiScanned": 0,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "c25ab6b2-9682-498d-92d2-ad419d2869fe",
+          "ruleId": "Project.0002",
+          "projectPath": "ConsoleTests\\DataPipelines.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net8.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net8.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "ConsoleTests\\DataPipelines.csproj",
+            "snippet": "Current target framework: net8.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net8.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net8.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "Domain\\Domain.csproj",
+      "startingProject": true,
+      "issues": 1,
+      "storyPoints": 1,
+      "properties": {
+        "appName": "Domain",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net8.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 10,
+        "numberOfCodeFiles": 10,
+        "linesTotal": 395,
+        "linesOfCode": 395,
+        "totalApiScanned": 520,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "8b290958-562a-4227-aa7e-bbc654039613",
+          "ruleId": "Project.0002",
+          "projectPath": "Domain\\Domain.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net8.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net8.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "Domain\\Domain.csproj",
+            "snippet": "Current target framework: net8.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net8.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net8.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "Infrastructure\\Infrastructure.csproj",
+      "startingProject": true,
+      "issues": 4,
+      "storyPoints": 70,
+      "properties": {
+        "appName": "Infrastructure",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net8.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 476,
+        "numberOfCodeFiles": 93,
+        "linesTotal": 591467,
+        "linesOfCode": 13022,
+        "totalApiScanned": 14963,
+        "minLinesOfCodeToChange": 62,
+        "maxLinesOfCodeToChange": 62
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "c4a70056-23de-47fc-b816-3af4de22fafb",
+          "ruleId": "NuGet.0002",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.EntityFrameworkCore.Design, 8.0.11\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.Design, and replace with new package Microsoft.EntityFrameworkCore.Design 10.0.9",
+              "protected": "Microsoft.EntityFrameworkCore.Design, 8.0.11\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.Design, and replace with new package Microsoft.EntityFrameworkCore.Design 10.0.9"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Infrastructure.csproj",
+            "snippet": "Microsoft.EntityFrameworkCore.Design, 8.0.11\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.Design, and replace with new package Microsoft.EntityFrameworkCore.Design 10.0.9",
+            "protectedSnippet": "Microsoft.EntityFrameworkCore.Design, 8.0.11\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.Design, and replace with new package Microsoft.EntityFrameworkCore.Design 10.0.9",
+            "label": "Microsoft.EntityFrameworkCore.Design 8.0.11",
+            "properties": {
+              "PackageId": "Microsoft.EntityFrameworkCore.Design",
+              "PackageVersion": "8.0.11",
+              "PackageNewVersion": "10.0.9",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "ae612c9f-6ba0-42d9-a0be-eee66129f943",
+          "ruleId": "NuGet.0002",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.EntityFrameworkCore.InMemory, 8.0.11\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.InMemory, and replace with new package Microsoft.EntityFrameworkCore.InMemory 10.0.9",
+              "protected": "Microsoft.EntityFrameworkCore.InMemory, 8.0.11\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.InMemory, and replace with new package Microsoft.EntityFrameworkCore.InMemory 10.0.9"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Infrastructure.csproj",
+            "snippet": "Microsoft.EntityFrameworkCore.InMemory, 8.0.11\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.InMemory, and replace with new package Microsoft.EntityFrameworkCore.InMemory 10.0.9",
+            "protectedSnippet": "Microsoft.EntityFrameworkCore.InMemory, 8.0.11\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.InMemory, and replace with new package Microsoft.EntityFrameworkCore.InMemory 10.0.9",
+            "label": "Microsoft.EntityFrameworkCore.InMemory 8.0.11",
+            "properties": {
+              "PackageId": "Microsoft.EntityFrameworkCore.InMemory",
+              "PackageVersion": "8.0.11",
+              "PackageNewVersion": "10.0.9",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "05b7d83c-4804-46d4-83e9-7cd0d51a3d50",
+          "ruleId": "NuGet.0002",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.EntityFrameworkCore.Sqlite, 8.0.11\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.Sqlite, and replace with new package Microsoft.EntityFrameworkCore.Sqlite 10.0.9",
+              "protected": "Microsoft.EntityFrameworkCore.Sqlite, 8.0.11\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.Sqlite, and replace with new package Microsoft.EntityFrameworkCore.Sqlite 10.0.9"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Infrastructure.csproj",
+            "snippet": "Microsoft.EntityFrameworkCore.Sqlite, 8.0.11\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.Sqlite, and replace with new package Microsoft.EntityFrameworkCore.Sqlite 10.0.9",
+            "protectedSnippet": "Microsoft.EntityFrameworkCore.Sqlite, 8.0.11\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.Sqlite, and replace with new package Microsoft.EntityFrameworkCore.Sqlite 10.0.9",
+            "label": "Microsoft.EntityFrameworkCore.Sqlite 8.0.11",
+            "properties": {
+              "PackageId": "Microsoft.EntityFrameworkCore.Sqlite",
+              "PackageVersion": "8.0.11",
+              "PackageNewVersion": "10.0.9",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "0a3ed86a-fd5e-4ba9-a894-8859a202b8b9",
+          "ruleId": "NuGet.0002",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Extensions.Configuration, 8.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.Configuration, and replace with new package Microsoft.Extensions.Configuration 10.0.9",
+              "protected": "Microsoft.Extensions.Configuration, 8.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.Configuration, and replace with new package Microsoft.Extensions.Configuration 10.0.9"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Infrastructure.csproj",
+            "snippet": "Microsoft.Extensions.Configuration, 8.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.Configuration, and replace with new package Microsoft.Extensions.Configuration 10.0.9",
+            "protectedSnippet": "Microsoft.Extensions.Configuration, 8.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.Configuration, and replace with new package Microsoft.Extensions.Configuration 10.0.9",
+            "label": "Microsoft.Extensions.Configuration 8.0.0",
+            "properties": {
+              "PackageId": "Microsoft.Extensions.Configuration",
+              "PackageVersion": "8.0.0",
+              "PackageNewVersion": "10.0.9",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "6fec03ef-e646-4faf-8679-4740f0f6443d",
+          "ruleId": "NuGet.0002",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Extensions.Configuration.FileExtensions, 8.0.1\n\nRecommendation:\n\nRemove Microsoft.Extensions.Configuration.FileExtensions, and replace with new package Microsoft.Extensions.Configuration.FileExtensions 10.0.9",
+              "protected": "Microsoft.Extensions.Configuration.FileExtensions, 8.0.1\n\nRecommendation:\n\nRemove Microsoft.Extensions.Configuration.FileExtensions, and replace with new package Microsoft.Extensions.Configuration.FileExtensions 10.0.9"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Infrastructure.csproj",
+            "snippet": "Microsoft.Extensions.Configuration.FileExtensions, 8.0.1\n\nRecommendation:\n\nRemove Microsoft.Extensions.Configuration.FileExtensions, and replace with new package Microsoft.Extensions.Configuration.FileExtensions 10.0.9",
+            "protectedSnippet": "Microsoft.Extensions.Configuration.FileExtensions, 8.0.1\n\nRecommendation:\n\nRemove Microsoft.Extensions.Configuration.FileExtensions, and replace with new package Microsoft.Extensions.Configuration.FileExtensions 10.0.9",
+            "label": "Microsoft.Extensions.Configuration.FileExtensions 8.0.1",
+            "properties": {
+              "PackageId": "Microsoft.Extensions.Configuration.FileExtensions",
+              "PackageVersion": "8.0.1",
+              "PackageNewVersion": "10.0.9",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "1da14e61-8039-489a-9c24-a1ea1d547d40",
+          "ruleId": "NuGet.0002",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Extensions.Configuration.Json, 8.0.1\n\nRecommendation:\n\nRemove Microsoft.Extensions.Configuration.Json, and replace with new package Microsoft.Extensions.Configuration.Json 10.0.9",
+              "protected": "Microsoft.Extensions.Configuration.Json, 8.0.1\n\nRecommendation:\n\nRemove Microsoft.Extensions.Configuration.Json, and replace with new package Microsoft.Extensions.Configuration.Json 10.0.9"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Infrastructure.csproj",
+            "snippet": "Microsoft.Extensions.Configuration.Json, 8.0.1\n\nRecommendation:\n\nRemove Microsoft.Extensions.Configuration.Json, and replace with new package Microsoft.Extensions.Configuration.Json 10.0.9",
+            "protectedSnippet": "Microsoft.Extensions.Configuration.Json, 8.0.1\n\nRecommendation:\n\nRemove Microsoft.Extensions.Configuration.Json, and replace with new package Microsoft.Extensions.Configuration.Json 10.0.9",
+            "label": "Microsoft.Extensions.Configuration.Json 8.0.1",
+            "properties": {
+              "PackageId": "Microsoft.Extensions.Configuration.Json",
+              "PackageVersion": "8.0.1",
+              "PackageNewVersion": "10.0.9",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "9f7fa420-13d7-4622-a4a2-7a4cc703e6cc",
+          "ruleId": "NuGet.0002",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Extensions.Hosting.Abstractions, 8.0.1\n\nRecommendation:\n\nRemove Microsoft.Extensions.Hosting.Abstractions, and replace with new package Microsoft.Extensions.Hosting.Abstractions 10.0.9",
+              "protected": "Microsoft.Extensions.Hosting.Abstractions, 8.0.1\n\nRecommendation:\n\nRemove Microsoft.Extensions.Hosting.Abstractions, and replace with new package Microsoft.Extensions.Hosting.Abstractions 10.0.9"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Infrastructure.csproj",
+            "snippet": "Microsoft.Extensions.Hosting.Abstractions, 8.0.1\n\nRecommendation:\n\nRemove Microsoft.Extensions.Hosting.Abstractions, and replace with new package Microsoft.Extensions.Hosting.Abstractions 10.0.9",
+            "protectedSnippet": "Microsoft.Extensions.Hosting.Abstractions, 8.0.1\n\nRecommendation:\n\nRemove Microsoft.Extensions.Hosting.Abstractions, and replace with new package Microsoft.Extensions.Hosting.Abstractions 10.0.9",
+            "label": "Microsoft.Extensions.Hosting.Abstractions 8.0.1",
+            "properties": {
+              "PackageId": "Microsoft.Extensions.Hosting.Abstractions",
+              "PackageVersion": "8.0.1",
+              "PackageNewVersion": "10.0.9",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "d485fe29-945e-4b1f-9b73-c4e39612fd64",
+          "ruleId": "Project.0002",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net8.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net8.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Infrastructure.csproj",
+            "snippet": "Current target framework: net8.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net8.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net8.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        },
+        {
+          "incidentId": "b2d6828f-2183-4ffd-b802-9539a23e5c82",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var json = await resp.Content.ReadAsStringAsync();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Vocab\\OrdbokeneClient.cs",
+            "snippet": "var json = await resp.Content.ReadAsStringAsync();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 90,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "cb075b56-9000-4e57-87bf-98c6fee198c2",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var stream = await resp.Content.ReadAsStreamAsync();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Vocab\\OrdbokeneClient.cs",
+            "snippet": "var stream = await resp.Content.ReadAsStreamAsync();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 71,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "3141a302-655c-4d96-a2cf-71798e9eedb0",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var stream = await resp.Content.ReadAsStreamAsync();",
+              "protected": "M:System.Net.Http.HttpContent.ReadAsStreamAsync"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Vocab\\OrdbokeneClient.cs",
+            "snippet": "var stream = await resp.Content.ReadAsStreamAsync();",
+            "protectedSnippet": "M:System.Net.Http.HttpContent.ReadAsStreamAsync",
+            "label": "M:System.Net.Http.HttpContent.ReadAsStreamAsync",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 71,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "e30eef12-f676-4123-a1fc-3ab1f8c72b77",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "query.Add($\u0022scope={Uri.EscapeDataString(scope)}\u0022);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Vocab\\OrdbokeneClient.cs",
+            "snippet": "query.Add($\u0022scope={Uri.EscapeDataString(scope)}\u0022);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 63,
+            "column": 46
+          }
+        },
+        {
+          "incidentId": "dac55824-5efa-40ba-941c-4754807d9880",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "query.Add($\u0022dict={Uri.EscapeDataString(string.Join(\u0027,\u0027, dicts))}\u0022);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Vocab\\OrdbokeneClient.cs",
+            "snippet": "query.Add($\u0022dict={Uri.EscapeDataString(string.Join(\u0027,\u0027, dicts))}\u0022);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 62,
+            "column": 31
+          }
+        },
+        {
+          "incidentId": "0c920abc-7c85-4787-81c4-b486ec0c7086",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "query.Add($\u0022wc={Uri.EscapeDataString(wc)}\u0022);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Vocab\\OrdbokeneClient.cs",
+            "snippet": "query.Add($\u0022wc={Uri.EscapeDataString(wc)}\u0022);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 61,
+            "column": 43
+          }
+        },
+        {
+          "incidentId": "75b78606-5cc0-46f6-894b-4e6b58f71d1c",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "query.Add($\u0022w={Uri.EscapeDataString(w)}\u0022);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Vocab\\OrdbokeneClient.cs",
+            "snippet": "query.Add($\u0022w={Uri.EscapeDataString(w)}\u0022);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 60,
+            "column": 42
+          }
+        },
+        {
+          "incidentId": "60136578-b5c9-4d73-9092-a79418881fa3",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_httpClient = new HttpClient\r\n            {\r\n                BaseAddress = new Uri(baseUrl)\r\n            };",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Vocab\\OrdbokeneClient.cs",
+            "snippet": "_httpClient = new HttpClient\r\n            {\r\n                BaseAddress = new Uri(baseUrl)\r\n            };",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 36,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "0293f184-e898-4cda-a0d5-f6ef799edb91",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_httpClient = new HttpClient\r\n            {\r\n                BaseAddress = new Uri(baseUrl)\r\n            };",
+              "protected": "M:System.Uri.#ctor(System.String)"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Vocab\\OrdbokeneClient.cs",
+            "snippet": "_httpClient = new HttpClient\r\n            {\r\n                BaseAddress = new Uri(baseUrl)\r\n            };",
+            "protectedSnippet": "M:System.Uri.#ctor(System.String)",
+            "label": "M:System.Uri.#ctor(System.String)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 36,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "049e1e8f-c1cc-4c45-9a27-0a268e0eaf76",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_httpClient = new HttpClient\r\n            {\r\n                BaseAddress = new Uri(baseUrl)\r\n            };",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Vocab\\OrdbokeneClient.cs",
+            "snippet": "_httpClient = new HttpClient\r\n            {\r\n                BaseAddress = new Uri(baseUrl)\r\n            };",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 36,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "efa8a3ff-a550-42d7-a8c3-5ff829df4738",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_httpClient = new HttpClient\r\n            {\r\n                BaseAddress = new Uri(baseUrl)\r\n            };",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Vocab\\OrdbokeneClient.cs",
+            "snippet": "_httpClient = new HttpClient\r\n            {\r\n                BaseAddress = new Uri(baseUrl)\r\n            };",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 36,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "66c51b88-2cf4-410a-be90-d31a8f6496d9",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_httpClient = new HttpClient\r\n            {\r\n                BaseAddress = new Uri(baseUrl)\r\n            };",
+              "protected": "M:System.Uri.#ctor(System.String)"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Vocab\\OrdbokeneClient.cs",
+            "snippet": "_httpClient = new HttpClient\r\n            {\r\n                BaseAddress = new Uri(baseUrl)\r\n            };",
+            "protectedSnippet": "M:System.Uri.#ctor(System.String)",
+            "label": "M:System.Uri.#ctor(System.String)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 36,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "b3fcdd13-1ca3-4fa4-ad2d-b48e332ebc02",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_httpClient = new HttpClient\r\n            {\r\n                BaseAddress = new Uri(baseUrl)\r\n            };",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Vocab\\OrdbokeneClient.cs",
+            "snippet": "_httpClient = new HttpClient\r\n            {\r\n                BaseAddress = new Uri(baseUrl)\r\n            };",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 36,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "74dcf9ee-2b2a-4f31-9541-8f97130b8610",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "return await res.Content.ReadAsStringAsync();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Lookup\\WiktionaryClient.cs",
+            "snippet": "return await res.Content.ReadAsStringAsync();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 316,
+            "column": 24
+          }
+        },
+        {
+          "incidentId": "f6b0508c-1ec0-41d4-9fff-aaa084d70424",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var encodedWord = Uri.EscapeDataString(word);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Lookup\\WiktionaryClient.cs",
+            "snippet": "var encodedWord = Uri.EscapeDataString(word);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 63,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "e92103f4-b881-4b1d-8244-71bc2dc9e68f",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "return await res.Content.ReadAsStringAsync();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Lookup\\DictCcClient.cs",
+            "snippet": "return await res.Content.ReadAsStringAsync();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 372,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "863f6e35-6e68-49cb-bbbf-ea8badb87e01",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "string url = $\u0022https://{_config.LanguagePair}.{_config.BaseDomain}/?s={Uri.EscapeDataString(word)}\u0022;",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Lookup\\DictCcClient.cs",
+            "snippet": "string url = $\u0022https://{_config.LanguagePair}.{_config.BaseDomain}/?s={Uri.EscapeDataString(word)}\u0022;",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 144,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "57020c0d-0ba1-47a2-9f3f-0d092507d6d7",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var url = $\u0022https://{_config.LanguagePair}.{_config.BaseDomain}/?s={Uri.EscapeDataString(word)}\u0022;",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Lookup\\DictCcClient.cs",
+            "snippet": "var url = $\u0022https://{_config.LanguagePair}.{_config.BaseDomain}/?s={Uri.EscapeDataString(word)}\u0022;",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 38,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "f4b238b7-eb5f-4e3e-affe-8d8e86869465",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "return await res.Content.ReadAsStringAsync();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Lookup\\CambridgeClient.cs",
+            "snippet": "return await res.Content.ReadAsStringAsync();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 412,
+            "column": 24
+          }
+        },
+        {
+          "incidentId": "3d845772-8ae2-4d1c-a0fe-ee26890301b7",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var url = $\u0022{_config.BaseUrl}/dictionary/{_config.LanguagePair}/{Uri.EscapeDataString(word)}\u0022;",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Lookup\\CambridgeClient.cs",
+            "snippet": "var url = $\u0022{_config.BaseUrl}/dictionary/{_config.LanguagePair}/{Uri.EscapeDataString(word)}\u0022;",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 346,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "9b04df5f-b5dc-4d16-817c-9a2485968182",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var url = $\u0022{_config.BaseUrl}/dictionary/{_config.LanguagePair}/{Uri.EscapeDataString(word)}\u0022;",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Lookup\\CambridgeClient.cs",
+            "snippet": "var url = $\u0022{_config.BaseUrl}/dictionary/{_config.LanguagePair}/{Uri.EscapeDataString(word)}\u0022;",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 292,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "7cc1f30d-2898-433e-bc91-44850ac3f386",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var url = $\u0022{_config.BaseUrl}/dictionary/{_config.LanguagePair}/{Uri.EscapeDataString(word)}\u0022;",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Lookup\\CambridgeClient.cs",
+            "snippet": "var url = $\u0022{_config.BaseUrl}/dictionary/{_config.LanguagePair}/{Uri.EscapeDataString(word)}\u0022;",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 176,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "f430572a-27ce-4bae-ad6a-60b4b2492a2e",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var url = $\u0022{_config.BaseUrl}/dictionary/{_config.LanguagePair}/{Uri.EscapeDataString(word)}\u0022;",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Lookup\\CambridgeClient.cs",
+            "snippet": "var url = $\u0022{_config.BaseUrl}/dictionary/{_config.LanguagePair}/{Uri.EscapeDataString(word)}\u0022;",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 98,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "7e57228b-82f4-4c95-ae4f-934ad977cca2",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "private async Task\u003Cstring\u003E DownloadRulesAsync(Uri uri)",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Vocab\\XpfTranscriptor.cs",
+            "snippet": "private async Task\u003Cstring\u003E DownloadRulesAsync(Uri uri)",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 139,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "7f1e3373-6e85-44c6-923f-76b001c87550",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "public XpfTranscriptor(Uri rulesUri, string providerName = \u0022XpfTranscriptor\u0022, string languageCode = \u0022unknown\u0022)\r\n    {\r\n        ProviderName = providerName;\r\n        LanguageCode = languageCode;\r\n        rulesContent = DownloadRulesAsync(rulesUri).GetAwaiter().GetResult();\r\n        var rules = LoadRules(rulesContent);\r\n        Init(rules);\r\n    }",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Vocab\\XpfTranscriptor.cs",
+            "snippet": "public XpfTranscriptor(Uri rulesUri, string providerName = \u0022XpfTranscriptor\u0022, string languageCode = \u0022unknown\u0022)\r\n    {\r\n        ProviderName = providerName;\r\n        LanguageCode = languageCode;\r\n        rulesContent = DownloadRulesAsync(rulesUri).GetAwaiter().GetResult();\r\n        var rules = LoadRules(rulesContent);\r\n        Init(rules);\r\n    }",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 130,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "fcedbd1d-9716-4d1e-877c-32a4377dc24f",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "public XpfTranscriptor(Uri rulesUri, string providerName = \u0022XpfTranscriptor\u0022, string languageCode = \u0022unknown\u0022)\r\n    {\r\n        ProviderName = providerName;\r\n        LanguageCode = languageCode;\r\n        rulesContent = DownloadRulesAsync(rulesUri).GetAwaiter().GetResult();\r\n        var rules = LoadRules(rulesContent);\r\n        Init(rules);\r\n    }",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Vocab\\XpfTranscriptor.cs",
+            "snippet": "public XpfTranscriptor(Uri rulesUri, string providerName = \u0022XpfTranscriptor\u0022, string languageCode = \u0022unknown\u0022)\r\n    {\r\n        ProviderName = providerName;\r\n        LanguageCode = languageCode;\r\n        rulesContent = DownloadRulesAsync(rulesUri).GetAwaiter().GetResult();\r\n        var rules = LoadRules(rulesContent);\r\n        Init(rules);\r\n    }",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 130,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "f421c225-754b-4b7e-86b6-fb02137da0b9",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "string html = await response.Content.ReadAsStringAsync();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Vocab\\ToIpaClient.cs",
+            "snippet": "string html = await response.Content.ReadAsStringAsync();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 74,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "9daedd0f-7b26-425c-9a14-0cd840e6765e",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "string url = $\u0022{BaseUrl}/{_langCode}/{Uri.EscapeDataString(token.ToLower())}\u0022;",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Vocab\\ToIpaClient.cs",
+            "snippet": "string url = $\u0022{BaseUrl}/{_langCode}/{Uri.EscapeDataString(token.ToLower())}\u0022;",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 68,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "daa154f1-b532-4e09-a046-e0cf6854b28b",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var sentence = await response.Content.ReadFromJsonAsync\u003CSentence\u003E();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Vocab\\TatoebaClient.cs",
+            "snippet": "var sentence = await response.Content.ReadFromJsonAsync\u003CSentence\u003E();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 181,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "fa600ef8-0f0a-4af1-9980-e8738041ebec",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var result = await response.Content.ReadFromJsonAsync\u003CSentenceSearchResult\u003E();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Vocab\\TatoebaClient.cs",
+            "snippet": "var result = await response.Content.ReadFromJsonAsync\u003CSentenceSearchResult\u003E();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 170,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "4f5580b1-231e-4d4e-844c-6015c9a65e9d",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var searchQuery = useExactSearch \r\n                    ? $\u0022={Uri.EscapeDataString(query)}\u0022 \r\n                    : Uri.EscapeDataString(query);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Vocab\\TatoebaClient.cs",
+            "snippet": "var searchQuery = useExactSearch \r\n                    ? $\u0022={Uri.EscapeDataString(query)}\u0022 \r\n                    : Uri.EscapeDataString(query);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 154,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "896668bf-679b-4fc0-93c9-0d795736efd4",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var searchQuery = useExactSearch \r\n                    ? $\u0022={Uri.EscapeDataString(query)}\u0022 \r\n                    : Uri.EscapeDataString(query);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Vocab\\TatoebaClient.cs",
+            "snippet": "var searchQuery = useExactSearch \r\n                    ? $\u0022={Uri.EscapeDataString(query)}\u0022 \r\n                    : Uri.EscapeDataString(query);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 154,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "0f546bcc-cdb1-461c-969f-9a9ba3dc25cc",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "queryParams.Add($\u0022lang={Uri.EscapeDataString(targetLanguage)}\u0022);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Vocab\\TatoebaClient.cs",
+            "snippet": "queryParams.Add($\u0022lang={Uri.EscapeDataString(targetLanguage)}\u0022);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 150,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "1e052149-4dd5-494c-9213-c53fd083fb3d",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_http = new HttpClient { BaseAddress = new Uri(_config.BaseUrl) };",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Vocab\\TatoebaClient.cs",
+            "snippet": "_http = new HttpClient { BaseAddress = new Uri(_config.BaseUrl) };",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 49,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "d88893ee-b746-48b9-be72-6a34d605d111",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_http = new HttpClient { BaseAddress = new Uri(_config.BaseUrl) };",
+              "protected": "M:System.Uri.#ctor(System.String)"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Vocab\\TatoebaClient.cs",
+            "snippet": "_http = new HttpClient { BaseAddress = new Uri(_config.BaseUrl) };",
+            "protectedSnippet": "M:System.Uri.#ctor(System.String)",
+            "label": "M:System.Uri.#ctor(System.String)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 49,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "e275e0ab-c2ff-4157-937d-bd031eb8e70c",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_http = new HttpClient { BaseAddress = new Uri(_config.BaseUrl) };",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Vocab\\TatoebaClient.cs",
+            "snippet": "_http = new HttpClient { BaseAddress = new Uri(_config.BaseUrl) };",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 49,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "0ca58af0-85cf-4053-af84-2b0a96c6441a",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_http = new HttpClient { BaseAddress = new Uri(_config.BaseUrl) };",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Vocab\\TatoebaClient.cs",
+            "snippet": "_http = new HttpClient { BaseAddress = new Uri(_config.BaseUrl) };",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 49,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "aaa15be8-c9a2-49d9-badd-b2c27926bf68",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_http = new HttpClient { BaseAddress = new Uri(_config.BaseUrl) };",
+              "protected": "M:System.Uri.#ctor(System.String)"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Vocab\\TatoebaClient.cs",
+            "snippet": "_http = new HttpClient { BaseAddress = new Uri(_config.BaseUrl) };",
+            "protectedSnippet": "M:System.Uri.#ctor(System.String)",
+            "label": "M:System.Uri.#ctor(System.String)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 49,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "2dda54ae-71c2-4a81-8bb9-96b541f051d7",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_http = new HttpClient { BaseAddress = new Uri(_config.BaseUrl) };",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Vocab\\TatoebaClient.cs",
+            "snippet": "_http = new HttpClient { BaseAddress = new Uri(_config.BaseUrl) };",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 49,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "c73ce9ba-7788-4170-a8ae-ea7cf7187908",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "await Task.Delay(TimeSpan.FromMinutes(delayMinutes));",
+              "protected": "M:System.TimeSpan.FromMinutes(System.Double)"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\AI\\GeminiClient.cs",
+            "snippet": "await Task.Delay(TimeSpan.FromMinutes(delayMinutes));",
+            "protectedSnippet": "M:System.TimeSpan.FromMinutes(System.Double)",
+            "label": "M:System.TimeSpan.FromMinutes(System.Double)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 83,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "12ccd84f-53a6-4c9c-b12e-529dbae7691b",
+          "ruleId": "Api.0003",
+          "description": "Nullable JsonDocument properties deserialize to JsonValueKind.Null ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "using var doc = JsonDocument.Parse(responseJson);",
+              "protected": "T:System.Text.Json.JsonDocument"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\AI\\GeminiClient.cs",
+            "snippet": "using var doc = JsonDocument.Parse(responseJson);",
+            "protectedSnippet": "T:System.Text.Json.JsonDocument",
+            "label": "T:System.Text.Json.JsonDocument",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/serialization/9.0/jsondocument-props.md",
+                "isCustom": false
+              }
+            ],
+            "line": 65,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "40c2ccf2-dace-42d8-949d-9c4aa7aa7299",
+          "ruleId": "Api.0003",
+          "description": "Nullable JsonDocument properties deserialize to JsonValueKind.Null ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "using var doc = JsonDocument.Parse(responseJson);",
+              "protected": "T:System.Text.Json.JsonDocument"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\AI\\GeminiClient.cs",
+            "snippet": "using var doc = JsonDocument.Parse(responseJson);",
+            "protectedSnippet": "T:System.Text.Json.JsonDocument",
+            "label": "T:System.Text.Json.JsonDocument",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/serialization/9.0/jsondocument-props.md",
+                "isCustom": false
+              }
+            ],
+            "line": 65,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "74643fb7-95cf-4af6-9c5c-19fa90f681db",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var responseJson = await response.Content.ReadAsStringAsync();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\AI\\GeminiClient.cs",
+            "snippet": "var responseJson = await response.Content.ReadAsStringAsync();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 64,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "c080dd35-4bca-4061-b4a9-0b0ded2aca88",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_httpClient = new HttpClient\r\n            {\r\n                BaseAddress = new Uri(\u0022https://generativelanguage.googleapis.com/\u0022)\r\n            };",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\AI\\GeminiClient.cs",
+            "snippet": "_httpClient = new HttpClient\r\n            {\r\n                BaseAddress = new Uri(\u0022https://generativelanguage.googleapis.com/\u0022)\r\n            };",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 17,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "a102edb0-23e6-45ae-84c7-dadc1a338ea9",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_httpClient = new HttpClient\r\n            {\r\n                BaseAddress = new Uri(\u0022https://generativelanguage.googleapis.com/\u0022)\r\n            };",
+              "protected": "M:System.Uri.#ctor(System.String)"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\AI\\GeminiClient.cs",
+            "snippet": "_httpClient = new HttpClient\r\n            {\r\n                BaseAddress = new Uri(\u0022https://generativelanguage.googleapis.com/\u0022)\r\n            };",
+            "protectedSnippet": "M:System.Uri.#ctor(System.String)",
+            "label": "M:System.Uri.#ctor(System.String)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 17,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "7f923da7-79c8-4097-b955-79c828912651",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_httpClient = new HttpClient\r\n            {\r\n                BaseAddress = new Uri(\u0022https://generativelanguage.googleapis.com/\u0022)\r\n            };",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\AI\\GeminiClient.cs",
+            "snippet": "_httpClient = new HttpClient\r\n            {\r\n                BaseAddress = new Uri(\u0022https://generativelanguage.googleapis.com/\u0022)\r\n            };",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 17,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "f15e97bd-c3b3-486d-abbd-d98e106b700a",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_httpClient = new HttpClient\r\n            {\r\n                BaseAddress = new Uri(\u0022https://generativelanguage.googleapis.com/\u0022)\r\n            };",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\AI\\GeminiClient.cs",
+            "snippet": "_httpClient = new HttpClient\r\n            {\r\n                BaseAddress = new Uri(\u0022https://generativelanguage.googleapis.com/\u0022)\r\n            };",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 17,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "f5b7e82d-151d-42e0-8f92-ccc7e12b5394",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_httpClient = new HttpClient\r\n            {\r\n                BaseAddress = new Uri(\u0022https://generativelanguage.googleapis.com/\u0022)\r\n            };",
+              "protected": "M:System.Uri.#ctor(System.String)"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\AI\\GeminiClient.cs",
+            "snippet": "_httpClient = new HttpClient\r\n            {\r\n                BaseAddress = new Uri(\u0022https://generativelanguage.googleapis.com/\u0022)\r\n            };",
+            "protectedSnippet": "M:System.Uri.#ctor(System.String)",
+            "label": "M:System.Uri.#ctor(System.String)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 17,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "66c81fea-6699-417e-b073-e9130f4acb30",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_httpClient = new HttpClient\r\n            {\r\n                BaseAddress = new Uri(\u0022https://generativelanguage.googleapis.com/\u0022)\r\n            };",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\AI\\GeminiClient.cs",
+            "snippet": "_httpClient = new HttpClient\r\n            {\r\n                BaseAddress = new Uri(\u0022https://generativelanguage.googleapis.com/\u0022)\r\n            };",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 17,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "46c223cb-72be-4dd4-bfc6-136a63154071",
+          "ruleId": "Api.0003",
+          "description": "Nullable JsonDocument properties deserialize to JsonValueKind.Null ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "using var doc = JsonDocument.Parse(responseString);",
+              "protected": "T:System.Text.Json.JsonDocument"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\AI\\LLamaFileClient.cs",
+            "snippet": "using var doc = JsonDocument.Parse(responseString);",
+            "protectedSnippet": "T:System.Text.Json.JsonDocument",
+            "label": "T:System.Text.Json.JsonDocument",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/serialization/9.0/jsondocument-props.md",
+                "isCustom": false
+              }
+            ],
+            "line": 47,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "1c918df1-afe9-4a3e-b97f-b170f30547e3",
+          "ruleId": "Api.0003",
+          "description": "Nullable JsonDocument properties deserialize to JsonValueKind.Null ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "using var doc = JsonDocument.Parse(responseString);",
+              "protected": "T:System.Text.Json.JsonDocument"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\AI\\LLamaFileClient.cs",
+            "snippet": "using var doc = JsonDocument.Parse(responseString);",
+            "protectedSnippet": "T:System.Text.Json.JsonDocument",
+            "label": "T:System.Text.Json.JsonDocument",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/serialization/9.0/jsondocument-props.md",
+                "isCustom": false
+              }
+            ],
+            "line": 47,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "34f15d9f-ff96-49b1-880a-d229c7212851",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var responseString = await response.Content.ReadAsStringAsync();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\AI\\LLamaFileClient.cs",
+            "snippet": "var responseString = await response.Content.ReadAsStringAsync();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 45,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "6da6ef28-54fd-4d5d-abbd-3483353a4d3b",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_httpClient.Timeout = TimeSpan.FromSeconds(300);",
+              "protected": "M:System.TimeSpan.FromSeconds(System.Double)"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\AI\\LLamaFileClient.cs",
+            "snippet": "_httpClient.Timeout = TimeSpan.FromSeconds(300);",
+            "protectedSnippet": "M:System.TimeSpan.FromSeconds(System.Double)",
+            "label": "M:System.TimeSpan.FromSeconds(System.Double)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 19,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "4935bca6-68a4-42cf-920a-3b9606f2d085",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_httpClient.Timeout = TimeSpan.FromSeconds(300);",
+              "protected": "M:System.TimeSpan.FromSeconds(System.Double)"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\AI\\LLamaFileClient.cs",
+            "snippet": "_httpClient.Timeout = TimeSpan.FromSeconds(300);",
+            "protectedSnippet": "M:System.TimeSpan.FromSeconds(System.Double)",
+            "label": "M:System.TimeSpan.FromSeconds(System.Double)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 19,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "81ae58e5-b354-4ad6-a077-a185e316b7a2",
+          "ruleId": "Api.0003",
+          "description": "Nullable JsonDocument properties deserialize to JsonValueKind.Null ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "using var doc = JsonDocument.Parse(json);",
+              "protected": "T:System.Text.Json.JsonDocument"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\AI\\OllamaClient.cs",
+            "snippet": "using var doc = JsonDocument.Parse(json);",
+            "protectedSnippet": "T:System.Text.Json.JsonDocument",
+            "label": "T:System.Text.Json.JsonDocument",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/serialization/9.0/jsondocument-props.md",
+                "isCustom": false
+              }
+            ],
+            "line": 68,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "261b28b4-954a-481a-88f5-14f6da6fc71b",
+          "ruleId": "Api.0003",
+          "description": "Nullable JsonDocument properties deserialize to JsonValueKind.Null ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "using var doc = JsonDocument.Parse(json);",
+              "protected": "T:System.Text.Json.JsonDocument"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\AI\\OllamaClient.cs",
+            "snippet": "using var doc = JsonDocument.Parse(json);",
+            "protectedSnippet": "T:System.Text.Json.JsonDocument",
+            "label": "T:System.Text.Json.JsonDocument",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/serialization/9.0/jsondocument-props.md",
+                "isCustom": false
+              }
+            ],
+            "line": 68,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "b1d7ec8c-094a-413a-a45e-d009fdc5b777",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var json = await response.Content.ReadAsStringAsync();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\AI\\OllamaClient.cs",
+            "snippet": "var json = await response.Content.ReadAsStringAsync();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 67,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "299c9775-5a8f-419f-82d7-3bade1aecbce",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_httpClient.Timeout = TimeSpan.FromSeconds(300);",
+              "protected": "M:System.TimeSpan.FromSeconds(System.Double)"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\AI\\OllamaClient.cs",
+            "snippet": "_httpClient.Timeout = TimeSpan.FromSeconds(300);",
+            "protectedSnippet": "M:System.TimeSpan.FromSeconds(System.Double)",
+            "label": "M:System.TimeSpan.FromSeconds(System.Double)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 27,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "013a80e1-7e08-4e6f-b995-d0612329b26f",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_httpClient.Timeout = TimeSpan.FromSeconds(300);",
+              "protected": "M:System.TimeSpan.FromSeconds(System.Double)"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\AI\\OllamaClient.cs",
+            "snippet": "_httpClient.Timeout = TimeSpan.FromSeconds(300);",
+            "protectedSnippet": "M:System.TimeSpan.FromSeconds(System.Double)",
+            "label": "M:System.TimeSpan.FromSeconds(System.Double)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 27,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "691e9fc2-c928-4fb0-9aa5-efdc6e2a6d79",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var audioData = await res.Content.ReadAsStringAsync();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\ETL\\Pipelines\\TatoebaPipeline.cs",
+            "snippet": "var audioData = await res.Content.ReadAsStringAsync();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 61,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "da25ba31-845d-4f59-bc5a-de08e46a6a8f",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_xpfProvider ??= new XpfTranscriptor(\r\n            new Uri(XPF_RULES_URL),\r\n            \u0022Vietnamese XPF\u0022,\r\n            LanguageCode\r\n        );",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Languages\\VietnameseLanguageService.cs",
+            "snippet": "_xpfProvider ??= new XpfTranscriptor(\r\n            new Uri(XPF_RULES_URL),\r\n            \u0022Vietnamese XPF\u0022,\r\n            LanguageCode\r\n        );",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 54,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "655f3f40-fb96-489a-ab5d-74288144f714",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "Infrastructure\\Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_xpfProvider ??= new XpfTranscriptor(\r\n            new Uri(XPF_RULES_URL),\r\n            \u0022Vietnamese XPF\u0022,\r\n            LanguageCode\r\n        );",
+              "protected": "M:System.Uri.#ctor(System.String)"
+            },
+            "kind": "File",
+            "path": "Infrastructure\\Languages\\VietnameseLanguageService.cs",
+            "snippet": "_xpfProvider ??= new XpfTranscriptor(\r\n            new Uri(XPF_RULES_URL),\r\n            \u0022Vietnamese XPF\u0022,\r\n            LanguageCode\r\n        );",
+            "protectedSnippet": "M:System.Uri.#ctor(System.String)",
+            "label": "M:System.Uri.#ctor(System.String)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 54,
+            "column": 8
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "SupportServer\\SupportServer.csproj",
+      "startingProject": true,
+      "issues": 3,
+      "storyPoints": 3,
+      "properties": {
+        "appName": "SupportServer",
+        "projectKind": "AspNetCore",
+        "frameworks": [
+          "net8.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 9,
+        "numberOfCodeFiles": 9,
+        "linesTotal": 552,
+        "linesOfCode": 552,
+        "totalApiScanned": 637,
+        "minLinesOfCodeToChange": 1,
+        "maxLinesOfCodeToChange": 1
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "e0de9702-4bd0-4497-b96a-cc59186e4466",
+          "ruleId": "NuGet.0001",
+          "projectPath": "SupportServer\\SupportServer.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets, 1.22.1\n\nRecommendation:\n\nNo supported version found",
+              "protected": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets, 1.22.1\n\nRecommendation:\n\nNo supported version found"
+            },
+            "kind": "File",
+            "path": "SupportServer\\SupportServer.csproj",
+            "snippet": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets, 1.22.1\n\nRecommendation:\n\nNo supported version found",
+            "protectedSnippet": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets, 1.22.1\n\nRecommendation:\n\nNo supported version found",
+            "label": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets 1.22.1",
+            "properties": {
+              "PackageId": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets",
+              "PackageVersion": "1.22.1",
+              "PackageNewVersion": null,
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "7978db60-c40f-4461-8f40-1caeeb304f5e",
+          "ruleId": "Project.0002",
+          "projectPath": "SupportServer\\SupportServer.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net8.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net8.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "SupportServer\\SupportServer.csproj",
+            "snippet": "Current target framework: net8.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net8.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net8.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        },
+        {
+          "incidentId": "d604a94e-de7a-45b3-bb52-6d5899bd7529",
+          "ruleId": "Api.0001",
+          "description": "Breaking change: DynamicallyAccessedMembers annotation removed from trim-unsafe configuration APIs ",
+          "projectPath": "SupportServer\\SupportServer.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var cloudflareConfig = builder.Configuration.GetSection(\u0022CloudflareR2\u0022).Get\u003CCloudflareR2Config\u003E();",
+              "protected": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.Get\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration)"
+            },
+            "kind": "File",
+            "path": "SupportServer\\Program.cs",
+            "snippet": "var cloudflareConfig = builder.Configuration.GetSection(\u0022CloudflareR2\u0022).Get\u003CCloudflareR2Config\u003E();",
+            "protectedSnippet": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.Get\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration)",
+            "label": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.Get\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/extensions/10.0/dynamically-accessed-members-configuration.md",
+                "isCustom": false
+              }
+            ],
+            "line": 43,
+            "column": 0
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "SupportServer.Tests\\SupportServer.Tests.csproj",
+      "startingProject": true,
+      "issues": 2,
+      "storyPoints": 2,
+      "properties": {
+        "appName": "SupportServer.Tests",
+        "projectKind": "DotNetCoreApp",
+        "frameworks": [
+          "net8.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 4,
+        "numberOfCodeFiles": 2,
+        "linesTotal": 2034,
+        "linesOfCode": 259,
+        "totalApiScanned": 270,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "c2a37209-f816-4e92-89d5-d1a06bb7695e",
+          "ruleId": "NuGet.0005",
+          "projectPath": "SupportServer.Tests\\SupportServer.Tests.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "xunit, 2.9.3\n\nRecommendation:\n\nThis package will only be updated for security issues. All future feature work has moved onto v3.\n\nGuide for migrating from xUnit.net v2 to v3: https://xunit.net/docs/getting-started/v3/migration\nRemove xunit, and replace with new package xunit, 2.9.3",
+              "protected": "xunit, 2.9.3\n\nRecommendation:\n\nThis package will only be updated for security issues. All future feature work has moved onto v3.\n\nGuide for migrating from xUnit.net v2 to v3: https://xunit.net/docs/getting-started/v3/migration\nRemove xunit, and replace with new package xunit, 2.9.3"
+            },
+            "kind": "File",
+            "path": "SupportServer.Tests\\SupportServer.Tests.csproj",
+            "snippet": "xunit, 2.9.3\n\nRecommendation:\n\nThis package will only be updated for security issues. All future feature work has moved onto v3.\n\nGuide for migrating from xUnit.net v2 to v3: https://xunit.net/docs/getting-started/v3/migration\nRemove xunit, and replace with new package xunit, 2.9.3",
+            "protectedSnippet": "xunit, 2.9.3\n\nRecommendation:\n\nThis package will only be updated for security issues. All future feature work has moved onto v3.\n\nGuide for migrating from xUnit.net v2 to v3: https://xunit.net/docs/getting-started/v3/migration\nRemove xunit, and replace with new package xunit, 2.9.3",
+            "label": "xunit 2.9.3",
+            "properties": {
+              "PackageId": "xunit",
+              "PackageVersion": "2.9.3",
+              "PackageNewVersion": null,
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "f957c5ac-874f-4aa0-8588-aec8782c000d",
+          "ruleId": "Project.0002",
+          "projectPath": "SupportServer.Tests\\SupportServer.Tests.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net8.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net8.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "SupportServer.Tests\\SupportServer.Tests.csproj",
+            "snippet": "Current target framework: net8.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net8.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net8.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "TestScripts\\TestScripts.csproj",
+      "startingProject": true,
+      "issues": 1,
+      "storyPoints": 1,
+      "properties": {
+        "appName": "TestScripts",
+        "projectKind": "DotNetCoreApp",
+        "frameworks": [
+          "net8.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 5,
+        "numberOfCodeFiles": 5,
+        "linesTotal": 221,
+        "linesOfCode": 221,
+        "totalApiScanned": 262,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "e12b67b4-7784-4d28-96e5-1f7fdb4e44a0",
+          "ruleId": "Project.0002",
+          "projectPath": "TestScripts\\TestScripts.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net8.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net8.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "TestScripts\\TestScripts.csproj",
+            "snippet": "Current target framework: net8.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net8.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net8.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "MauiApp1\\Triolingo.csproj",
+      "startingProject": true,
+      "issues": 3,
+      "storyPoints": 42,
+      "properties": {
+        "appName": "Triolingo",
+        "projectKind": "DotNetCoreApp",
+        "frameworks": [
+          "net8.0-android",
+          "net8.0-ios",
+          "net8.0-maccatalyst",
+          "net8.0-windows10.0.19041.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 80,
+        "numberOfCodeFiles": 29,
+        "linesTotal": 10596,
+        "linesOfCode": 2263,
+        "totalApiScanned": 6643,
+        "minLinesOfCodeToChange": 39,
+        "maxLinesOfCodeToChange": 39
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "f5f8a359-e85e-4a54-80f0-fe3da8caa337",
+          "ruleId": "NuGet.0002",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.AspNetCore.WebUtilities, 8.0.11\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.WebUtilities, and replace with new package Microsoft.AspNetCore.WebUtilities 10.0.9",
+              "protected": "Microsoft.AspNetCore.WebUtilities, 8.0.11\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.WebUtilities, and replace with new package Microsoft.AspNetCore.WebUtilities 10.0.9"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\Triolingo.csproj",
+            "snippet": "Microsoft.AspNetCore.WebUtilities, 8.0.11\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.WebUtilities, and replace with new package Microsoft.AspNetCore.WebUtilities 10.0.9",
+            "protectedSnippet": "Microsoft.AspNetCore.WebUtilities, 8.0.11\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.WebUtilities, and replace with new package Microsoft.AspNetCore.WebUtilities 10.0.9",
+            "label": "Microsoft.AspNetCore.WebUtilities 8.0.11",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.WebUtilities",
+              "PackageVersion": "8.0.11",
+              "PackageNewVersion": "10.0.9",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "3d84a800-1acf-488c-9e84-5fbe5c3839d4",
+          "ruleId": "NuGet.0002",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Extensions.Logging.Debug, 8.0.1\n\nRecommendation:\n\nRemove Microsoft.Extensions.Logging.Debug, and replace with new package Microsoft.Extensions.Logging.Debug 10.0.9",
+              "protected": "Microsoft.Extensions.Logging.Debug, 8.0.1\n\nRecommendation:\n\nRemove Microsoft.Extensions.Logging.Debug, and replace with new package Microsoft.Extensions.Logging.Debug 10.0.9"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\Triolingo.csproj",
+            "snippet": "Microsoft.Extensions.Logging.Debug, 8.0.1\n\nRecommendation:\n\nRemove Microsoft.Extensions.Logging.Debug, and replace with new package Microsoft.Extensions.Logging.Debug 10.0.9",
+            "protectedSnippet": "Microsoft.Extensions.Logging.Debug, 8.0.1\n\nRecommendation:\n\nRemove Microsoft.Extensions.Logging.Debug, and replace with new package Microsoft.Extensions.Logging.Debug 10.0.9",
+            "label": "Microsoft.Extensions.Logging.Debug 8.0.1",
+            "properties": {
+              "PackageId": "Microsoft.Extensions.Logging.Debug",
+              "PackageVersion": "8.0.1",
+              "PackageNewVersion": "10.0.9",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "958e97f0-d0c9-48e2-a721-5f0fc5935f8c",
+          "ruleId": "Project.0002",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net8.0-android;net8.0-ios;net8.0-maccatalyst;net8.0-windows10.0.19041.0\nRecommended target framework: net8.0-android;net8.0-ios;net8.0-maccatalyst;net8.0-windows10.0.19041.0;net10.0-windows",
+              "protected": "Current target framework: net8.0-android;net8.0-ios;net8.0-maccatalyst;net8.0-windows10.0.19041.0\nRecommended target framework: net8.0-android;net8.0-ios;net8.0-maccatalyst;net8.0-windows10.0.19041.0;net10.0-windows"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\Triolingo.csproj",
+            "snippet": "Current target framework: net8.0-android;net8.0-ios;net8.0-maccatalyst;net8.0-windows10.0.19041.0\nRecommended target framework: net8.0-android;net8.0-ios;net8.0-maccatalyst;net8.0-windows10.0.19041.0;net10.0-windows",
+            "protectedSnippet": "Current target framework: net8.0-android;net8.0-ios;net8.0-maccatalyst;net8.0-windows10.0.19041.0\nRecommended target framework: net8.0-android;net8.0-ios;net8.0-maccatalyst;net8.0-windows10.0.19041.0;net10.0-windows",
+            "properties": {
+              "CurrentTargetFramework": "net8.0-android;net8.0-ios;net8.0-maccatalyst;net8.0-windows10.0.19041.0",
+              "RecommendedTargetFramework": "net8.0-android;net8.0-ios;net8.0-maccatalyst;net8.0-windows10.0.19041.0;net10.0-windows"
+            }
+          }
+        },
+        {
+          "incidentId": "c153e6da-4ba3-4638-91be-0bd5c6804dc3",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var encodedText = Uri.EscapeDataString(text);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\obj\\Debug\\net8.0-android\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Components/Layout/SharedTextHandler_razor.g.cs",
+            "snippet": "var encodedText = Uri.EscapeDataString(text);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 152,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "1046410e-eac1-48e3-8ec8-9d2b9bdaed8b",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var encodedText = Uri.EscapeDataString(item.OriginalText);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\obj\\Debug\\net8.0-android\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Components/Shared/AnalysisHistory_razor.g.cs",
+            "snippet": "var encodedText = Uri.EscapeDataString(item.OriginalText);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 455,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "f938ddae-f5bc-4d5e-83e6-a18eb2483c9c",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var encodedTranslation = Uri.EscapeDataString(translation);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\obj\\Debug\\net8.0-android\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Components/Webscraping/TatoebaSearch_razor.g.cs",
+            "snippet": "var encodedTranslation = Uri.EscapeDataString(translation);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 761,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "f0371560-941c-4013-8637-ed0e1d398a52",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var encodedText = Uri.EscapeDataString(sentenceText);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\obj\\Debug\\net8.0-android\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Components/Webscraping/TatoebaSearch_razor.g.cs",
+            "snippet": "var encodedText = Uri.EscapeDataString(sentenceText);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 742,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "b32f2ca6-491f-454a-95d1-757fec3ee4c1",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var encodedTranslation = Uri.EscapeDataString(translation);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\obj\\Debug\\net8.0-android\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Components/Webscraping/WordSearch_razor.g.cs",
+            "snippet": "var encodedTranslation = Uri.EscapeDataString(translation);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 882,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "b62fe169-beed-4948-a3df-54913e406090",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var encodedSource = Uri.EscapeDataString(sourceText);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\obj\\Debug\\net8.0-android\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Components/Webscraping/WordSearch_razor.g.cs",
+            "snippet": "var encodedSource = Uri.EscapeDataString(sourceText);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 881,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "a89e1f02-035e-4f1f-adca-77eb8ca8a157",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var encodedTranslation = Uri.EscapeDataString(Card.NativeSample.Text);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\obj\\Debug\\net8.0-android\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Components/User/CardSummary_razor.g.cs",
+            "snippet": "var encodedTranslation = Uri.EscapeDataString(Card.NativeSample.Text);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 727,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "28565346-9f2e-464c-b21c-fe6d85026201",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var encodedText = Uri.EscapeDataString(Card.TargetSample.Text);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\obj\\Debug\\net8.0-android\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Components/User/CardSummary_razor.g.cs",
+            "snippet": "var encodedText = Uri.EscapeDataString(Card.TargetSample.Text);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 722,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "7dc665d3-32b7-4cba-99e8-8995641c9965",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "translatedSentence = Uri.UnescapeDataString(Translation);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\obj\\Debug\\net8.0-android\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Components/Pages/CreateCard_razor.g.cs",
+            "snippet": "translatedSentence = Uri.UnescapeDataString(Translation);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 926,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "34da3300-242d-4069-b90d-b0584e2bfbf3",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "primarySentence = Uri.UnescapeDataString(SharedText);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\obj\\Debug\\net8.0-android\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Components/Pages/CreateCard_razor.g.cs",
+            "snippet": "primarySentence = Uri.UnescapeDataString(SharedText);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 918,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "1c473a2a-f951-4f76-8796-9cd6b508ea1f",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "translatedSentence = Uri.UnescapeDataString(Translation);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\obj\\Debug\\net8.0-android\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Components/Pages/CreateCard_razor.g.cs",
+            "snippet": "translatedSentence = Uri.UnescapeDataString(Translation);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 882,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "0ac67fbc-27de-4cd6-a4ea-8a511522e92f",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "primarySentence = Uri.UnescapeDataString(SharedText);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\obj\\Debug\\net8.0-android\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Components/Pages/CreateCard_razor.g.cs",
+            "snippet": "primarySentence = Uri.UnescapeDataString(SharedText);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 876,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "af48258d-0347-4b4d-9a6e-db8b7e5b20d4",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "sharedText = Uri.UnescapeDataString(EncodedText);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\obj\\Debug\\net8.0-android\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Components/Pages/SharedTextSelect_razor.g.cs",
+            "snippet": "sharedText = Uri.UnescapeDataString(EncodedText);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 272,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "27dd42fd-05ad-4018-9566-83f3feca379b",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var encodedTranslation = Uri.EscapeDataString(translation);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\obj\\Debug\\net8.0-android\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Components/Pages/Search_razor.g.cs",
+            "snippet": "var encodedTranslation = Uri.EscapeDataString(translation);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 1770,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "5776a6b2-4918-4c49-987f-ff8ad40b5ded",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var encodedSource = Uri.EscapeDataString(sourceText);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\obj\\Debug\\net8.0-android\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Components/Pages/Search_razor.g.cs",
+            "snippet": "var encodedSource = Uri.EscapeDataString(sourceText);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 1765,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "3406cce8-f092-4e40-8e00-4aa84cedaee4",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var encodedTranslation = Uri.EscapeDataString(translatedText);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\obj\\Debug\\net8.0-android\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Components/Pages/Analysis_razor.g.cs",
+            "snippet": "var encodedTranslation = Uri.EscapeDataString(translatedText);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 1560,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "15f0f168-c08d-43db-a506-206a9cc8b5be",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var encodedSource = Uri.EscapeDataString(analysisText);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\obj\\Debug\\net8.0-android\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Components/Pages/Analysis_razor.g.cs",
+            "snippet": "var encodedSource = Uri.EscapeDataString(analysisText);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 1555,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "5b9b2167-2812-4beb-b341-f08223f17e0e",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "translatedText = Uri.UnescapeDataString(EncodedTranslation);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\obj\\Debug\\net8.0-android\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Components/Pages/Analysis_razor.g.cs",
+            "snippet": "translatedText = Uri.UnescapeDataString(EncodedTranslation);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 1201,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "523e0078-04eb-4d72-ad49-2d2031a73946",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "analysisText = Uri.UnescapeDataString(EncodedText);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\obj\\Debug\\net8.0-android\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Components/Pages/Analysis_razor.g.cs",
+            "snippet": "analysisText = Uri.UnescapeDataString(EncodedText);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 1195,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "968321a3-71cf-4d6d-b043-fef9b72b5412",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var xmlContent = await response.Content.ReadAsStringAsync();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\obj\\Debug\\net8.0-android\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Components/RssFeedWidget_razor.g.cs",
+            "snippet": "var xmlContent = await response.Content.ReadAsStringAsync();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 747,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "a2e5c9f9-0c8f-400d-b998-aaaaf27d82fe",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var xmlContent = await response.Content.ReadAsStringAsync();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\obj\\Debug\\net8.0-android\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Components/RssCarousel_razor.g.cs",
+            "snippet": "var xmlContent = await response.Content.ReadAsStringAsync();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 341,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "6f029db6-dc67-47a4-8c8e-7c90d107362a",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "return await response.Content.ReadFromJsonAsync\u003CWikiArticle\u003E();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\obj\\Debug\\net8.0-android\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Components/WikiCarousel_razor.g.cs",
+            "snippet": "return await response.Content.ReadFromJsonAsync\u003CWikiArticle\u003E();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 296,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "f0e7224d-51c5-4fed-9380-f4ec3edebc39",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var analysisResponse = await response.Content.ReadFromJsonAsync\u003CLexicalAnalysisResponse\u003E();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\Services\\ApiService.cs",
+            "snippet": "var analysisResponse = await response.Content.ReadFromJsonAsync\u003CLexicalAnalysisResponse\u003E();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 235,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "3b88e2f9-9c29-4052-9035-1c223a399d98",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var aiResult = await response.Content.ReadAsStringAsync();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\Services\\ApiService.cs",
+            "snippet": "var aiResult = await response.Content.ReadAsStringAsync();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 183,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "dc7fc218-f762-476d-998c-8ab68b9ca254",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var card = await response.Content.ReadFromJsonAsync\u003CCardDefinition\u003E();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\Services\\ApiService.cs",
+            "snippet": "var card = await response.Content.ReadFromJsonAsync\u003CCardDefinition\u003E();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 161,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "e49d4d52-3c09-4237-ad2b-8b2c6a62b56c",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var translation = await response.Content.ReadAsStringAsync();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\Services\\ApiService.cs",
+            "snippet": "var translation = await response.Content.ReadAsStringAsync();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 93,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "96e3f3f2-0547-4fdd-adf2-8fad24f156c7",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var url = $\u0022/api/Translations?text={Uri.EscapeDataString(text)}\u0026sourceLang={Uri.EscapeDataString(sourceLang)}\u0026targetLang={Uri.EscapeDataString(targetLang)}\u0022;",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\Services\\ApiService.cs",
+            "snippet": "var url = $\u0022/api/Translations?text={Uri.EscapeDataString(text)}\u0026sourceLang={Uri.EscapeDataString(sourceLang)}\u0026targetLang={Uri.EscapeDataString(targetLang)}\u0022;",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 89,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "fd4cab8d-44f6-45a2-8fa5-54eab127eb86",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var url = $\u0022/api/Translations?text={Uri.EscapeDataString(text)}\u0026sourceLang={Uri.EscapeDataString(sourceLang)}\u0026targetLang={Uri.EscapeDataString(targetLang)}\u0022;",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\Services\\ApiService.cs",
+            "snippet": "var url = $\u0022/api/Translations?text={Uri.EscapeDataString(text)}\u0026sourceLang={Uri.EscapeDataString(sourceLang)}\u0026targetLang={Uri.EscapeDataString(targetLang)}\u0022;",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 89,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "0198ac35-6cb1-46d8-8bb1-e56d064232f3",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var url = $\u0022/api/Translations?text={Uri.EscapeDataString(text)}\u0026sourceLang={Uri.EscapeDataString(sourceLang)}\u0026targetLang={Uri.EscapeDataString(targetLang)}\u0022;",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\Services\\ApiService.cs",
+            "snippet": "var url = $\u0022/api/Translations?text={Uri.EscapeDataString(text)}\u0026sourceLang={Uri.EscapeDataString(sourceLang)}\u0026targetLang={Uri.EscapeDataString(targetLang)}\u0022;",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 89,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "141751fc-a00b-4e88-8478-27ab2ec602b0",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var result = await response.Content.ReadAsStringAsync();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\Services\\ApiService.cs",
+            "snippet": "var result = await response.Content.ReadAsStringAsync();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 63,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "fb8590dc-2217-48f8-956d-63379d4c4200",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "return await response.Content.ReadAsByteArrayAsync();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\Services\\ApiService.cs",
+            "snippet": "return await response.Content.ReadAsByteArrayAsync();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 53,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "947f8e91-5c6c-4e18-b45e-a865fb0e8fe4",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var url = $\u0022/api/tts?text={Uri.EscapeDataString(text)}\u0026lang={Uri.EscapeDataString(lang)}\u0026voice={voice}\u0022;",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\Services\\ApiService.cs",
+            "snippet": "var url = $\u0022/api/tts?text={Uri.EscapeDataString(text)}\u0026lang={Uri.EscapeDataString(lang)}\u0026voice={voice}\u0022;",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 50,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "a75cd174-4198-476a-a140-8d9536a31f8f",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var url = $\u0022/api/tts?text={Uri.EscapeDataString(text)}\u0026lang={Uri.EscapeDataString(lang)}\u0026voice={voice}\u0022;",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\Services\\ApiService.cs",
+            "snippet": "var url = $\u0022/api/tts?text={Uri.EscapeDataString(text)}\u0026lang={Uri.EscapeDataString(lang)}\u0026voice={voice}\u0022;",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 50,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "c66937bd-a44d-43d0-b269-ff1a8bcd5efe",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_httpClient.BaseAddress = new Uri(baseUrl);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\Services\\ApiService.cs",
+            "snippet": "_httpClient.BaseAddress = new Uri(baseUrl);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 34,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "2cce9a68-6ca3-4dd2-ab08-9dd1f280848e",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_httpClient.BaseAddress = new Uri(baseUrl);",
+              "protected": "M:System.Uri.#ctor(System.String)"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\Services\\ApiService.cs",
+            "snippet": "_httpClient.BaseAddress = new Uri(baseUrl);",
+            "protectedSnippet": "M:System.Uri.#ctor(System.String)",
+            "label": "M:System.Uri.#ctor(System.String)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 34,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "bb83a454-7171-4cc4-a761-3f33a2693b7e",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_httpClient.BaseAddress = new Uri(baseUrl);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\Services\\ApiService.cs",
+            "snippet": "_httpClient.BaseAddress = new Uri(baseUrl);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 34,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "b4ebc5fb-ad03-4284-b012-148ff1e342e2",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_httpClient.BaseAddress = new Uri(baseUrl);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\Services\\ApiService.cs",
+            "snippet": "_httpClient.BaseAddress = new Uri(baseUrl);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 34,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "1a178202-33e9-43a0-9dd7-0da24b906717",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_httpClient.BaseAddress = new Uri(baseUrl);",
+              "protected": "M:System.Uri.#ctor(System.String)"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\Services\\ApiService.cs",
+            "snippet": "_httpClient.BaseAddress = new Uri(baseUrl);",
+            "protectedSnippet": "M:System.Uri.#ctor(System.String)",
+            "label": "M:System.Uri.#ctor(System.String)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 34,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "064b8931-7b56-463b-acd8-fb50058c2f45",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "MauiApp1\\Triolingo.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_httpClient.BaseAddress = new Uri(baseUrl);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "MauiApp1\\Services\\ApiService.cs",
+            "snippet": "_httpClient.BaseAddress = new Uri(baseUrl);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 34,
+            "column": 20
+          }
+        }
+      ],
+      "features": []
+    }
+  ],
+  "rules": {
+    "NuGet.0002": {
+      "id": "NuGet.0002",
+      "isFeature": false,
+      "description": "NuGet package upgrade is recommended for selected target framework.\n\nStandard .NET packages are recommended to have versions matching version of .NET that project targets.\n\nSome other packages also are known to work better for selected target frameworks.",
+      "label": "NuGet package upgrade is recommended",
+      "severity": "Potential",
+      "effort": 1,
+      "links": [
+        {
+          "url": "https://go.microsoft.com/fwlink/?linkid=2262530",
+          "isCustom": false
+        }
+      ]
+    },
+    "Project.0002": {
+      "id": "Project.0002",
+      "isFeature": false,
+      "description": "Project\u0027s target framework(s) needs to be changed to the new target framework that you selected for this upgrade.\n\nDuring upgrade target framework will be adjusted to corresponding platform when applicable. In some cases project would result in multiple target frameworks after the upgrade if it was using features that now have their own platforms in modern .NET frameworks (windows, iOS, Android etc).",
+      "label": "Project\u0027s target framework(s) needs to be changed",
+      "severity": "Mandatory",
+      "effort": 1,
+      "links": [
+        {
+          "title": "Overview of porting from .NET Framework to .NET",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2265227",
+          "isCustom": false
+        },
+        {
+          "title": ".NET project SDKs",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2265226",
+          "isCustom": false
+        }
+      ]
+    },
+    "Api.0001": {
+      "id": "Api.0001",
+      "isFeature": false,
+      "description": "API is binary incompatible for selected .NET version: affects existing binaries, often requiring recompilation, because the API has changed in a way that prevents older binaries from loading or executing.",
+      "label": "Binary incompatible for selected .NET version",
+      "severity": "Mandatory",
+      "effort": 1,
+      "links": [
+        {
+          "title": "Breaking changes in .NET",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2262679",
+          "isCustom": false
+        }
+      ]
+    },
+    "Api.0003": {
+      "id": "Api.0003",
+      "isFeature": false,
+      "description": "API has a behavioral change in selected .NET version: code and binaries may behave differently at runtime without needing recompilation, but the new behavior might be undesirable and require updates.",
+      "label": "Behavioral change in selected .NET version",
+      "severity": "Potential",
+      "effort": 1
+    },
+    "Api.0002": {
+      "id": "Api.0002",
+      "isFeature": false,
+      "description": "API is source incompatible for selected .NET version: requires code changes to compile successfully when targeting a new version, such as removing obsolete APIs or changing method signatures.",
+      "label": "Source incompatible for selected .NET version",
+      "severity": "Potential",
+      "effort": 1,
+      "links": [
+        {
+          "title": "Breaking changes in .NET",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2262679",
+          "isCustom": false
+        }
+      ]
+    },
+    "NuGet.0001": {
+      "id": "NuGet.0001",
+      "isFeature": false,
+      "description": "NuGet package is incompatible with selected target framework.\n\nPackage needs to be upgraded to a version supporting selected project target framework. If there no new package versions supporting new target framework, different package needs to be used and all code needs to be upgraded to new API.",
+      "label": "NuGet package is incompatible",
+      "severity": "Mandatory",
+      "effort": 1,
+      "links": [
+        {
+          "url": "https://go.microsoft.com/fwlink/?linkid=2262529",
+          "isCustom": false
+        }
+      ]
+    },
+    "NuGet.0005": {
+      "id": "NuGet.0005",
+      "isFeature": false,
+      "description": "NuGet package is deprecated.\n\nGo to its documentation and if there is a guidance for replacement of functionality provided by this package.",
+      "label": "NuGet package is deprecated",
+      "severity": "Optional",
+      "effort": 1,
+      "links": [
+        {
+          "url": "https://go.microsoft.com/fwlink/?linkid=2262531",
+          "isCustom": false
+        }
+      ]
+    }
+  }
+}

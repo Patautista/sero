@@ -1,0 +1,35 @@
+@using Domain.Shared.Models
+
+<div class="correction-card">
+    <div class="correction-card-header">
+        <span class="correction-icon">💡</span>
+        <span class="correction-title">Language Tip</span>
+    </div>
+
+    <div class="correction-card-body">
+        <div class="correction-comparison">
+            <div class="correction-before">
+                <span class="correction-label">You said:</span>
+                <span class="correction-text original">@Correction.Original</span>
+            </div>
+            <div class="correction-arrow">→</div>
+            <div class="correction-after">
+                <span class="correction-label">Better:</span>
+                <span class="correction-text corrected">@Correction.Corrected</span>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(Correction.Explanation))
+        {
+            <div class="correction-explanation">
+                <span class="explanation-icon">ℹ️</span>
+                <span>@Correction.Explanation</span>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public CorrectionData Correction { get; set; } = new();
+}

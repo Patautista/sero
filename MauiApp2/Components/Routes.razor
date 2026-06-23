@@ -1,0 +1,47 @@
+﻿@using MauiApp2.Features.Onboarding
+@using MauiApp2.Components
+@inject OnboardingService OnboardingService
+@inject NavigationManager Navigation
+
+<LoadingSpinner IsLoading="@(!isLoaded)">
+    <Router AppAssembly="typeof(MauiProgram).Assembly">
+        <Found Context="routeData">
+            <RouteView RouteData="routeData" />
+        </Found>
+        <NotFound>
+            <div style="padding: 20px;">
+                <h3>Page not found</h3>
+                <p>The page you're looking for doesn't exist.</p>
+            </div>
+        </NotFound>
+    </Router>
+</LoadingSpinner>
+
+@code {
+    private bool isLoaded = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Check if user has completed onboarding
+            var hasOnboarded = await OnboardingService.HasCompletedOnboardingAsync();
+
+            if (!hasOnboarded && !Navigation.Uri.Contains("/onboarding"))
+            {
+                Navigation.NavigateTo("/onboarding", forceLoad: true);
+            }
+            else if (hasOnboarded && Navigation.Uri.EndsWith("/"))
+            {
+                Navigation.NavigateTo("/home", forceLoad: true);
+            }
+
+            isLoaded = true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in Routes: {ex.Message}");
+            isLoaded = true;
+        }
+    }
+}

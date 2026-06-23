@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -20,25 +20,29 @@
 		<PackageReference Include="Google.Apis" Version="1.72.0" />
 		<PackageReference Include="Google.Cloud.TextToSpeech.V1" Version="3.15.0" />
 		<PackageReference Include="HtmlAgilityPack" Version="1.12.2" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.11">
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.9">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.11" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.11" />
-		<PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="8.0.1" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.1" />
-		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.9" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.9" />
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.9" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="10.0.9" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.9" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.9" />
 		<PackageReference Include="Mosaik.Core" Version="25.5.58373" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
 		<PackageReference Include="SearchPioneer.Lingua" Version="1.0.4" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\AnkiNet\AnkiNet.csproj" />
 	  <ProjectReference Include="..\Business\Business.csproj" />
 	  <ProjectReference Include="..\Domain\Domain.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Migrations\PetDb\" />
+	  <Folder Include="Parsing\" />
 	</ItemGroup>
 
 </Project>

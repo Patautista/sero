@@ -1,0 +1,301 @@
+@page "/home"
+@using MauiApp2.Features.QuickActions
+@using MauiApp2.Features.Onboarding
+@using MauiApp2.Components
+@using MauiApp2.Components.Buttons
+@using Domain.Shared.Models
+@inject QuickActionsService QuickActionsService
+@inject OnboardingService OnboardingService
+@inject NavigationManager Navigation
+
+<div class="home-container">
+    <div class="header">
+        <div class="companion-section">
+            <div class="companion-avatar">🌙</div>
+            <div class="companion-info">
+                <h2>@companionName</h2>
+                <span class="mood-badge mood-@currentMood.ToString().ToLower()">@currentMood</span>
+            </div>
+        </div>
+        <h3>Hi, @userName! 👋</h3>
+    </div>
+
+    <div class="quick-actions">
+        <button class="quick-action-btn" @onclick="() => ShowDialog(ActionType.Pronunciation)">
+            <div class="action-icon">🗣️</div>
+            <div class="action-text">How do I pronounce...?</div>
+        </button>
+
+        <button class="quick-action-btn" @onclick="() => ShowDialog(ActionType.Translation)">
+            <div class="action-icon">🔄</div>
+            <div class="action-text">How do I say...?</div>
+        </button>
+
+        <button class="quick-action-btn" @onclick="() => ShowDialog(ActionType.Meaning)">
+            <div class="action-icon">💡</div>
+            <div class="action-text">What does ... mean?</div>
+        </button>
+
+        <button class="quick-action-btn" @onclick="() => ShowDialog(ActionType.TextAnalysis)">
+            <div class="action-icon">📖</div>
+            <div class="action-text">Help me read something</div>
+        </button>
+
+        <button class="quick-action-btn conversation-btn" @onclick="StartConversation">
+            <div class="action-icon">💬</div>
+            <div class="action-text">Start a conversation</div>
+        </button>
+    </div>
+
+    @if (showDialog)
+    {
+        <div class="dialog-overlay" @onclick="CloseDialog">
+            <div class="dialog-content" @onclick:stopPropagation="true">
+                <h3>@GetDialogTitle()</h3>
+
+                @if (currentAction == ActionType.TextAnalysis)
+                {
+                    <textarea @bind="inputText" placeholder="@GetPlaceholder()" rows="5" class="input-field"></textarea>
+                }
+                else
+                {
+                    <input type="text" @bind="inputText" placeholder="@GetPlaceholder()" class="input-field" />
+                }
+
+                <LoadingText IsLoading="@isLoading">
+                    @if (!string.IsNullOrWhiteSpace(resultText))
+                    {
+                        <div class="result-section">
+                            @if (currentAction == ActionType.TextAnalysis && analysisChunks != null && analysisChunks.Any())
+                            {
+                                <div class="analysis-chunks">
+                                    @foreach (var chunk in analysisChunks)
+                                    {
+                                        <div class="chunk">
+                                            <span class="chunk-word">@chunk.Word</span>
+                                            <span class="chunk-translation">@chunk.Translation</span>
+                                            @if (!string.IsNullOrWhiteSpace(chunk.Note))
+                                            {
+                                                <span class="chunk-note">@chunk.Note</span>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="result-text">@resultText</div>
+                                @if (!string.IsNullOrWhiteSpace(contextText))
+                                {
+                                    <div class="context-text">@contextText</div>
+                                }
+                                @if (!string.IsNullOrWhiteSpace(exampleText))
+                                {
+                                    <div class="example-text">💭 @exampleText</div>
+                                }
+                            }
+
+                            @if (canPlayAudio && currentAction != ActionType.TextAnalysis)
+                            {
+                                <ButtonSecondary OnClick="PlayAudio">🔊 Play Pronunciation</ButtonSecondary>
+                            }
+                        </div>
+                    }
+                </LoadingText>
+
+                <div class="dialog-buttons">
+                    <ButtonSecondary OnClick="CloseDialog">Close</ButtonSecondary>
+                    <ButtonPrimary OnClick="ProcessAction" Disabled="@(string.IsNullOrWhiteSpace(inputText) || isLoading)">
+                        Go
+                    </ButtonPrimary>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private string userName = "Friend";
+    private string companionName = "Luna";
+    private CompanionMood currentMood = CompanionMood.Curious;
+
+    private bool showDialog = false;
+    private ActionType currentAction;
+    private string inputText = string.Empty;
+    private string resultText = string.Empty;
+    private string contextText = string.Empty;
+    private string exampleText = string.Empty;
+    private bool isLoading = false;
+    private bool canPlayAudio = false;
+    private List<TextChunk>? analysisChunks = null;
+
+    private string targetLanguage = "es";
+    private string nativeLanguage = "en";
+
+    enum ActionType
+    {
+        Pronunciation,
+        Translation,
+        Meaning,
+        TextAnalysis
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var userProfile = await OnboardingService.GetCurrentUserProfileAsync();
+            if (userProfile != null)
+            {
+                userName = userProfile.Name;
+                targetLanguage = userProfile.TargetLanguage;
+                nativeLanguage = userProfile.NativeLanguage;
+            }
+
+            var companion = await OnboardingService.GetOrCreateCompanionAsync();
+            companionName = companion.Name;
+            currentMood = companion.CurrentMood;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading user data: {ex.Message}");
+        }
+    }
+
+    private void ShowDialog(ActionType action)
+    {
+        currentAction = action;
+        showDialog = true;
+        inputText = string.Empty;
+        resultText = string.Empty;
+        contextText = string.Empty;
+        exampleText = string.Empty;
+        canPlayAudio = false;
+        analysisChunks = null;
+    }
+
+    private void CloseDialog()
+    {
+        showDialog = false;
+    }
+
+    private string GetDialogTitle()
+    {
+        return currentAction switch
+        {
+            ActionType.Pronunciation => "How do I pronounce...?",
+            ActionType.Translation => "How do I say...?",
+            ActionType.Meaning => "What does this mean?",
+            ActionType.TextAnalysis => "Help me read this",
+            _ => ""
+        };
+    }
+
+    private string GetPlaceholder()
+    {
+        return currentAction switch
+        {
+            ActionType.Pronunciation => $"Enter text in {targetLanguage}...",
+            ActionType.Translation => $"Enter text in {nativeLanguage}...",
+            ActionType.Meaning => $"Enter word/phrase in {targetLanguage}...",
+            ActionType.TextAnalysis => "Paste text to analyze...",
+            _ => "Enter text..."
+        };
+    }
+
+    private async Task ProcessAction()
+    {
+        try
+        {
+            isLoading = true;
+            resultText = string.Empty;
+            contextText = string.Empty;
+            exampleText = string.Empty;
+            canPlayAudio = false;
+            analysisChunks = null;
+
+            switch (currentAction)
+            {
+                case ActionType.Pronunciation:
+                    var pronResult = await QuickActionsService.GetPronunciationAsync(inputText, targetLanguage);
+                    if (pronResult.Success)
+                    {
+                        resultText = $"'{inputText}' - Ready to play!";
+                        canPlayAudio = true;
+                    }
+                    else
+                    {
+                        resultText = pronResult.ErrorMessage;
+                    }
+                    break;
+
+                case ActionType.Translation:
+                    var transResult = await QuickActionsService.TranslateAsync(inputText, nativeLanguage, targetLanguage);
+                    if (transResult.Success)
+                    {
+                        resultText = transResult.TranslatedText;
+                        canPlayAudio = true;
+                    }
+                    else
+                    {
+                        resultText = transResult.ErrorMessage;
+                    }
+                    break;
+
+                case ActionType.Meaning:
+                    var meaningResult = await QuickActionsService.GetMeaningAsync(inputText, targetLanguage, nativeLanguage);
+                    if (meaningResult.Success)
+                    {
+                        resultText = meaningResult.Translation;
+                        contextText = meaningResult.Context;
+                        exampleText = meaningResult.Example;
+                    }
+                    else
+                    {
+                        resultText = meaningResult.ErrorMessage;
+                    }
+                    break;
+
+                case ActionType.TextAnalysis:
+                    var analysisResult = await QuickActionsService.AnalyzeTextAsync(inputText, targetLanguage);
+                    if (analysisResult.Success)
+                    {
+                        analysisChunks = analysisResult.Chunks;
+                        resultText = "Analysis complete!";
+                    }
+                    else
+                    {
+                        resultText = analysisResult.ErrorMessage;
+                    }
+                    break;
+            }
+        }
+        catch (Exception ex)
+        {
+            resultText = "An error occurred. Please try again.";
+            Console.WriteLine($"Error processing action: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task PlayAudio()
+    {
+        try
+        {
+            // Use platform TTS
+            await TextToSpeech.Default.SpeakAsync(resultText);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error playing audio: {ex.Message}");
+        }
+    }
+
+    private void StartConversation()
+    {
+        Navigation.NavigateTo("/chat");
+    }
+}

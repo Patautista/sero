@@ -10,6 +10,7 @@ namespace Infrastructure.Services
     {
         public static List<string> TargetLanguages = new()
         {
+            AvailableCodes.French,
             AvailableCodes.Italian,
             AvailableCodes.Norwegian,
             AvailableCodes.English,
@@ -25,6 +26,7 @@ namespace Infrastructure.Services
     }
     public static class AvailableCodes
     {
+        public const string French = "fr";
         public const string Italian = "it";
         public const string Norwegian = "no";
         public const string Portuguese = "pt";

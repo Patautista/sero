@@ -1,0 +1,18 @@
+<button class="btn btn-secondary py-2 px-6 rounded-lg font-bold text-white shadow-lg
+           bg-gradient-to-r from-gray-500 to-gray-700
+           hover:from-gray-600 hover:to-gray-800
+           transition-all duration-200
+           @Class"
+        type="@Type"
+        @onclick="OnClick"
+        disabled="@Disabled">
+    @ChildContent
+</button>
+
+@code {
+    [Parameter] public EventCallback OnClick { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter] public string? Type { get; set; } = "button";
+    [Parameter] public bool Disabled { get; set; } = false;
+}

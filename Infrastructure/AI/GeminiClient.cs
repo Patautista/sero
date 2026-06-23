@@ -1,13 +1,15 @@
-﻿using System;
+﻿using Adapter.AI.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Infrastructure.AI
 {
-    public class GeminiClient : IPromptClient
+    public class GeminiClient
     {
         private readonly HttpClient _httpClient;
         private readonly string _apiKey;
@@ -22,7 +24,7 @@ namespace Infrastructure.AI
             _httpClient.DefaultRequestHeaders.Add("x-goog-api-key", _apiKey);
         }
 
-        public async Task<string> GenerateAsync(string prompt, string model = "gemini-flash-latest")
+        public virtual async Task<string> GenerateAsync(string prompt, string model = "gemini-flash-latest", string outputTemplate = "")
         {
             if (string.IsNullOrEmpty(model))
             {
@@ -32,18 +34,19 @@ namespace Infrastructure.AI
             {
                 contents = new[]
                 {
-            new
-            {
-                parts = new[]
+                    new
+                    {
+                        parts = new[]
+                        {
+                            new { text = prompt }
+                        }
+                    }
+                },
+                generationConfig = string.IsNullOrEmpty(outputTemplate) ? null : new
                 {
-                    new { text = prompt }
+                    response_mime_type = "application/json",
+                    response_json_schema = outputTemplate
                 }
-            }
-        },
-        generationConfig = new
-        {
-            responseMimeType = "application/json"
-        }
             };
 
             var json = JsonSerializer.Serialize(requestBody);
@@ -72,6 +75,27 @@ namespace Infrastructure.AI
                         .GetProperty("text")
                         .GetString();
 
+                    // Remove markdown code block wrapper if present
+                    if (!string.IsNullOrEmpty(text))
+                    {
+                        text = text.Trim();
+                        if (text.StartsWith("```json"))
+                        {
+                            text = text.Substring(7); // Remove "```json"
+                        }
+                        else if (text.StartsWith("```"))
+                        {
+                            text = text.Substring(3); // Remove "```"
+                        }
+
+                        if (text.EndsWith("```"))
+                        {
+                            text = text.Substring(0, text.Length - 3); // Remove trailing "```"
+                        }
+
+                        text = text.Trim();
+                    }
+
                     return text ?? string.Empty;
                 }
                 catch (Exception ex)
@@ -88,6 +112,36 @@ namespace Infrastructure.AI
 
             // If all retries failed, optionally log `lastException`
             return string.Empty;
+        }
+        public virtual Task<T> GenerateJsonAsync<T>(string prompt, string model = "")
+        {
+            var template = ((T?)default).ToJsonTemplate();
+            return GenerateAsync(prompt, model, template)
+                .ContinueWith(task =>
+                {
+                    var json = task.Result;
+                    try
+                    {
+                        var options = new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true,
+                            Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
+                        };
+
+                        var obj = JsonSerializer.Deserialize<T>(json, options) ?? Activator.CreateInstance<T>();
+
+                        return obj;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"JSON Deserialization Error: {ex.Message}");
+                        Console.WriteLine($"JSON Content: {json}");
+                        Console.WriteLine();
+                        Console.WriteLine("Expected format:");
+                        Console.WriteLine(((T?)default).ToJsonTemplate());
+                        return Activator.CreateInstance<T>();
+                    }
+                });
         }
     }
 }

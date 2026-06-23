@@ -14,9 +14,10 @@ namespace Infrastructure.Vocab;
 public class VocabularyService
 {
     private readonly CultureInfo TargetLanguage;
-    public VocabularyService(ISettingsService settingsService)
+    public VocabularyService()
     {
-        TargetLanguage = settingsService.StudyConfig.Value.SelectedLanguage.Target;
+        // TODO: Replace with actual target language from settings
+        TargetLanguage = new("fr");
     }
     public VocabularyService(string targetLangCode)
     {

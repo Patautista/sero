@@ -1,0 +1,211 @@
+@page "/onboarding"
+@using MauiApp2.Features.Onboarding
+@using MauiApp2.Components
+@using MauiApp2.Components.Buttons
+@using Domain.Shared.Models
+@using Microsoft.AspNetCore.Components.Forms
+@inject OnboardingService OnboardingService
+@inject NavigationManager Navigation
+
+<LoadingSpinner IsLoading="@isCompleting">
+    <div class="onboarding-container">
+        @if (currentStep == 0)
+        {
+            <div class="step-content">
+                <h1>Welcome! 👋</h1>
+                <p>Meet your new language learning companion.</p>
+                <p>I'm here to help you practice @selectedTargetLanguageName through natural conversations.</p>
+                <ButtonPrimary OnClick="NextStep">Get Started</ButtonPrimary>
+            </div>
+        }
+        else if (currentStep == 1)
+        {
+            <div class="step-content">
+                <h2>What's your name?</h2>
+                <InputText placeholder="Enter your name" 
+           class="input-field" 
+           @bind-Value="userName" />
+                <div class="button-group">
+                    <ButtonSecondary OnClick="PreviousStep">Back</ButtonSecondary>
+                    <ButtonPrimary OnClick="NextStep" Disabled="@string.IsNullOrWhiteSpace(userName)">Next</ButtonPrimary>
+                </div>
+            </div>
+        }
+        else if (currentStep == 2)
+        {
+            <div class="step-content">
+                <h2>What language do you want to learn?</h2>
+                <div class="language-grid">
+                    @foreach (var lang in AvailableLanguages.GetLanguages())
+                    {
+                        <div class="language-option @(selectedTargetLanguage == lang.Code ? "selected" : "")" 
+                             @onclick="() => SelectTargetLanguage(lang.Code, lang.Name)">
+                            <span class="flag">@lang.Flag</span>
+                            <span>@lang.Name</span>
+                        </div>
+                    }
+                </div>
+                <div class="button-group">
+                    <ButtonSecondary OnClick="PreviousStep">Back</ButtonSecondary>
+                    <ButtonPrimary OnClick="NextStep" Disabled="@string.IsNullOrWhiteSpace(selectedTargetLanguage)">Next</ButtonPrimary>
+                </div>
+            </div>
+        }
+        else if (currentStep == 3)
+        {
+            <div class="step-content">
+                <h2>What's your native language?</h2>
+                <div class="language-grid">
+                    @foreach (var lang in AvailableLanguages.GetNativeLanguages().Where(l => l.Code != selectedTargetLanguage))
+                    {
+                        // Fix: Capture the loop variable locally
+                        var currentLang = lang;
+
+                        <div class="language-option @(selectedNativeLanguage == currentLang.Code ? "selected" : "")"
+                             @onclick="() => selectedNativeLanguage = currentLang.Code">
+                            <span class="flag">@currentLang.Flag</span>
+                            <span>@currentLang.Name</span>
+                        </div>
+                    }
+                </div>
+                <div class="button-group">
+                    <ButtonSecondary OnClick="PreviousStep">Back</ButtonSecondary>
+                    <ButtonPrimary OnClick="NextStep" Disabled="@string.IsNullOrWhiteSpace(selectedNativeLanguage)">Next</ButtonPrimary>
+                </div>
+            </div>
+        }
+        else if (currentStep == 4)
+        {
+            <div class="step-content">
+                <h2>What are you interested in?</h2>
+                <p class="subtitle">Select at least 3 topics to personalize your experience</p>
+                <div class="interests-grid">
+                    @foreach (var interest in PredefinedInterests.GetInterests())
+                    {
+                        <div class="interest-option @(selectedInterests.Contains(interest.Name) ? "selected" : "")" 
+                             @onclick="() => ToggleInterest(interest.Name)">
+                            <span class="icon">@interest.Icon</span>
+                            <span>@interest.Name</span>
+                        </div>
+                    }
+                </div>
+                <div class="button-group">
+                    <ButtonSecondary OnClick="PreviousStep">Back</ButtonSecondary>
+                    <ButtonPrimary OnClick="NextStep" Disabled="@(selectedInterests.Count < 3)">Next</ButtonPrimary>
+                </div>
+            </div>
+        }
+        else if (currentStep == 5)
+        {
+            <div class="step-content">
+                <h2>Meet Luna 🌙</h2>
+                <div class="companion-intro">
+                    <div class="companion-avatar">🌙</div>
+                    <p class="companion-personality">Curious and encouraging, loves learning new things alongside you</p>
+                    <p>Luna will be your companion on this language learning journey!</p>
+                </div>
+                <div class="button-group">
+                    <ButtonSecondary OnClick="PreviousStep">Back</ButtonSecondary>
+                    <ButtonPrimary OnClick="CompleteOnboarding" Disabled="@isCompleting">
+                        Start Learning!
+                    </ButtonPrimary>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <div class="error-message">@errorMessage</div>
+    }
+</LoadingSpinner>
+
+@code {
+    private int currentStep = 0;
+    private string userName = string.Empty;
+    private string selectedTargetLanguage = string.Empty;
+    private string selectedTargetLanguageName = string.Empty;
+    private string selectedNativeLanguage = string.Empty;
+    private List<string> selectedInterests = new();
+    private bool isCompleting = false;
+    private string errorMessage = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        System.Diagnostics.Debug.WriteLine("OnboardingPage initialized");
+        // Set default target language name for welcome message
+        selectedTargetLanguageName = "your target language";
+    }
+
+    private void NextStep()
+    {
+        System.Diagnostics.Debug.WriteLine($"NextStep called. Current step: {currentStep}");
+        currentStep++;
+        errorMessage = string.Empty;
+        StateHasChanged();
+    }
+
+    private void PreviousStep()
+    {
+        System.Diagnostics.Debug.WriteLine($"PreviousStep called. Current step: {currentStep}");
+        currentStep--;
+        errorMessage = string.Empty;
+        StateHasChanged();
+    }
+
+    private void SelectTargetLanguage(string code, string name)
+    {
+        selectedTargetLanguage = code;
+        selectedTargetLanguageName = name;
+        StateHasChanged();
+    }
+
+    private void ToggleInterest(string interest)
+    {
+        if (selectedInterests.Contains(interest))
+        {
+            selectedInterests.Remove(interest);
+        }
+        else
+        {
+            selectedInterests.Add(interest);
+        }
+    }
+
+    private async Task CompleteOnboarding()
+    {
+        try
+        {
+            isCompleting = true;
+            errorMessage = string.Empty;
+
+            var request = new OnboardingRequest
+            {
+                UserName = userName,
+                TargetLanguage = selectedTargetLanguage,
+                NativeLanguage = selectedNativeLanguage,
+                Interests = selectedInterests
+            };
+
+            var response = await OnboardingService.CompleteOnboardingAsync(request);
+
+            if (response.Success)
+            {
+                // Navigate to home page
+                Navigation.NavigateTo("/home", forceLoad: true);
+            }
+            else
+            {
+                errorMessage = response.ErrorMessage;
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "An unexpected error occurred. Please try again.";
+        }
+        finally
+        {
+            isCompleting = false;
+        }
+    }
+}

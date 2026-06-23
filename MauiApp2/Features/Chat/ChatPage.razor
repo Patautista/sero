@@ -1,0 +1,240 @@
+@page "/chat"
+@using MauiApp2.Features.Chat
+@using MauiApp2.Features.Onboarding
+@using MauiApp2.Components
+@using Domain.Shared.Models
+@using Microsoft.AspNetCore.Components.Web
+@inject ChatService ChatService
+@inject OnboardingService OnboardingService
+@inject NavigationManager Navigation
+
+<div class="chat-container">
+    <div class="chat-header">
+        <button class="back-button" @onclick="GoBack">←</button>
+        <div class="companion-info">
+            <div class="companion-avatar-small">🌙</div>
+            <div>
+                <h3>@companionName</h3>
+                <span class="mood-indicator mood-@currentMood.ToString().ToLower()">@currentMood</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="chat-messages" @ref="messageContainer">
+        <LoadingSpinner IsLoading="@isLoading">
+            @if (messages.Any())
+            {
+                @foreach (var message in messages)
+                {
+                    <div class="message-wrapper @(message.SenderType == SenderType.User ? "user-message-wrapper" : "companion-message-wrapper")">
+                        <div class="message @(message.SenderType == SenderType.User ? "message-user" : "message-companion")">
+                            <div class="message-content">@message.Content</div>
+                            <div class="message-time">@message.Timestamp.ToLocalTime().ToString("HH:mm")</div>
+
+                            @if (message.Corrections != null && message.Corrections.Any())
+                            {
+                                <div class="corrections-section">
+                                    <div class="corrections-header">💡 Corrections:</div>
+                                    @foreach (var correction in message.Corrections)
+                                    {
+                                        <div class="correction-item">
+                                            <span class="correction-original">@correction.Original</span>
+                                            <span class="correction-arrow">→</span>
+                                            <span class="correction-corrected">@correction.Corrected</span>
+                                            @if (!string.IsNullOrWhiteSpace(correction.Explanation))
+                                            {
+                                                <div class="correction-explanation">@correction.Explanation</div>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+
+                        @if (message.SenderType == SenderType.Companion)
+                        {
+                            <button class="tts-button" @onclick="() => PlayMessageAudio(message)">🔊</button>
+                        }
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state">
+                    <div class="empty-icon">💬</div>
+                    <p>Start a conversation with @companionName!</p>
+                </div>
+            }
+        </LoadingSpinner>
+    </div>
+
+    <div class="chat-input-container">
+        @if (isSending)
+        {
+            <div class="sending-indicator">Sending...</div>
+        }
+        else
+        {
+            <textarea 
+                @bind="messageInput" 
+                @bind:event="oninput"
+                @onkeydown="HandleKeyDown"
+                placeholder="Type your message..."
+                rows="1"
+                class="chat-input"
+                disabled="@isSending">
+            </textarea>
+            <button class="send-button" @onclick="SendMessage" disabled="@(string.IsNullOrWhiteSpace(messageInput) || isSending)">
+                ➤
+            </button>
+        }
+    </div>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <div class="error-toast">@errorMessage</div>
+}
+
+@code {
+    private ElementReference messageContainer;
+    private List<ChatMessage> messages = new();
+    private string messageInput = string.Empty;
+    private bool isLoading = true;
+    private bool isSending = false;
+    private string errorMessage = string.Empty;
+    private int conversationId;
+    private string companionName = "Luna";
+    private CompanionMood currentMood = CompanionMood.Curious;
+    private int userProfileId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Get user profile
+            var userProfile = await OnboardingService.GetCurrentUserProfileAsync();
+            if (userProfile is null)
+            {
+                Navigation.NavigateTo("/onboarding");
+                return;
+            }
+
+            userProfileId = userProfile.Id;
+
+            // Get companion
+            var companion = await OnboardingService.GetOrCreateCompanionAsync();
+            companionName = companion.Name;
+            currentMood = companion.CurrentMood;
+
+            // Load conversation
+            var conversation = await ChatService.GetOrCreateActiveConversationAsync(userProfileId);
+            conversationId = conversation.ConversationId;
+            messages = conversation.Messages;
+
+            isLoading = false;
+
+            // Scroll to bottom after rendering
+            await Task.Delay(100);
+            await ScrollToBottom();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Failed to load conversation";
+            Console.WriteLine($"Error loading chat: {ex.Message}");
+            isLoading = false;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await ScrollToBottom();
+        }
+    }
+
+    private async Task SendMessage()
+    {
+        if (string.IsNullOrWhiteSpace(messageInput) || isSending)
+            return;
+
+        try
+        {
+            isSending = true;
+            errorMessage = string.Empty;
+
+            var content = messageInput.Trim();
+            messageInput = string.Empty;
+
+            var response = await ChatService.SendUserMessageAsync(conversationId, content);
+
+            if (response.Success)
+            {
+                if (response.UserMessage != null)
+                    messages.Add(response.UserMessage);
+
+                if (response.CompanionResponse != null)
+                    messages.Add(response.CompanionResponse);
+
+                await Task.Delay(100);
+                await ScrollToBottom();
+            }
+            else
+            {
+                errorMessage = response.ErrorMessage;
+                messageInput = content; // Restore message
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Failed to send message";
+            Console.WriteLine($"Error sending message: {ex.Message}");
+        }
+        finally
+        {
+            isSending = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !e.ShiftKey)
+        {
+            await SendMessage();
+        }
+    }
+
+    private async Task PlayMessageAudio(ChatMessage message)
+    {
+        try
+        {
+            await TextToSpeech.Default.SpeakAsync(message.Content);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error playing audio: {ex.Message}");
+            errorMessage = "Failed to play audio";
+        }
+    }
+
+    private async Task ScrollToBottom()
+    {
+        try
+        {
+            // Use JavaScript interop to scroll to bottom
+            // For now, just log - actual scroll implementation would require JS
+            Console.WriteLine("Scrolling to bottom");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error scrolling: {ex.Message}");
+        }
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/home");
+    }
+}

@@ -1,0 +1,41 @@
+<div class="relative">
+    @if (IsLoading)
+    {
+        <div class="animate-pulse space-y-2">
+            @for (int i = 0; i < Lines; i++)
+            {
+                <div class="h-4 bg-gray-200 rounded" style="width: @(i == Lines - 1 ? "75%" : "100%")"></div>
+            }
+        </div>
+    }
+    else
+    {
+        @ChildContent
+    }
+</div>
+
+@code {
+    [Parameter]
+    public bool IsLoading { get; set; }
+
+    [Parameter]
+    public int Lines { get; set; } = 2;
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}
+
+<style>
+    @@keyframes pulse {
+        0%, 100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.5;
+        }
+    }
+
+    .animate-pulse {
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+</style>

@@ -8,12 +8,12 @@ namespace SupportServer.Tests.Controllers
 {
     public class LexicalAnalysisControllerTests
     {
-        private readonly Mock<IPromptClient> _mockPromptClient;
+        private readonly Mock<GeminiClient> _mockPromptClient;
         private readonly LexicalAnalysisController _controller;
 
         public LexicalAnalysisControllerTests()
         {
-            _mockPromptClient = new Mock<IPromptClient>();
+            _mockPromptClient = new Mock<GeminiClient>("test-key");
             _controller = new LexicalAnalysisController(_mockPromptClient.Object);
         }
 
@@ -42,7 +42,7 @@ namespace SupportServer.Tests.Controllers
 }";
 
             _mockPromptClient
-                .Setup(x => x.GenerateAsync(It.IsAny<string>(), It.IsAny<string>()))
+                .Setup(x => x.GenerateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(expectedResponse);
 
             // Act
@@ -108,7 +108,7 @@ namespace SupportServer.Tests.Controllers
             };
 
             _mockPromptClient
-                .Setup(x => x.GenerateAsync(It.IsAny<string>(), It.IsAny<string>()))
+                .Setup(x => x.GenerateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(string.Empty);
 
             // Act
@@ -130,7 +130,7 @@ namespace SupportServer.Tests.Controllers
             };
 
             _mockPromptClient
-                .Setup(x => x.GenerateAsync(It.IsAny<string>(), It.IsAny<string>()))
+                .Setup(x => x.GenerateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync((string)null);
 
             // Act
@@ -154,8 +154,8 @@ namespace SupportServer.Tests.Controllers
             string capturedPrompt = null;
 
             _mockPromptClient
-                .Setup(x => x.GenerateAsync(It.IsAny<string>(), It.IsAny<string>()))
-                .Callback<string, string>((prompt, model) => capturedPrompt = prompt)
+                .Setup(x => x.GenerateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Callback<string, string, string>((prompt, model, outputTemplate) => capturedPrompt = prompt)
                 .ReturnsAsync(@"{""items"": []}");
 
             // Act
@@ -190,7 +190,7 @@ namespace SupportServer.Tests.Controllers
 }";
 
             _mockPromptClient
-                .Setup(x => x.GenerateAsync(It.IsAny<string>(), It.IsAny<string>()))
+                .Setup(x => x.GenerateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(expectedResponse);
 
             // Act
@@ -226,7 +226,7 @@ namespace SupportServer.Tests.Controllers
 }";
 
             _mockPromptClient
-                .Setup(x => x.GenerateAsync(It.IsAny<string>(), It.IsAny<string>()))
+                .Setup(x => x.GenerateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(expectedResponse);
 
             // Act
@@ -247,7 +247,7 @@ namespace SupportServer.Tests.Controllers
             };
 
             _mockPromptClient
-                .Setup(x => x.GenerateAsync(It.IsAny<string>(), It.IsAny<string>()))
+                .Setup(x => x.GenerateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ThrowsAsync(new Exception("API Error"));
 
             // Act & Assert

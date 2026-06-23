@@ -1,0 +1,28 @@
+@using MauiApp2.Features.Chat
+@using Domain.Shared.Models
+
+<div class="message-bubble-container @(IsUser ? "user-bubble" : "companion-bubble")">
+    <div class="message-bubble">
+        <div class="bubble-content">@Message.Content</div>
+        <div class="bubble-timestamp">@Message.Timestamp.ToLocalTime().ToString("HH:mm")</div>
+    </div>
+
+    @if (!IsUser && ShowTtsButton)
+    {
+        <button class="bubble-tts-btn" @onclick="() => OnPlayAudio.InvokeAsync(Message)">🔊</button>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public ChatMessage Message { get; set; } = new();
+
+    [Parameter]
+    public bool IsUser { get; set; }
+
+    [Parameter]
+    public bool ShowTtsButton { get; set; } = true;
+
+    [Parameter]
+    public EventCallback<ChatMessage> OnPlayAudio { get; set; }
+}
