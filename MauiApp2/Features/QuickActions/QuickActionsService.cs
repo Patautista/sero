@@ -1,4 +1,5 @@
 using MauiApp2.Services;
+using MauiApp2.Services.AI.Schemas;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
@@ -121,15 +122,9 @@ namespace MauiApp2.Features.QuickActions
 
 Provide:
 1. A brief context explanation
-2. An example sentence in {targetLang}
+2. An example sentence in {targetLang}";
 
-Format as JSON:
-{{
-  ""context"": ""brief explanation"",
-  ""example"": ""example sentence""
-}}";
-
-                var contextResponse = await _api.GenerateTextAsync(contextPrompt);
+                var contextResponse = await _api.GenerateTextAsync(contextPrompt, typeof(WordContextSchema));
 
                 string context = "";
                 string example = "";

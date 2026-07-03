@@ -1,5 +1,6 @@
 using Infrastructure.Data;
 using MauiApp2.Services;
+using MauiApp2.Services.AI.Schemas;
 using Domain.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -70,23 +71,6 @@ namespace MauiApp2.Features.Memory
 Conversation:
 {conversationText}
 
-Extract facts in JSON format:
-{{
-  ""memories"": [
-    {{
-      ""type"": ""Interest"" or ""Event"" or ""Preference"" or ""Goal"",
-      ""content"": ""The extracted fact as a complete sentence"",
-      ""importance"": 1-5 (1=minor detail, 5=very important)
-    }}
-  ]
-}}
-
-Types:
-- Interest: Things the user likes or is interested in
-- Event: Things that happened to the user
-- Preference: User's preferences about learning or life
-- Goal: User's objectives or ambitions
-
 Guidelines:
 - Only extract facts explicitly mentioned by the user
 - Be specific and concrete
@@ -94,10 +78,9 @@ Guidelines:
 - Importance 4-5: Core interests, significant events, important goals
 - Importance 2-3: Casual mentions, minor events
 - Importance 1: Very minor details
+- type must be one of: Interest, Event, Preference, Goal";
 
-Return ONLY valid JSON.";
-
-                var response = await _api.GenerateTextAsync(prompt);
+                var response = await _api.GenerateTextAsync(prompt, typeof(MemoryExtractionSchema));
                 var extractionData = JsonSerializer.Deserialize<MemoryExtractionData>(response);
 
                 if (extractionData?.Memories == null || !extractionData.Memories.Any())

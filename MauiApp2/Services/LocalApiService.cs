@@ -3,6 +3,8 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Schema;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
@@ -147,11 +149,17 @@ If there are no mistakes, return {{""hasMistakes"": false, ""mistakes"": []}}";
         }
 
         // AI Generation (general purpose)
-        public async Task<string> GenerateTextAsync(string prompt)
+        public async Task<string> GenerateTextAsync(string prompt, Type? schemaType = null)
         {
             try
             {
-                var jsonOptions = new ChatOptions { ResponseFormat = ChatResponseFormat.Json };
+                if (schemaType != null)
+                {
+                    JsonNode schema = JsonSerializerOptions.Default.GetJsonSchemaAsNode(schemaType);
+                    prompt = $"{prompt}\n\nRespond with valid JSON matching this schema:\n{schema.ToJsonString()}";
+                }
+
+                var jsonOptions = schemaType != null ? new ChatOptions { ResponseFormat = ChatResponseFormat.Json } : null;
                 var completion = await _chatClient.GetResponseAsync([new ChatMessage(ChatRole.User, prompt)], jsonOptions);
                 return completion.Messages[^1].Text ?? string.Empty;
             }

@@ -87,6 +87,37 @@ namespace Infrastructure.Data
             await _context.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Clears all user-generated data (profile, conversations, messages, memories, mistakes,
+        /// and activities) while keeping the companion seed intact.
+        /// </summary>
+        public async Task ClearUserDataAsync()
+        {
+            _logger.LogWarning("Clearing all user data...");
+
+            try
+            {
+                _context.UserProfiles.RemoveRange(_context.UserProfiles);
+                await _context.SaveChangesAsync();
+
+                // Reset companion mood to default
+                var companion = await _context.Companions.FindAsync(1);
+                if (companion != null)
+                {
+                    companion.CurrentMood = Domain.Shared.Models.CompanionMood.Curious;
+                    companion.LastMoodChange = DateTime.UtcNow;
+                    await _context.SaveChangesAsync();
+                }
+
+                _logger.LogInformation("User data cleared successfully");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error clearing user data");
+                throw;
+            }
+        }
+
 #if DEBUG
         /// <summary>
         /// Development-only: Completely resets the database.

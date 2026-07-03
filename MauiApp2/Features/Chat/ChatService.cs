@@ -1,6 +1,7 @@
 using Domain.Shared.Models;
 using Infrastructure.Data;
 using MauiApp2.Services;
+using MauiApp2.Services.AI.Schemas;
 using Domain.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -265,7 +266,7 @@ namespace MauiApp2.Features.Chat
 
                 var context = await BuildResponseContextAsync(conversation);
                 var prompt = BuildCompanionResponsePrompt(context, userMessage.Content, corrections);
-                var responseJson = await _api.GenerateTextAsync(prompt);
+                var responseJson = await _api.GenerateTextAsync(prompt, typeof(CompanionResponseSchema));
                 var response = ParseCompanionResponse(responseJson);
 
                 var paragraphs = SplitIntoParagraphs(response.Text);
@@ -361,7 +362,7 @@ namespace MauiApp2.Features.Chat
                 var prompt = BuildCompanionResponsePrompt(context, userMessage.Content, corrections);
 
                 // Generate response
-                var responseJson = await _api.GenerateTextAsync(prompt);
+                var responseJson = await _api.GenerateTextAsync(prompt, typeof(CompanionResponseSchema));
                 var response = ParseCompanionResponse(responseJson);
 
                 // Create companion message
@@ -500,21 +501,7 @@ INSTRUCTIONS:
 4. Match your current mood: {moodDescription}
 5. Keep response conversational, 2-4 sentences
 6. Ask a follow-up question to keep the conversation going
-7. Be encouraging and supportive
-
-Return ONLY valid JSON in this format:
-{{
-  ""text"": ""your response in {context.TargetLanguage}"",
-  ""corrections"": [
-    {{
-      ""original"": ""incorrect phrase"",
-      ""corrected"": ""correct version"",
-      ""explanation"": ""brief explanation""
-    }}
-  ]
-}}
-
-If no corrections are needed, use an empty array for corrections.";
+7. Be encouraging and supportive";
 
             return prompt;
         }

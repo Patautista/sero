@@ -1,0 +1,234 @@
+@page "/settings"
+@using Infrastructure.Data
+@inject PetDbContextInitialiser DbInitialiser
+@inject NavigationManager Navigation
+
+<div class="settings-container">
+    <div class="settings-header">
+        <button class="back-button" @onclick="GoBack">←</button>
+        <h2>Settings</h2>
+    </div>
+
+    <div class="settings-section">
+        <h3>Data</h3>
+
+        <div class="settings-item danger-zone">
+            <div class="settings-item-info">
+                <span class="settings-item-title">Reset App</span>
+                <span class="settings-item-description">Delete all conversations and your profile. You will go through onboarding again.</span>
+            </div>
+            <button class="btn-danger" @onclick="ShowConfirmation" disabled="@isResetting">
+                Reset
+            </button>
+        </div>
+    </div>
+
+    @if (showConfirm)
+    {
+        <div class="dialog-overlay" @onclick="HideConfirmation">
+            <div class="dialog-content" @onclick:stopPropagation="true">
+                <h3>Reset App?</h3>
+                <p>This will permanently delete <strong>all conversations</strong> and your <strong>user profile</strong>. You will need to go through onboarding again.</p>
+                <p>This action cannot be undone.</p>
+
+                @if (!string.IsNullOrWhiteSpace(errorMessage))
+                {
+                    <div class="error-message">@errorMessage</div>
+                }
+
+                <div class="dialog-actions">
+                    <button class="btn-secondary" @onclick="HideConfirmation" disabled="@isResetting">Cancel</button>
+                    <button class="btn-danger" @onclick="ConfirmReset" disabled="@isResetting">
+                        @(isResetting ? "Resetting..." : "Yes, Reset Everything")
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .settings-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 1rem;
+    }
+
+    .settings-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .settings-header h2 {
+        margin: 0;
+    }
+
+    .back-button {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0.25rem 0.5rem;
+        border-radius: 8px;
+        color: inherit;
+    }
+
+    .back-button:hover {
+        background: rgba(0, 0, 0, 0.08);
+    }
+
+    .settings-section {
+        margin-bottom: 2rem;
+    }
+
+    .settings-section h3 {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        opacity: 0.6;
+        margin-bottom: 0.75rem;
+    }
+
+    .settings-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem;
+        background: var(--bs-body-bg, #fff);
+        border: 1px solid rgba(0,0,0,0.1);
+        border-radius: 12px;
+    }
+
+    .settings-item-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .settings-item-title {
+        font-weight: 600;
+    }
+
+    .settings-item-description {
+        font-size: 0.85rem;
+        opacity: 0.65;
+        max-width: 360px;
+    }
+
+    .btn-danger {
+        background: #dc3545;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    .btn-danger:hover:not(:disabled) {
+        background: #b02a37;
+    }
+
+    .btn-danger:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .btn-secondary {
+        background: transparent;
+        border: 1px solid rgba(0,0,0,0.2);
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+        background: rgba(0,0,0,0.05);
+    }
+
+    .btn-secondary:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .dialog-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    }
+
+    .dialog-content {
+        background: var(--bs-body-bg, #fff);
+        border-radius: 16px;
+        padding: 1.5rem;
+        max-width: 400px;
+        width: 90%;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    .dialog-content h3 {
+        margin-top: 0;
+    }
+
+    .dialog-actions {
+        display: flex;
+        gap: 0.75rem;
+        justify-content: flex-end;
+        margin-top: 1.25rem;
+    }
+
+    .error-message {
+        color: #dc3545;
+        background: #fff5f5;
+        border: 1px solid #f5c6cb;
+        border-radius: 8px;
+        padding: 0.5rem 0.75rem;
+        margin-top: 0.75rem;
+        font-size: 0.9rem;
+    }
+</style>
+
+@code {
+    private bool showConfirm = false;
+    private bool isResetting = false;
+    private string errorMessage = string.Empty;
+
+    private void GoBack() => Navigation.NavigateTo("/home");
+
+    private void ShowConfirmation()
+    {
+        errorMessage = string.Empty;
+        showConfirm = true;
+    }
+
+    private void HideConfirmation()
+    {
+        if (!isResetting)
+            showConfirm = false;
+    }
+
+    private async Task ConfirmReset()
+    {
+        isResetting = true;
+        errorMessage = string.Empty;
+
+        try
+        {
+            await DbInitialiser.ClearUserDataAsync();
+            Navigation.NavigateTo("/onboarding", forceLoad: true);
+        }
+        catch (Exception)
+        {
+            errorMessage = "Something went wrong while resetting. Please try again.";
+            isResetting = false;
+        }
+    }
+}
