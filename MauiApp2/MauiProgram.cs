@@ -54,6 +54,7 @@ namespace MauiApp2
 
             // Core Services
             builder.Services.AddSingleton<LocalApiService>();
+            builder.Services.AddSingleton<IApiService>(sp => sp.GetRequiredService<LocalApiService>());
             builder.Services.AddSingleton<Services.NotificationService>();
 
             // Feature Services

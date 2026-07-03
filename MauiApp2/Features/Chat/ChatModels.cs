@@ -12,6 +12,11 @@ namespace MauiApp2.Features.Chat
         public DateTime Timestamp { get; set; }
         public List<CorrectionData>? Corrections { get; set; }
         public MessageType MessageType { get; set; }
+
+        // UI-only state (not persisted)
+        public string? Translation { get; set; }
+        public bool ShowTranslation { get; set; }
+        public bool IsTranslating { get; set; }
     }
 
     public class SendMessageRequest

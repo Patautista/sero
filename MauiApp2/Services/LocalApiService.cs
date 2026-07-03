@@ -151,7 +151,8 @@ If there are no mistakes, return {{""hasMistakes"": false, ""mistakes"": []}}";
         {
             try
             {
-                var completion = await _chatClient.GetResponseAsync([new ChatMessage(ChatRole.User, prompt)]);
+                var jsonOptions = new ChatOptions { ResponseFormat = ChatResponseFormat.Json };
+                var completion = await _chatClient.GetResponseAsync([new ChatMessage(ChatRole.User, prompt)], jsonOptions);
                 return completion.Messages[^1].Text ?? string.Empty;
             }
             catch (Exception ex)

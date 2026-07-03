@@ -22,6 +22,7 @@ namespace MauiApp2.Features.QuickActions
         public string OriginalText { get; set; } = string.Empty;
         public string TranslatedText { get; set; } = string.Empty;
         public byte[] AudioData { get; set; } = System.Array.Empty<byte>();
+        public List<TextChunk> Chunks { get; set; } = new();
         public bool Success { get; set; }
         public string ErrorMessage { get; set; } = string.Empty;
     }

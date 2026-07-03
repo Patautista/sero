@@ -70,11 +70,20 @@ namespace MauiApp2.Features.QuickActions
                 var translation = await _api.TranslateAsync(text, fromLang, toLang);
                 var audio = await _api.GetTTSAsync(translation, toLang);
 
+                var analysis = await _api.AnalyzeLexicalAsync(translation, toLang);
+                var chunks = analysis.Chunks.Select(c => new TextChunk
+                {
+                    Word = c.Word,
+                    Translation = c.Translation,
+                    Note = c.Note
+                }).ToList();
+
                 return new TranslationResult
                 {
                     OriginalText = text,
                     TranslatedText = translation,
                     AudioData = audio,
+                    Chunks = chunks,
                     Success = true
                 };
             }

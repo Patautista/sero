@@ -2,11 +2,16 @@
 @using MauiApp2.Features.Chat
 @using MauiApp2.Features.Onboarding
 @using MauiApp2.Components
+@using MauiApp2.Services
 @using Domain.Shared.Models
 @using Microsoft.AspNetCore.Components.Web
+@using Business.Interfaces
+@using Infrastructure.Factories
 @inject ChatService ChatService
 @inject OnboardingService OnboardingService
+@inject IApiService ApiService
 @inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
 
 <div class="chat-container">
     <div class="chat-header">
@@ -20,7 +25,7 @@
         </div>
     </div>
 
-    <div class="chat-messages" @ref="messageContainer">
+    <div class="chat-messages" @ref="messageContainer" @onpointerup="HandleSelectionAsync">
         <LoadingSpinner IsLoading="@isLoading">
             @if (messages.Any())
             {
@@ -30,6 +35,11 @@
                         <div class="message @(message.SenderType == SenderType.User ? "message-user" : "message-companion")">
                             <div class="message-content">@message.Content</div>
                             <div class="message-time">@message.Timestamp.ToLocalTime().ToString("HH:mm")</div>
+
+                            @if (message.ShowTranslation && !string.IsNullOrWhiteSpace(message.Translation))
+                            {
+                                <div class="message-translation">🌐 @message.Translation</div>
+                            }
 
                             @if (message.Corrections != null && message.Corrections.Any())
                             {
@@ -53,7 +63,12 @@
 
                         @if (message.SenderType == SenderType.Companion)
                         {
-                            <button class="tts-button" @onclick="() => PlayMessageAudio(message)">🔊</button>
+                            <div class="message-actions">
+                                <button class="tts-button" @onclick="() => PlayMessageAudio(message)" title="Listen">🔊</button>
+                                <button class="translate-button @(message.ShowTranslation ? "active" : "")" @onclick="() => TranslateMessage(message)" title="Translate" disabled="@message.IsTranslating">
+                                    @(message.IsTranslating ? "⏳" : "🌐")
+                                </button>
+                            </div>
                         }
                     </div>
                 }
@@ -65,30 +80,41 @@
                     <p>Start a conversation with @companionName!</p>
                 </div>
             }
+
+            @if (isTyping)
+            {
+                <div class="message-wrapper companion-message-wrapper">
+                    <div class="typing-bubble">
+                        <span class="typing-dot"></span>
+                        <span class="typing-dot"></span>
+                        <span class="typing-dot"></span>
+                    </div>
+                </div>
+            }
         </LoadingSpinner>
     </div>
 
     <div class="chat-input-container">
-        @if (isSending)
-        {
-            <div class="sending-indicator">Sending...</div>
-        }
-        else
-        {
-            <textarea 
-                @bind="messageInput" 
-                @bind:event="oninput"
-                @onkeydown="HandleKeyDown"
-                placeholder="Type your message..."
-                rows="1"
-                class="chat-input"
-                disabled="@isSending">
-            </textarea>
-            <button class="send-button" @onclick="SendMessage" disabled="@(string.IsNullOrWhiteSpace(messageInput) || isSending)">
-                ➤
-            </button>
-        }
+        <textarea 
+            @bind="messageInput" 
+            @bind:event="oninput"
+            @onkeydown="HandleKeyDown"
+            placeholder="Type your message..."
+            rows="1"
+            class="chat-input"
+            disabled="@isSending">
+        </textarea>
+        <button class="send-button" @onclick="SendMessage" disabled="@(string.IsNullOrWhiteSpace(messageInput) || isSending)">
+            ➤
+        </button>
     </div>
+
+    <DefinitionTooltip IsVisible="@showDefinitionTooltip"
+                       IsLoading="@isLoadingDefinition"
+                       DefinitionResult="@definitionResult"
+                       X="@tooltipX"
+                       Y="@tooltipY"
+                       OnClose="@CloseDefinitionTooltip" />
 </div>
 
 @if (!string.IsNullOrWhiteSpace(errorMessage))
@@ -102,11 +128,22 @@
     private string messageInput = string.Empty;
     private bool isLoading = true;
     private bool isSending = false;
+    private bool isTyping = false;
     private string errorMessage = string.Empty;
     private int conversationId;
     private string companionName = "Luna";
     private CompanionMood currentMood = CompanionMood.Curious;
     private int userProfileId;
+    private string targetLanguage = string.Empty;
+
+    private bool showDefinitionTooltip = false;
+    private bool isLoadingDefinition = false;
+    private DefinitionResult? definitionResult = null;
+    private double tooltipX = 0;
+    private double tooltipY = 0;
+    private string currentDefinitionWord = string.Empty;
+    private string nativeLanguage = string.Empty;
+    private readonly Random _random = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -121,6 +158,8 @@
             }
 
             userProfileId = userProfile.Id;
+            targetLanguage = userProfile.TargetLanguage;
+            nativeLanguage = userProfile.NativeLanguage;
 
             // Get companion
             var companion = await OnboardingService.GetOrCreateCompanionAsync();
@@ -159,36 +198,64 @@
         if (string.IsNullOrWhiteSpace(messageInput) || isSending)
             return;
 
+        isSending = true;
+        errorMessage = string.Empty;
+        var content = messageInput.Trim();
+        messageInput = string.Empty;
+
         try
         {
-            isSending = true;
-            errorMessage = string.Empty;
+            // 1. Save and immediately display user message
+            var userMessage = await ChatService.SaveUserMessageAsync(conversationId, content);
+            messages.Add(userMessage);
+            isTyping = true;
+            StateHasChanged();
+            await ScrollToBottom();
 
-            var content = messageInput.Trim();
-            messageInput = string.Empty;
+            // 2. Minimum natural typing delay (1.5–3.5 s) so the animation is never instant
+            var minDelayTask = Task.Delay(_random.Next(1500, 3500));
 
-            var response = await ChatService.SendUserMessageAsync(conversationId, content);
-
-            if (response.Success)
+            // 3. Corrections: separate API call — display on user bubble as soon as they arrive
+            var corrections = await ChatService.GetCorrectionsAsync(content, targetLanguage);
+            if (corrections != null && corrections.Any())
             {
-                if (response.UserMessage != null)
-                    messages.Add(response.UserMessage);
+                userMessage.Corrections = corrections;
+                StateHasChanged();
+                _ = ChatService.PersistUserMessageCorrectionsAsync(userMessage.Id, corrections);
+            }
 
-                if (response.CompanionResponse != null)
-                    messages.Add(response.CompanionResponse);
+            // 4. Generate companion response (can use corrections for context)
+            var companionTask = ChatService.GenerateCompanionMessageAsync(conversationId, userMessage.Id, corrections);
 
-                await Task.Delay(100);
+            // 5. Reveal paragraphs progressively once both delay and response are ready
+            await Task.WhenAll(minDelayTask, companionTask);
+            var companions = await companionTask;
+
+            isTyping = false;
+            for (int i = 0; i < companions.Count; i++)
+            {
+                messages.Add(companions[i]);
+                StateHasChanged();
                 await ScrollToBottom();
+
+                if (i < companions.Count - 1)
+                {
+                    // Let the user read the current paragraph before typing starts
+                    await Task.Delay(Math.Clamp(companions[i].Content.Length * 25, 400, 900));
+                    isTyping = true;
+                    StateHasChanged();
+                    // Typing duration proportional to the next paragraph's length
+                    await Task.Delay(Math.Clamp(companions[i + 1].Content.Length * 35, 600, 2200));
+                    isTyping = false;
+                }
             }
-            else
-            {
-                errorMessage = response.ErrorMessage;
-                messageInput = content; // Restore message
-            }
+            StateHasChanged();
         }
         catch (Exception ex)
         {
             errorMessage = "Failed to send message";
+            isTyping = false;
+            messageInput = content;
             Console.WriteLine($"Error sending message: {ex.Message}");
         }
         finally
@@ -206,11 +273,51 @@
         }
     }
 
+    private async Task TranslateMessage(ChatMessage message)
+    {
+        if (message.IsTranslating) return;
+
+        // Toggle off if already showing
+        if (message.ShowTranslation)
+        {
+            message.ShowTranslation = false;
+            StateHasChanged();
+            return;
+        }
+
+        // Fetch translation if not yet cached
+        if (message.Translation == null)
+        {
+            message.IsTranslating = true;
+            StateHasChanged();
+            try
+            {
+                message.Translation = await ApiService.TranslateAsync(message.Content, targetLanguage, nativeLanguage);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error translating: {ex.Message}");
+                message.Translation = "[Translation unavailable]";
+            }
+            finally
+            {
+                message.IsTranslating = false;
+            }
+        }
+
+        message.ShowTranslation = true;
+        StateHasChanged();
+    }
+
     private async Task PlayMessageAudio(ChatMessage message)
     {
         try
         {
-            await TextToSpeech.Default.SpeakAsync(message.Content);
+            var locales = await TextToSpeech.Default.GetLocalesAsync();
+            var locale = locales.FirstOrDefault(l =>
+                l.Language.Equals(targetLanguage, StringComparison.OrdinalIgnoreCase) ||
+                l.Id.StartsWith(targetLanguage, StringComparison.OrdinalIgnoreCase));
+            await TextToSpeech.Default.SpeakAsync(message.Content, new SpeechOptions { Locale = locale });
         }
         catch (Exception ex)
         {
@@ -231,6 +338,72 @@
         {
             Console.WriteLine($"Error scrolling: {ex.Message}");
         }
+    }
+
+    private async Task HandleSelectionAsync(PointerEventArgs e)
+    {
+        var selectedText = await JSRuntime.InvokeAsync<string>("selectionHelper.getSelectedText");
+        if (string.IsNullOrWhiteSpace(selectedText))
+            return;
+
+        if (selectedText.Split(' ', StringSplitOptions.RemoveEmptyEntries).Length > 5)
+            return;
+
+        if (currentDefinitionWord == selectedText && definitionResult != null)
+        {
+            tooltipX = e.ClientX;
+            tooltipY = e.ClientY;
+            showDefinitionTooltip = !showDefinitionTooltip;
+            StateHasChanged();
+            return;
+        }
+
+        tooltipX = e.ClientX;
+        tooltipY = e.ClientY;
+        currentDefinitionWord = selectedText;
+        showDefinitionTooltip = true;
+        isLoadingDefinition = true;
+        definitionResult = null;
+        StateHasChanged();
+
+        try
+        {
+            if (LanguageServiceFactory.TryGetLanguageService(targetLanguage, out var languageService))
+            {
+                var provider = languageService!.GetDefinitionProviders().FirstOrDefault();
+                if (provider != null)
+                    definitionResult = await provider.GetDefinitionsAsync(selectedText);
+            }
+
+            definitionResult ??= new DefinitionResult
+            {
+                Word = selectedText,
+                ProviderName = "N/A",
+                Entries = new List<DefinitionEntry>()
+            };
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading definition for '{selectedText}': {ex.Message}");
+            definitionResult = new DefinitionResult
+            {
+                Word = selectedText,
+                ProviderName = "Error",
+                Entries = new List<DefinitionEntry>()
+            };
+        }
+        finally
+        {
+            isLoadingDefinition = false;
+            StateHasChanged();
+        }
+    }
+
+    private void CloseDefinitionTooltip()
+    {
+        showDefinitionTooltip = false;
+        currentDefinitionWord = string.Empty;
+        StateHasChanged();
     }
 
     private void GoBack()

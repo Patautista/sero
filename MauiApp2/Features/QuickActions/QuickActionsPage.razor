@@ -4,6 +4,8 @@
 @using MauiApp2.Components
 @using MauiApp2.Components.Buttons
 @using Domain.Shared.Models
+@using Business.Interfaces
+@using Infrastructure.Factories
 @inject QuickActionsService QuickActionsService
 @inject OnboardingService OnboardingService
 @inject NavigationManager Navigation
@@ -66,20 +68,47 @@
                     @if (!string.IsNullOrWhiteSpace(resultText))
                     {
                         <div class="result-section">
-                            @if (currentAction == ActionType.TextAnalysis && analysisChunks != null && analysisChunks.Any())
+                            @if ((currentAction == ActionType.TextAnalysis || currentAction == ActionType.Translation) && analysisChunks != null && analysisChunks.Any())
                             {
-                                <div class="analysis-chunks">
-                                    @foreach (var chunk in analysisChunks)
-                                    {
-                                        <div class="chunk">
-                                            <span class="chunk-word">@chunk.Word</span>
-                                            <span class="chunk-translation">@chunk.Translation</span>
-                                            @if (!string.IsNullOrWhiteSpace(chunk.Note))
-                                            {
-                                                <span class="chunk-note">@chunk.Note</span>
-                                            }
+                                @if (selectedChunk != null)
+                                {
+                                    <div class="mb-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <div class="d-flex gap-2 align-items-center flex-wrap">
+                                                <h6 class="text-blue-800 fw-semibold mb-0"
+                                                    @onclick="(e) => OnChunkWordClick(selectedChunk.Word, e)"
+                                                    @onclick:stopPropagation="true"
+                                                    style="cursor: pointer;">@selectedChunk.Word</h6>
+                                            </div>
+                                            <button type="button" class="btn-close btn-sm"
+                                                    @onclick="ClearSelectedChunk"
+                                                    @onclick:stopPropagation="true"></button>
                                         </div>
-                                    }
+                                        @if (!string.IsNullOrWhiteSpace(selectedChunk.Translation))
+                                        {
+                                            <div class="mb-2">
+                                                <span class="text-success fw-bold">🔤 @selectedChunk.Translation</span>
+                                            </div>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(selectedChunk.Note))
+                                        {
+                                            <div class="p-2 bg-white rounded border border-blue-100">
+                                                <small class="text-muted">💡 @selectedChunk.Note</small>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+
+                                <div class="p-3 bg-gray-50 rounded-lg border border-gray-300">
+                                    <div class="flex flex-wrap gap-2">
+                                        @foreach (var chunk in analysisChunks)
+                                        {
+                                            <span @onclick="async (e) => await OnChunkBlockClick(chunk, e)"
+                                                  @onclick:stopPropagation="true"
+                                                  class="@GetChunkBlockClass(chunk)"
+                                                  style="cursor: pointer;">@chunk.Word</span>
+                                        }
+                                    </div>
                                 </div>
                             }
                             else
@@ -112,6 +141,13 @@
             </div>
         </div>
     }
+
+    <DefinitionTooltip IsVisible="@showDefinitionTooltip"
+                       IsLoading="@isLoadingDefinition"
+                       DefinitionResult="@definitionResult"
+                       X="@tooltipX"
+                       Y="@tooltipY"
+                       OnClose="@CloseDefinitionTooltip" />
 </div>
 
 @code {
@@ -128,9 +164,17 @@
     private bool isLoading = false;
     private bool canPlayAudio = false;
     private List<TextChunk>? analysisChunks = null;
+    private TextChunk? selectedChunk = null;
 
     private string targetLanguage = "es";
     private string nativeLanguage = "en";
+
+    private bool showDefinitionTooltip = false;
+    private bool isLoadingDefinition = false;
+    private DefinitionResult? definitionResult = null;
+    private double tooltipX = 0;
+    private double tooltipY = 0;
+    private string currentDefinitionWord = string.Empty;
 
     enum ActionType
     {
@@ -172,6 +216,7 @@
         exampleText = string.Empty;
         canPlayAudio = false;
         analysisChunks = null;
+        selectedChunk = null;
     }
 
     private void CloseDialog()
@@ -213,6 +258,7 @@
             exampleText = string.Empty;
             canPlayAudio = false;
             analysisChunks = null;
+            selectedChunk = null;
 
             switch (currentAction)
             {
@@ -234,6 +280,7 @@
                     if (transResult.Success)
                     {
                         resultText = transResult.TranslatedText;
+                        analysisChunks = transResult.Chunks;
                         canPlayAudio = true;
                     }
                     else
@@ -292,6 +339,99 @@
         {
             Console.WriteLine($"Error playing audio: {ex.Message}");
         }
+    }
+
+    private async Task OnChunkBlockClick(TextChunk chunk, MouseEventArgs e)
+    {
+        if (selectedChunk?.Word == chunk.Word)
+        {
+            selectedChunk = null;
+            showDefinitionTooltip = false;
+            StateHasChanged();
+        }
+        else
+        {
+            selectedChunk = chunk;
+            await OnChunkWordClick(chunk.Word, e);
+        }
+    }
+
+    private void ClearSelectedChunk()
+    {
+        selectedChunk = null;
+    }
+
+    private string GetChunkBlockClass(TextChunk chunk)
+    {
+        const string baseClasses = "px-2 py-1 rounded transition-all";
+        if (selectedChunk?.Word == chunk.Word)
+            return $"{baseClasses} bg-indigo-600 text-white fw-semibold shadow";
+        if (!string.IsNullOrWhiteSpace(chunk.Note))
+            return $"{baseClasses} bg-yellow-100 border border-yellow-400 hover:bg-yellow-200 hover:border-yellow-500";
+        return $"{baseClasses} bg-white border border-gray-300 hover:bg-indigo-100 hover:border-indigo-400";
+    }
+
+    private async Task OnChunkWordClick(string word, MouseEventArgs e)
+    {
+        if (string.IsNullOrWhiteSpace(word))
+            return;
+
+        tooltipX = e.ClientX;
+        tooltipY = e.ClientY;
+
+        if (currentDefinitionWord == word && definitionResult != null)
+        {
+            showDefinitionTooltip = !showDefinitionTooltip;
+            StateHasChanged();
+            return;
+        }
+
+        currentDefinitionWord = word;
+        showDefinitionTooltip = true;
+        isLoadingDefinition = true;
+        definitionResult = null;
+        StateHasChanged();
+
+        try
+        {
+            if (LanguageServiceFactory.TryGetLanguageService(targetLanguage, out var languageService))
+            {
+                var provider = languageService!.GetDefinitionProviders().FirstOrDefault();
+                if (provider != null)
+                {
+                    definitionResult = await provider.GetDefinitionsAsync(word);
+                }
+            }
+
+            definitionResult ??= new DefinitionResult
+            {
+                Word = word,
+                ProviderName = "N/A",
+                Entries = new List<DefinitionEntry>()
+            };
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading definition for '{word}': {ex.Message}");
+            definitionResult = new DefinitionResult
+            {
+                Word = word,
+                ProviderName = "Error",
+                Entries = new List<DefinitionEntry>()
+            };
+        }
+        finally
+        {
+            isLoadingDefinition = false;
+            StateHasChanged();
+        }
+    }
+
+    private void CloseDefinitionTooltip()
+    {
+        showDefinitionTooltip = false;
+        selectedChunk = null;
+        StateHasChanged();
     }
 
     private void StartConversation()

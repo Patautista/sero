@@ -5,6 +5,7 @@ using Google.Cloud.TextToSpeech.V1;
 using Infrastructure.AI;
 using Infrastructure.Audio;
 using Infrastructure.Data;
+using Infrastructure.Data.Model.Server;
 using Infrastructure.Storage;
 using Microsoft.EntityFrameworkCore;
 

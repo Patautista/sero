@@ -11,6 +11,7 @@ public static class LanguageServiceFactory
     {
         { AvailableCodes.Italian, new ItalianLanguageService() },
         { AvailableCodes.English, new EnglishLanguageService() },
+        { AvailableCodes.French, new FrenchLanguageService() },
         { AvailableCodes.Norwegian, new NorwegianLanguageService() },
         { AvailableCodes.German, new GermanLanguageService() },
         { AvailableCodes.Chinese, new ChineseLanguageService() },

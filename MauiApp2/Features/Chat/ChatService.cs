@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace MauiApp2.Features.Chat
@@ -175,6 +177,155 @@ namespace MauiApp2.Features.Chat
                     Success = false,
                     ErrorMessage = "Failed to send message"
                 };
+            }
+        }
+
+        public async Task<ChatMessage> SaveUserMessageAsync(int conversationId, string content)
+        {
+            var conversation = await _db.Conversations
+                .Include(c => c.UserProfile)
+                .FirstOrDefaultAsync(c => c.Id == conversationId)
+                ?? throw new InvalidOperationException("Conversation not found");
+
+            var userMessage = new MessageTable
+            {
+                ConversationId = conversationId,
+                SenderType = SenderType.User,
+                Content = content,
+                MessageType = MessageType.Normal,
+                Timestamp = DateTime.UtcNow,
+                LanguageCode = conversation.UserProfile?.TargetLanguage ?? "es"
+            };
+
+            _db.Messages.Add(userMessage);
+            conversation.LastMessageAt = DateTime.UtcNow;
+            await _db.SaveChangesAsync();
+
+            return new ChatMessage
+            {
+                Id = userMessage.Id,
+                SenderType = SenderType.User,
+                Content = content,
+                Timestamp = userMessage.Timestamp,
+                MessageType = MessageType.Normal
+            };
+        }
+
+        public async Task<List<CorrectionData>?> GetCorrectionsAsync(string content, string language)
+        {
+            if (!_config.EnableMistakeDetection) return null;
+
+            try
+            {
+                var analysis = await _api.DetectMistakesAsync(content, language);
+                if (!analysis.HasMistakes || analysis.Mistakes.Count == 0) return null;
+
+                return analysis.Mistakes.Select(m => new CorrectionData
+                {
+                    Original = m.Segment,
+                    Corrected = m.Corrected,
+                    Explanation = $"{m.Type}: {m.Concept}"
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error checking corrections");
+                return null;
+            }
+        }
+
+        public async Task PersistUserMessageCorrectionsAsync(int userMessageId, List<CorrectionData> corrections)
+        {
+            try
+            {
+                var message = await _db.Messages.FindAsync(userMessageId);
+                if (message != null)
+                {
+                    message.CorrectionDataJson = JsonSerializer.Serialize(corrections);
+                    await _db.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error persisting corrections to user message {MessageId}", userMessageId);
+            }
+        }
+
+        public async Task<List<ChatMessage>> GenerateCompanionMessageAsync(int conversationId, int userMessageId, List<CorrectionData>? corrections)
+        {
+            try
+            {
+                var conversation = await _db.Conversations
+                    .Include(c => c.UserProfile)
+                    .FirstOrDefaultAsync(c => c.Id == conversationId)
+                    ?? throw new InvalidOperationException("Conversation not found");
+
+                var userMessage = await _db.Messages.FindAsync(userMessageId)
+                    ?? throw new InvalidOperationException("User message not found");
+
+                var context = await BuildResponseContextAsync(conversation);
+                var prompt = BuildCompanionResponsePrompt(context, userMessage.Content, corrections);
+                var responseJson = await _api.GenerateTextAsync(prompt);
+                var response = ParseCompanionResponse(responseJson);
+
+                var paragraphs = SplitIntoParagraphs(response.Text);
+                var results = new List<ChatMessage>(paragraphs.Count);
+                var baseTimestamp = DateTime.UtcNow;
+
+                for (int i = 0; i < paragraphs.Count; i++)
+                {
+                    var companionMessage = new MessageTable
+                    {
+                        ConversationId = conversationId,
+                        SenderType = SenderType.Companion,
+                        Content = paragraphs[i],
+                        MessageType = MessageType.Normal,
+                        Timestamp = baseTimestamp.AddMilliseconds(i * 50),
+                        LanguageCode = context.TargetLanguage
+                    };
+                    _db.Messages.Add(companionMessage);
+                    await _db.SaveChangesAsync();
+
+                    results.Add(new ChatMessage
+                    {
+                        Id = companionMessage.Id,
+                        SenderType = SenderType.Companion,
+                        Content = paragraphs[i],
+                        Timestamp = companionMessage.Timestamp,
+                        MessageType = MessageType.Normal
+                    });
+                }
+
+                _logger.LogInformation("Generated {Count} companion message(s) for conversation {ConversationId}", results.Count, conversationId);
+                return results;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error generating companion message");
+
+                var fallback = new MessageTable
+                {
+                    ConversationId = conversationId,
+                    SenderType = SenderType.Companion,
+                    Content = "I'm having trouble thinking right now. Can you try again?",
+                    MessageType = MessageType.Normal,
+                    Timestamp = DateTime.UtcNow,
+                    LanguageCode = "es"
+                };
+                _db.Messages.Add(fallback);
+                await _db.SaveChangesAsync();
+
+                return
+                [
+                    new ChatMessage
+                    {
+                        Id = fallback.Id,
+                        SenderType = SenderType.Companion,
+                        Content = fallback.Content,
+                        Timestamp = fallback.Timestamp,
+                        MessageType = MessageType.Normal
+                    }
+                ];
             }
         }
 
@@ -368,12 +519,20 @@ If no corrections are needed, use an empty array for corrections.";
             return prompt;
         }
 
+        private static readonly JsonSerializerOptions _jsonOptions = new() { PropertyNameCaseInsensitive = true };
+
+        // Splits after ./?/! that is NOT part of an ellipsis (...) and is
+        // followed by whitespace + a Unicode uppercase letter.
+        private static readonly Regex _sentenceBoundaryRe = new(
+            @"(?<=[^.][.!?])\s+(?=\p{Lu})",
+            RegexOptions.Compiled | RegexOptions.CultureInvariant);
+
         private CompanionResponseData ParseCompanionResponse(string json)
         {
             try
             {
-                var response = JsonSerializer.Deserialize<CompanionResponseData>(json);
-                return response ?? new CompanionResponseData { Text = json }; // Fallback if not JSON
+                var response = JsonSerializer.Deserialize<CompanionResponseData>(json, _jsonOptions);
+                return response ?? new CompanionResponseData { Text = json };
             }
             catch
             {
@@ -412,8 +571,54 @@ If no corrections are needed, use an empty array for corrections.";
 
         private class CompanionResponseData
         {
+            [JsonPropertyName("text")]
             public string Text { get; set; } = string.Empty;
+
+            [JsonPropertyName("corrections")]
             public List<CorrectionData>? Corrections { get; set; }
+        }
+
+        /// <summary>
+        /// Splits an AI response into chunks for progressive message delivery.<br/>
+        /// Priority order: \n\n → \n → sentence boundaries (.&nbsp;!&nbsp;?) → single chunk.
+        /// Single-word fragments ending in '.' are treated as abbreviations (M., Mme., Dr., …)
+        /// and merged into the following sentence to avoid spurious splits.
+        /// </summary>
+        private static List<string> SplitIntoParagraphs(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return [string.Empty];
+
+            static List<string> Trimmed(IEnumerable<string> src) =>
+                src.Select(p => p.Trim()).Where(p => p.Length > 0).ToList();
+
+            // 1. Explicit paragraph breaks (\n\n)
+            var parts = Trimmed(text.Split(["\n\n", "\r\n\r\n"], StringSplitOptions.RemoveEmptyEntries));
+            if (parts.Count >= 2) return parts;
+
+            // 2. Single line-breaks
+            parts = Trimmed(text.Split(["\n", "\r\n"], StringSplitOptions.RemoveEmptyEntries));
+            if (parts.Count >= 2) return parts;
+
+            // 3. Sentence boundaries: after ./?/! (not ellipsis) + space + uppercase
+            var sentences = Trimmed(_sentenceBoundaryRe.Split(text.Trim()));
+            if (sentences.Count >= 2)
+            {
+                // Merge single-word abbreviation fragments (M., Mme., Dr., …)
+                // into the next sentence to avoid splitting "M. Aznavour" in two.
+                var merged = new List<string>(sentences.Count);
+                for (int i = 0; i < sentences.Count; i++)
+                {
+                    var s = sentences[i];
+                    if (s.EndsWith('.') && !s.Contains(' ') && i + 1 < sentences.Count)
+                        sentences[i + 1] = s + " " + sentences[i + 1];
+                    else
+                        merged.Add(s);
+                }
+                if (merged.Count >= 2) return merged;
+            }
+
+            return [text.Trim()];
         }
     }
 }
