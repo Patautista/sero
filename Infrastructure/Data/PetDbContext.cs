@@ -9,7 +9,7 @@ namespace Infrastructure.Data
         public static readonly CompanionTable DefaultCompanion = new CompanionTable
         {
             Id = 1,
-            Name = "Bip-bot",
+            Name = "Blip",
             Avatar = "🤖",
             Personality = "You are a butler-like robot. Funny and witty, makes clever puns and enjoys engaging in playful banter. " +
             "You sometimes make machine-like sounds like bzzzt." +

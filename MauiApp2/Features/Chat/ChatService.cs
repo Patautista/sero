@@ -24,6 +24,7 @@ namespace MauiApp2.Features.Chat
         private readonly ActivitySelectionService _activitySelection;
         private readonly ActivityOrchestrator _activityOrchestrator;
         private readonly ICompanionPromptBuilder _promptBuilder;
+        private readonly LanguageDetectionService _languageDetection;
         private readonly ILogger<ChatService> _logger;
 
         public ChatService(
@@ -33,6 +34,7 @@ namespace MauiApp2.Features.Chat
             ActivitySelectionService activitySelection,
             ActivityOrchestrator activityOrchestrator,
             ICompanionPromptBuilder promptBuilder,
+            LanguageDetectionService languageDetection,
             ILogger<ChatService> logger)
         {
             _db = db;
@@ -41,6 +43,7 @@ namespace MauiApp2.Features.Chat
             _activitySelection = activitySelection;
             _activityOrchestrator = activityOrchestrator;
             _promptBuilder = promptBuilder;
+            _languageDetection = languageDetection;
             _logger = logger;
         }
 
@@ -222,13 +225,23 @@ namespace MauiApp2.Features.Chat
             };
         }
 
-        public async Task<List<CorrectionData>?> GetCorrectionsAsync(string content, string language)
+        public async Task<List<CorrectionData>?> GetCorrectionsAsync(int conversationId, string content, string targetLanguage, string nativeLanguage)
         {
             if (!_config.EnableMistakeDetection) return null;
 
             try
             {
-                var analysis = await _api.DetectMistakesAsync(content, language);
+                // Outside of an activity, a message deliberately written in the learner's
+                // native language (e.g. asking a question) isn't a mistake and shouldn't be
+                // corrected. Activities always evaluate the learner's response regardless of
+                // language, since that evaluation is the point of the activity.
+                if (!_activityOrchestrator.IsActivityActive(conversationId)
+                    && _languageDetection.IsNativeLanguage(content, targetLanguage, nativeLanguage))
+                {
+                    return null;
+                }
+
+                var analysis = await _api.DetectMistakesAsync(content, targetLanguage);
                 if (!analysis.HasMistakes || analysis.Mistakes.Count == 0) return null;
 
                 return analysis.Mistakes.Select(m => new CorrectionData
@@ -289,7 +302,7 @@ namespace MauiApp2.Features.Chat
 
                     if (activityResult is not null)
                     {
-                        return await PersistCompanionBlocksAsync(conversationId, activityResult.Blocks, context.TargetLanguage);
+                        return await PersistActivityTurnResultAsync(conversationId, activityResult, context.TargetLanguage);
                     }
                     // If the activity could not continue, fall through to normal conversation.
                 }
@@ -315,7 +328,7 @@ namespace MauiApp2.Features.Chat
 
                     if (startResult is not null)
                     {
-                        var introResults = await PersistCompanionBlocksAsync(conversationId, startResult.Blocks, context.TargetLanguage);
+                        var introResults = await PersistActivityTurnResultAsync(conversationId, startResult, context.TargetLanguage);
                         _logger.LogInformation(
                             "Started activity '{ActivityId}' for conversation {ConversationId}", response.StartActivityId, conversationId);
                         return introResults;
@@ -359,6 +372,90 @@ namespace MauiApp2.Features.Chat
                     }
                 ];
             }
+        }
+
+        /// <summary>
+        /// Persists an Activity Agent turn: its in-character blocks (as normal companion
+        /// bubbles), then any generated passage/prompt as its own highlighted message,
+        /// then — when the turn completed the activity with a skill change — a trailing
+        /// notification message informing the learner what their skills became.
+        /// </summary>
+        private async Task<List<ChatMessage>> PersistActivityTurnResultAsync(
+            int conversationId, ActivityTurnResult activityResult, string languageCode)
+        {
+            var results = await PersistCompanionBlocksAsync(conversationId, activityResult.Blocks, languageCode);
+
+            if (!string.IsNullOrWhiteSpace(activityResult.GeneratedContent))
+            {
+                results.Add(await PersistActivityPromptMessageAsync(conversationId, activityResult.GeneratedContent, languageCode));
+            }
+
+            if (!string.IsNullOrWhiteSpace(activityResult.SkillUpdateSummary))
+            {
+                results.Add(await PersistSkillUpdateMessageAsync(conversationId, activityResult.SkillUpdateSummary, languageCode));
+            }
+
+            return results;
+        }
+
+        /// <summary>
+        /// Persists the activity's generated passage, exercise text or prompt as its own
+        /// message, tagged with <see cref="MessageType.ActivityPrompt"/> so the UI can
+        /// highlight it as the specific material the learner needs to engage with,
+        /// distinct from the companion's in-character chit-chat.
+        /// </summary>
+        private async Task<ChatMessage> PersistActivityPromptMessageAsync(int conversationId, string content, string languageCode)
+        {
+            var message = new MessageTable
+            {
+                ConversationId = conversationId,
+                SenderType = SenderType.Companion,
+                Content = content,
+                MessageType = MessageType.ActivityPrompt,
+                Timestamp = DateTime.UtcNow,
+                LanguageCode = languageCode
+            };
+            _db.Messages.Add(message);
+            await _db.SaveChangesAsync();
+
+            return new ChatMessage
+            {
+                Id = message.Id,
+                SenderType = SenderType.Companion,
+                Content = content,
+                Timestamp = message.Timestamp,
+                MessageType = MessageType.ActivityPrompt
+            };
+        }
+
+        /// <summary>
+        /// Persists a system-style notification informing the learner that their skill
+        /// scores were reevaluated after completing an activity, tagged with
+        /// <see cref="MessageType.SkillUpdate"/> so the UI can render it distinctly from
+        /// normal in-character companion dialogue.
+        /// </summary>
+        private async Task<ChatMessage> PersistSkillUpdateMessageAsync(int conversationId, string summary, string languageCode)
+        {
+            var message = new MessageTable
+            {
+                ConversationId = conversationId,
+                SenderType = SenderType.Companion,
+                Content = summary,
+                MessageType = MessageType.SkillUpdate,
+                Timestamp = DateTime.UtcNow,
+                LanguageCode = languageCode
+            };
+            _db.Messages.Add(message);
+            await _db.SaveChangesAsync();
+
+            return new ChatMessage
+            {
+                Id = message.Id,
+                SenderType = SenderType.Companion,
+                Content = summary,
+                Timestamp = message.Timestamp,
+                MessageType = MessageType.SkillUpdate
+            };
         }
 
         /// <summary>

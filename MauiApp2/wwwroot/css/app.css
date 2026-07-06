@@ -528,6 +528,45 @@ body {
     border-bottom-left-radius: 4px;
 }
 
+/* Highlighted bubble for the activity's generated passage/exercise/prompt, so it
+   stands out from ordinary in-character companion chit-chat. */
+.message-activity-prompt {
+    background: #ffe8cc;
+    color: var(--dark-color);
+    border: 1px solid #ffcc80;
+    border-bottom-left-radius: 4px;
+}
+
+.activity-prompt-badge {
+    display: inline-block;
+    margin-bottom: 6px;
+    padding: 2px 8px;
+    border-radius: 8px;
+    background: var(--warning-color);
+    color: var(--dark-color);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+/* Centered system notice shown when an activity completes and skills change */
+.skill-update-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.skill-update-message {
+    max-width: 85%;
+    padding: 8px 16px;
+    border-radius: 14px;
+    background: var(--success-color);
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: center;
+}
+
 .message-content {
     margin-bottom: 5px;
 }

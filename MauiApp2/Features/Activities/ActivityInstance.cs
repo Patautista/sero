@@ -99,5 +99,24 @@ namespace MauiApp2.Features.Activities
         public ActivityStage Stage { get; init; }
         public bool Completed => Stage == ActivityStage.Completed;
         public ActivityEvaluation? Evaluation { get; init; }
+
+        /// <summary>
+        /// Friendly, human-readable summary of any skill score changes applied when the
+        /// activity completed (e.g. "Reading +5, Writing -2"), or null when the activity
+        /// has not finished or no skill changed. Populated by the
+        /// <see cref="ActivityOrchestrator"/> after it persists the evaluation's skill
+        /// adjustments, so the conversation engine can inform the learner without needing
+        /// to know how skills are stored or evaluated.
+        /// </summary>
+        public string? SkillUpdateSummary { get; init; }
+
+        /// <summary>
+        /// Any passage, exercise text or prompt the Activity Agent generated this turn
+        /// (e.g. a reading passage or a specific writing prompt), or null when nothing was
+        /// generated. Kept separate from <see cref="Blocks"/> so the conversation engine
+        /// can show it as its own visually distinct message instead of plain companion
+        /// chit-chat.
+        /// </summary>
+        public string? GeneratedContent { get; init; }
     }
 }

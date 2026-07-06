@@ -24,7 +24,9 @@ namespace Domain.Shared.Models
     {
         Normal,
         Correction,
-        ProactivePrompt
+        ProactivePrompt,
+        SkillUpdate,
+        ActivityPrompt
     }
 
     // Domain Models

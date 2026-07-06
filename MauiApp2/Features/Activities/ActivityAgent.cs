@@ -133,7 +133,8 @@ namespace MauiApp2.Features.Activities
             sb.AppendLine("HOW TO RUN THE ACTIVITY");
             sb.AppendLine($"- Speak mainly in {context.TargetLanguage}, at a level that matches the learner's skills.");
             sb.AppendLine("- Move through the lifecycle: INTRODUCTION -> IN_PROGRESS -> EVALUATING -> COMPLETED.");
-            sb.AppendLine("- In INTRODUCTION, warmly introduce the activity and give the first prompt or content.");
+            sb.AppendLine("- In INTRODUCTION, warmly introduce the activity in a couple of short sentences, then put the");
+            sb.AppendLine("  actual passage, exercise text or prompt in \"generatedContent\" — do not repeat it in \"blocks\".");
             sb.AppendLine("- In IN_PROGRESS, react to the learner's answers and guide them one small step at a time.");
             sb.AppendLine("- Enter EVALUATING once the completion criteria are met, then COMPLETED with your evaluation.");
             sb.AppendLine("- Only judge performance yourself; never ask the learner to grade themselves.");
@@ -144,7 +145,8 @@ namespace MauiApp2.Features.Activities
             sb.AppendLine("  \"blocks\": [\"short in-character message\", \"optional second short message\"],");
             sb.AppendLine("  \"stage\": \"INTRODUCTION | IN_PROGRESS | EVALUATING | COMPLETED\",");
             sb.AppendLine("  \"completed\": false,");
-            sb.AppendLine("  \"generatedContent\": \"any passage or prompt you generated this turn, or an empty string\",");
+            sb.AppendLine("  \"generatedContent\": \"the passage, exercise text or prompt for this turn, shown to the learner");
+            sb.AppendLine("    in its own highlighted box — do not restate it in blocks — or an empty string if this turn has none\",");
             sb.AppendLine("  \"evaluation\": {");
             sb.AppendLine("    \"feedback\": \"friendly feedback for the learner (only when completed)\",");
             sb.AppendLine("    \"skillAdjustments\": { \"reading\": 0, \"writing\": 0, \"listening\": 0 },");
@@ -255,7 +257,8 @@ namespace MauiApp2.Features.Activities
             {
                 Blocks = blocks,
                 Stage = stage,
-                Evaluation = evaluation
+                Evaluation = evaluation,
+                GeneratedContent = string.IsNullOrWhiteSpace(parsed.GeneratedContent) ? null : parsed.GeneratedContent
             };
         }
 

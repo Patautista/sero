@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Domain.Shared.Models;
 using Microsoft.Extensions.Logging;
 
 namespace MauiApp2.Features.Activities
@@ -87,8 +89,7 @@ namespace MauiApp2.Features.Activities
             var result = await _agent.AdvanceAsync(
                 instance, context, skills, recentConversation, userInput: null, cancellationToken);
 
-            await FinalizeIfCompletedAsync(instance, result);
-            return result;
+            return await FinalizeIfCompletedAsync(instance, result);
         }
 
         /// <summary>
@@ -114,34 +115,69 @@ namespace MauiApp2.Features.Activities
             var result = await _agent.AdvanceAsync(
                 instance, context, skills, recentConversation, userInput, cancellationToken);
 
-            await FinalizeIfCompletedAsync(instance, result);
-            return result;
+            return await FinalizeIfCompletedAsync(instance, result);
         }
 
         /// <summary>
         /// When a turn completes the activity, applies the agent's structured skill
-        /// adjustments to the user's profile (independently of the agent) and clears
-        /// the active instance so the conversation returns to normal flow.
+        /// adjustments to the user's profile (independently of the agent), clears the
+        /// active instance so the conversation returns to normal flow, and (when any
+        /// skill actually changed) returns a copy of the result carrying a human-readable
+        /// summary the conversation engine can show the learner.
         /// </summary>
-        private async Task FinalizeIfCompletedAsync(ActivityInstance instance, ActivityTurnResult result)
+        private async Task<ActivityTurnResult> FinalizeIfCompletedAsync(ActivityInstance instance, ActivityTurnResult result)
         {
             if (!result.Completed)
             {
-                return;
+                return result;
             }
 
+            string? skillUpdateSummary = null;
             if (result.Evaluation is { SkillAdjustments.Count: > 0 } evaluation)
             {
                 await _selection.ApplySkillAdjustmentsAsync(evaluation.SkillAdjustments);
                 _logger.LogInformation(
                     "Applied skill adjustments for completed activity '{Activity}': {Reasoning}",
                     instance.Definition.Name, evaluation.Reasoning);
+
+                skillUpdateSummary = BuildSkillUpdateSummary(evaluation.SkillAdjustments);
             }
 
             _store.Remove(instance.ConversationId);
             _logger.LogInformation(
                 "Activity '{Activity}' completed for conversation {ConversationId}.",
                 instance.Definition.Name, instance.ConversationId);
+
+            return skillUpdateSummary is null
+                ? result
+                : new ActivityTurnResult
+                {
+                    Blocks = result.Blocks,
+                    Stage = result.Stage,
+                    Evaluation = result.Evaluation,
+                    SkillUpdateSummary = skillUpdateSummary,
+                    GeneratedContent = result.GeneratedContent
+                };
+        }
+
+        /// <summary>
+        /// Builds a short, learner-facing summary of the non-zero skill deltas (e.g.
+        /// "Reading +5, Writing -2"), or null when nothing actually changed.
+        /// </summary>
+        private static string? BuildSkillUpdateSummary(IReadOnlyDictionary<SkillType, int> skillAdjustments)
+        {
+            var changed = skillAdjustments
+                .Where(kvp => kvp.Value != 0)
+                .OrderByDescending(kvp => kvp.Value)
+                .ToList();
+
+            if (changed.Count == 0)
+            {
+                return null;
+            }
+
+            var parts = changed.Select(kvp => $"{kvp.Key} {(kvp.Value > 0 ? "+" : string.Empty)}{kvp.Value}");
+            return $"📈 Skill update: {string.Join(", ", parts)}";
         }
     }
 }

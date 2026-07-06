@@ -35,46 +35,59 @@
             {
                 @foreach (var message in messages)
                 {
-                    <div class="message-wrapper @(message.SenderType == SenderType.User ? "user-message-wrapper" : "companion-message-wrapper")">
-                        <div class="message @(message.SenderType == SenderType.User ? "message-user" : "message-companion")">
-                            <div class="message-content">@((MarkupString)SimpleMarkdown.ToHtml(message.Content))</div>
-                            <div class="message-time">@message.Timestamp.ToLocalTime().ToString("HH:mm")</div>
+                    @if (message.MessageType == MessageType.SkillUpdate)
+                    {
+                        <div class="skill-update-wrapper">
+                            <div class="skill-update-message">@message.Content</div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="message-wrapper @(message.SenderType == SenderType.User ? "user-message-wrapper" : "companion-message-wrapper")">
+                            <div class="message @(message.SenderType == SenderType.User ? "message-user" : message.MessageType == MessageType.ActivityPrompt ? "message-activity-prompt" : "message-companion")">
+                                @if (message.MessageType == MessageType.ActivityPrompt)
+                                {
+                                    <div class="activity-prompt-badge">📝 Activity Prompt</div>
+                                }
+                                <div class="message-content">@((MarkupString)SimpleMarkdown.ToHtml(message.Content))</div>
+                                <div class="message-time">@message.Timestamp.ToLocalTime().ToString("HH:mm")</div>
 
-                            @if (message.ShowTranslation && !string.IsNullOrWhiteSpace(message.Translation))
-                            {
-                                <div class="message-translation">🌐 @message.Translation</div>
-                            }
+                                @if (message.ShowTranslation && !string.IsNullOrWhiteSpace(message.Translation))
+                                {
+                                    <div class="message-translation">🌐 @message.Translation</div>
+                                }
 
-                            @if (message.Corrections != null && message.Corrections.Any())
+                                @if (message.Corrections != null && message.Corrections.Any())
+                                {
+                                    <div class="corrections-section">
+                                        <div class="corrections-header">💡 Corrections:</div>
+                                        @foreach (var correction in message.Corrections)
+                                        {
+                                            <div class="correction-item">
+                                                <span class="correction-original">@correction.Original</span>
+                                                <span class="correction-arrow">→</span>
+                                                <span class="correction-corrected">@correction.Corrected</span>
+                                                @if (!string.IsNullOrWhiteSpace(correction.Explanation))
+                                                {
+                                                    <div class="correction-explanation">@correction.Explanation</div>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+
+                            @if (message.SenderType == SenderType.Companion)
                             {
-                                <div class="corrections-section">
-                                    <div class="corrections-header">💡 Corrections:</div>
-                                    @foreach (var correction in message.Corrections)
-                                    {
-                                        <div class="correction-item">
-                                            <span class="correction-original">@correction.Original</span>
-                                            <span class="correction-arrow">→</span>
-                                            <span class="correction-corrected">@correction.Corrected</span>
-                                            @if (!string.IsNullOrWhiteSpace(correction.Explanation))
-                                            {
-                                                <div class="correction-explanation">@correction.Explanation</div>
-                                            }
-                                        </div>
-                                    }
+                                <div class="message-actions">
+                                    <button class="tts-button" @onclick="() => PlayMessageAudio(message)" title="Listen">🔊</button>
+                                    <button class="translate-button @(message.ShowTranslation ? "active" : "")" @onclick="() => TranslateMessage(message)" title="Translate" disabled="@message.IsTranslating">
+                                        @(message.IsTranslating ? "⏳" : "🌐")
+                                    </button>
                                 </div>
                             }
                         </div>
-
-                        @if (message.SenderType == SenderType.Companion)
-                        {
-                            <div class="message-actions">
-                                <button class="tts-button" @onclick="() => PlayMessageAudio(message)" title="Listen">🔊</button>
-                                <button class="translate-button @(message.ShowTranslation ? "active" : "")" @onclick="() => TranslateMessage(message)" title="Translate" disabled="@message.IsTranslating">
-                                    @(message.IsTranslating ? "⏳" : "🌐")
-                                </button>
-                            </div>
-                        }
-                    </div>
+                    }
                 }
             }
             else
@@ -222,7 +235,7 @@
             var minDelayTask = Task.Delay(_random.Next(1500, 3500));
 
             // 3. Corrections: separate API call — display on user bubble as soon as they arrive
-            var corrections = await ChatService.GetCorrectionsAsync(content, targetLanguage);
+            var corrections = await ChatService.GetCorrectionsAsync(conversationId, content, targetLanguage, nativeLanguage);
             if (corrections != null && corrections.Any())
             {
                 userMessage.Corrections = corrections;
