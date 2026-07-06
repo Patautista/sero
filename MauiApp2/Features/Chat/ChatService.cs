@@ -2,6 +2,7 @@ using Domain.Shared.Models;
 using Infrastructure.Data;
 using MauiApp2.Features.Activities;
 using MauiApp2.Services;
+using MauiApp2.Services.AI;
 using MauiApp2.Services.AI.Schemas;
 using Domain.Shared.Models;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,7 @@ namespace MauiApp2.Features.Chat
         private readonly ConfigurationService _config;
         private readonly ActivitySelectionService _activitySelection;
         private readonly ActivityOrchestrator _activityOrchestrator;
+        private readonly ICompanionPromptBuilder _promptBuilder;
         private readonly ILogger<ChatService> _logger;
 
         public ChatService(
@@ -30,6 +32,7 @@ namespace MauiApp2.Features.Chat
             ConfigurationService config,
             ActivitySelectionService activitySelection,
             ActivityOrchestrator activityOrchestrator,
+            ICompanionPromptBuilder promptBuilder,
             ILogger<ChatService> logger)
         {
             _db = db;
@@ -37,6 +40,7 @@ namespace MauiApp2.Features.Chat
             _config = config;
             _activitySelection = activitySelection;
             _activityOrchestrator = activityOrchestrator;
+            _promptBuilder = promptBuilder;
             _logger = logger;
         }
 
@@ -292,14 +296,15 @@ namespace MauiApp2.Features.Chat
 
                 // 2. Normal companion flow. The companion may decide *when* to start an
                 //    activity by returning a startActivityId, but never decides how to run it.
-                var prompt = BuildCompanionResponsePrompt(context, userMessage.Content, corrections);
+                var prompt = _promptBuilder.BuildCompanionResponsePrompt(context, userMessage.Content, corrections);
                 var responseJson = await _api.GenerateTextAsync(prompt, typeof(CompanionResponseSchema));
                 var response = ParseCompanionResponse(responseJson);
 
-                var results = await PersistCompanionBlocksAsync(conversationId, response.Blocks, context.TargetLanguage);
-
-                // 3. If the companion chose to start an activity, hand control to the
-                //    Activity Agent and append its in-character introduction to this turn.
+                // 3. If the companion chose to start an activity, hand this whole turn to the
+                //    Activity Agent's introduction instead of ALSO showing the companion's own
+                //    reply. The Activity Agent's introduction already answers in character and
+                //    launches the activity, so showing both would mean two replies for a single
+                //    learner message.
                 if (!string.IsNullOrWhiteSpace(response.StartActivityId))
                 {
                     var startResult = await _activityOrchestrator.StartActivityAsync(
@@ -310,11 +315,18 @@ namespace MauiApp2.Features.Chat
 
                     if (startResult is not null)
                     {
-                        var introMessages = await PersistCompanionBlocksAsync(
-                            conversationId, startResult.Blocks, context.TargetLanguage);
-                        results.AddRange(introMessages);
+                        var introResults = await PersistCompanionBlocksAsync(conversationId, startResult.Blocks, context.TargetLanguage);
+                        _logger.LogInformation(
+                            "Started activity '{ActivityId}' for conversation {ConversationId}", response.StartActivityId, conversationId);
+                        return introResults;
                     }
+
+                    _logger.LogInformation(
+                        "Companion requested activity '{ActivityId}' but it could not be started; using the companion's own reply instead.",
+                        response.StartActivityId);
                 }
+
+                var results = await PersistCompanionBlocksAsync(conversationId, response.Blocks, context.TargetLanguage);
 
                 _logger.LogInformation("Generated {Count} companion message(s) for conversation {ConversationId}", results.Count, conversationId);
                 return results;
@@ -438,7 +450,7 @@ namespace MauiApp2.Features.Chat
                 }
 
                 // Build AI prompt
-                var prompt = BuildCompanionResponsePrompt(context, userMessage.Content, corrections);
+                var prompt = _promptBuilder.BuildCompanionResponsePrompt(context, userMessage.Content, corrections);
 
                 // Generate response
                 var responseJson = await _api.GenerateTextAsync(prompt, typeof(CompanionResponseSchema));
@@ -509,7 +521,7 @@ namespace MauiApp2.Features.Chat
                 .ToListAsync();
 
             // Load recent conversation history
-            var recentMessages = await LoadConversationHistoryAsync(conversation.Id, 10);
+            var recentMessages = await LoadConversationHistoryAsync(conversation.Id, 12);
 
             var interests = JsonSerializer.Deserialize<List<string>>(userProfile?.InterestsJson ?? "[]") ?? new List<string>();
 
@@ -522,83 +534,16 @@ namespace MauiApp2.Features.Chat
             {
                 UserName = userProfile?.Name ?? "Friend",
                 TargetLanguage = userProfile?.TargetLanguage ?? "es",
-                NativeLanguage = userProfile?.NativeLanguage ?? "en",
+                NativeLanguage = userProfile?.NativeLanguage ?? string.Empty,
                 Interests = interests,
                 RecentMemories = memories,
                 CurrentMood = companion.CurrentMood,
                 Personality = companion.Personality,
                 CompanionName = companion.Name,
                 ConversationHistory = recentMessages,
-                EligibleActivities = eligibleActivities
+                EligibleActivities = eligibleActivities,
+                UserSkillProfile = skills
             };
-        }
-
-        private string BuildCompanionResponsePrompt(CompanionResponseContext context, string userMessage, List<CorrectionData>? corrections)
-        {
-            var moodDescription = context.CurrentMood switch
-            {
-                CompanionMood.Tired => "You're feeling a bit tired, so keep your response gentle and supportive",
-                CompanionMood.Curious => "You're feeling curious about the user's interests and recent activities",
-                CompanionMood.Nostalgic => "You're in a reflective, nostalgic mood, thinking about past conversations",
-                CompanionMood.Excited => "You're feeling energetic and enthusiastic",
-                _ => "You're in a balanced, supportive mood"
-            };
-
-            var historyText = string.Join("\n", context.ConversationHistory.TakeLast(5).Select(m => 
-                $"{m.SenderType}: {m.Content}"));
-
-            var memoriesText = context.RecentMemories.Any()
-                ? string.Join("\n", context.RecentMemories.Select(m => $"- {m.Content}"))
-                : "No specific memories yet";
-
-            var correctionsText = corrections != null && corrections.Any()
-                ? "Mistakes detected:\n" + string.Join("\n", corrections.Select(c => 
-                    $"- '{c.Original}' → '{c.Corrected}' ({c.Explanation})"))
-                : "No mistakes detected";
-
-            var activitiesText = context.EligibleActivities.Any()
-                ? string.Join("\n", context.EligibleActivities.Select(a =>
-                    $"- id: {a.Id} | {a.Name}: {a.Objective}"))
-                : "No activities are available right now";
-
-            var prompt = $@"You are {context.CompanionName}, a {context.Personality} language learning companion.
-
-USER CONTEXT:
-- Name: {context.UserName}
-- Learning: {context.TargetLanguage}
-- Native language: {context.NativeLanguage}
-- Interests: {string.Join(", ", context.Interests)}
-
-YOUR STATE:
-- Current mood: {context.CurrentMood}
-- {moodDescription}
-
-RECENT MEMORIES:
-{memoriesText}
-
-RECENT CONVERSATION:
-{historyText}
-
-USER'S NEW MESSAGE:
-""{userMessage}""
-
-LANGUAGE ANALYSIS:
-{correctionsText}
-
-LEARNING ACTIVITIES YOU CAN OFFER:
-{activitiesText}
-
-INSTRUCTIONS:
-1. Respond primarily in {context.TargetLanguage}
-2. Your main goal is to help the user practice and improve their language skills. So keep trying to introduce the user to the target language-specific topics such as grammar and vocabulary relative to their level. 
-2. Reference past conversations or user's interests when relevant
-3. Match your current mood: {moodDescription}
-4. Split your reply into 1–3 short paragraphs (each 1–2 sentences). Put each paragraph as a separate entry in the ""blocks"" array
-5. Ask a follow-up question to keep the conversation going
-6. You may use **bold** for emphasis and *italics* for foreign words, titles, or gentle stress — use them sparingly to feel natural
-7. If — and only if — this is a natural moment to practise, you may gently offer ONE of the activities listed above. To start it, set ""startActivityId"" to that activity's id and briefly invite the user in your ""blocks"". Otherwise leave ""startActivityId"" empty. Never describe how the activity works or run it yourself; simply offer it and a dedicated guide will take over.";
-
-            return prompt;
         }
 
         private static readonly JsonSerializerOptions _jsonOptions = new() { PropertyNameCaseInsensitive = true };

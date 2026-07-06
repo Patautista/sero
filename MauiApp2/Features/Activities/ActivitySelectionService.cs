@@ -57,41 +57,6 @@ namespace MauiApp2.Features.Activities
         }
 
         /// <summary>
-        /// Applies skill gains for a completed activity to the current user profile and
-        /// persists them. Returns the updated skill profile, or null if no profile exists.
-        /// </summary>
-        public async Task<SkillProfile?> RecordActivityCompletionAsync(
-            LearningActivity activity,
-            int gainPerSkill = DefaultSkillGain)
-        {
-            ArgumentNullException.ThrowIfNull(activity);
-
-            var profileTable = await _db.UserProfiles.FirstOrDefaultAsync();
-            if (profileTable is null)
-            {
-                _logger.LogWarning("No user profile found; cannot record activity completion.");
-                return null;
-            }
-
-            var skills = SkillProfile.FromJson(profileTable.SkillsJson);
-            foreach (var skill in activity.TrainedSkills)
-            {
-                skills.Adjust(skill, gainPerSkill);
-            }
-
-            profileTable.SkillsJson = skills.ToJson();
-            profileTable.LastActiveAt = DateTime.UtcNow;
-            await _db.SaveChangesAsync();
-
-            _logger.LogInformation(
-                "Recorded completion of '{Activity}'; updated skills: {Skills}",
-                activity.Name,
-                profileTable.SkillsJson);
-
-            return skills;
-        }
-
-        /// <summary>
         /// Applies structured per-skill adjustments produced by the Activity Agent's
         /// evaluation to the current user profile and persists them. Deltas may be
         /// negative. Returns the updated skill profile, or null if no profile exists.

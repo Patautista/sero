@@ -1,10 +1,11 @@
 using Infrastructure.Data;
 using MauiApp2.Services;
+using MauiApp2.Services.AI;
 using Domain.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MauiApp2.Features.Onboarding
@@ -14,17 +15,20 @@ namespace MauiApp2.Features.Onboarding
         private readonly PetDbContext _db;
         private readonly LocalApiService _api;
         private readonly ConfigurationService _config;
+        private readonly ICompanionPromptBuilder _promptBuilder;
         private readonly ILogger<OnboardingService> _logger;
 
         public OnboardingService(
             PetDbContext db,
             LocalApiService api,
             ConfigurationService config,
+            ICompanionPromptBuilder promptBuilder,
             ILogger<OnboardingService> logger)
         {
             _db = db;
             _api = api;
             _config = config;
+            _promptBuilder = promptBuilder;
             _logger = logger;
         }
 
@@ -139,29 +143,21 @@ namespace MauiApp2.Features.Onboarding
         {
             try
             {
-                var interestsList = System.Text.Json.JsonSerializer.Deserialize<System.Collections.Generic.List<string>>(userProfile.InterestsJson);
-                var interestsText = interestsList != null && interestsList.Any() 
-                    ? string.Join(", ", interestsList) 
-                    : "various topics";
+                var interestsList = System.Text.Json.JsonSerializer.Deserialize<List<string>>(userProfile.InterestsJson) ?? new List<string>();
 
-                var prompt = $@"You are {companion.Name}, a friendly and {companion.Personality} language learning companion.
+                var personaContext = new CompanionPersonaContext
+                {
+                    CompanionName = companion.Name,
+                    Personality = companion.Personality,
+                    CurrentMood = companion.CurrentMood,
+                    UserName = userProfile.Name,
+                    TargetLanguage = userProfile.TargetLanguage,
+                    NativeLanguage = userProfile.NativeLanguage,
+                    Interests = interestsList,
+                    UserSkillProfile = SkillProfile.FromJson(userProfile.SkillsJson)
+                };
 
-A new user just joined:
-- Name: {userProfile.Name}
-- Learning: {userProfile.TargetLanguage}
-- Native language: {userProfile.NativeLanguage}
-- Interests: {interestsText}
-- Your current mood: {companion.CurrentMood}
-
-Write a warm welcome message to {userProfile.Name} in {userProfile.TargetLanguage}. The message should:
-1. Introduce yourself briefly
-2. Express excitement about helping them learn
-3. Mention one of their interests to show you're paying attention
-4. End with a simple question to start a conversation
-5. Keep it to 3-4 sentences
-6. Be appropriate for a {companion.CurrentMood} mood
-
-Return ONLY the welcome message, no JSON, no quotes.";
+                var prompt = _promptBuilder.BuildWelcomeMessagePrompt(personaContext);
 
                 var message = await _api.GenerateTextAsync(prompt);
                 return message.Trim().Trim('"');

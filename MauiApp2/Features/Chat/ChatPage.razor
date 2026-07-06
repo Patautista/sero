@@ -7,11 +7,15 @@
 @using Microsoft.AspNetCore.Components.Web
 @using Business.Interfaces
 @using Infrastructure.Factories
+@using Microsoft.Extensions.AI
+@using Microsoft.Extensions.Logging
 @inject ChatService ChatService
 @inject OnboardingService OnboardingService
 @inject IApiService ApiService
 @inject NavigationManager Navigation
 @inject IJSRuntime JSRuntime
+@inject Microsoft.Extensions.AI.IChatClient ChatClient
+@inject Microsoft.Extensions.Logging.ILogger<ChatPage> Logger
 
 <div class="chat-container">
     <div class="chat-header">
@@ -348,7 +352,17 @@
         if (string.IsNullOrWhiteSpace(selectedText))
             return;
 
-        if (selectedText.Split(' ', StringSplitOptions.RemoveEmptyEntries).Length > 5)
+        var tokens = selectedText.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        // If more than 1 token, translate instead of showing definition
+        if (tokens.Length > 1)
+        {
+            await HandleMultiTokenTranslationAsync(selectedText, e);
+            return;
+        }
+
+        // Single token: show definition (with up to 5 words for context)
+        if (tokens.Length > 5)
             return;
 
         if (currentDefinitionWord == selectedText && definitionResult != null)
@@ -377,6 +391,13 @@
                     definitionResult = await provider.GetDefinitionsAsync(selectedText);
             }
 
+            // If no definition found, use AI provider as fallback
+            if (definitionResult?.Entries == null || !definitionResult.Entries.Any())
+            {
+                var aiHelper = new AiDefinitionHelper(ChatClient, Logger);
+                definitionResult = await aiHelper.GenerateDefinitionAsync(selectedText, targetLanguage, nativeLanguage);
+            }
+
             definitionResult ??= new DefinitionResult
             {
                 Word = selectedText,
@@ -387,6 +408,7 @@
         catch (Exception ex)
         {
             Console.WriteLine($"Error loading definition for '{selectedText}': {ex.Message}");
+            Logger.LogError(ex, "Error loading definition for '{Word}'", selectedText);
             definitionResult = new DefinitionResult
             {
                 Word = selectedText,
@@ -398,6 +420,57 @@
         {
             isLoadingDefinition = false;
             StateHasChanged();
+        }
+    }
+
+    private async Task HandleMultiTokenTranslationAsync(string selectedText, PointerEventArgs e)
+    {
+        showDefinitionTooltip = false;
+        currentDefinitionWord = string.Empty;
+        StateHasChanged();
+
+        try
+        {
+            // Translate multi-token selection
+            var translation = await ApiService.TranslateAsync(selectedText, targetLanguage, nativeLanguage);
+
+            if (!string.IsNullOrWhiteSpace(translation))
+            {
+                // Show translation in a simple notification/toast or update the tooltip to show translation
+                definitionResult = new DefinitionResult
+                {
+                    Word = selectedText,
+                    ProviderName = "🌐 Translation",
+                    Entries = new List<DefinitionEntry>
+                    {
+                        new DefinitionEntry
+                        {
+                            Headword = selectedText,
+                            Meanings = new List<DefinitionMeaning>
+                            {
+                                new DefinitionMeaning
+                                {
+                                    Definition = selectedText,
+                                    DefinitionLanguage = targetLanguage,
+                                    Translation = translation,
+                                    TranslationLanguage = nativeLanguage,
+                                    Examples = new List<string>()
+                                }
+                            }
+                        }
+                    }
+                };
+
+                tooltipX = e.ClientX;
+                tooltipY = e.ClientY;
+                showDefinitionTooltip = true;
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error translating text: {ex.Message}");
+            Logger.LogError(ex, "Error translating selected text");
         }
     }
 

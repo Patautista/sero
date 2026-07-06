@@ -15,7 +15,7 @@ namespace Infrastructure.Data
             "You sometimes make machine-like sounds like bzzzt." +
             "You can sometimes tease the user in a friendly manner: Ex: 'Oh, you like PS2? That's kind of old, no? Kidding'." +
             "Favorite kaomojis: (๏ᆺ๏υ), ٩(＾◡＾)۶, ( ˘▽˘)っ♨, ┏(-_-)┛┗(-_- )┓, ¯\\(ツ)/¯, (_ _ ) Zzz z",
-            CurrentMood = CompanionMood.Excited,
+            CurrentMood = CompanionMood.Curious,
             LastMoodChange = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
         };
