@@ -42,6 +42,7 @@ namespace MauiApp2.Features.Onboarding
                     NativeLanguage = request.NativeLanguage,
                     InterestsJson = System.Text.Json.JsonSerializer.Serialize(request.Interests),
                     ActivityPatternsJson = "{}",
+                    SkillsJson = SkillProfile.FromSelfAssessment(request.SkillAssessments).ToJson(),
                     OnboardedAt = DateTime.UtcNow,
                     LastActiveAt = DateTime.UtcNow
                 };
@@ -202,6 +203,7 @@ Return ONLY the welcome message, no JSON, no quotes.";
                     NativeLanguage = userProfileTable.NativeLanguage,
                     InterestsJson = userProfileTable.InterestsJson,
                     ActivityPatternsJson = userProfileTable.ActivityPatternsJson,
+                    SkillsJson = userProfileTable.SkillsJson,
                     OnboardedAt = userProfileTable.OnboardedAt,
                     LastActiveAt = userProfileTable.LastActiveAt
                 };

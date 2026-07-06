@@ -95,7 +95,31 @@
                 </div>
             </div>
         }
-        else if (currentStep == 5)
+        else if (currentStep >= FirstSkillStep && currentStep < CompanionStep)
+        {
+            var currentSkill = SkillProfile.AllSkills[currentStep - FirstSkillStep];
+
+            <div class="step-content">
+                <h2>How would you rate your @(currentSkill.ToString().ToLower())?</h2>
+                <p class="subtitle">Skill @(currentStep - FirstSkillStep + 1) of @SkillProfile.AllSkills.Count · This helps us tailor your activities</p>
+                <div class="interests-grid">
+                    @foreach (var level in SelfAssessment.Levels)
+                    {
+                        var currentLevel = level;
+
+                        <div class="interest-option @(skillAssessments[currentSkill] == currentLevel ? "selected" : "")"
+                             @onclick="() => SelectSkillLevel(currentSkill, currentLevel)">
+                            <span>@SelfAssessment.DisplayName(currentLevel)</span>
+                        </div>
+                    }
+                </div>
+                <div class="button-group">
+                    <ButtonSecondary OnClick="PreviousStep">Back</ButtonSecondary>
+                    <ButtonPrimary OnClick="NextStep" Disabled="@(!skillAssessments[currentSkill].HasValue)">Next</ButtonPrimary>
+                </div>
+            </div>
+        }
+        else if (currentStep == CompanionStep)
         {
             <div class="step-content">
                 <h2>Meet @_companion!.Name</h2>
@@ -127,9 +151,17 @@
     private string selectedTargetLanguageName = string.Empty;
     private string selectedNativeLanguage = string.Empty;
     private List<string> selectedInterests = new();
+    private readonly Dictionary<SkillType, SelfAssessmentLevel?> skillAssessments =
+        SkillProfile.AllSkills.ToDictionary(skill => skill, _ => (SelfAssessmentLevel?)null);
     private bool isCompleting = false;
     private string errorMessage = string.Empty;
     private Companion? _companion;
+
+    // Onboarding step layout: fixed steps 0-4, then one step per measured skill,
+    // then the companion step. Derived from SkillProfile.AllSkills so adding a new
+    // skill automatically inserts its own self-assessment step.
+    private const int FirstSkillStep = 5;
+    private int CompanionStep => FirstSkillStep + SkillProfile.AllSkills.Count;
 
     protected override async Task OnInitializedAsync()
     {
@@ -173,6 +205,12 @@
         }
     }
 
+    private void SelectSkillLevel(SkillType skill, SelfAssessmentLevel level)
+    {
+        skillAssessments[skill] = level;
+        StateHasChanged();
+    }
+
     private async Task CompleteOnboarding()
     {
         try
@@ -185,7 +223,10 @@
                 UserName = userName,
                 TargetLanguage = selectedTargetLanguage,
                 NativeLanguage = selectedNativeLanguage,
-                Interests = selectedInterests
+                Interests = selectedInterests,
+                SkillAssessments = skillAssessments
+                    .Where(entry => entry.Value.HasValue)
+                    .ToDictionary(entry => entry.Key, entry => entry.Value!.Value)
             };
 
             var response = await OnboardingService.CompleteOnboardingAsync(request);

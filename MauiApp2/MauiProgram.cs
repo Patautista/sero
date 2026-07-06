@@ -2,6 +2,7 @@
 using Infrastructure.Data;
 using MauiApp2.Services.AI;
 using Microsoft.Extensions.AI;
+using MauiApp2.Features.Activities;
 using MauiApp2.Features.Chat;
 using MauiApp2.Features.LanguageCoaching;
 using MauiApp2.Features.Memory;
@@ -65,6 +66,7 @@ namespace MauiApp2
             builder.Services.AddScoped<LanguageCoachingService>();
             builder.Services.AddScoped<MemoryService>();
             builder.Services.AddScoped<TimingLearningService>();
+            builder.Services.AddScoped<ActivitySelectionService>();
 
             // Settings service (if it exists in Business project)
             try

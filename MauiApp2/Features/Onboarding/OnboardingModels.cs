@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Domain.Shared.Models;
 using Infrastructure.Services;
 
 namespace MauiApp2.Features.Onboarding
@@ -11,6 +12,12 @@ namespace MauiApp2.Features.Onboarding
         public string TargetLanguage { get; set; } = string.Empty;
         public string NativeLanguage { get; set; } = string.Empty;
         public List<string> Interests { get; set; } = new();
+
+        /// <summary>
+        /// The user's self-assessed level for each skill, collected during onboarding.
+        /// Mapped to initial 0-100 skill scores when the profile is created.
+        /// </summary>
+        public Dictionary<SkillType, SelfAssessmentLevel> SkillAssessments { get; set; } = new();
     }
 
     public class OnboardingResponse

@@ -47,6 +47,7 @@ namespace Domain.Shared.Models
         public string NativeLanguage { get; set; } = string.Empty;
         public string InterestsJson { get; set; } = "[]";
         public string ActivityPatternsJson { get; set; } = "{}";
+        public string SkillsJson { get; set; } = "{}";
         public DateTime OnboardedAt { get; set; }
         public DateTime LastActiveAt { get; set; }
 
@@ -57,6 +58,17 @@ namespace Domain.Shared.Models
                 ? new List<string>() 
                 : JsonSerializer.Deserialize<List<string>>(InterestsJson) ?? new List<string>();
             set => InterestsJson = JsonSerializer.Serialize(value);
+        }
+
+        /// <summary>
+        /// Independent skill scores (Reading, Writing, Listening; 0-100) that replace
+        /// a single static language level. Persisted as a name-keyed JSON dictionary so
+        /// new skills can be added without a schema change.
+        /// </summary>
+        public SkillProfile Skills
+        {
+            get => SkillProfile.FromJson(SkillsJson);
+            set => SkillsJson = value?.ToJson() ?? "{}";
         }
 
         public Dictionary<int, List<DateTime>> ActivityPatterns

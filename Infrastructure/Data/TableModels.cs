@@ -56,6 +56,9 @@ namespace Infrastructure.Data
         [Column(TypeName = "TEXT")]
         public string ActivityPatternsJson { get; set; } = "{}";
 
+        [Column(TypeName = "TEXT")]
+        public string SkillsJson { get; set; } = "{}";
+
         [Required]
         public DateTime OnboardedAt { get; set; }
 
