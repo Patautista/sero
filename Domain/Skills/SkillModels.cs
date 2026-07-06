@@ -184,12 +184,31 @@ namespace Domain.Shared.Models
     }
 
     /// <summary>
-    /// A learning activity definition. Kept intentionally minimal (no tags or
-    /// other metadata yet).
+    /// A reusable activity definition. Describes what an activity is, how it should
+    /// be conducted, and how it is evaluated. The text fields (<see cref="Objective"/>,
+    /// <see cref="Instructions"/>, <see cref="EvaluationCriteria"/>,
+    /// <see cref="CompletionCriteria"/>) are meant to be injected into the Activity
+    /// Agent prompt, so new activities can be added simply by creating new definitions
+    /// without touching the conversation engine.
     /// </summary>
     public class LearningActivity
     {
+        /// <summary>Stable identifier used to track instances and completions.</summary>
+        public string Id { get; set; } = string.Empty;
+
         public string Name { get; set; } = string.Empty;
+
+        /// <summary>What the activity is trying to achieve for the learner.</summary>
+        public string Objective { get; set; } = string.Empty;
+
+        /// <summary>How the Activity Agent should run the activity, step by step.</summary>
+        public string Instructions { get; set; } = string.Empty;
+
+        /// <summary>What the agent should look for when judging the learner's performance.</summary>
+        public string EvaluationCriteria { get; set; } = string.Empty;
+
+        /// <summary>The condition that marks the activity as finished.</summary>
+        public string CompletionCriteria { get; set; } = string.Empty;
 
         /// <summary>Minimum skill scores required before this activity is offered.</summary>
         public Dictionary<SkillType, int> MinimumSkills { get; set; } = new();

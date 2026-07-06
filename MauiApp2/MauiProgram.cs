@@ -68,6 +68,13 @@ namespace MauiApp2
             builder.Services.AddScoped<TimingLearningService>();
             builder.Services.AddScoped<ActivitySelectionService>();
 
+            // Activity Agent architecture — the dedicated agent that conducts and evaluates
+            // learning activities, decoupled from the conversation engine. The instance store
+            // is a singleton so an in-flight activity survives across scoped ChatService uses.
+            builder.Services.AddSingleton<IActivityInstanceStore, InMemoryActivityInstanceStore>();
+            builder.Services.AddScoped<ActivityAgent>();
+            builder.Services.AddScoped<ActivityOrchestrator>();
+
             // Settings service (if it exists in Business project)
             try
             {

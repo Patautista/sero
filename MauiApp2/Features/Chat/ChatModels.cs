@@ -50,5 +50,6 @@ namespace MauiApp2.Features.Chat
         public string Personality { get; set; } = string.Empty;
         public string CompanionName { get; set; } = string.Empty;
         public List<ChatMessage> ConversationHistory { get; set; } = new();
+        public List<LearningActivity> EligibleActivities { get; set; } = new();
     }
 }
