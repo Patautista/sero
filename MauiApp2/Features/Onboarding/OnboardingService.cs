@@ -111,14 +111,7 @@ namespace MauiApp2.Features.Onboarding
                 if (companionTable == null)
                 {
                     _logger.LogWarning("No companion found in database, this should not happen");
-                    companionTable = new CompanionTable
-                    {
-                        Name = "Luna",
-                        Personality = "Curious and encouraging, loves learning new things alongside you",
-                        CurrentMood = CompanionMood.Curious,
-                        LastMoodChange = DateTime.UtcNow,
-                        CreatedAt = DateTime.UtcNow
-                    };
+                    companionTable = PetDbContext.DefaultCompanion;
                     _db.Companions.Add(companionTable);
                     await _db.SaveChangesAsync();
                 }
@@ -127,6 +120,7 @@ namespace MauiApp2.Features.Onboarding
                 {
                     Id = companionTable.Id,
                     Name = companionTable.Name,
+                    Avatar = companionTable.Avatar,
                     Personality = companionTable.Personality,
                     CurrentMood = companionTable.CurrentMood,
                     LastMoodChange = companionTable.LastMoodChange,

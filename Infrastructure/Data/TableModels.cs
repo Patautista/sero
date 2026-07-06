@@ -15,6 +15,9 @@ namespace Infrastructure.Data
         [MaxLength(100)]
         public string Name { get; set; } = string.Empty;
 
+        [MaxLength(10)]
+        public string Avatar { get; set; } = string.Empty;
+
         [Required]
         [MaxLength(500)]
         public string Personality { get; set; } = string.Empty;

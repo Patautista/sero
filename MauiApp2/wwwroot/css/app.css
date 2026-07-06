@@ -20,6 +20,14 @@
     --user-message-bg: #007bff;
     --companion-message-bg: #e9ecef;
     --correction-bg: #fff3cd;
+
+    /* Typography */
+    --font-pixel: 'Pixelify Sans', 'Segoe UI', sans-serif;
+
+    /* Override Bootstrap's font variables so its own components inherit the pixel font */
+    --bs-body-font-family: var(--font-pixel);
+    --bs-font-sans-serif: var(--font-pixel);
+    --bs-font-monospace: var(--font-pixel);
 }
 
 * {
@@ -28,8 +36,12 @@
     padding: 0;
 }
 
+input, textarea, select, button {
+    font-family: inherit;
+}
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: var(--font-pixel);
     line-height: 1.6;
     color: var(--dark-color);
 }
@@ -54,11 +66,13 @@ body {
 
 .step-content h1 {
     font-size: 2rem;
+    font-weight: 700;
     margin-bottom: 10px;
 }
 
 .step-content h2 {
     font-size: 1.5rem;
+    font-weight: 600;
     margin-bottom: 20px;
 }
 
@@ -148,6 +162,7 @@ body {
 .btn-primary, .btn-secondary {
     padding: 12px 24px;
     font-size: 1rem;
+    font-weight: 600;
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -252,6 +267,7 @@ body {
 .companion-info h2 {
     margin: 0;
     font-size: 1.5rem;
+    font-weight: 700;
 }
 
 .mood-badge {
@@ -259,7 +275,7 @@ body {
     padding: 4px 12px;
     border-radius: 12px;
     font-size: 0.85rem;
-    font-weight: bold;
+    font-weight: 700;
     color: white;
 }
 
@@ -446,6 +462,8 @@ body {
 
 .companion-info h3 {
     margin: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
 }
 
 .mood-indicator {
@@ -512,6 +530,14 @@ body {
 
 .message-content {
     margin-bottom: 5px;
+}
+
+.message-content strong {
+    font-weight: 700;
+}
+
+.message-content em {
+    font-style: italic;
 }
 
 .message-time {
@@ -658,7 +684,6 @@ body {
     border: 1px solid #ddd;
     border-radius: 20px;
     resize: none;
-    font-family: inherit;
     font-size: 1rem;
 }
 

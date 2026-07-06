@@ -98,11 +98,11 @@
         else if (currentStep == 5)
         {
             <div class="step-content">
-                <h2>Meet Luna 🌙</h2>
+                <h2>Meet @_companion!.Name</h2>
                 <div class="companion-intro">
-                    <div class="companion-avatar">🌙</div>
-                    <p class="companion-personality">Curious and encouraging, loves learning new things alongside you</p>
-                    <p>Luna will be your companion on this language learning journey!</p>
+                    <div class="companion-avatar">@_companion!.Avatar</div>
+                    <p class="companion-personality">@_companion!.Personality</p>
+                    <p>@_companion!.Name will be your companion on this language learning journey!</p>
                 </div>
                 <div class="button-group">
                     <ButtonSecondary OnClick="PreviousStep">Back</ButtonSecondary>
@@ -129,12 +129,13 @@
     private List<string> selectedInterests = new();
     private bool isCompleting = false;
     private string errorMessage = string.Empty;
+    private Companion? _companion;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         System.Diagnostics.Debug.WriteLine("OnboardingPage initialized");
-        // Set default target language name for welcome message
         selectedTargetLanguageName = "your target language";
+        _companion = await OnboardingService.GetOrCreateCompanionAsync();
     }
 
     private void NextStep()

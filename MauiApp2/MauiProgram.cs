@@ -27,6 +27,7 @@ namespace MauiApp2
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                    fonts.AddFont("PressStart2P-Regular.ttf", "PressStart2P");
                 });
 
             builder.Services.AddMauiBlazorWebView();
@@ -83,7 +84,16 @@ namespace MauiApp2
                 // Ignore if not available
             }
 
-            return builder.Build();
+            var app = builder.Build();
+
+            // Apply pending EF Core migrations at startup
+            using (var scope = app.Services.CreateScope())
+            {
+                var initialiser = scope.ServiceProvider.GetRequiredService<PetDbContextInitialiser>();
+                initialiser.InitialiseAsync().GetAwaiter().GetResult();
+            }
+
+            return app;
         }
     }
 }

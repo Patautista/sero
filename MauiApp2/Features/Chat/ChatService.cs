@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace MauiApp2.Features.Chat
@@ -269,17 +268,17 @@ namespace MauiApp2.Features.Chat
                 var responseJson = await _api.GenerateTextAsync(prompt, typeof(CompanionResponseSchema));
                 var response = ParseCompanionResponse(responseJson);
 
-                var paragraphs = SplitIntoParagraphs(response.Text);
-                var results = new List<ChatMessage>(paragraphs.Count);
+                var blocks = response.Blocks;
+                var results = new List<ChatMessage>(blocks.Count);
                 var baseTimestamp = DateTime.UtcNow;
 
-                for (int i = 0; i < paragraphs.Count; i++)
+                for (int i = 0; i < blocks.Count; i++)
                 {
                     var companionMessage = new MessageTable
                     {
                         ConversationId = conversationId,
                         SenderType = SenderType.Companion,
-                        Content = paragraphs[i],
+                        Content = blocks[i],
                         MessageType = MessageType.Normal,
                         Timestamp = baseTimestamp.AddMilliseconds(i * 50),
                         LanguageCode = context.TargetLanguage
@@ -291,7 +290,7 @@ namespace MauiApp2.Features.Chat
                     {
                         Id = companionMessage.Id,
                         SenderType = SenderType.Companion,
-                        Content = paragraphs[i],
+                        Content = blocks[i],
                         Timestamp = companionMessage.Timestamp,
                         MessageType = MessageType.Normal
                     });
@@ -370,7 +369,7 @@ namespace MauiApp2.Features.Chat
                 {
                     ConversationId = conversation.Id,
                     SenderType = SenderType.Companion,
-                    Content = response.Text,
+                    Content = string.Join("\n\n", response.Blocks),
                     MessageType = corrections != null && corrections.Any() ? MessageType.Correction : MessageType.Normal,
                     Timestamp = DateTime.UtcNow,
                     LanguageCode = context.TargetLanguage,
@@ -443,6 +442,7 @@ namespace MauiApp2.Features.Chat
                 RecentMemories = memories,
                 CurrentMood = companion.CurrentMood,
                 Personality = companion.Personality,
+                CompanionName = companion.Name,
                 ConversationHistory = recentMessages
             };
         }
@@ -470,7 +470,7 @@ namespace MauiApp2.Features.Chat
                     $"- '{c.Original}' → '{c.Corrected}' ({c.Explanation})"))
                 : "No mistakes detected";
 
-            var prompt = $@"You are Luna, a {context.Personality} language learning companion.
+            var prompt = $@"You are {context.CompanionName}, a {context.Personality} language learning companion.
 
 USER CONTEXT:
 - Name: {context.UserName}
@@ -496,36 +496,39 @@ LANGUAGE ANALYSIS:
 
 INSTRUCTIONS:
 1. Respond primarily in {context.TargetLanguage}
-2. If mistakes were detected, correct them naturally and gently in your response (e.g., ""I see what you mean! By the way, we usually say X instead of Y."")
-3. Reference past conversations or user's interests when relevant
-4. Match your current mood: {moodDescription}
-5. Keep response conversational, 2-4 sentences
-6. Ask a follow-up question to keep the conversation going
-7. Be encouraging and supportive";
+2. Your main goal is to help the user practice and improve their language skills. So keep trying to introduce the user to the target language-specific topics such as grammar and vocabulary relative to their level. 
+2. Reference past conversations or user's interests when relevant
+3. Match your current mood: {moodDescription}
+4. Split your reply into 1–3 short paragraphs (each 1–2 sentences). Put each paragraph as a separate entry in the ""blocks"" array
+5. Ask a follow-up question to keep the conversation going
+6. You may use **bold** for emphasis and *italics* for foreign words, titles, or gentle stress — use them sparingly to feel natural";
 
             return prompt;
         }
 
         private static readonly JsonSerializerOptions _jsonOptions = new() { PropertyNameCaseInsensitive = true };
 
-        // Splits after ./?/! that is NOT part of an ellipsis (...) and is
-        // followed by whitespace + a Unicode uppercase letter.
-        private static readonly Regex _sentenceBoundaryRe = new(
-            @"(?<=[^.][.!?])\s+(?=\p{Lu})",
-            RegexOptions.Compiled | RegexOptions.CultureInvariant);
-
         private CompanionResponseData ParseCompanionResponse(string json)
         {
             try
             {
                 var response = JsonSerializer.Deserialize<CompanionResponseData>(json, _jsonOptions);
-                return response ?? new CompanionResponseData { Text = json };
+                if (response?.Blocks is { Count: > 0 })
+                    return response;
             }
-            catch
+            catch { /* ignore, try fallbacks below */ }
+
+            // Graceful fallback: handle legacy "text" field
+            try
             {
-                // If parsing fails, treat entire response as text
-                return new CompanionResponseData { Text = json.Trim().Trim('"') };
+                using var doc = JsonDocument.Parse(json);
+                if (doc.RootElement.TryGetProperty("text", out var textEl))
+                    return new CompanionResponseData { Blocks = [textEl.GetString() ?? string.Empty] };
             }
+            catch { /* ignore */ }
+
+            // Last resort: treat entire response as a single block
+            return new CompanionResponseData { Blocks = [json.Trim().Trim('"')] };
         }
 
         private List<CorrectionData>? ParseCorrections(string? json)
@@ -558,54 +561,12 @@ INSTRUCTIONS:
 
         private class CompanionResponseData
         {
-            [JsonPropertyName("text")]
-            public string Text { get; set; } = string.Empty;
+            [JsonPropertyName("blocks")]
+            public List<string> Blocks { get; set; } = new();
 
             [JsonPropertyName("corrections")]
             public List<CorrectionData>? Corrections { get; set; }
         }
 
-        /// <summary>
-        /// Splits an AI response into chunks for progressive message delivery.<br/>
-        /// Priority order: \n\n → \n → sentence boundaries (.&nbsp;!&nbsp;?) → single chunk.
-        /// Single-word fragments ending in '.' are treated as abbreviations (M., Mme., Dr., …)
-        /// and merged into the following sentence to avoid spurious splits.
-        /// </summary>
-        private static List<string> SplitIntoParagraphs(string text)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-                return [string.Empty];
-
-            static List<string> Trimmed(IEnumerable<string> src) =>
-                src.Select(p => p.Trim()).Where(p => p.Length > 0).ToList();
-
-            // 1. Explicit paragraph breaks (\n\n)
-            var parts = Trimmed(text.Split(["\n\n", "\r\n\r\n"], StringSplitOptions.RemoveEmptyEntries));
-            if (parts.Count >= 2) return parts;
-
-            // 2. Single line-breaks
-            parts = Trimmed(text.Split(["\n", "\r\n"], StringSplitOptions.RemoveEmptyEntries));
-            if (parts.Count >= 2) return parts;
-
-            // 3. Sentence boundaries: after ./?/! (not ellipsis) + space + uppercase
-            var sentences = Trimmed(_sentenceBoundaryRe.Split(text.Trim()));
-            if (sentences.Count >= 2)
-            {
-                // Merge single-word abbreviation fragments (M., Mme., Dr., …)
-                // into the next sentence to avoid splitting "M. Aznavour" in two.
-                var merged = new List<string>(sentences.Count);
-                for (int i = 0; i < sentences.Count; i++)
-                {
-                    var s = sentences[i];
-                    if (s.EndsWith('.') && !s.Contains(' ') && i + 1 < sentences.Count)
-                        sentences[i + 1] = s + " " + sentences[i + 1];
-                    else
-                        merged.Add(s);
-                }
-                if (merged.Count >= 2) return merged;
             }
-
-            return [text.Trim()];
         }
-    }
-}

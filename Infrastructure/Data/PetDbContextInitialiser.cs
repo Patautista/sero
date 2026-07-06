@@ -40,7 +40,7 @@ namespace Infrastructure.Data
                     if (pendingMigrations.Any())
                     {
                         _logger.LogInformation($"Applying {pendingMigrations.Count()} pending migration(s)...");
-                        await _context.Database.MigrateAsync();
+                        //await _context.Database.MigrateAsync();
                         _logger.LogInformation("Migrations applied successfully");
                     }
                     else

@@ -17,7 +17,7 @@
     <div class="chat-header">
         <button class="back-button" @onclick="GoBack">←</button>
         <div class="companion-info">
-            <div class="companion-avatar-small">🌙</div>
+            <div class="companion-avatar-small">@companionAvatar</div>
             <div>
                 <h3>@companionName</h3>
                 <span class="mood-indicator mood-@currentMood.ToString().ToLower()">@currentMood</span>
@@ -33,7 +33,7 @@
                 {
                     <div class="message-wrapper @(message.SenderType == SenderType.User ? "user-message-wrapper" : "companion-message-wrapper")">
                         <div class="message @(message.SenderType == SenderType.User ? "message-user" : "message-companion")">
-                            <div class="message-content">@message.Content</div>
+                            <div class="message-content">@((MarkupString)SimpleMarkdown.ToHtml(message.Content))</div>
                             <div class="message-time">@message.Timestamp.ToLocalTime().ToString("HH:mm")</div>
 
                             @if (message.ShowTranslation && !string.IsNullOrWhiteSpace(message.Translation))
@@ -131,7 +131,8 @@
     private bool isTyping = false;
     private string errorMessage = string.Empty;
     private int conversationId;
-    private string companionName = "Luna";
+    private string companionName = string.Empty;
+    private string companionAvatar = string.Empty;
     private CompanionMood currentMood = CompanionMood.Curious;
     private int userProfileId;
     private string targetLanguage = string.Empty;
@@ -164,6 +165,7 @@
             // Get companion
             var companion = await OnboardingService.GetOrCreateCompanionAsync();
             companionName = companion.Name;
+            companionAvatar = companion.Avatar;
             currentMood = companion.CurrentMood;
 
             // Load conversation

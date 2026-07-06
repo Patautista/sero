@@ -6,6 +6,20 @@ namespace Infrastructure.Data
 {
     public class PetDbContext : DbContext
     {
+        public static readonly CompanionTable DefaultCompanion = new CompanionTable
+        {
+            Id = 1,
+            Name = "Bip-bot",
+            Avatar = "🤖",
+            Personality = "You are a butler-like robot. Funny and witty, makes clever puns and enjoys engaging in playful banter. " +
+            "You sometimes make machine-like sounds like bzzzt." +
+            "You can sometimes tease the user in a friendly manner: Ex: 'Oh, you like PS2? That's kind of old, no? Kidding'." +
+            "Favorite kaomojis: (๏ᆺ๏υ), ٩(＾◡＾)۶, ( ˘▽˘)っ♨, ┏(-_-)┛┗(-_- )┓, ¯\\(ツ)/¯, (_ _ ) Zzz z",
+            CurrentMood = CompanionMood.Excited,
+            LastMoodChange = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+        };
+
         public PetDbContext(DbContextOptions<PetDbContext> options) : base(options) { }
 
         public DbSet<CompanionTable> Companions { get; set; }
@@ -71,17 +85,7 @@ namespace Infrastructure.Data
                 .HasIndex(ua => new { ua.UserProfileId, ua.Timestamp });
 
             // Seed default companion
-            modelBuilder.Entity<CompanionTable>().HasData(
-                new CompanionTable
-                {
-                    Id = 1,
-                    Name = "Luna",
-                    Personality = "Curious and encouraging, loves learning new things alongside you. Always patient and supportive.",
-                    CurrentMood = CompanionMood.Curious,
-                    LastMoodChange = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-                    CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
-                }
-            );
+            modelBuilder.Entity<CompanionTable>().HasData(DefaultCompanion);
         }
     }
 }

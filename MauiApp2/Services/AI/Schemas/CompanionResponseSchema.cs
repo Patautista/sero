@@ -5,8 +5,8 @@ namespace MauiApp2.Services.AI.Schemas
 {
     public class CompanionResponseSchema
     {
-        [JsonPropertyName("text")]
-        public string Text { get; set; } = string.Empty;
+        [JsonPropertyName("blocks")]
+        public List<string> Blocks { get; set; } = new();
 
         [JsonPropertyName("corrections")]
         public List<CompanionCorrectionItem> Corrections { get; set; } = new();

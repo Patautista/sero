@@ -48,6 +48,7 @@ namespace MauiApp2.Features.Chat
         public List<ConversationMemory> RecentMemories { get; set; } = new();
         public CompanionMood CurrentMood { get; set; }
         public string Personality { get; set; } = string.Empty;
+        public string CompanionName { get; set; } = string.Empty;
         public List<ChatMessage> ConversationHistory { get; set; } = new();
     }
 }
