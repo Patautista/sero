@@ -36,6 +36,7 @@ namespace Infrastructure.Data
         public ILiteCollection<LanguageMistakeTable> LanguageMistakes => _database.GetCollection<LanguageMistakeTable>("languageMistakes");
         public ILiteCollection<ConversationMemoryTable> ConversationMemories => _database.GetCollection<ConversationMemoryTable>("conversationMemories");
         public ILiteCollection<UserActivityTable> UserActivities => _database.GetCollection<UserActivityTable>("userActivities");
+        public ILiteCollection<CompletedLearningActivityTable> CompletedLearningActivities => _database.GetCollection<CompletedLearningActivityTable>("completedLearningActivities");
 
         public void EnsureIndexes()
         {
@@ -45,6 +46,7 @@ namespace Infrastructure.Data
             LanguageMistakes.EnsureIndex(x => x.UserProfileId);
             ConversationMemories.EnsureIndex(x => x.UserProfileId);
             UserActivities.EnsureIndex(x => x.UserProfileId);
+            CompletedLearningActivities.EnsureIndex(x => x.UserProfileId);
         }
 
         public bool BeginTrans() => _database.BeginTrans();
@@ -59,6 +61,7 @@ namespace Infrastructure.Data
             _database.DropCollection("languageMistakes");
             _database.DropCollection("conversationMemories");
             _database.DropCollection("userActivities");
+            _database.DropCollection("completedLearningActivities");
         }
     }
 }

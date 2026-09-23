@@ -42,14 +42,45 @@
                 <span class="mood-indicator mood-@currentMood.ToString().ToLower()">@currentMood</span>
             </div>
         </div>
+        <button class="bookmarks-toggle" @onclick="ToggleBookmarksList" aria-expanded="@showBookmarks" aria-label="Show bookmarked messages">🔖 Bookmarks</button>
     </div>
+
+    @if (showBookmarks)
+    {
+        <div class="bookmarks-panel" aria-label="Bookmarked messages">
+            @if (bookmarkedMessages.Count == 0)
+            {
+                <p>No bookmarked messages yet.</p>
+            }
+            @foreach (var bookmark in bookmarkedMessages)
+            {
+                <button class="bookmark-list-item" @key="bookmark.Id" @onclick="() => JumpToBookmarkAsync(bookmark.Id)">
+                    <span>@bookmark.Timestamp.ToLocalTime().ToString("g")</span>
+                    <span>@(bookmark.MessageType == MessageType.AudioMessage ? "🔊 Audio message" : bookmark.Content)</span>
+                </button>
+            }
+        </div>
+    }
 
     <div class="chat-messages" @ref="messageContainer" @onpointerup="HandleSelectionAsync">
         <LoadingSpinner IsLoading="@isLoading">
+            @if (!isShowingLatest)
+            {
+                <button class="chat-history-button" @onclick="ReturnToLatestAsync">↓ Back to latest</button>
+            }
+            @if (hasOlderMessages)
+            {
+                <button class="chat-history-button" @onclick="LoadOlderMessagesAsync" disabled="@isLoadingOlder">@(isLoadingOlder ? "Loading..." : "↑ Load older messages")</button>
+            }
             @if (messages.Any())
             {
                 @foreach (var message in messages)
                 {
+                    <div class="chat-entry @(highlightedMessageId == message.Id ? "bookmark-highlight" : "") @(contextMenuMessageId == message.Id ? "context-menu-active" : "")"
+                         id="chat-message-@message.Id" @key="message.Id"
+                         @oncontextmenu="@(e => OpenMessageContextMenu(message.Id, e))" @oncontextmenu:preventDefault="true"
+                         @onpointerdown="@(e => OnMessagePointerDown(message.Id, e))"
+                         @onpointerup="CancelLongPress" @onpointerleave="CancelLongPress" @onpointercancel="CancelLongPress">
                     @if (message.MessageType == MessageType.SkillUpdate
                         || message.MessageType == MessageType.UserInsight
                         || message.MessageType == MessageType.CompanionInsight)
@@ -121,6 +152,7 @@
                             }
                         </div>
                     }
+                    </div>
                 }
             }
             else
@@ -165,6 +197,20 @@
                        X="@tooltipX"
                        Y="@tooltipY"
                        OnClose="@CloseDefinitionTooltip" />
+
+    @if (contextMenuMessageId is { } contextMessageId)
+    {
+        var contextMessage = messages.FirstOrDefault(m => m.Id == contextMessageId);
+        if (contextMessage != null)
+        {
+            <div class="message-context-menu-backdrop" @onclick="CloseMessageContextMenu" @oncontextmenu="CloseMessageContextMenu" @oncontextmenu:preventDefault="true"></div>
+            <div class="message-context-menu" style="left: @(contextMenuX)px; top: @(contextMenuY)px;">
+                <button class="message-context-menu-item" @onclick="() => ToggleBookmarkAsync(contextMessage)">
+                    @(contextMessage.IsBookmarked ? "🔖 Remove bookmark" : "🔖 Bookmark")
+                </button>
+            </div>
+        }
+    }
 </div>
 
 @if (!string.IsNullOrWhiteSpace(errorMessage))
@@ -175,6 +221,19 @@
 @code {
     private ElementReference messageContainer;
     private List<ChatMessage> messages = new();
+    private List<ChatMessage> bookmarkedMessages = new();
+    private bool showBookmarks;
+    private int? contextMenuMessageId;
+    private double contextMenuX;
+    private double contextMenuY;
+    private CancellationTokenSource? longPressCts;
+    private int? highlightedMessageId;
+    private int? pendingScrollMessageId;
+    private bool isShowingLatest = true;
+    private bool hasOlderMessages;
+    private bool isLoadingOlder;
+    private bool pendingRestoreScroll;
+    private bool pendingScrollBottom;
     private string messageInput = string.Empty;
     private bool isLoading = true;
     private bool isSending = false;
@@ -226,12 +285,10 @@
             var conversation = await ChatService.GetOrCreateActiveConversationAsync(userProfileId);
             conversationId = conversation.ConversationId;
             messages = conversation.Messages;
+            hasOlderMessages = conversation.HasOlderMessages;
 
             isLoading = false;
-
-            // Scroll to bottom after rendering
-            await Task.Delay(100);
-            await ScrollToBottom();
+            pendingScrollBottom = true;
         }
         catch (Exception ex)
         {
@@ -241,12 +298,158 @@
         }
     }
 
+    private void OpenMessageContextMenu(int messageId, MouseEventArgs e)
+    {
+        longPressCts?.Cancel();
+        contextMenuMessageId = messageId;
+        contextMenuX = e.ClientX;
+        contextMenuY = e.ClientY;
+    }
+
+    private void CloseMessageContextMenu()
+    {
+        contextMenuMessageId = null;
+    }
+
+    private void OnMessagePointerDown(int messageId, PointerEventArgs e)
+    {
+        if (e.PointerType != "touch")
+            return;
+
+        longPressCts?.Cancel();
+        var cts = new CancellationTokenSource();
+        longPressCts = cts;
+        _ = StartLongPressAsync(messageId, e.ClientX, e.ClientY, cts);
+    }
+
+    private async Task StartLongPressAsync(int messageId, double x, double y, CancellationTokenSource cts)
+    {
+        try
+        {
+            await Task.Delay(500, cts.Token);
+            contextMenuMessageId = messageId;
+            contextMenuX = x;
+            contextMenuY = y;
+            StateHasChanged();
+        }
+        catch (TaskCanceledException)
+        {
+        }
+    }
+
+    private void CancelLongPress()
+    {
+        longPressCts?.Cancel();
+    }
+
+    private async Task ToggleBookmarksList()
+    {
+        showBookmarks = !showBookmarks;
+        contextMenuMessageId = null;
+        if (showBookmarks)
+            bookmarkedMessages = await ChatService.GetBookmarkedMessagesAsync(conversationId);
+    }
+
+    private async Task ToggleBookmarkAsync(ChatMessage message)
+    {
+        try
+        {
+            var bookmarked = !message.IsBookmarked;
+            if (await ChatService.SetBookmarkAsync(conversationId, message.Id, bookmarked))
+            {
+                message.IsBookmarked = bookmarked;
+                if (showBookmarks)
+                    bookmarkedMessages = await ChatService.GetBookmarkedMessagesAsync(conversationId);
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Could not update bookmark for message {MessageId}", message.Id);
+            errorMessage = "Could not update bookmark";
+        }
+        finally
+        {
+            contextMenuMessageId = null;
+        }
+    }
+
+    private async Task JumpToBookmarkAsync(int messageId)
+    {
+        try
+        {
+            var page = await ChatService.LoadMessagePageAsync(conversationId, messageId);
+            if (!page.Messages.Any(message => message.Id == messageId))
+            {
+                errorMessage = "Bookmarked message not found";
+                return;
+            }
+
+            messages = page.Messages;
+            hasOlderMessages = page.HasOlder;
+            isShowingLatest = false;
+            highlightedMessageId = messageId;
+            pendingScrollMessageId = messageId;
+            showBookmarks = false;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Could not open bookmarked message {MessageId}", messageId);
+            errorMessage = "Could not open bookmarked message";
+        }
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        if (pendingScrollMessageId is { } messageId)
         {
-            await ScrollToBottom();
+            pendingScrollMessageId = null;
+            await JSRuntime.InvokeVoidAsync("chatScroll.scrollToMessage", messageContainer, messageId);
         }
+        else if (pendingRestoreScroll)
+        {
+            pendingRestoreScroll = false;
+            await JSRuntime.InvokeVoidAsync("chatScroll.restorePosition", messageContainer);
+        }
+        else if (pendingScrollBottom)
+        {
+            pendingScrollBottom = false;
+            await JSRuntime.InvokeVoidAsync("chatScroll.scrollToBottom", messageContainer);
+        }
+    }
+
+    private async Task LoadOlderMessagesAsync()
+    {
+        if (isLoadingOlder || !hasOlderMessages || messages.Count == 0)
+            return;
+
+        isLoadingOlder = true;
+        try
+        {
+            var page = await ChatService.LoadMessagePageAsync(conversationId, messages[0].Id - 1);
+            await JSRuntime.InvokeVoidAsync("chatScroll.rememberPosition", messageContainer);
+            messages.InsertRange(0, page.Messages);
+            hasOlderMessages = page.HasOlder;
+            pendingRestoreScroll = true;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Could not load older messages");
+            errorMessage = "Could not load older messages";
+        }
+        finally
+        {
+            isLoadingOlder = false;
+        }
+    }
+
+    private async Task ReturnToLatestAsync()
+    {
+        var page = await ChatService.LoadMessagePageAsync(conversationId);
+        messages = page.Messages;
+        hasOlderMessages = page.HasOlder;
+        isShowingLatest = true;
+        highlightedMessageId = null;
+        pendingScrollBottom = true;
     }
 
     private async Task SendMessage()
@@ -263,7 +466,12 @@
         {
             // 1. Save and immediately display user message
             var userMessage = await ChatService.SaveUserMessageAsync(conversationId, content);
-            messages.Add(userMessage);
+            var latestPage = await ChatService.LoadMessagePageAsync(conversationId);
+            messages = latestPage.Messages;
+            hasOlderMessages = latestPage.HasOlder;
+            isShowingLatest = true;
+            highlightedMessageId = null;
+            userMessage = messages.First(message => message.Id == userMessage.Id);
             isTyping = true;
             StateHasChanged();
             await ScrollToBottom();
@@ -296,6 +504,11 @@
             for (int i = 0; i < companions.Count; i++)
             {
                 messages.Add(companions[i]);
+                if (messages.Count > ChatService.MessagePageSize)
+                {
+                    messages.RemoveAt(0);
+                    hasOlderMessages = true;
+                }
                 StateHasChanged();
                 await ScrollToBottom();
 
@@ -410,18 +623,11 @@
         }
     }
 
-    private async Task ScrollToBottom()
+    private Task ScrollToBottom()
     {
-        try
-        {
-            // Use JavaScript interop to scroll to bottom
-            // For now, just log - actual scroll implementation would require JS
-            Console.WriteLine("Scrolling to bottom");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error scrolling: {ex.Message}");
-        }
+        pendingScrollBottom = true;
+        StateHasChanged();
+        return Task.CompletedTask;
     }
 
     private async Task HandleSelectionAsync(PointerEventArgs e)

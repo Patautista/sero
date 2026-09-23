@@ -20,6 +20,8 @@ namespace MauiApp2.Features.Chat
 {
     public class ChatService
     {
+        public const int MessagePageSize = 30;
+
         private readonly IPetDataStore _store;
         private readonly LocalApiService _api;
         private readonly ConfigurationService _config;
@@ -84,12 +86,13 @@ namespace MauiApp2.Features.Chat
                     _logger.LogInformation($"Created new conversation {activeConversation.Id} for user {userProfileId}");
                 }
 
-                var messages = await LoadConversationHistoryAsync(activeConversation.Id, _config.ConversationHistoryLimit);
+                var page = await LoadMessagePageAsync(activeConversation.Id);
 
                 return new ConversationState
                 {
                     ConversationId = activeConversation.Id,
-                    Messages = messages,
+                    Messages = page.Messages,
+                    HasOlderMessages = page.HasOlder,
                     IsActive = activeConversation.IsActive
                 };
             }
@@ -99,6 +102,45 @@ namespace MauiApp2.Features.Chat
                 throw;
             }
         }
+
+        public async Task<ChatHistoryPage> LoadMessagePageAsync(int conversationId, int? throughId = null)
+        {
+            var page = await _store.GetMessagePageAsync(conversationId, throughId, MessagePageSize + 1);
+            return new ChatHistoryPage
+            {
+                Messages = page.Take(MessagePageSize).Reverse().Select(ToChatMessage).ToList(),
+                HasOlder = page.Count > MessagePageSize
+            };
+        }
+
+        public async Task<List<ChatMessage>> GetBookmarkedMessagesAsync(int conversationId)
+        {
+            var bookmarks = await _store.Messages.WhereAsync(message => message.ConversationId == conversationId && message.IsBookmarked);
+            return bookmarks.OrderByDescending(message => message.Id).Select(ToChatMessage).ToList();
+        }
+
+        public async Task<bool> SetBookmarkAsync(int conversationId, int messageId, bool isBookmarked)
+        {
+            var message = await _store.Messages.FindByIdAsync(messageId);
+            if (message is null || message.ConversationId != conversationId)
+                return false;
+
+            message.IsBookmarked = isBookmarked;
+            _store.Messages.Update(message);
+            await _store.SaveChangesAsync();
+            return true;
+        }
+
+        private static ChatMessage ToChatMessage(MessageTable message) => new()
+        {
+            Id = message.Id,
+            SenderType = message.SenderType,
+            Content = message.Content,
+            Timestamp = message.Timestamp,
+            MessageType = message.MessageType,
+            Corrections = ParseCorrections(message.CorrectionDataJson),
+            IsBookmarked = message.IsBookmarked
+        };
 
         public async Task<List<ChatMessage>> LoadConversationHistoryAsync(int conversationId, int limit = 50)
         {
@@ -736,7 +778,7 @@ namespace MauiApp2.Features.Chat
             return new CompanionResponseData { Blocks = [json.Trim().Trim('"')] };
         }
 
-        private List<CorrectionData>? ParseCorrections(string? json)
+        private static List<CorrectionData>? ParseCorrections(string? json)
         {
             if (string.IsNullOrWhiteSpace(json))
                 return null;

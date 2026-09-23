@@ -833,6 +833,68 @@ body {
     max-width: 90%;
 }
 
+/* Chat entry hosting the bubble; slightly dims/scales while a long-press is charging */
+.chat-entry {
+    touch-action: manipulation;
+}
+
+.chat-entry.context-menu-active .message,
+.chat-entry.context-menu-active .message-audio {
+    opacity: 0.85;
+}
+
+.chat-entry.bookmark-highlight {
+    animation: bookmark-flash 1.4s ease-out;
+}
+
+@keyframes bookmark-flash {
+    0% { background-color: rgba(108, 92, 231, 0.18); }
+    100% { background-color: transparent; }
+}
+
+/* Floating message actions menu opened via long-press (touch) or right-click (desktop) */
+.message-context-menu-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1400;
+    background: transparent;
+}
+
+.message-context-menu {
+    position: fixed;
+    z-index: 1500;
+    min-width: 180px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    padding: 6px;
+    transform: translate(-50%, 8px);
+    animation: context-menu-pop 0.12s ease-out;
+}
+
+@keyframes context-menu-pop {
+    from { opacity: 0; transform: translate(-50%, 0px) scale(0.95); }
+    to { opacity: 1; transform: translate(-50%, 8px) scale(1); }
+}
+
+.message-context-menu-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    color: var(--dark-color);
+}
+
+.message-context-menu-item:hover,
+.message-context-menu-item:active {
+    background: var(--companion-message-bg, #f0f0f0);
+}
+
 /* ========================================
    Responsive Design
    ======================================== */

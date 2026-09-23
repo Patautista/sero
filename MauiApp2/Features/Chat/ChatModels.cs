@@ -13,6 +13,7 @@ namespace MauiApp2.Features.Chat
         public DateTime Timestamp { get; set; }
         public List<CorrectionData>? Corrections { get; set; }
         public MessageType MessageType { get; set; }
+        public bool IsBookmarked { get; set; }
 
         // UI-only state (not persisted)
         public string? Translation { get; set; }
@@ -30,7 +31,14 @@ namespace MauiApp2.Features.Chat
     {
         public int ConversationId { get; set; }
         public List<ChatMessage> Messages { get; set; } = new();
+        public bool HasOlderMessages { get; set; }
         public bool IsActive { get; set; }
+    }
+
+    public sealed class ChatHistoryPage
+    {
+        public List<ChatMessage> Messages { get; init; } = new();
+        public bool HasOlder { get; init; }
     }
 
     public class CompanionResponseContext

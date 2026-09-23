@@ -30,12 +30,12 @@ namespace MauiApp2.Features.Activities
         };
 
         private readonly IChatClient _chatClient;
-        private readonly IActivityPromptBuilder _promptBuilder;
+        private readonly ICompanionPromptBuilder _promptBuilder;
         private readonly ILogger<ActivityAgent> _logger;
 
         public ActivityAgent(
             IChatClient chatClient,
-            IActivityPromptBuilder promptBuilder,
+            ICompanionPromptBuilder promptBuilder,
             ILogger<ActivityAgent> logger)
         {
             _chatClient = chatClient;
@@ -63,7 +63,7 @@ namespace MauiApp2.Features.Activities
             // Build a fresh agent each turn from the definition's instructions. The agent
             // itself is stateless; the activity's private history lives on the session.
             AIAgent agent = _chatClient.AsAIAgent(
-                instructions: _promptBuilder.BuildSystemInstructions(instance.Definition, context),
+                instructions: _promptBuilder.BuildActivitySystemInstructions(instance.Definition, context),
                 name: AgentName);
 
             instance.Session ??= await agent.CreateSessionAsync(cancellationToken);
@@ -73,7 +73,7 @@ namespace MauiApp2.Features.Activities
                 instance.Turns.Add(ActivityTurn.FromUser(userInput));
             }
 
-            var turnMessage = _promptBuilder.BuildTurnMessage(instance, skills, recentConversation, userInput);
+            var turnMessage = _promptBuilder.BuildActivityTurnMessage(instance, skills, instance.LearningContext, recentConversation, userInput);
 
             var runOptions = new ChatClientAgentRunOptions(new ChatOptions
             {
@@ -145,6 +145,7 @@ namespace MauiApp2.Features.Activities
             if (!string.IsNullOrWhiteSpace(parsed.GeneratedContent))
             {
                 instance.GeneratedContent = parsed.GeneratedContent;
+                instance.GeneratedContents.Add(parsed.GeneratedContent);
             }
 
             ActivityEvaluation? evaluation = null;

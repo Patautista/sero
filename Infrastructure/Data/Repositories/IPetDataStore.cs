@@ -1,4 +1,5 @@
 using Domain.Shared.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Data.Repositories
@@ -16,6 +17,10 @@ namespace Infrastructure.Data.Repositories
         IRepository<LanguageMistakeTable> LanguageMistakes { get; }
         IRepository<ConversationMemoryTable> ConversationMemories { get; }
         IRepository<UserActivityTable> UserActivities { get; }
+        IRepository<CompletedLearningActivityTable> CompletedLearningActivities { get; }
+
+        /// <summary>Loads a bounded page newest-first, optionally ending at a message id.</summary>
+        Task<IReadOnlyList<MessageTable>> GetMessagePageAsync(int conversationId, int? throughId, int pageSize);
 
         /// <summary>
         /// Persists all pending changes (inserts, updates, deletes) across all repositories.

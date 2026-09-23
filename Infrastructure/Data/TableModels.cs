@@ -84,6 +84,9 @@ namespace Infrastructure.Data
         public ICollection<ConversationMemoryTable> ConversationMemories { get; set; } = new List<ConversationMemoryTable>();
         [BsonIgnore]
         public ICollection<UserActivityTable> UserActivities { get; set; } = new List<UserActivityTable>();
+
+        [BsonIgnore]
+        public ICollection<CompletedLearningActivityTable> CompletedLearningActivities { get; set; } = new List<CompletedLearningActivityTable>();
     }
 
     public class ConversationTable
@@ -122,6 +125,8 @@ namespace Infrastructure.Data
         public string LanguageCode { get; set; } = string.Empty;
 
         public string? CorrectionDataJson { get; set; }
+
+        public bool IsBookmarked { get; set; }
 
         [BsonIgnore]
         public ConversationTable? Conversation { get; set; }
@@ -186,6 +191,33 @@ namespace Infrastructure.Data
         public string ActivityType { get; set; } = string.Empty;
 
         public DateTime Timestamp { get; set; }
+
+        [BsonIgnore]
+        public UserProfileTable? UserProfile { get; set; }
+    }
+
+    /// <summary>
+    /// A completed learning activity retained to provide varied future practice for the
+    /// same combination of broad skills and target areas, and track successful streaks.
+    /// </summary>
+    public class CompletedLearningActivityTable
+    {
+        public int Id { get; set; }
+
+        public int UserProfileId { get; set; }
+
+        public string ActivityId { get; set; } = string.Empty;
+
+        public List<string> TrainedSkillNames { get; set; } = new();
+
+        public List<string> TargetAreaIds { get; set; } = new();
+
+        public string GeneratedContent { get; set; } = string.Empty;
+
+        public DateTime CompletedAt { get; set; }
+
+        /// <summary>Null for activity records created before outcomes were tracked.</summary>
+        public bool? WasSuccessful { get; set; }
 
         [BsonIgnore]
         public UserProfileTable? UserProfile { get; set; }

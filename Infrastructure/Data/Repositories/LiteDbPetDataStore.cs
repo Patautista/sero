@@ -1,6 +1,8 @@
 using Domain.Shared.Models;
 using LiteDB;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Data.Repositories
@@ -19,6 +21,7 @@ namespace Infrastructure.Data.Repositories
         private readonly Lazy<IRepository<LanguageMistakeTable>> _languageMistakes;
         private readonly Lazy<IRepository<ConversationMemoryTable>> _conversationMemories;
         private readonly Lazy<IRepository<UserActivityTable>> _userActivities;
+        private readonly Lazy<IRepository<CompletedLearningActivityTable>> _completedLearningActivities;
 
         public LiteDbPetDataStore(ILiteDatabase database)
         {
@@ -39,6 +42,8 @@ namespace Infrastructure.Data.Repositories
                 () => new LiteDbRepository<ConversationMemoryTable>(_database.GetCollection<ConversationMemoryTable>("conversationMemories")));
             _userActivities = new Lazy<IRepository<UserActivityTable>>(
                 () => new LiteDbRepository<UserActivityTable>(_database.GetCollection<UserActivityTable>("userActivities")));
+            _completedLearningActivities = new Lazy<IRepository<CompletedLearningActivityTable>>(
+                () => new LiteDbRepository<CompletedLearningActivityTable>(_database.GetCollection<CompletedLearningActivityTable>("completedLearningActivities")));
         }
 
         public IRepository<UserProfileTable> UserProfiles => _userProfiles.Value;
@@ -48,6 +53,20 @@ namespace Infrastructure.Data.Repositories
         public IRepository<LanguageMistakeTable> LanguageMistakes => _languageMistakes.Value;
         public IRepository<ConversationMemoryTable> ConversationMemories => _conversationMemories.Value;
         public IRepository<UserActivityTable> UserActivities => _userActivities.Value;
+        public IRepository<CompletedLearningActivityTable> CompletedLearningActivities => _completedLearningActivities.Value;
+
+        public Task<IReadOnlyList<MessageTable>> GetMessagePageAsync(int conversationId, int? throughId, int pageSize)
+        {
+            var query = _database.GetCollection<MessageTable>("messages")
+                .Query().Where(message => message.ConversationId == conversationId);
+            if (throughId is { } id)
+                query = query.Where(message => message.Id <= id);
+
+            IReadOnlyList<MessageTable> page = query.OrderByDescending(message => message.Id)
+                .Limit(pageSize)
+                .ToList();
+            return Task.FromResult(page);
+        }
 
         public Task SaveChangesAsync()
         {
@@ -77,6 +96,9 @@ namespace Infrastructure.Data.Repositories
             var activitiesColl = _database.GetCollection<UserActivityTable>("userActivities");
             activitiesColl.EnsureIndex(x => x.UserProfileId);
 
+            var completedActivitiesColl = _database.GetCollection<CompletedLearningActivityTable>("completedLearningActivities");
+            completedActivitiesColl.EnsureIndex(x => x.UserProfileId);
+
             return Task.CompletedTask;
         }
 
@@ -88,6 +110,7 @@ namespace Infrastructure.Data.Repositories
             _database.DropCollection("languageMistakes");
             _database.DropCollection("conversationMemories");
             _database.DropCollection("userActivities");
+            _database.DropCollection("completedLearningActivities");
             return Task.CompletedTask;
         }
     }

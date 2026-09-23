@@ -75,7 +75,6 @@ namespace MauiApp2
             builder.Services.AddSingleton<IApiService>(sp => sp.GetRequiredService<LocalApiService>());
             builder.Services.AddSingleton<Services.NotificationService>();
             builder.Services.AddSingleton<ICompanionPromptBuilder, CompanionPromptBuilder>();
-            builder.Services.AddSingleton<IActivityPromptBuilder, ActivityPromptBuilder>();
             builder.Services.AddSingleton<LanguageDetectionService>();
 
             // Voice / TTS — powers audio-only companion messages (e.g. listening activities).

@@ -32,6 +32,12 @@ namespace MauiApp2.Features.Activities
         /// <summary>Any content the agent produced for the learner (a passage, a prompt, etc.).</summary>
         public string? GeneratedContent { get; set; }
 
+        /// <summary>All generated exercise material from this run, retained for future variation.</summary>
+        public List<string> GeneratedContents { get; } = new();
+
+        /// <summary>Selection rationale and prior material supplied to the agent for this activity run.</summary>
+        public ActivityLearningContext LearningContext { get; init; } = new();
+
         /// <summary>True once the activity has reached <see cref="ActivityStage.Completed"/>.</summary>
         public bool IsCompleted => Stage == ActivityStage.Completed;
 
@@ -49,6 +55,21 @@ namespace MauiApp2.Features.Activities
         /// </summary>
         public AgentSession? Session { get; set; }
     }
+
+    /// <summary>
+    /// Learner-specific context for explaining an activity choice, teaching a concept on
+    /// its first practice, and varying generated material across matching activities.
+    /// </summary>
+    public sealed class ActivityLearningContext
+    {
+        public IReadOnlyList<ActivitySkillSnapshot> TrainedSkills { get; init; } = Array.Empty<ActivitySkillSnapshot>();
+        public IReadOnlyList<ActivityAreaSnapshot> TargetAreas { get; init; } = Array.Empty<ActivityAreaSnapshot>();
+        public IReadOnlyList<string> PriorGeneratedContent { get; init; } = Array.Empty<string>();
+    }
+
+    public sealed record ActivitySkillSnapshot(SkillType Skill, int Score);
+
+    public sealed record ActivityAreaSnapshot(string Id, string Name, SkillAreaKind Kind, int Score, bool IsFirstPractice);
 
     /// <summary>A single message exchanged inside an activity.</summary>
     public class ActivityTurn
@@ -104,12 +125,9 @@ namespace MauiApp2.Features.Activities
         public ActivityEvaluation? Evaluation { get; init; }
 
         /// <summary>
-        /// Friendly, human-readable summary of any skill score changes applied when the
-        /// activity completed (e.g. "Reading +5, Writing -2"), or null when the activity
-        /// has not finished or no skill changed. Populated by the
-        /// <see cref="ActivityOrchestrator"/> after it persists the evaluation's skill
-        /// adjustments, so the conversation engine can inform the learner without needing
-        /// to know how skills are stored or evaluated.
+        /// Human-readable summary of applied skill and concept/topic score changes,
+        /// including any streak bonus, or null when nothing changed. Populated by the
+        /// <see cref="ActivityOrchestrator"/> after the evaluation is applied.
         /// </summary>
         public string? SkillUpdateSummary { get; init; }
 
