@@ -42,6 +42,8 @@ namespace MauiApp2.Features.MentalModels
         public required DateTime OnboardedAt { get; init; }
         public required IReadOnlyList<string> Interests { get; init; }
         public required SkillProfile Skills { get; init; }
+        public required AreaProgress AreaProgress { get; init; }
+        public required SkillAreaCatalog SkillAreaCatalog { get; init; }
         public required CompanionSnapshot Companion { get; init; }
         public required IReadOnlyList<ChatMessage> History { get; init; }
         public required IReadOnlyList<ConversationMemory> RecentMemories { get; init; }

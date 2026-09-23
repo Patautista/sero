@@ -44,6 +44,9 @@ namespace MauiApp2.Services.AI.Schemas
         [JsonPropertyName("skillAdjustments")]
         public ActivitySkillAdjustmentsSchema SkillAdjustments { get; set; } = new();
 
+        [JsonPropertyName("areaAdjustments")]
+        public Dictionary<string, int> AreaAdjustments { get; set; } = new();
+
         [JsonPropertyName("reasoning")]
         public string Reasoning { get; set; } = string.Empty;
     }

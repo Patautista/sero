@@ -57,6 +57,11 @@ namespace Infrastructure.Data.Repositories
             _collection.Insert(entity);
         }
 
+        public void Update(TEntity entity)
+        {
+            _collection.Update(entity);
+        }
+
         public void Remove(TEntity entity)
         {
             // LiteDB requires using BsonValue for ID-based deletion

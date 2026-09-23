@@ -1,5 +1,6 @@
 using Business.Interfaces;
 using MauiApp1.Services.Cache;
+using MauiApp2.Services.AI;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Logging;
 using System.Text.Json.Nodes;
@@ -14,12 +15,18 @@ namespace MauiApp2.Services
         private readonly IChatClient _chatClient;
         private readonly ILogger _logger;
         private readonly AiDefinitionCache _cache;
+        private readonly ICompanionPromptBuilder _promptBuilder;
 
-        public AiDefinitionHelper(IChatClient chatClient, ILogger logger, AiDefinitionCache cache)
+        public AiDefinitionHelper(
+            IChatClient chatClient,
+            ILogger logger,
+            AiDefinitionCache cache,
+            ICompanionPromptBuilder promptBuilder)
         {
             _chatClient = chatClient;
             _logger = logger;
             _cache = cache;
+            _promptBuilder = promptBuilder;
         }
 
         /// <summary>
@@ -41,16 +48,7 @@ namespace MauiApp2.Services
 
                 _logger.LogInformation($"Generating AI definition for '{word}'");
 
-                var prompt = $@"Generate a concise definition for the {sourceLanguage} word ""{word}"" in {targetLanguage}.
-
-Return ONLY a valid JSON object (no markdown, no explanation) with this exact structure:
-{{
-  ""definition"": ""clear definition in {targetLanguage} explaining what the {sourceLanguage} word means"",
-  ""partOfSpeech"": ""noun|verb|adjective|adverb|etc"",
-  ""pronunciation"": ""phonetic spelling (if applicable)"",
-  ""translation"": ""direct translation of the word to {targetLanguage}"",
-  ""examples"": [""example sentence in {sourceLanguage} using the word"", ""another example sentence""]
-}}";
+                var prompt = _promptBuilder.BuildDefinitionPrompt(word, sourceLanguage, targetLanguage);
 
                 var chatOptions = new ChatOptions { ResponseFormat = ChatResponseFormat.Json };
                 var response = await _chatClient.GetResponseAsync([new ChatMessage(ChatRole.User, prompt)], chatOptions);

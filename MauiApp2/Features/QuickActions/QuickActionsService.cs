@@ -1,4 +1,5 @@
 using MauiApp2.Services;
+using MauiApp2.Services.AI;
 using MauiApp2.Services.AI.Schemas;
 using Microsoft.Extensions.Logging;
 using System;
@@ -10,11 +11,16 @@ namespace MauiApp2.Features.QuickActions
     public class QuickActionsService
     {
         private readonly LocalApiService _api;
+        private readonly ICompanionPromptBuilder _promptBuilder;
         private readonly ILogger<QuickActionsService> _logger;
 
-        public QuickActionsService(LocalApiService api, ILogger<QuickActionsService> logger)
+        public QuickActionsService(
+            LocalApiService api,
+            ICompanionPromptBuilder promptBuilder,
+            ILogger<QuickActionsService> logger)
         {
             _api = api;
+            _promptBuilder = promptBuilder;
             _logger = logger;
         }
 
@@ -118,11 +124,7 @@ namespace MauiApp2.Features.QuickActions
                 var translation = await _api.TranslateAsync(text, targetLang, nativeLang);
 
                 // Get context and example using AI
-                var contextPrompt = $@"Explain the meaning and usage of the {targetLang} word/phrase: ""{text}""
-
-Provide:
-1. A brief context explanation
-2. An example sentence in {targetLang}";
+                var contextPrompt = _promptBuilder.BuildWordContextPrompt(text, targetLang);
 
                 var contextResponse = await _api.GenerateTextAsync(contextPrompt, typeof(WordContextSchema));
 

@@ -1,6 +1,7 @@
 using Domain.Shared.Models;
 using MauiApp2.Features.Chat;
 using MauiApp2.Features.MentalModels;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,13 @@ namespace MauiApp2.Services.AI
 
         /// <summary>Builds the prompt used to generate the companion's reply during an active conversation.</summary>
         string BuildCompanionResponsePrompt(CompanionResponseContext context, string userMessage, List<CorrectionData>? corrections);
+
+        string BuildMemoryExtractionPrompt(string conversationText);
+        string BuildTranslationPrompt(string text, string sourceLanguage, string targetLanguage);
+        string BuildLexicalAnalysisPrompt(string text, string language);
+        string BuildMistakeDetectionPrompt(string text, string language);
+        string BuildDefinitionPrompt(string word, string sourceLanguage, string targetLanguage);
+        string BuildWordContextPrompt(string text, string targetLanguage);
     }
 
     /// <summary>
@@ -41,6 +49,8 @@ namespace MauiApp2.Services.AI
 
     public class CompanionPromptBuilder : ICompanionPromptBuilder
     {
+        private readonly ILogger<CompanionPromptBuilder> _logger;
+
         /// <summary>
         /// Instructions that must guide the companion's writing in every context (onboarding,
         /// chat, and any future prompt). Context-specific instructions (e.g. "ask a follow-up
@@ -57,6 +67,11 @@ namespace MauiApp2.Services.AI
             "This is an internet conversation, so use internet language. ALL CAPS, looooooong text and lols/lmaos are encouraged, but do not use them all the time."
         };
 
+        public CompanionPromptBuilder(ILogger<CompanionPromptBuilder> logger)
+        {
+            _logger = logger;
+        }
+
         public string BuildWelcomeMessagePrompt(CompanionPersonaContext context)
         {
             var interestsText = FormatInterests(context.Interests, "various topics");
@@ -71,7 +86,7 @@ namespace MauiApp2.Services.AI
                 "Keep it to 3-4 sentences"
             };
 
-            return $@"You are {context.CompanionName}, a friendly and {context.Personality} language learning companion.
+            var prompt = $@"You are {context.CompanionName}, a friendly and {context.Personality} language learning companion.
 
 A new user just joined:
 - Name: {context.UserName}
@@ -92,6 +107,8 @@ MESSAGE-SPECIFIC INSTRUCTIONS. The message should:
 {FormatInstructions(welcomeSpecificInstructions)}
 
 Return ONLY the welcome message, no JSON, no quotes.";
+
+            return LogPrompt("welcome message", prompt);
         }
 
         public string BuildCompanionResponsePrompt(CompanionResponseContext context, string userMessage, List<CorrectionData>? corrections)
@@ -186,11 +203,100 @@ GENERAL INSTRUCTIONS:
 CONVERSATION-SPECIFIC INSTRUCTIONS:
 {FormatInstructions(conversationSpecificInstructions)}";
 
-            return prompt;
+            return LogPrompt("companion response", prompt);
         }
+
+        public string BuildMemoryExtractionPrompt(string conversationText) => LogPrompt(
+            "memory extraction",
+            $@"Analyze this conversation and extract important facts about the user that should be remembered for future conversations.
+
+Conversation:
+{conversationText}
+
+Guidelines:
+- Only extract facts explicitly mentioned by the user
+- Be specific and concrete
+- Combine related facts into single memories
+- Importance 4-5: Core interests, significant events, important goals
+- Importance 2-3: Casual mentions, minor events
+- Importance 1: Very minor details
+- type must be one of: Interest, Event, Preference, Goal");
+
+        public string BuildTranslationPrompt(string text, string sourceLanguage, string targetLanguage) => LogPrompt(
+            "translation",
+            $@"Translate the following text from {sourceLanguage} to {targetLanguage}. Return ONLY the translation, no explanations.
+
+Text to translate: ""{text}""
+
+Translation:");
+
+        public string BuildLexicalAnalysisPrompt(string text, string language) => LogPrompt(
+            "lexical analysis",
+            $@"Analyze the following {language} text word-by-word or phrase-by-phrase. Break it down into meaningful chunks with translations and grammar notes.
+
+Text: ""{text}""
+
+Return a JSON object with this structure:
+{{
+  ""chunks"": [
+    {{
+      ""word"": ""word or phrase"",
+      ""translation"": ""English translation"",
+      ""note"": ""grammar note or context (optional)""
+    }}
+  ]
+}}");
+
+        public string BuildMistakeDetectionPrompt(string text, string language) => LogPrompt(
+            "mistake detection",
+            $@"Analyze the following {language} text for grammar, vocabulary, and spelling mistakes.
+
+Text: ""{text}""
+
+Return a JSON object with this structure:
+{{
+  ""hasMistakes"": true/false,
+  ""mistakes"": [
+    {{
+      ""segment"": ""incorrect segment from the text"",
+      ""corrected"": ""correct version"",
+      ""type"": ""Grammar"" or ""Vocabulary"" or ""Spelling"",
+      ""concept"": ""brief explanation like 'verb conjugation' or 'article usage'""
+    }}
+  ]
+}}
+
+If there are no mistakes, return {{""hasMistakes"": false, ""mistakes"": []}}");
+
+        public string BuildDefinitionPrompt(string word, string sourceLanguage, string targetLanguage) => LogPrompt(
+            "definition generation",
+            $@"Generate a concise definition for the {sourceLanguage} word ""{word}"" in {targetLanguage}.
+
+Return ONLY a valid JSON object (no markdown, no explanation) with this exact structure:
+{{
+  ""definition"": ""clear definition in {targetLanguage} explaining what the {sourceLanguage} word means"",
+  ""partOfSpeech"": ""noun|verb|adjective|adverb|etc"",
+  ""pronunciation"": ""phonetic spelling (if applicable)"",
+  ""translation"": ""direct translation of the word to {targetLanguage}"",
+  ""examples"": [""example sentence in {sourceLanguage} using the word"", ""another example sentence""]
+}}");
+
+        public string BuildWordContextPrompt(string text, string targetLanguage) => LogPrompt(
+            "word context",
+            $@"Explain the meaning and usage of the {targetLanguage} word/phrase: ""{text}""
+
+Provide:
+1. A brief context explanation
+2. An example sentence in {targetLanguage}");
 
         private static string FormatInstructions(IEnumerable<string> instructions) =>
             string.Join("\n", instructions.Select((instruction, index) => $"{index + 1}. {instruction}"));
+
+        private string LogPrompt(string promptName, string prompt)
+        {
+            _logger.LogDebug("Built {PromptName} prompt:{NewLine}{Prompt}", promptName, Environment.NewLine, prompt);
+            return prompt;
+        }
 
         /// <summary>
         /// Renders the Conversation Engine's output — each mental model's insight followed

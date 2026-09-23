@@ -46,7 +46,8 @@ namespace MauiApp2.Features.Onboarding
                     NativeLanguage = request.NativeLanguage,
                     InterestsJson = System.Text.Json.JsonSerializer.Serialize(request.Interests),
                     ActivityPatternsJson = "{}",
-                    SkillsJson = SkillProfile.FromSelfAssessment(request.SkillAssessments).ToJson(),
+                    Skills = SkillProfile.FromSelfAssessment(request.SkillAssessments),
+                    AreaProgress = new AreaProgress(),
                     OnboardedAt = DateTime.UtcNow,
                     LastActiveAt = DateTime.UtcNow
                 };
@@ -156,7 +157,7 @@ namespace MauiApp2.Features.Onboarding
                     TargetLanguage = userProfile.TargetLanguage,
                     NativeLanguage = userProfile.NativeLanguage,
                     Interests = interestsList,
-                    UserSkillProfile = SkillProfile.FromJson(userProfile.SkillsJson)
+                    UserSkillProfile = userProfile.Skills
                 };
 
                 var prompt = _promptBuilder.BuildWelcomeMessagePrompt(personaContext);
@@ -201,7 +202,8 @@ namespace MauiApp2.Features.Onboarding
                     NativeLanguage = userProfileTable.NativeLanguage,
                     InterestsJson = userProfileTable.InterestsJson,
                     ActivityPatternsJson = userProfileTable.ActivityPatternsJson,
-                    SkillsJson = userProfileTable.SkillsJson,
+                    SkillsJson = userProfileTable.Skills.ToJson(),
+                    AreaProgressJson = userProfileTable.AreaProgress.ToJson(),
                     OnboardedAt = userProfileTable.OnboardedAt,
                     LastActiveAt = userProfileTable.LastActiveAt
                 };

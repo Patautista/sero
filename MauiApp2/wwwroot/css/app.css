@@ -320,6 +320,15 @@ body {
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
+.skill-stats-btn {
+    background: linear-gradient(135deg, #eff6ff 0%, #eef2ff 100%);
+    border-color: #a5b4fc;
+}
+
+.skill-stats-btn:hover {
+    border-color: #6366f1;
+}
+
 .conversation-btn {
     grid-column: span 2;
     background: var(--primary-color);

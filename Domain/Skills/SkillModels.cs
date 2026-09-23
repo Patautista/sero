@@ -216,6 +216,9 @@ namespace Domain.Shared.Models
         /// <summary>Skills this activity practises.</summary>
         public List<SkillType> TrainedSkills { get; set; } = new();
 
+        /// <summary>Skill-area ids this activity is best suited to reinforce.</summary>
+        public List<string> TargetAreaIds { get; set; } = new();
+
         /// <summary>Estimated difficulty, on the same 0-100 scale as skill scores.</summary>
         public int Difficulty { get; set; }
     }
@@ -228,10 +231,13 @@ namespace Domain.Shared.Models
     public static class ActivityRecommender
     {
         /// <summary>Relative weight of "trains weak skills" in the ranking (0-1).</summary>
-        public const double WeaknessWeight = 0.6;
+        public const double WeaknessWeight = 0.45;
 
         /// <summary>Relative weight of "difficulty matches level" in the ranking (0-1).</summary>
-        public const double DifficultyWeight = 0.4;
+        public const double DifficultyWeight = 0.30;
+
+        /// <summary>Relative weight of "targets frontier skill areas" in the ranking (0-1).</summary>
+        public const double FrontierWeight = 0.25;
 
         /// <summary>Activities whose minimum-skill requirements the profile satisfies.</summary>
         public static IReadOnlyList<LearningActivity> GetEligible(
@@ -248,6 +254,26 @@ namespace Domain.Shared.Models
                 .ThenBy(a => a.Name, StringComparer.OrdinalIgnoreCase)
                 .FirstOrDefault();
 
+        /// <summary>The best activity when frontier skill areas are also available.</summary>
+        public static LearningActivity? Recommend(
+            SkillProfile profile,
+            AreaProgress areaProgress,
+            SkillAreaCatalog catalog,
+            IEnumerable<LearningActivity> activities)
+        {
+            ArgumentNullException.ThrowIfNull(areaProgress);
+            ArgumentNullException.ThrowIfNull(catalog);
+
+            var frontierIds = areaProgress.GetFrontier(catalog)
+                .Select(a => a.Id)
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+            return GetEligible(profile, activities)
+                .OrderByDescending(a => Score(profile, a, frontierIds))
+                .ThenBy(a => a.Name, StringComparer.OrdinalIgnoreCase)
+                .FirstOrDefault();
+        }
+
         /// <summary>
         /// Combined desirability score (higher is better): rewards training weak
         /// skills and a difficulty close to the user's overall level.
@@ -255,6 +281,17 @@ namespace Domain.Shared.Models
         public static double Score(SkillProfile profile, LearningActivity activity) =>
             WeaknessWeight * WeaknessScore(profile, activity) +
             DifficultyWeight * DifficultyScore(profile, activity);
+
+        /// <summary>
+        /// Combined desirability score when frontier area ids are available too.
+        /// </summary>
+        public static double Score(
+            SkillProfile profile,
+            LearningActivity activity,
+            IReadOnlySet<string> frontierAreaIds) =>
+            WeaknessWeight * WeaknessScore(profile, activity) +
+            DifficultyWeight * DifficultyScore(profile, activity) +
+            FrontierWeight * FrontierScore(activity, frontierAreaIds);
 
         // Average "room to grow" (100 - score) across the trained skills: higher
         // when the activity trains skills the user is weak at.
@@ -270,5 +307,13 @@ namespace Domain.Shared.Models
         // when difficulty is neither far above nor far below the current level.
         private static double DifficultyScore(SkillProfile profile, LearningActivity activity) =>
             SkillProfile.MaxScore - Math.Abs(activity.Difficulty - profile.AverageScore);
+
+        private static double FrontierScore(LearningActivity activity, IReadOnlySet<string> frontierAreaIds)
+        {
+            if (frontierAreaIds.Count == 0 || activity.TargetAreaIds is null || activity.TargetAreaIds.Count == 0)
+                return 0;
+
+            return activity.TargetAreaIds.Any(frontierAreaIds.Contains) ? SkillProfile.MaxScore : 0;
+        }
     }
 }

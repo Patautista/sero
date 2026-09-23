@@ -23,6 +23,7 @@ namespace MauiApp2.Features.Activities
                 CompletionCriteria = "The learner has given their understanding of the sentence and received confirmation or a correction.",
                 MinimumSkills = new(),
                 TrainedSkills = new() { SkillType.Reading },
+                TargetAreaIds = new() { "introductions", "present-simple" },
                 Difficulty = 10
             },
             new LearningActivity
@@ -35,6 +36,7 @@ namespace MauiApp2.Features.Activities
                 CompletionCriteria = "The learner has answered the comprehension question and received feedback.",
                 MinimumSkills = new() { [SkillType.Listening] = 10 },
                 TrainedSkills = new() { SkillType.Listening },
+                TargetAreaIds = new() { "questions", "daily-life" },
                 Difficulty = 25
             },
             new LearningActivity
@@ -47,6 +49,7 @@ namespace MauiApp2.Features.Activities
                 CompletionCriteria = "The learner has written at least two descriptive sentences and received feedback.",
                 MinimumSkills = new() { [SkillType.Writing] = 20 },
                 TrainedSkills = new() { SkillType.Writing },
+                TargetAreaIds = new() { "adjectives", "colors" },
                 Difficulty = 35
             },
             new LearningActivity
@@ -59,6 +62,7 @@ namespace MauiApp2.Features.Activities
                 CompletionCriteria = "The learner has answered the comprehension questions and the answers have been discussed.",
                 MinimumSkills = new() { [SkillType.Reading] = 25 },
                 TrainedSkills = new() { SkillType.Reading },
+                TargetAreaIds = new() { "past", "daily-life" },
                 Difficulty = 40
             },
             new LearningActivity
@@ -71,6 +75,7 @@ namespace MauiApp2.Features.Activities
                 CompletionCriteria = "The learner has produced a summary and received feedback on it.",
                 MinimumSkills = new() { [SkillType.Reading] = 40, [SkillType.Writing] = 30 },
                 TrainedSkills = new() { SkillType.Reading, SkillType.Writing },
+                TargetAreaIds = new() { "facts", "science" },
                 Difficulty = 60
             },
             new LearningActivity
@@ -83,6 +88,7 @@ namespace MauiApp2.Features.Activities
                 CompletionCriteria = "The learner has written a short journal entry and received encouraging feedback.",
                 MinimumSkills = new() { [SkillType.Writing] = 45 },
                 TrainedSkills = new() { SkillType.Writing },
+                TargetAreaIds = new() { "past", "feelings", "daily-life" },
                 Difficulty = 65
             }
         };

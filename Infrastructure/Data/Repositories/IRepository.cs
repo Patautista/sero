@@ -43,6 +43,11 @@ namespace Infrastructure.Data.Repositories
         void Add(TEntity entity);
 
         /// <summary>
+        /// Update an existing entity.
+        /// </summary>
+        void Update(TEntity entity);
+
+        /// <summary>
         /// Remove an entity. Changes are not persisted until SaveChangesAsync is called on the store.
         /// </summary>
         void Remove(TEntity entity);

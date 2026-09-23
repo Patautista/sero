@@ -46,6 +46,11 @@
             <div class="action-text">Help me read something</div>
         </button>
 
+        <button class="quick-action-btn skill-stats-btn" @onclick="OpenSkillStats">
+            <div class="action-icon">📊</div>
+            <div class="action-text">Track skill stats</div>
+        </button>
+
         <button class="quick-action-btn conversation-btn" @onclick="StartConversation">
             <div class="action-icon">💬</div>
             <div class="action-text">Open chat</div>
@@ -440,6 +445,11 @@
     private void StartConversation()
     {
         Navigation.NavigateTo("/chat");
+    }
+
+    private void OpenSkillStats()
+    {
+        Navigation.NavigateTo("/skills");
     }
 
     private void GoToSettings()

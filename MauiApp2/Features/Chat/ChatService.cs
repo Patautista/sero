@@ -2,6 +2,9 @@ using Domain.Shared.Models;
 using Infrastructure.Data;
 using Infrastructure.Data.Repositories;
 using MauiApp2.Features.Activities;
+using MauiApp2.Features.LanguageCoaching;
+using MauiApp2.Features.MentalModels;
+using MauiApp2.Features.Skills;
 using MauiApp2.Services;
 using MauiApp2.Services.AI;
 using MauiApp2.Services.AI.Schemas;
@@ -24,6 +27,9 @@ namespace MauiApp2.Features.Chat
         private readonly ActivityOrchestrator _activityOrchestrator;
         private readonly ICompanionPromptBuilder _promptBuilder;
         private readonly LanguageDetectionService _languageDetection;
+        private readonly LanguageCoachingService _languageCoaching;
+        private readonly ConversationEngine _conversationEngine;
+        private readonly ISkillAreaCatalogProvider _skillAreaCatalogProvider;
         private readonly ILogger<ChatService> _logger;
 
         public ChatService(
@@ -34,6 +40,9 @@ namespace MauiApp2.Features.Chat
             ActivityOrchestrator activityOrchestrator,
             ICompanionPromptBuilder promptBuilder,
             LanguageDetectionService languageDetection,
+            LanguageCoachingService languageCoaching,
+            ConversationEngine conversationEngine,
+            ISkillAreaCatalogProvider skillAreaCatalogProvider,
             ILogger<ChatService> logger)
         {
             _store = store;
@@ -43,6 +52,9 @@ namespace MauiApp2.Features.Chat
             _activityOrchestrator = activityOrchestrator;
             _promptBuilder = promptBuilder;
             _languageDetection = languageDetection;
+            _languageCoaching = languageCoaching;
+            _conversationEngine = conversationEngine;
+            _skillAreaCatalogProvider = skillAreaCatalogProvider;
             _logger = logger;
         }
 
@@ -600,7 +612,7 @@ namespace MauiApp2.Features.Chat
         private async Task<CompanionResponseContext> BuildResponseContextAsync(ConversationTable conversation)
         {
             var userProfile = conversation.UserProfile ?? await _store.UserProfiles.FindByIdAsync(conversation.UserProfileId);
-            var companion = await _store.Companions.FirstOrDefaultAsync(m => true);
+            var companion = await _store.Companions.FirstOrDefaultAsync(m => true) ?? PetDbContext.DefaultCompanion;
 
             // Load recent memories
             var allMemories = await _store.ConversationMemories
@@ -626,13 +638,15 @@ namespace MauiApp2.Features.Chat
             var recentMessages = await LoadConversationHistoryAsync(conversation.Id, 12);
 
             var interests = JsonSerializer.Deserialize<List<string>>(userProfile?.InterestsJson ?? "[]") ?? new List<string>();
+            var catalog = await _skillAreaCatalogProvider.GetCatalogAsync();
 
             // Activities the learner currently qualifies for. The companion may offer one
             // of these; it never decides how they are run (that is the Activity Agent's job).
-            var skills = SkillProfile.FromJson(userProfile?.SkillsJson);
-            var eligibleActivities = _activitySelection.GetEligibleActivities(skills).ToList();
+            var skills = userProfile?.Skills ?? new SkillProfile();
+            var areaProgress = userProfile?.AreaProgress ?? new AreaProgress();
+            var eligibleActivities = _activitySelection.GetEligibleActivities(skills, areaProgress, catalog).ToList();
 
-            return new CompanionResponseContext
+            var context = new CompanionResponseContext
             {
                 UserName = userProfile?.Name ?? "Friend",
                 TargetLanguage = userProfile?.TargetLanguage ?? "es",
@@ -644,8 +658,57 @@ namespace MauiApp2.Features.Chat
                 CompanionName = companion.Name,
                 ConversationHistory = recentMessages,
                 EligibleActivities = eligibleActivities,
-                UserSkillProfile = skills
+                UserSkillProfile = skills,
+                UserAreaProgress = areaProgress,
+                SkillAreaCatalog = catalog
             };
+
+            context.Reasoning = await BuildReasoningAsync(conversation, userProfile, companion, context);
+            return context;
+        }
+
+        private async Task<MentalModelReasoning?> BuildReasoningAsync(
+            ConversationTable conversation,
+            UserProfileTable? userProfile,
+            CompanionTable companion,
+            CompanionResponseContext context)
+        {
+            try
+            {
+                var latestUserMessage = context.ConversationHistory
+                    .LastOrDefault(m => m.SenderType == SenderType.User)?.Content;
+                var activeChallenges = await _languageCoaching.GetActiveChallengesAsync(conversation.UserProfileId);
+
+                if (context.SkillAreaCatalog is null)
+                    return null;
+
+                var request = new MentalModelRequest
+                {
+                    UserProfileId = conversation.UserProfileId,
+                    ConversationId = conversation.Id,
+                    UserName = context.UserName,
+                    TargetLanguage = context.TargetLanguage,
+                    NativeLanguage = context.NativeLanguage,
+                    OnboardedAt = userProfile?.OnboardedAt ?? DateTime.UtcNow,
+                    Interests = context.Interests,
+                    Skills = context.UserSkillProfile,
+                    AreaProgress = context.UserAreaProgress,
+                    SkillAreaCatalog = context.SkillAreaCatalog,
+                    Companion = new CompanionSnapshot(companion.Name, companion.Personality, companion.CurrentMood),
+                    History = context.ConversationHistory,
+                    RecentMemories = context.RecentMemories,
+                    EligibleActivities = context.EligibleActivities,
+                    ActiveChallenges = activeChallenges,
+                    LatestUserMessage = latestUserMessage
+                };
+
+                return await _conversationEngine.ReasonAsync(request);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to build mental-model reasoning for conversation {ConversationId}", conversation.Id);
+                return null;
+            }
         }
 
         private static readonly JsonSerializerOptions _jsonOptions = new() { PropertyNameCaseInsensitive = true };

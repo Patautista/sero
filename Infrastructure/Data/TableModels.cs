@@ -32,6 +32,30 @@ namespace Infrastructure.Data
 
     public class UserProfileTable
     {
+        public static void ConfigureBsonMapper(BsonMapper mapper)
+        {
+            mapper.RegisterType<SkillProfile>(
+                skills => ToBsonDocument(skills.ToStorage()),
+                value => SkillProfile.FromStorage(FromBsonDocument(value)));
+            mapper.RegisterType<AreaProgress>(
+                areaProgress => ToBsonDocument(areaProgress.ToStorage()),
+                value => AreaProgress.FromStorage(FromBsonDocument(value)));
+        }
+
+        private static BsonDocument ToBsonDocument(IReadOnlyDictionary<string, int> values)
+        {
+            var document = new BsonDocument();
+            foreach (var (key, value) in values)
+            {
+                document[key] = value;
+            }
+
+            return document;
+        }
+
+        private static Dictionary<string, int> FromBsonDocument(BsonValue value) =>
+            value.AsDocument.ToDictionary(entry => entry.Key, entry => entry.Value.AsInt32);
+
         public int Id { get; set; }
 
         public string Name { get; set; } = string.Empty;
@@ -44,7 +68,9 @@ namespace Infrastructure.Data
 
         public string ActivityPatternsJson { get; set; } = "{}";
 
-        public string SkillsJson { get; set; } = "{}";
+        public SkillProfile Skills { get; set; } = new();
+
+        public AreaProgress AreaProgress { get; set; } = new();
 
         public DateTime OnboardedAt { get; set; }
 

@@ -1,6 +1,7 @@
 using Infrastructure.Data;
 using Infrastructure.Data.Repositories;
 using MauiApp2.Services;
+using MauiApp2.Services.AI;
 using MauiApp2.Services.AI.Schemas;
 using Domain.Shared.Models;
 using Microsoft.Extensions.Logging;
@@ -17,17 +18,20 @@ namespace MauiApp2.Features.Memory
     {
         private readonly IPetDataStore _store;
         private readonly LocalApiService _api;
+        private readonly ICompanionPromptBuilder _promptBuilder;
         private readonly ConfigurationService _config;
         private readonly ILogger<MemoryService> _logger;
 
         public MemoryService(
             IPetDataStore store,
             LocalApiService api,
+            ICompanionPromptBuilder promptBuilder,
             ConfigurationService config,
             ILogger<MemoryService> logger)
         {
             _store = store;
             _api = api;
+            _promptBuilder = promptBuilder;
             _config = config;
             _logger = logger;
         }
@@ -66,19 +70,7 @@ namespace MauiApp2.Features.Memory
                 var conversationText = string.Join("\n", messages.Select(m => $"{m.Sender}: {m.Content}"));
 
                 // Extract memories using AI
-                var prompt = $@"Analyze this conversation and extract important facts about the user that should be remembered for future conversations.
-
-Conversation:
-{conversationText}
-
-Guidelines:
-- Only extract facts explicitly mentioned by the user
-- Be specific and concrete
-- Combine related facts into single memories
-- Importance 4-5: Core interests, significant events, important goals
-- Importance 2-3: Casual mentions, minor events
-- Importance 1: Very minor details
-- type must be one of: Interest, Event, Preference, Goal";
+                var prompt = _promptBuilder.BuildMemoryExtractionPrompt(conversationText);
 
                 var response = await _api.GenerateTextAsync(prompt, typeof(MemoryExtractionSchema));
                 var extractionData = JsonSerializer.Deserialize<MemoryExtractionData>(response);

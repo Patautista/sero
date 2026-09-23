@@ -34,13 +34,26 @@ namespace MauiApp2.Features.MentalModels.Models
                 sb.AppendLine("- No proficiency data yet (assume an early beginner).");
             }
 
+            var frontierConcepts = request.AreaProgress.GetFrontierByKind(request.SkillAreaCatalog, SkillAreaKind.Concept, take: 2);
+            var frontierTopics = request.AreaProgress.GetFrontierByKind(request.SkillAreaCatalog, SkillAreaKind.Topic, take: 2);
+            if (frontierConcepts.Count > 0 || frontierTopics.Count > 0)
+            {
+                sb.AppendLine("NEXT SKILL AREAS ON THE LEARNING PATH:");
+
+                foreach (var area in frontierConcepts.Concat(frontierTopics))
+                {
+                    sb.AppendLine($"- {area.Name} ({area.Kind}, stage {area.Stage}): {request.AreaProgress[area.Id]}/100");
+                }
+            }
+
             if (request.ActiveChallenges.Count > 0)
             {
                 sb.AppendLine("ACTIVE PRACTICE CHALLENGES:");
                 foreach (var challenge in request.ActiveChallenges)
                 {
+                    var areaName = request.SkillAreaCatalog.Find(challenge.Concept)?.Name ?? challenge.Concept;
                     sb.AppendLine(
-                        $"- {challenge.Concept} ({challenge.MistakeType}): {challenge.ConsecutiveCorrectCount}/{PracticeChallenge.MasteryThreshold} correct in a row — keep weaving in natural prompts or questions that require this construction, without explicitly announcing a test.");
+                        $"- {areaName} ({challenge.MistakeType}): {challenge.ConsecutiveCorrectCount}/{PracticeChallenge.MasteryThreshold} correct in a row — keep weaving in natural prompts or questions that require this construction, without explicitly announcing a test.");
                 }
             }
 

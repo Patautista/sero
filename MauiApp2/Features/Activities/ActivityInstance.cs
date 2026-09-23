@@ -85,6 +85,9 @@ namespace MauiApp2.Features.Activities
         /// <summary>Per-skill score deltas (can be negative), keyed by skill.</summary>
         public Dictionary<SkillType, int> SkillAdjustments { get; set; } = new();
 
+        /// <summary>Per-area progress deltas (can be negative), keyed by skill-area id.</summary>
+        public Dictionary<string, int> AreaAdjustments { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+
         /// <summary>The agent's private rationale for the adjustments.</summary>
         public string Reasoning { get; set; } = string.Empty;
     }

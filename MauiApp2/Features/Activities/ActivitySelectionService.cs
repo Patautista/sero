@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Domain.Shared.Models;
 using Infrastructure.Data.Repositories;
+using MauiApp2.Features.Skills;
 using Microsoft.Extensions.Logging;
 
 namespace MauiApp2.Features.Activities
@@ -19,11 +21,16 @@ namespace MauiApp2.Features.Activities
         public const int DefaultSkillGain = 5;
 
         private readonly IPetDataStore _store;
+        private readonly ISkillAreaCatalogProvider _skillAreaCatalogProvider;
         private readonly ILogger<ActivitySelectionService> _logger;
 
-        public ActivitySelectionService(IPetDataStore store, ILogger<ActivitySelectionService> logger)
+        public ActivitySelectionService(
+            IPetDataStore store,
+            ISkillAreaCatalogProvider skillAreaCatalogProvider,
+            ILogger<ActivitySelectionService> logger)
         {
             _store = store;
+            _skillAreaCatalogProvider = skillAreaCatalogProvider;
             _logger = logger;
         }
 
@@ -31,9 +38,36 @@ namespace MauiApp2.Features.Activities
         public IReadOnlyList<LearningActivity> GetEligibleActivities(SkillProfile skills) =>
             ActivityRecommender.GetEligible(skills, ActivityCatalog.GetActivities());
 
+        /// <summary>
+        /// Eligible activities ordered to favour the learner's current frontier skill areas.
+        /// </summary>
+        public IReadOnlyList<LearningActivity> GetEligibleActivities(
+            SkillProfile skills,
+            AreaProgress areaProgress,
+            SkillAreaCatalog catalog)
+        {
+            ArgumentNullException.ThrowIfNull(areaProgress);
+            ArgumentNullException.ThrowIfNull(catalog);
+
+            var frontierIds = areaProgress.GetFrontier(catalog)
+                .Select(a => a.Id)
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+            return ActivityRecommender.GetEligible(skills, ActivityCatalog.GetActivities())
+                .OrderByDescending(a => ActivityRecommender.Score(skills, a, frontierIds))
+                .ThenBy(a => a.Name, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
+
         /// <summary>The best next activity for the given profile, or null if none are eligible.</summary>
         public LearningActivity? RecommendActivity(SkillProfile skills) =>
             ActivityRecommender.Recommend(skills, ActivityCatalog.GetActivities());
+
+        public LearningActivity? RecommendActivity(
+            SkillProfile skills,
+            AreaProgress areaProgress,
+            SkillAreaCatalog catalog) =>
+            ActivityRecommender.Recommend(skills, areaProgress, catalog, ActivityCatalog.GetActivities());
 
         /// <summary>Loads the current user's skills and recommends the best next activity.</summary>
         public async Task<LearningActivity?> GetRecommendedActivityAsync()
@@ -45,36 +79,39 @@ namespace MauiApp2.Features.Activities
                 return null;
             }
 
-            return RecommendActivity(SkillProfile.FromJson(profile.SkillsJson));
+            var catalog = await _skillAreaCatalogProvider.GetCatalogAsync();
+            return RecommendActivity(
+                profile.Skills,
+                profile.AreaProgress,
+                catalog);
         }
 
         /// <summary>Loads the current user's skill profile, or an empty profile when none exists.</summary>
         public async Task<SkillProfile> GetCurrentSkillProfileAsync()
         {
             var profile = await _store.UserProfiles.FirstOrDefaultAsync(p => true);
-            return SkillProfile.FromJson(profile?.SkillsJson);
+            return profile?.Skills ?? new SkillProfile();
         }
 
         /// <summary>
-        /// Applies structured per-skill adjustments produced by the Activity Agent's
-        /// evaluation to the current user profile and persists them. Deltas may be
-        /// negative. Returns the updated skill profile, or null if no profile exists.
-        /// This keeps skill persistence owned by the selection service, independent of
-        /// how the Activity Agent decided the adjustments.
+        /// Applies structured skill and area-progress adjustments produced by the Activity
+        /// Agent's evaluation to the current user profile and persists them. Area ids are
+        /// validated against the packaged skill-area catalog before they are accepted.
         /// </summary>
-        public async Task<SkillProfile?> ApplySkillAdjustmentsAsync(
-            IReadOnlyDictionary<SkillType, int> skillAdjustments)
+        public async Task<(SkillProfile Skills, AreaProgress AreaProgress)?> ApplyActivityAdjustmentsAsync(
+            IReadOnlyDictionary<SkillType, int> skillAdjustments,
+            IReadOnlyDictionary<string, int>? areaAdjustments)
         {
             ArgumentNullException.ThrowIfNull(skillAdjustments);
 
             var profileTable = await _store.UserProfiles.FirstOrDefaultAsync(p => true);
             if (profileTable is null)
             {
-                _logger.LogWarning("No user profile found; cannot apply skill adjustments.");
+                _logger.LogWarning("No user profile found; cannot apply activity adjustments.");
                 return null;
             }
 
-            var skills = SkillProfile.FromJson(profileTable.SkillsJson);
+            var skills = profileTable.Skills;
             foreach (var (skill, delta) in skillAdjustments)
             {
                 if (delta != 0)
@@ -83,15 +120,31 @@ namespace MauiApp2.Features.Activities
                 }
             }
 
-            profileTable.SkillsJson = skills.ToJson();
+            var areaProgress = profileTable.AreaProgress;
+            if (areaAdjustments is { Count: > 0 })
+            {
+                var catalog = await _skillAreaCatalogProvider.GetCatalogAsync();
+                foreach (var (areaId, delta) in areaAdjustments)
+                {
+                    if (delta == 0 || string.IsNullOrWhiteSpace(areaId) || !catalog.Contains(areaId))
+                    {
+                        continue;
+                    }
+
+                    areaProgress.Adjust(areaId, delta);
+                }
+            }
+
             profileTable.LastActiveAt = DateTime.UtcNow;
+            _store.UserProfiles.Update(profileTable);
             await _store.SaveChangesAsync();
 
             _logger.LogInformation(
-                "Applied activity skill adjustments; updated skills: {Skills}",
-                profileTable.SkillsJson);
+                "Applied activity adjustments; updated skills: {Skills}; updated area progress: {AreaProgress}",
+                profileTable.Skills.ToStorage(),
+                profileTable.AreaProgress.ToStorage());
 
-            return skills;
+            return (skills, areaProgress);
         }
     }
 }

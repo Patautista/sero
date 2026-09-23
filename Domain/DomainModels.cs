@@ -74,6 +74,7 @@ namespace Domain.Shared.Models
         public string InterestsJson { get; set; } = "[]";
         public string ActivityPatternsJson { get; set; } = "{}";
         public string SkillsJson { get; set; } = "{}";
+        public string AreaProgressJson { get; set; } = "{}";
         public DateTime OnboardedAt { get; set; }
         public DateTime LastActiveAt { get; set; }
 
@@ -95,6 +96,16 @@ namespace Domain.Shared.Models
         {
             get => SkillProfile.FromJson(SkillsJson);
             set => SkillsJson = value?.ToJson() ?? "{}";
+        }
+
+        /// <summary>
+        /// Progress through concept/topic skill areas, stored independently from the
+        /// broad Reading/Writing/Listening profile.
+        /// </summary>
+        public AreaProgress AreaProgress
+        {
+            get => AreaProgress.FromJson(AreaProgressJson);
+            set => AreaProgressJson = value?.ToJson() ?? "{}";
         }
 
         public Dictionary<int, List<DateTime>> ActivityPatterns

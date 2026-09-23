@@ -1,0 +1,250 @@
+.skill-stats-page {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.skill-stats-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.skill-stats-header h2 {
+    margin: 0;
+}
+
+.skill-stats-subtitle {
+    margin: 0.35rem 0 0;
+    color: #667085;
+}
+
+.back-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    border-radius: 8px;
+    color: inherit;
+}
+
+.back-button:hover {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.skill-stats-state,
+.skill-summary-card,
+.skill-card,
+.frontier-card,
+.area-row,
+.topic-chip {
+    background: #fff;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+.skill-stats-state {
+    padding: 1rem 1.25rem;
+}
+
+.skill-stats-error {
+    color: #b42318;
+}
+
+.skill-summary-card {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+    background: linear-gradient(135deg, #eef2ff 0%, #f8fafc 100%);
+}
+
+.skill-summary-label {
+    font-size: 0.9rem;
+    color: #667085;
+}
+
+.skill-summary-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #312e81;
+}
+
+.skill-summary-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    text-align: right;
+    color: #475467;
+    font-size: 0.95rem;
+}
+
+.skill-section {
+    margin-bottom: 1.5rem;
+}
+
+.skill-section-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.85rem;
+}
+
+.skill-section-header h3,
+.stage-group-header h4,
+.area-row h5,
+.topic-chip h5,
+.frontier-card h4,
+.skill-card h4 {
+    margin: 0;
+}
+
+.skill-section-caption,
+.stage-group-header span,
+.area-row-prereqs,
+.frontier-meta,
+.skill-card-level {
+    color: #667085;
+    font-size: 0.9rem;
+}
+
+.skill-card-grid,
+.frontier-grid {
+    display: grid;
+    gap: 0.9rem;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.skill-card,
+.frontier-card,
+.topic-chip,
+.area-row {
+    padding: 1rem;
+}
+
+.skill-card-header,
+.frontier-card-top,
+.topic-chip-header,
+.area-row-main,
+.area-row-title-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.area-row-title-wrap {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.skill-card-score,
+.area-row-score {
+    font-weight: 700;
+    color: #312e81;
+}
+
+.skill-progress-track {
+    width: 100%;
+    height: 10px;
+    background: #e5e7eb;
+    border-radius: 999px;
+    overflow: hidden;
+    margin: 0.85rem 0 0.55rem;
+}
+
+.skill-progress-track.compact {
+    height: 8px;
+    margin-bottom: 0;
+}
+
+.skill-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
+    border-radius: inherit;
+}
+
+.area-kind-pill,
+.stage-pill,
+.mastered-pill {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 0.2rem 0.65rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.area-kind-concept {
+    background: #ede9fe;
+    color: #5b21b6;
+}
+
+.area-kind-topic {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.stage-pill {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.mastered-pill {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.stage-group {
+    margin-bottom: 1rem;
+}
+
+.stage-group-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.65rem;
+}
+
+.area-list,
+.topic-chip-grid {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.topic-chip-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.area-row.mastered,
+.topic-chip.mastered {
+    border-color: rgba(34, 197, 94, 0.35);
+}
+
+.skill-empty-state {
+    padding: 1rem;
+    border-radius: 12px;
+    background: #f8fafc;
+    color: #667085;
+}
+
+@media (max-width: 640px) {
+    .skill-stats-header,
+    .skill-summary-card,
+    .skill-section-header,
+    .stage-group-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .skill-summary-meta {
+        text-align: left;
+    }
+}

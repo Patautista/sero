@@ -44,7 +44,6 @@ namespace Infrastructure.Data
 
             try
             {
-                _context.BeginTrans();
                 _context.DropUserCollections();
 
                 var companion = _context.Companions.FindById(1);
@@ -57,13 +56,11 @@ namespace Infrastructure.Data
                     _context.Companions.Update(companion);
                 }
 
-                _context.Commit();
                 _logger.LogInformation("User data cleared successfully");
                 return Task.CompletedTask;
             }
             catch (Exception ex)
             {
-                _context.Rollback();
                 _logger.LogError(ex, "Error clearing user data");
                 throw;
             }
@@ -80,11 +77,9 @@ namespace Infrastructure.Data
 
             try
             {
-                _context.BeginTrans();
                 _context.DropUserCollections();
                 _context.Companions.DeleteAll();
                 _context.Companions.Insert(PetDbContext.DefaultCompanion);
-                _context.Commit();
                 _context.EnsureIndexes();
 
                 _logger.LogInformation("✅ Database reset complete");
@@ -92,7 +87,6 @@ namespace Infrastructure.Data
             }
             catch (Exception ex)
             {
-                _context.Rollback();
                 _logger.LogError(ex, "❌ Error during database reset");
                 throw;
             }

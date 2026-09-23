@@ -19,6 +19,7 @@ using MauiApp2.Features.MentalModels.Strategy;
 using MauiApp2.Features.Onboarding;
 using MauiApp2.Features.ProactiveMessages;
 using MauiApp2.Features.QuickActions;
+using MauiApp2.Features.Skills;
 using MauiApp2.Services;
 using Microsoft.Extensions.Logging;
 using Radzen;
@@ -54,7 +55,11 @@ namespace MauiApp2
 
             // Database
             var dbPath = Path.Combine(FileSystem.AppDataDirectory, Path.ChangeExtension(config.DatabaseFileName, ".litedb"));
-            builder.Services.AddSingleton<ILiteDatabase>(_ => new LiteDatabase(dbPath));
+            builder.Services.AddSingleton<ILiteDatabase>(_ =>
+            {
+                UserProfileTable.ConfigureBsonMapper(BsonMapper.Global);
+                return new LiteDatabase(dbPath);
+            });
             builder.Services.AddScoped<PetDbContext>();
             builder.Services.AddScoped<PetDbContextInitialiser>();
             builder.Services.AddScoped<IPetDataStore, LiteDbPetDataStore>();
@@ -70,6 +75,7 @@ namespace MauiApp2
             builder.Services.AddSingleton<IApiService>(sp => sp.GetRequiredService<LocalApiService>());
             builder.Services.AddSingleton<Services.NotificationService>();
             builder.Services.AddSingleton<ICompanionPromptBuilder, CompanionPromptBuilder>();
+            builder.Services.AddSingleton<IActivityPromptBuilder, ActivityPromptBuilder>();
             builder.Services.AddSingleton<LanguageDetectionService>();
 
             // Voice / TTS — powers audio-only companion messages (e.g. listening activities).
@@ -100,6 +106,7 @@ namespace MauiApp2
             builder.Services.AddScoped<MemoryService>();
             builder.Services.AddScoped<TimingLearningService>();
             builder.Services.AddScoped<ActivitySelectionService>();
+            builder.Services.AddSingleton<ISkillAreaCatalogProvider, SkillAreaCatalogProvider>();
 
             // Activity Agent architecture — the dedicated agent that conducts and evaluates
             // learning activities, decoupled from the conversation engine. The instance store

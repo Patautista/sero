@@ -46,6 +46,8 @@ namespace MauiApp2.Features.Chat
         public List<ChatMessage> ConversationHistory { get; set; } = new();
         public List<LearningActivity> EligibleActivities { get; set; } = new();
         public SkillProfile UserSkillProfile { get; set; } = new();
+        public AreaProgress UserAreaProgress { get; set; } = new();
+        public SkillAreaCatalog? SkillAreaCatalog { get; set; }
 
         /// <summary>
         /// Tracks whether the user has completed a learning activity in the last 15 minutes.

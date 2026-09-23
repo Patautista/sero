@@ -1,4 +1,5 @@
 using Business.Audio;
+using MauiApp2.Services.AI;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Logging;
 using System;
@@ -15,13 +16,19 @@ namespace MauiApp2.Services
     {
         private readonly IChatClient _chatClient;
         private readonly ISpeechService? _speechService;
+        private readonly ICompanionPromptBuilder _promptBuilder;
         private readonly ILogger<LocalApiService> _logger;
         private readonly Dictionary<string, string> _translationCache = new();
 
-        public LocalApiService(IChatClient chatClient, ILogger<LocalApiService> logger, ISpeechService? speechService = null)
+        public LocalApiService(
+            IChatClient chatClient,
+            ILogger<LocalApiService> logger,
+            ICompanionPromptBuilder promptBuilder,
+            ISpeechService? speechService = null)
         {
             _chatClient = chatClient;
             _logger = logger;
+            _promptBuilder = promptBuilder;
             _speechService = speechService;
         }
 
@@ -43,11 +50,7 @@ namespace MauiApp2.Services
                     return cachedTranslation;
                 }
 
-                var prompt = $@"Translate the following text from {sourceLang} to {targetLang}. Return ONLY the translation, no explanations.
-
-Text to translate: ""{text}""
-
-Translation:";
+                var prompt = _promptBuilder.BuildTranslationPrompt(text, sourceLang, targetLang);
 
                 var completion = await _chatClient.GetResponseAsync([new ChatMessage(ChatRole.User, prompt)]);
                 var translation = (completion.Messages[^1].Text ?? string.Empty).Trim().Trim('"');
@@ -90,20 +93,7 @@ Translation:";
         {
             try
             {
-                var prompt = $@"Analyze the following {language} text word-by-word or phrase-by-phrase. Break it down into meaningful chunks with translations and grammar notes.
-
-Text: ""{text}""
-
-Return a JSON object with this structure:
-{{
-  ""chunks"": [
-    {{
-      ""word"": ""word or phrase"",
-      ""translation"": ""English translation"",
-      ""note"": ""grammar note or context (optional)""
-    }}
-  ]
-}}";
+                var prompt = _promptBuilder.BuildLexicalAnalysisPrompt(text, language);
 
                 var jsonOptions = new ChatOptions { ResponseFormat = ChatResponseFormat.Json };
                 var completion = await _chatClient.GetResponseAsync([new ChatMessage(ChatRole.User, prompt)], jsonOptions);
@@ -124,24 +114,7 @@ Return a JSON object with this structure:
         {
             try
             {
-                var prompt = $@"Analyze the following {language} text for grammar, vocabulary, and spelling mistakes.
-
-Text: ""{text}""
-
-Return a JSON object with this structure:
-{{
-  ""hasMistakes"": true/false,
-  ""mistakes"": [
-    {{
-      ""segment"": ""incorrect segment from the text"",
-      ""corrected"": ""correct version"",
-      ""type"": ""Grammar"" or ""Vocabulary"" or ""Spelling"",
-      ""concept"": ""brief explanation like 'verb conjugation' or 'article usage'""
-    }}
-  ]
-}}
-
-If there are no mistakes, return {{""hasMistakes"": false, ""mistakes"": []}}";
+                var prompt = _promptBuilder.BuildMistakeDetectionPrompt(text, language);
 
                 var jsonOptions = new ChatOptions { ResponseFormat = ChatResponseFormat.Json };
                 var completion = await _chatClient.GetResponseAsync([new ChatMessage(ChatRole.User, prompt)], jsonOptions);

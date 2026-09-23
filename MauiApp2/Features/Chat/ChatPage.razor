@@ -3,6 +3,7 @@
 @using MauiApp2.Features.Onboarding
 @using MauiApp2.Components
 @using MauiApp2.Services
+@using MauiApp2.Services.AI
 @using MauiApp2.Services.Audio
 @using MauiApp1.Services.Cache
 @using Domain.Shared.Models
@@ -20,6 +21,7 @@
 @inject Microsoft.Extensions.AI.IChatClient ChatClient
 @inject Microsoft.Extensions.Logging.ILogger<ChatPage> Logger
 @inject AiDefinitionCache AiDefinitionCache
+@inject ICompanionPromptBuilder PromptBuilder
 
 <div class="chat-container">
     <div class="chat-header">
@@ -470,7 +472,7 @@
             // If no definition found, use AI provider as fallback
             if (definitionResult?.Entries == null || !definitionResult.Entries.Any())
             {
-                var aiHelper = new AiDefinitionHelper(ChatClient, Logger, AiDefinitionCache);
+                var aiHelper = new AiDefinitionHelper(ChatClient, Logger, AiDefinitionCache, PromptBuilder);
                 definitionResult = await aiHelper.GenerateDefinitionAsync(selectedText, targetLanguage, nativeLanguage);
             }
 

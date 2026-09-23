@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Domain.Shared.Models;
+using MauiApp2.Services.AI;
 using Microsoft.Extensions.Logging;
 
 namespace MauiApp2.Features.Activities
@@ -133,11 +134,11 @@ namespace MauiApp2.Features.Activities
             }
 
             string? skillUpdateSummary = null;
-            if (result.Evaluation is { SkillAdjustments.Count: > 0 } evaluation)
+            if (result.Evaluation is { } evaluation)
             {
-                await _selection.ApplySkillAdjustmentsAsync(evaluation.SkillAdjustments);
+                await _selection.ApplyActivityAdjustmentsAsync(evaluation.SkillAdjustments, evaluation.AreaAdjustments);
                 _logger.LogInformation(
-                    "Applied skill adjustments for completed activity '{Activity}': {Reasoning}",
+                    "Applied activity adjustments for completed activity '{Activity}': {Reasoning}",
                     instance.Definition.Name, evaluation.Reasoning);
 
                 skillUpdateSummary = BuildSkillUpdateSummary(evaluation.SkillAdjustments);
