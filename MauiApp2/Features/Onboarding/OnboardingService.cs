@@ -1,8 +1,8 @@
+using Infrastructure.Data.Repositories;
 using Infrastructure.Data;
 using MauiApp2.Services;
 using MauiApp2.Services.AI;
 using Domain.Shared.Models;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -12,20 +12,20 @@ namespace MauiApp2.Features.Onboarding
 {
     public class OnboardingService
     {
-        private readonly PetDbContext _db;
+        private readonly IPetDataStore _store;
         private readonly LocalApiService _api;
         private readonly ConfigurationService _config;
         private readonly ICompanionPromptBuilder _promptBuilder;
         private readonly ILogger<OnboardingService> _logger;
 
         public OnboardingService(
-            PetDbContext db,
+            IPetDataStore store,
             LocalApiService api,
             ConfigurationService config,
             ICompanionPromptBuilder promptBuilder,
             ILogger<OnboardingService> logger)
         {
-            _db = db;
+            _store = store;
             _api = api;
             _config = config;
             _promptBuilder = promptBuilder;
@@ -51,8 +51,8 @@ namespace MauiApp2.Features.Onboarding
                     LastActiveAt = DateTime.UtcNow
                 };
 
-                _db.UserProfiles.Add(userProfile);
-                await _db.SaveChangesAsync();
+                _store.UserProfiles.Add(userProfile);
+                await _store.SaveChangesAsync();
 
                 // Get or create companion
                 var companion = await GetOrCreateCompanionAsync();
@@ -69,8 +69,8 @@ namespace MauiApp2.Features.Onboarding
                     IsActive = true
                 };
 
-                _db.Conversations.Add(conversation);
-                await _db.SaveChangesAsync();
+                _store.Conversations.Add(conversation);
+                await _store.SaveChangesAsync();
 
                 // Add welcome message to conversation
                 var message = new MessageTable
@@ -83,8 +83,8 @@ namespace MauiApp2.Features.Onboarding
                     LanguageCode = request.TargetLanguage
                 };
 
-                _db.Messages.Add(message);
-                await _db.SaveChangesAsync();
+                _store.Messages.Add(message);
+                await _store.SaveChangesAsync();
 
                 _logger.LogInformation($"Onboarding completed successfully for user ID: {userProfile.Id}");
 
@@ -111,14 +111,14 @@ namespace MauiApp2.Features.Onboarding
         {
             try
             {
-                var companionTable = await _db.Companions.FirstOrDefaultAsync();
+                var companionTable = await _store.Companions.FirstOrDefaultAsync(c => true);
 
                 if (companionTable == null)
                 {
                     _logger.LogWarning("No companion found in database, this should not happen");
                     companionTable = PetDbContext.DefaultCompanion;
-                    _db.Companions.Add(companionTable);
-                    await _db.SaveChangesAsync();
+                    _store.Companions.Add(companionTable);
+                    await _store.SaveChangesAsync();
                 }
 
                 return new Companion
@@ -129,6 +129,8 @@ namespace MauiApp2.Features.Onboarding
                     Personality = companionTable.Personality,
                     CurrentMood = companionTable.CurrentMood,
                     LastMoodChange = companionTable.LastMoodChange,
+                    EnergyLevel = companionTable.EnergyLevel,
+                    LastEnergyUpdate = companionTable.LastEnergyUpdate,
                     CreatedAt = companionTable.CreatedAt
                 };
             }
@@ -173,7 +175,7 @@ namespace MauiApp2.Features.Onboarding
         {
             try
             {
-                return await _db.UserProfiles.AnyAsync();
+                return await _store.UserProfiles.AnyAsync();
             }
             catch (Exception ex)
             {
@@ -186,7 +188,7 @@ namespace MauiApp2.Features.Onboarding
         {
             try
             {
-                var userProfileTable = await _db.UserProfiles.FirstOrDefaultAsync();
+                var userProfileTable = await _store.UserProfiles.FirstOrDefaultAsync(p => true);
 
                 if (userProfileTable == null)
                     return null;

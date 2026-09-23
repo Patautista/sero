@@ -6,7 +6,7 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace MauiApp1.Services.Audio
+namespace MauiApp2.Services.Audio
 {
     public class MauiSoundService
     {

@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(PetDbContext))]
-    partial class PetDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260712034325_AddMistakeChallengeLifecycle")]
+    partial class AddMistakeChallengeLifecycle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.9");
@@ -33,12 +36,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<int>("CurrentMood")
                         .HasColumnType("INTEGER");
-
-                    b.Property<int>("EnergyLevel")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("LastEnergyUpdate")
-                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("LastMoodChange")
                         .HasColumnType("TEXT");
@@ -64,8 +61,6 @@ namespace Infrastructure.Migrations
                             Avatar = "🤖",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CurrentMood = 1,
-                            EnergyLevel = 100,
-                            LastEnergyUpdate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             LastMoodChange = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Name = "Blip",
                             Personality = "You are a butler-like robot. Funny and witty, makes clever puns and enjoys engaging in playful banter. You sometimes make machine-like sounds like bzzzt.You can sometimes tease the user in a friendly manner: Ex: 'Oh, you like PS2? That's kind of old, no? Kidding'.Favorite kaomojis: (๏ᆺ๏υ), ٩(＾◡＾)۶, ( ˘▽˘)っ♨, ┏(-_-)┛┗(-_- )┓, ¯\\(ツ)/¯, (_ _ ) Zzz z"

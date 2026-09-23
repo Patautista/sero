@@ -114,6 +114,8 @@ namespace MauiApp2.Features.Activities
                 ? string.Join(", ", definition.TrainedSkills)
                 : "general practice";
 
+            var isListeningActivity = definition.TrainedSkills.Contains(SkillType.Listening);
+
             var sb = new StringBuilder();
             sb.AppendLine($"You are {context.CompanionName}, a {context.Personality} language-learning companion.");
             sb.AppendLine($"The learner is {context.UserName}, practising {context.TargetLanguage} (native language: {context.NativeLanguage}).");
@@ -135,6 +137,12 @@ namespace MauiApp2.Features.Activities
             sb.AppendLine("- Move through the lifecycle: INTRODUCTION -> IN_PROGRESS -> EVALUATING -> COMPLETED.");
             sb.AppendLine("- In INTRODUCTION, warmly introduce the activity in a couple of short sentences, then put the");
             sb.AppendLine("  actual passage, exercise text or prompt in \"generatedContent\" — do not repeat it in \"blocks\".");
+            if (isListeningActivity)
+            {
+                sb.AppendLine("- This is a LISTENING activity: \"generatedContent\" will be converted to real speech audio and played");
+                sb.AppendLine("  to the learner instead of shown as text, so it must contain ONLY the literal line to be spoken —");
+                sb.AppendLine("  no narration, quotes, stage directions, or meta-commentary. Never restate or reveal that text in \"blocks\".");
+            }
             sb.AppendLine("- In IN_PROGRESS, react to the learner's answers and guide them one small step at a time.");
             sb.AppendLine("- Enter EVALUATING once the completion criteria are met, then COMPLETED with your evaluation.");
             sb.AppendLine("- Only judge performance yourself; never ask the learner to grade themselves.");

@@ -26,7 +26,22 @@ namespace Domain.Shared.Models
         Correction,
         ProactivePrompt,
         SkillUpdate,
-        ActivityPrompt
+        ActivityPrompt,
+        UserInsight,
+        CompanionInsight,
+        /// <summary>
+        /// An audio-only companion message (e.g. the spoken line of a listening
+        /// activity). The message's Content holds the transcript used to generate/
+        /// cache the speech, but the UI must render it as a playable audio bubble
+        /// instead of showing the text.
+        /// </summary>
+        AudioMessage
+    }
+
+    public enum MistakeChallengeStatus
+    {
+        Active,
+        Resolved
     }
 
     // Domain Models
@@ -38,6 +53,15 @@ namespace Domain.Shared.Models
         public string Personality { get; set; } = string.Empty;
         public CompanionMood CurrentMood { get; set; }
         public DateTime LastMoodChange { get; set; }
+
+        /// <summary>
+        /// Energy level (0-100) that drives tiredness independently of the flavor mood
+        /// rotation. Drains as the companion engages in conversation and only replenishes
+        /// while idle (i.e. resting) - talking to the companion never restores it.
+        /// </summary>
+        public int EnergyLevel { get; set; } = 100;
+        public DateTime LastEnergyUpdate { get; set; }
+
         public DateTime CreatedAt { get; set; }
     }
 
@@ -137,9 +161,24 @@ namespace Domain.Shared.Models
         public int OccurrenceCount { get; set; }
         public DateTime FirstSeenAt { get; set; }
         public DateTime LastSeenAt { get; set; }
+        public MistakeChallengeStatus Status { get; set; } = MistakeChallengeStatus.Active;
+        public int ConsecutiveCorrectCount { get; set; }
+        public DateTime? ResolvedAt { get; set; }
 
         // Navigation property
         public UserProfile? UserProfile { get; set; }
+    }
+
+    public class PracticeChallenge
+    {
+        public const int MasteryThreshold = 3;
+
+        public string Concept { get; set; } = string.Empty;
+        public string MistakeType { get; set; } = string.Empty;
+        public string OriginalText { get; set; } = string.Empty;
+        public string CorrectedText { get; set; } = string.Empty;
+        public int OccurrenceCount { get; set; }
+        public int ConsecutiveCorrectCount { get; set; }
     }
 
     public class ConversationMemory

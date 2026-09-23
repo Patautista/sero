@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		apk_script.txt = apk_script.txt
 		ngrok.txt = ngrok.txt
 		MauiApp2\Powering the New Microsoft Agent Framework with Gemini 3.x _ by Saverio Terracciano _ Google Cloud - Community _ Medium.html = MauiApp2\Powering the New Microsoft Agent Framework with Gemini 3.x _ by Saverio Terracciano _ Google Cloud - Community _ Medium.html
+		skill-areas.json = skill-areas.json
+		tags.json = tags.json
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{69881B9C-6DB3-4B38-AF42-05D413003A58}"

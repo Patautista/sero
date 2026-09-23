@@ -1,11 +1,10 @@
 using Domain.Shared.Models;
 using Infrastructure.Data;
+using Infrastructure.Data.Repositories;
 using MauiApp2.Features.Activities;
 using MauiApp2.Services;
 using MauiApp2.Services.AI;
 using MauiApp2.Services.AI.Schemas;
-using Domain.Shared.Models;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -18,7 +17,7 @@ namespace MauiApp2.Features.Chat
 {
     public class ChatService
     {
-        private readonly PetDbContext _db;
+        private readonly IPetDataStore _store;
         private readonly LocalApiService _api;
         private readonly ConfigurationService _config;
         private readonly ActivitySelectionService _activitySelection;
@@ -28,7 +27,7 @@ namespace MauiApp2.Features.Chat
         private readonly ILogger<ChatService> _logger;
 
         public ChatService(
-            PetDbContext db,
+            IPetDataStore store,
             LocalApiService api,
             ConfigurationService config,
             ActivitySelectionService activitySelection,
@@ -37,7 +36,7 @@ namespace MauiApp2.Features.Chat
             LanguageDetectionService languageDetection,
             ILogger<ChatService> logger)
         {
-            _db = db;
+            _store = store;
             _api = api;
             _config = config;
             _activitySelection = activitySelection;
@@ -52,9 +51,9 @@ namespace MauiApp2.Features.Chat
             try
             {
                 // Try to find active conversation
-                var activeConversation = await _db.Conversations
-                    .Include(c => c.Messages)
+                var activeConversation = await _store.Conversations
                     .FirstOrDefaultAsync(c => c.UserProfileId == userProfileId && c.IsActive);
+                // Note: Include() not needed with LiteDB; load messages separately if needed
 
                 if (activeConversation == null)
                 {
@@ -67,8 +66,8 @@ namespace MauiApp2.Features.Chat
                         IsActive = true
                     };
 
-                    _db.Conversations.Add(activeConversation);
-                    await _db.SaveChangesAsync();
+                    _store.Conversations.Add(activeConversation);
+                    await _store.SaveChangesAsync();
 
                     _logger.LogInformation($"Created new conversation {activeConversation.Id} for user {userProfileId}");
                 }
@@ -93,11 +92,11 @@ namespace MauiApp2.Features.Chat
         {
             try
             {
-                var messages = await _db.Messages
-                    .Where(m => m.ConversationId == conversationId)
+                var allMessages = await _store.Messages.WhereAsync(m => m.ConversationId == conversationId);
+                var messages = allMessages
                     .OrderByDescending(m => m.Timestamp)
                     .Take(limit)
-                    .ToListAsync();
+                    .ToList();
 
                 return messages
                     .OrderBy(m => m.Timestamp)
@@ -126,8 +125,7 @@ namespace MauiApp2.Features.Chat
                 _logger.LogInformation($"User sending message in conversation {conversationId}");
 
                 // Get conversation and user profile
-                var conversation = await _db.Conversations
-                    .Include(c => c.UserProfile)
+                var conversation = await _store.Conversations
                     .FirstOrDefaultAsync(c => c.Id == conversationId);
 
                 if (conversation == null)
@@ -150,9 +148,9 @@ namespace MauiApp2.Features.Chat
                     LanguageCode = conversation.UserProfile?.TargetLanguage ?? "es"
                 };
 
-                _db.Messages.Add(userMessage);
+                _store.Messages.Add(userMessage);
                 conversation.LastMessageAt = DateTime.UtcNow;
-                await _db.SaveChangesAsync();
+                await _store.SaveChangesAsync();
 
                 // Generate companion response
                 var companionResponse = await GenerateCompanionResponseAsync(conversation, userMessage);
@@ -196,8 +194,7 @@ namespace MauiApp2.Features.Chat
 
         public async Task<ChatMessage> SaveUserMessageAsync(int conversationId, string content)
         {
-            var conversation = await _db.Conversations
-                .Include(c => c.UserProfile)
+            var conversation = await _store.Conversations
                 .FirstOrDefaultAsync(c => c.Id == conversationId)
                 ?? throw new InvalidOperationException("Conversation not found");
 
@@ -211,9 +208,9 @@ namespace MauiApp2.Features.Chat
                 LanguageCode = conversation.UserProfile?.TargetLanguage ?? "es"
             };
 
-            _db.Messages.Add(userMessage);
+            _store.Messages.Add(userMessage);
             conversation.LastMessageAt = DateTime.UtcNow;
-            await _db.SaveChangesAsync();
+            await _store.SaveChangesAsync();
 
             return new ChatMessage
             {
@@ -225,9 +222,11 @@ namespace MauiApp2.Features.Chat
             };
         }
 
-        public async Task<List<CorrectionData>?> GetCorrectionsAsync(int conversationId, string content, string targetLanguage, string nativeLanguage)
+        public async Task<CorrectionsResponse> GetCorrectionsAsync(int conversationId, string content, string targetLanguage, string nativeLanguage)
         {
-            if (!_config.EnableMistakeDetection) return null;
+            var response = new CorrectionsResponse();
+
+            if (!_config.EnableMistakeDetection) return response;
 
             try
             {
@@ -238,23 +237,28 @@ namespace MauiApp2.Features.Chat
                 if (!_activityOrchestrator.IsActivityActive(conversationId)
                     && _languageDetection.IsNativeLanguage(content, targetLanguage, nativeLanguage))
                 {
-                    return null;
+                    return response;
                 }
 
                 var analysis = await _api.DetectMistakesAsync(content, targetLanguage);
-                if (!analysis.HasMistakes || analysis.Mistakes.Count == 0) return null;
+                if (!analysis.HasMistakes || analysis.Mistakes.Count == 0) return response;
 
-                return analysis.Mistakes.Select(m => new CorrectionData
+                response.Corrections = analysis.Mistakes.Select(m => new CorrectionData
                 {
                     Original = m.Segment,
                     Corrected = m.Corrected,
                     Explanation = $"{m.Type}: {m.Concept}"
                 }).ToList();
+
+                // TODO: Get newly mastered concepts from language coaching service
+                response.NewlyMasteredConcepts = new();
+
+                return response;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error checking corrections");
-                return null;
+                return response;
             }
         }
 
@@ -262,11 +266,11 @@ namespace MauiApp2.Features.Chat
         {
             try
             {
-                var message = await _db.Messages.FindAsync(userMessageId);
+                var message = await _store.Messages.FindByIdAsync(userMessageId);
                 if (message != null)
                 {
                     message.CorrectionDataJson = JsonSerializer.Serialize(corrections);
-                    await _db.SaveChangesAsync();
+                    await _store.SaveChangesAsync();
                 }
             }
             catch (Exception ex)
@@ -275,16 +279,15 @@ namespace MauiApp2.Features.Chat
             }
         }
 
-        public async Task<List<ChatMessage>> GenerateCompanionMessageAsync(int conversationId, int userMessageId, List<CorrectionData>? corrections)
+        public async Task<List<ChatMessage>> GenerateCompanionMessageAsync(int conversationId, int userMessageId, List<CorrectionData>? corrections, List<string>? newlyMasteredConcepts = null)
         {
             try
             {
-                var conversation = await _db.Conversations
-                    .Include(c => c.UserProfile)
+                var conversation = await _store.Conversations
                     .FirstOrDefaultAsync(c => c.Id == conversationId)
                     ?? throw new InvalidOperationException("Conversation not found");
 
-                var userMessage = await _db.Messages.FindAsync(userMessageId)
+                var userMessage = await _store.Messages.FindByIdAsync(userMessageId)
                     ?? throw new InvalidOperationException("User message not found");
 
                 var context = await BuildResponseContextAsync(conversation);
@@ -357,8 +360,8 @@ namespace MauiApp2.Features.Chat
                     Timestamp = DateTime.UtcNow,
                     LanguageCode = "es"
                 };
-                _db.Messages.Add(fallback);
-                await _db.SaveChangesAsync();
+                _store.Messages.Add(fallback);
+                await _store.SaveChangesAsync();
 
                 return
                 [
@@ -415,8 +418,8 @@ namespace MauiApp2.Features.Chat
                 Timestamp = DateTime.UtcNow,
                 LanguageCode = languageCode
             };
-            _db.Messages.Add(message);
-            await _db.SaveChangesAsync();
+            _store.Messages.Add(message);
+            await _store.SaveChangesAsync();
 
             return new ChatMessage
             {
@@ -445,8 +448,8 @@ namespace MauiApp2.Features.Chat
                 Timestamp = DateTime.UtcNow,
                 LanguageCode = languageCode
             };
-            _db.Messages.Add(message);
-            await _db.SaveChangesAsync();
+            _store.Messages.Add(message);
+            await _store.SaveChangesAsync();
 
             return new ChatMessage
             {
@@ -481,8 +484,8 @@ namespace MauiApp2.Features.Chat
                     Timestamp = baseTimestamp.AddMilliseconds(i * 50),
                     LanguageCode = languageCode
                 };
-                _db.Messages.Add(companionMessage);
-                await _db.SaveChangesAsync();
+                _store.Messages.Add(companionMessage);
+                await _store.SaveChangesAsync();
 
                 results.Add(new ChatMessage
                 {
@@ -565,8 +568,8 @@ namespace MauiApp2.Features.Chat
                     CorrectionDataJson = corrections != null ? JsonSerializer.Serialize(corrections) : null
                 };
 
-                _db.Messages.Add(companionMessage);
-                await _db.SaveChangesAsync();
+                _store.Messages.Add(companionMessage);
+                await _store.SaveChangesAsync();
 
                 _logger.LogInformation($"Generated companion response for conversation {conversation.Id}");
 
@@ -587,8 +590,8 @@ namespace MauiApp2.Features.Chat
                     LanguageCode = conversation.UserProfile?.TargetLanguage ?? "es"
                 };
 
-                _db.Messages.Add(fallbackMessage);
-                await _db.SaveChangesAsync();
+                _store.Messages.Add(fallbackMessage);
+                await _store.SaveChangesAsync();
 
                 return fallbackMessage;
             }
@@ -596,12 +599,14 @@ namespace MauiApp2.Features.Chat
 
         private async Task<CompanionResponseContext> BuildResponseContextAsync(ConversationTable conversation)
         {
-            var userProfile = conversation.UserProfile ?? await _db.UserProfiles.FindAsync(conversation.UserProfileId);
-            var companion = await _db.Companions.FirstAsync();
+            var userProfile = conversation.UserProfile ?? await _store.UserProfiles.FindByIdAsync(conversation.UserProfileId);
+            var companion = await _store.Companions.FirstOrDefaultAsync(m => true);
 
             // Load recent memories
-            var memories = await _db.ConversationMemories
-                .Where(m => m.UserProfileId == conversation.UserProfileId)
+            var allMemories = await _store.ConversationMemories
+                .WhereAsync(m => m.UserProfileId == conversation.UserProfileId);
+
+            var memories = allMemories
                 .OrderByDescending(m => m.LastReferencedAt)
                 .ThenByDescending(m => m.Importance)
                 .Take(_config.MaxMemoriesPerRetrieval)
@@ -615,7 +620,7 @@ namespace MauiApp2.Features.Chat
                     Importance = m.Importance,
                     CreatedAt = m.CreatedAt
                 })
-                .ToListAsync();
+                .ToList();
 
             // Load recent conversation history
             var recentMessages = await LoadConversationHistoryAsync(conversation.Id, 12);
@@ -710,3 +715,4 @@ namespace MauiApp2.Features.Chat
 
             }
         }
+

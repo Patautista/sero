@@ -161,8 +161,9 @@ namespace MauiApp2.Features.Activities
         }
 
         /// <summary>
-        /// Builds a short, learner-facing summary of the non-zero skill deltas (e.g.
-        /// "Reading +5, Writing -2"), or null when nothing actually changed.
+        /// Builds a short summary of the non-zero skill deltas (e.g. "Reading +5,
+        /// Writing -2"), or null when nothing actually changed. The learner-facing framing
+        /// (and companion name) is added by the conversation engine when it is shown.
         /// </summary>
         private static string? BuildSkillUpdateSummary(IReadOnlyDictionary<SkillType, int> skillAdjustments)
         {
@@ -177,7 +178,7 @@ namespace MauiApp2.Features.Activities
             }
 
             var parts = changed.Select(kvp => $"{kvp.Key} {(kvp.Value > 0 ? "+" : string.Empty)}{kvp.Value}");
-            return $"📈 Skill update: {string.Join(", ", parts)}";
+            return string.Join(", ", parts);
         }
     }
 }

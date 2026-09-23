@@ -1,6 +1,6 @@
 using Infrastructure.Data;
+using Infrastructure.Data.Repositories;
 using MauiApp2.Services;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -11,16 +11,16 @@ namespace MauiApp2.Features.ProactiveMessages
 {
     public class TimingLearningService
     {
-        private readonly PetDbContext _db;
+        private readonly IPetDataStore _store;
         private readonly ConfigurationService _config;
         private readonly ILogger<TimingLearningService> _logger;
 
         public TimingLearningService(
-            PetDbContext db,
+            IPetDataStore store,
             ConfigurationService config,
             ILogger<TimingLearningService> logger)
         {
-            _db = db;
+            _store = store;
             _config = config;
             _logger = logger;
         }
@@ -36,17 +36,17 @@ namespace MauiApp2.Features.ProactiveMessages
                     Timestamp = DateTime.UtcNow
                 };
 
-                _db.UserActivities.Add(activity);
-                await _db.SaveChangesAsync();
+                _store.UserActivities.Add(activity);
+                await _store.SaveChangesAsync();
 
                 _logger.LogInformation($"Recorded activity: {activityType} for user {userProfileId}");
 
                 // Update user profile last active time
-                var userProfile = await _db.UserProfiles.FindAsync(userProfileId);
+                var userProfile = await _store.UserProfiles.FindByIdAsync(userProfileId);
                 if (userProfile != null)
                 {
                     userProfile.LastActiveAt = DateTime.UtcNow;
-                    await _db.SaveChangesAsync();
+                    await _store.SaveChangesAsync();
                 }
             }
             catch (Exception ex)
@@ -66,7 +66,7 @@ namespace MauiApp2.Features.ProactiveMessages
                 }
 
                 // Get all user profiles
-                var userProfiles = await _db.UserProfiles.ToListAsync();
+                var userProfiles = (await _store.UserProfiles.GetAllAsync()).ToList();
 
                 if (!userProfiles.Any())
                 {
@@ -141,9 +141,7 @@ namespace MauiApp2.Features.ProactiveMessages
             try
             {
                 // Get all user activities
-                var activities = await _db.UserActivities
-                    .Where(a => a.UserProfileId == userProfileId)
-                    .ToListAsync();
+                var activities = (await _store.UserActivities.WhereAsync(a => a.UserProfileId == userProfileId)).ToList();
 
                 if (!activities.Any())
                 {
@@ -188,12 +186,13 @@ namespace MauiApp2.Features.ProactiveMessages
             try
             {
                 // Get last proactive message sent to user
-                var lastMessage = await _db.Messages
-                    .Where(m => m.Conversation!.UserProfileId == userProfileId && 
+                var allMessages = await _store.Messages.GetAllAsync();
+                var lastMessage = allMessages
+                    .Where(m => m.Conversation?.UserProfileId == userProfileId && 
                                 m.SenderType == Domain.Shared.Models.SenderType.Companion &&
                                 m.MessageType == Domain.Shared.Models.MessageType.ProactivePrompt)
                     .OrderByDescending(m => m.Timestamp)
-                    .FirstOrDefaultAsync();
+                    .FirstOrDefault();
 
                 if (lastMessage == null)
                 {
@@ -217,13 +216,12 @@ namespace MauiApp2.Features.ProactiveMessages
                 var todayStart = DateTime.UtcNow.Date;
                 var todayEnd = todayStart.AddDays(1);
 
-                var count = await _db.Messages
-                    .Where(m => m.Conversation!.UserProfileId == userProfileId &&
+                var allMessages = await _store.Messages.GetAllAsync();
+                var count = allMessages.Count(m => m.Conversation?.UserProfileId == userProfileId &&
                                 m.SenderType == Domain.Shared.Models.SenderType.Companion &&
                                 m.MessageType == Domain.Shared.Models.MessageType.ProactivePrompt &&
                                 m.Timestamp >= todayStart &&
-                                m.Timestamp < todayEnd)
-                    .CountAsync();
+                                m.Timestamp < todayEnd);
 
                 return count;
             }
@@ -240,9 +238,8 @@ namespace MauiApp2.Features.ProactiveMessages
             {
                 var cutoff = DateTime.UtcNow.AddDays(-daysPast);
 
-                var activities = await _db.UserActivities
-                    .Where(a => a.UserProfileId == userProfileId && a.Timestamp >= cutoff)
-                    .ToListAsync();
+                var allActivities = await _store.UserActivities.WhereAsync(a => a.UserProfileId == userProfileId);
+                var activities = allActivities.Where(a => a.Timestamp >= cutoff).ToList();
 
                 var histogram = new Dictionary<int, int>();
                 for (int hour = 0; hour < 24; hour++)
@@ -259,13 +256,31 @@ namespace MauiApp2.Features.ProactiveMessages
             }
         }
 
+        /// <summary>
+        /// Gets the most recent learning activity (started) for the given user within the last specified minutes.
+        /// Returns null if no activity was found within the time window.
+        /// </summary>
+        public async Task<UserActivityTable?> GetMostRecentActivityAsync(int userProfileId, int minutesBack = 15)
+        {
+            try
+            {
+                var cutoffTime = DateTime.UtcNow.AddMinutes(-minutesBack);
+                var recentActivity = await _store.UserActivities.FirstOrDefaultAsync(a => a.UserProfileId == userProfileId && a.Timestamp >= cutoffTime);
+
+                return recentActivity;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting most recent activity");
+                return null;
+            }
+        }
+
         public async Task<ActivityInsights> GetActivityInsightsAsync(int userProfileId)
         {
             try
             {
-                var activities = await _db.UserActivities
-                    .Where(a => a.UserProfileId == userProfileId)
-                    .ToListAsync();
+                var activities = (await _store.UserActivities.WhereAsync(a => a.UserProfileId == userProfileId)).ToList();
 
                 if (!activities.Any())
                 {

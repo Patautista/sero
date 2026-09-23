@@ -1,0 +1,198 @@
+@page "/current-tasks"
+@using Infrastructure.Data
+@using Infrastructure.Data.Repositories
+@using Domain.Shared.Models
+@inject IPetDataStore DataStore
+@inject LanguageCoachingService CoachingService
+@inject NavigationManager Navigation
+
+<div class="settings-container">
+    <div class="settings-header">
+        <button class="back-button" @onclick="GoBack">←</button>
+        <h2>Current Tasks</h2>
+    </div>
+
+    @if (isLoading)
+    {
+        <p>Loading...</p>
+    }
+    else if (challenges.Count == 0)
+    {
+        <div class="empty-state">
+            <p>No active practice challenges right now. Keep chatting and I'll let you know if there's something to work on!</p>
+        </div>
+    }
+    else
+    {
+        <div class="settings-section">
+            <h3>Active Practice Challenges</h3>
+
+            @foreach (var challenge in challenges)
+            {
+                <div class="task-item">
+                    <div class="task-item-header">
+                        <span class="task-item-title">@challenge.Concept</span>
+                        <span class="task-item-type">@challenge.MistakeType</span>
+                    </div>
+                    <div class="task-item-example">
+                        <span class="task-item-original">@challenge.OriginalText</span>
+                        <span class="task-item-arrow">→</span>
+                        <span class="task-item-corrected">@challenge.CorrectedText</span>
+                    </div>
+                    <div class="task-item-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: @(ProgressPercent(challenge))%"></div>
+                        </div>
+                        <span class="progress-label">@challenge.ConsecutiveCorrectCount / @PracticeChallenge.MasteryThreshold correct in a row</span>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<style>
+    .settings-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 1rem;
+    }
+
+    .settings-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .settings-header h2 {
+        margin: 0;
+    }
+
+    .back-button {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0.25rem 0.5rem;
+        border-radius: 8px;
+        color: inherit;
+    }
+
+    .back-button:hover {
+        background: rgba(0, 0, 0, 0.08);
+    }
+
+    .settings-section h3 {
+        margin-bottom: 1rem;
+    }
+
+    .empty-state {
+        padding: 1.5rem;
+        border-radius: 12px;
+        background: rgba(0, 0, 0, 0.04);
+        text-align: center;
+    }
+
+    .task-item {
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .task-item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .task-item-title {
+        font-weight: 600;
+        font-size: 1.05rem;
+        text-transform: capitalize;
+    }
+
+    .task-item-type {
+        font-size: 0.8rem;
+        opacity: 0.7;
+        text-transform: uppercase;
+    }
+
+    .task-item-example {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+        font-size: 0.9rem;
+        margin-bottom: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .task-item-original {
+        text-decoration: line-through;
+        opacity: 0.7;
+    }
+
+    .task-item-corrected {
+        font-weight: 600;
+        color: #2e7d32;
+    }
+
+    .task-item-progress {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 8px;
+        border-radius: 4px;
+        background: rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: #2e7d32;
+        transition: width 0.3s ease;
+    }
+
+    .progress-label {
+        font-size: 0.8rem;
+        opacity: 0.75;
+    }
+</style>
+
+@code {
+    private List<PracticeChallenge> challenges = new();
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var profile = (await DataStore.UserProfiles.GetAllAsync()).FirstOrDefault();
+            if (profile != null)
+            {
+                challenges = await CoachingService.GetActiveChallengesAsync(profile.Id, take: 10);
+            }
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private static int ProgressPercent(PracticeChallenge challenge)
+    {
+        var percent = (int)Math.Round(100.0 * challenge.ConsecutiveCorrectCount / PracticeChallenge.MasteryThreshold);
+        return Math.Clamp(percent, 0, 100);
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/");
+    }
+}

@@ -1,7 +1,7 @@
 using Infrastructure.Data;
+using Infrastructure.Data.Repositories;
 using MauiApp2.Services;
 using Domain.Shared.Models;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -12,18 +12,18 @@ namespace MauiApp2.Features.LanguageCoaching
 {
     public class LanguageCoachingService
     {
-        private readonly PetDbContext _db;
+        private readonly IPetDataStore _store;
         private readonly LocalApiService _api;
         private readonly ConfigurationService _config;
         private readonly ILogger<LanguageCoachingService> _logger;
 
         public LanguageCoachingService(
-            PetDbContext db,
+            IPetDataStore store,
             LocalApiService api,
             ConfigurationService config,
             ILogger<LanguageCoachingService> logger)
         {
-            _db = db;
+            _store = store;
             _api = api;
             _config = config;
             _logger = logger;
@@ -80,7 +80,7 @@ namespace MauiApp2.Features.LanguageCoaching
                 foreach (var mistake in mistakes)
                 {
                     // Check if this concept has been seen before
-                    var existingMistake = await _db.LanguageMistakes
+                    var existingMistake = await _store.LanguageMistakes
                         .FirstOrDefaultAsync(m => 
                             m.UserProfileId == userProfileId && 
                             m.Concept == mistake.Concept);
@@ -92,6 +92,10 @@ namespace MauiApp2.Features.LanguageCoaching
                         existingMistake.LastSeenAt = DateTime.UtcNow;
                         existingMistake.OriginalText = mistake.OriginalSegment;
                         existingMistake.CorrectedText = mistake.CorrectedSegment;
+                        existingMistake.MistakeType = mistake.MistakeType;
+                        existingMistake.Status = MistakeChallengeStatus.Active;
+                        existingMistake.ConsecutiveCorrectCount = 0;
+                        existingMistake.ResolvedAt = null;
                     }
                     else
                     {
@@ -105,14 +109,16 @@ namespace MauiApp2.Features.LanguageCoaching
                             Concept = mistake.Concept,
                             OccurrenceCount = 1,
                             FirstSeenAt = DateTime.UtcNow,
-                            LastSeenAt = DateTime.UtcNow
+                            LastSeenAt = DateTime.UtcNow,
+                            Status = MistakeChallengeStatus.Active,
+                            ConsecutiveCorrectCount = 0
                         };
 
-                        _db.LanguageMistakes.Add(newMistake);
+                        _store.LanguageMistakes.Add(newMistake);
                     }
                 }
 
-                await _db.SaveChangesAsync();
+                await _store.SaveChangesAsync();
                 _logger.LogInformation($"Recorded {mistakes.Count} mistakes for user {userProfileId}");
             }
             catch (Exception ex)
@@ -121,12 +127,86 @@ namespace MauiApp2.Features.LanguageCoaching
             }
         }
 
+        public async Task<List<string>> AdvanceChallengeProgressAsync(int userProfileId, IReadOnlyCollection<string> conceptsMistakenThisTurn)
+        {
+            try
+            {
+                var mistakenConcepts = conceptsMistakenThisTurn
+                    .Where(c => !string.IsNullOrWhiteSpace(c))
+                    .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+                var activeChallenges = (await _store.LanguageMistakes
+                    .WhereAsync(m => m.UserProfileId == userProfileId && m.Status == MistakeChallengeStatus.Active))
+                    .ToList();
+
+                if (activeChallenges.Count == 0)
+                    return new List<string>();
+
+                var now = DateTime.UtcNow;
+                var newlyResolved = new List<string>();
+
+                foreach (var challenge in activeChallenges)
+                {
+                    if (mistakenConcepts.Contains(challenge.Concept))
+                        continue;
+
+                    challenge.ConsecutiveCorrectCount++;
+                    if (challenge.ConsecutiveCorrectCount >= PracticeChallenge.MasteryThreshold)
+                    {
+                        challenge.Status = MistakeChallengeStatus.Resolved;
+                        challenge.ResolvedAt = now;
+                        challenge.ConsecutiveCorrectCount = PracticeChallenge.MasteryThreshold;
+                        newlyResolved.Add(challenge.Concept);
+                    }
+                }
+
+                await _store.SaveChangesAsync();
+                return newlyResolved;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error advancing practice challenge progress for user {UserProfileId}", userProfileId);
+                return new List<string>();
+            }
+        }
+
+        public async Task<List<PracticeChallenge>> GetActiveChallengesAsync(int userProfileId, int take = 3)
+        {
+            try
+            {
+                var activeMistakes = await _store.LanguageMistakes
+                    .WhereAsync(m => m.UserProfileId == userProfileId && m.Status == MistakeChallengeStatus.Active);
+
+                var mistakes = activeMistakes
+                    .OrderByDescending(m => m.OccurrenceCount)
+                    .ThenByDescending(m => m.LastSeenAt)
+                    .Take(take)
+                    .Select(m => new PracticeChallenge
+                    {
+                        Concept = m.Concept,
+                        MistakeType = m.MistakeType,
+                        OriginalText = m.OriginalText,
+                        CorrectedText = m.CorrectedText,
+                        OccurrenceCount = m.OccurrenceCount,
+                        ConsecutiveCorrectCount = m.ConsecutiveCorrectCount
+                    })
+                    .ToList();
+
+                return mistakes;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting active practice challenges for user {UserProfileId}", userProfileId);
+                return new List<PracticeChallenge>();
+            }
+        }
+
         public async Task<List<RecurringMistake>> GetRecurringMistakesAsync(int userProfileId, int minOccurrences = 2)
         {
             try
             {
-                var mistakes = await _db.LanguageMistakes
-                    .Where(m => m.UserProfileId == userProfileId && m.OccurrenceCount >= minOccurrences)
+                var mistakes = (await _store.LanguageMistakes
+                    .WhereAsync(m => m.UserProfileId == userProfileId && m.OccurrenceCount >= minOccurrences))
                     .OrderByDescending(m => m.OccurrenceCount)
                     .ThenByDescending(m => m.LastSeenAt)
                     .Take(10)
@@ -139,7 +219,7 @@ namespace MauiApp2.Features.LanguageCoaching
                         LatestExample = m.OriginalText,
                         LastSeenAt = m.LastSeenAt
                     })
-                    .ToListAsync();
+                    .ToList();
 
                 return mistakes;
             }
@@ -154,9 +234,9 @@ namespace MauiApp2.Features.LanguageCoaching
         {
             try
             {
-                var mistakes = await _db.LanguageMistakes
-                    .Where(m => m.UserProfileId == userProfileId)
-                    .ToListAsync();
+                var mistakes = (await _store.LanguageMistakes
+                    .WhereAsync(m => m.UserProfileId == userProfileId))
+                    .ToList();
 
                 var conceptFrequency = mistakes
                     .GroupBy(m => m.Concept)
@@ -183,41 +263,6 @@ namespace MauiApp2.Features.LanguageCoaching
             }
         }
 
-        public async Task<string> GenerateNaturalCorrectionAsync(string originalText, List<DetectedMistake> mistakes)
-        {
-            try
-            {
-                if (!mistakes.Any())
-                    return string.Empty;
-
-                var mistakesText = string.Join("\n", mistakes.Select(m => 
-                    $"- '{m.OriginalSegment}' → '{m.CorrectedSegment}' ({m.MistakeType}: {m.Concept})"));
-
-                var prompt = $@"Generate a natural, friendly correction for a language learner.
-
-Original text: ""{originalText}""
-
-Mistakes detected:
-{mistakesText}
-
-Create a gentle, encouraging correction that:
-1. Acknowledges what they're trying to say
-2. Explains the correction in simple terms
-3. Keeps a supportive, non-judgmental tone
-4. Is brief (2-3 sentences)
-
-Return ONLY the correction text, no JSON.";
-
-                var correction = await _api.GenerateTextAsync(prompt);
-                return correction.Trim().Trim('"');
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error generating natural correction");
-                return "I noticed a small mistake, but let's keep practicing! 😊";
-            }
-        }
-
         private string GenerateFeedbackSummary(List<DetectedMistake> mistakes)
         {
             if (!mistakes.Any())
@@ -241,11 +286,13 @@ Return ONLY the correction text, no JSON.";
         {
             try
             {
-                var distribution = await _db.LanguageMistakes
-                    .Where(m => m.UserProfileId == userProfileId)
+                var mistakes = (await _store.LanguageMistakes
+                    .WhereAsync(m => m.UserProfileId == userProfileId))
+                    .ToList();
+
+                var distribution = mistakes
                     .GroupBy(m => m.MistakeType)
-                    .Select(g => new { Type = g.Key, Count = g.Sum(m => m.OccurrenceCount) })
-                    .ToDictionaryAsync(x => x.Type, x => x.Count);
+                    .ToDictionary(g => g.Key, g => g.Sum(m => m.OccurrenceCount));
 
                 return distribution;
             }

@@ -3,6 +3,8 @@
 @using MauiApp2.Features.Onboarding
 @using MauiApp2.Components
 @using MauiApp2.Services
+@using MauiApp2.Services.Audio
+@using MauiApp1.Services.Cache
 @using Domain.Shared.Models
 @using Microsoft.AspNetCore.Components.Web
 @using Business.Interfaces
@@ -12,16 +14,27 @@
 @inject ChatService ChatService
 @inject OnboardingService OnboardingService
 @inject IApiService ApiService
+@inject MauiSoundService SoundService
 @inject NavigationManager Navigation
 @inject IJSRuntime JSRuntime
 @inject Microsoft.Extensions.AI.IChatClient ChatClient
 @inject Microsoft.Extensions.Logging.ILogger<ChatPage> Logger
+@inject AiDefinitionCache AiDefinitionCache
 
 <div class="chat-container">
     <div class="chat-header">
         <button class="back-button" @onclick="GoBack">←</button>
         <div class="companion-info">
-            <div class="companion-avatar-small">@companionAvatar</div>
+            <div class="companion-avatar-small">
+                @if (!string.IsNullOrEmpty(companionAvatarImagePath))
+                {
+                    <img src="@companionAvatarImagePath" alt="@companionName" class="companion-avatar-photo" />
+                }
+                else
+                {
+                    @companionAvatar
+                }
+            </div>
             <div>
                 <h3>@companionName</h3>
                 <span class="mood-indicator mood-@currentMood.ToString().ToLower()">@currentMood</span>
@@ -35,10 +48,28 @@
             {
                 @foreach (var message in messages)
                 {
-                    @if (message.MessageType == MessageType.SkillUpdate)
+                    @if (message.MessageType == MessageType.SkillUpdate
+                        || message.MessageType == MessageType.UserInsight
+                        || message.MessageType == MessageType.CompanionInsight)
                     {
                         <div class="skill-update-wrapper">
-                            <div class="skill-update-message">@message.Content</div>
+                            <div class="skill-update-message @GetSystemNoticeClass(message.MessageType)">@message.Content</div>
+                        </div>
+                    }
+                    else if (message.MessageType == MessageType.AudioMessage)
+                    {
+                        <div class="message-wrapper companion-message-wrapper">
+                            <div class="message message-companion message-audio">
+                                <button class="audio-widget @(playingAudioMessageId == message.Id ? "playing" : "")"
+                                        disabled="@(loadingAudioMessageId == message.Id)"
+                                        @onclick="() => PlayAudioMessage(message)">
+                                    <span class="audio-widget-icon">
+                                        @(loadingAudioMessageId == message.Id ? "⏳" : playingAudioMessageId == message.Id ? "⏸" : "▶")
+                                    </span>
+                                    <span class="audio-widget-waveform">🔊 Listen</span>
+                                </button>
+                                <div class="message-time">@message.Timestamp.ToLocalTime().ToString("HH:mm")</div>
+                            </div>
                         </div>
                     }
                     else
@@ -150,6 +181,7 @@
     private int conversationId;
     private string companionName = string.Empty;
     private string companionAvatar = string.Empty;
+    private string? companionAvatarImagePath;
     private CompanionMood currentMood = CompanionMood.Curious;
     private int userProfileId;
     private string targetLanguage = string.Empty;
@@ -162,6 +194,8 @@
     private string currentDefinitionWord = string.Empty;
     private string nativeLanguage = string.Empty;
     private readonly Random _random = new();
+    private int? playingAudioMessageId;
+    private int? loadingAudioMessageId;
 
     protected override async Task OnInitializedAsync()
     {
@@ -183,6 +217,7 @@
             var companion = await OnboardingService.GetOrCreateCompanionAsync();
             companionName = companion.Name;
             companionAvatar = companion.Avatar;
+            companionAvatarImagePath = GetCompanionAvatarImagePath(companionName);
             currentMood = companion.CurrentMood;
 
             // Load conversation
@@ -235,7 +270,8 @@
             var minDelayTask = Task.Delay(_random.Next(1500, 3500));
 
             // 3. Corrections: separate API call — display on user bubble as soon as they arrive
-            var corrections = await ChatService.GetCorrectionsAsync(conversationId, content, targetLanguage, nativeLanguage);
+            var correctionCheck = await ChatService.GetCorrectionsAsync(conversationId, content, targetLanguage, nativeLanguage);
+            var corrections = correctionCheck.Corrections;
             if (corrections != null && corrections.Any())
             {
                 userMessage.Corrections = corrections;
@@ -244,7 +280,11 @@
             }
 
             // 4. Generate companion response (can use corrections for context)
-            var companionTask = ChatService.GenerateCompanionMessageAsync(conversationId, userMessage.Id, corrections);
+            var companionTask = ChatService.GenerateCompanionMessageAsync(
+                conversationId,
+                userMessage.Id,
+                correctionCheck.Corrections,
+                correctionCheck.NewlyMasteredConcepts);
 
             // 5. Reveal paragraphs progressively once both delay and response are ready
             await Task.WhenAll(minDelayTask, companionTask);
@@ -345,6 +385,29 @@
         }
     }
 
+    private async Task PlayAudioMessage(ChatMessage message)
+    {
+        if (loadingAudioMessageId == message.Id) return;
+
+        loadingAudioMessageId = message.Id;
+        StateHasChanged();
+        try
+        {
+            await SoundService.PlayVoiceClip(message.Content, targetLanguage);
+            playingAudioMessageId = message.Id;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error playing audio message: {ex.Message}");
+            errorMessage = "Failed to play audio";
+        }
+        finally
+        {
+            loadingAudioMessageId = null;
+            StateHasChanged();
+        }
+    }
+
     private async Task ScrollToBottom()
     {
         try
@@ -407,7 +470,7 @@
             // If no definition found, use AI provider as fallback
             if (definitionResult?.Entries == null || !definitionResult.Entries.Any())
             {
-                var aiHelper = new AiDefinitionHelper(ChatClient, Logger);
+                var aiHelper = new AiDefinitionHelper(ChatClient, Logger, AiDefinitionCache);
                 definitionResult = await aiHelper.GenerateDefinitionAsync(selectedText, targetLanguage, nativeLanguage);
             }
 
@@ -498,4 +561,20 @@
     {
         Navigation.NavigateTo("/home");
     }
+
+    // Maps a system-notice message type to its colored pill variant so skill updates,
+    // "learned about you" and "learned about companion" notices are visually distinct.
+    private static string GetSystemNoticeClass(MessageType messageType) => messageType switch
+    {
+        MessageType.UserInsight => "notice-user-insight",
+        MessageType.CompanionInsight => "notice-companion-insight",
+        _ => "notice-skill-update"
+    };
+
+    // Maps known companions to their static portrait asset, falling back to the emoji avatar.
+    private static string? GetCompanionAvatarImagePath(string name) => name?.Trim().ToLowerInvariant() switch
+    {
+        "blip" => "assets/blip.jpeg",
+        _ => null
+    };
 }

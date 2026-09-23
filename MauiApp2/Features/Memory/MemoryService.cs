@@ -1,8 +1,8 @@
 using Infrastructure.Data;
+using Infrastructure.Data.Repositories;
 using MauiApp2.Services;
 using MauiApp2.Services.AI.Schemas;
 using Domain.Shared.Models;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -15,18 +15,18 @@ namespace MauiApp2.Features.Memory
 {
     public class MemoryService
     {
-        private readonly PetDbContext _db;
+        private readonly IPetDataStore _store;
         private readonly LocalApiService _api;
         private readonly ConfigurationService _config;
         private readonly ILogger<MemoryService> _logger;
 
         public MemoryService(
-            PetDbContext db,
+            IPetDataStore store,
             LocalApiService api,
             ConfigurationService config,
             ILogger<MemoryService> logger)
         {
-            _db = db;
+            _store = store;
             _api = api;
             _config = config;
             _logger = logger;
@@ -44,8 +44,8 @@ namespace MauiApp2.Features.Memory
                 _logger.LogInformation($"Extracting memories from conversation {conversationId}");
 
                 // Get recent messages
-                var messages = await _db.Messages
-                    .Where(m => m.ConversationId == conversationId)
+                var allMessages = await _store.Messages.WhereAsync(m => m.ConversationId == conversationId);
+                var messages = allMessages
                     .OrderByDescending(m => m.Timestamp)
                     .Take(20)
                     .OrderBy(m => m.Timestamp)
@@ -55,7 +55,7 @@ namespace MauiApp2.Features.Memory
                         Content = m.Content,
                         Timestamp = m.Timestamp
                     })
-                    .ToListAsync();
+                    .ToList();
 
                 if (!messages.Any())
                 {
@@ -94,7 +94,7 @@ Guidelines:
                 foreach (var memory in extractionData.Memories)
                 {
                     // Check for similar existing memories to avoid duplicates
-                    var existingMemory = await _db.ConversationMemories
+                    var existingMemory = await _store.ConversationMemories
                         .FirstOrDefaultAsync(m => 
                             m.UserProfileId == userProfileId &&
                             m.FactType == memory.FactType &&
@@ -121,13 +121,13 @@ Guidelines:
                             LastReferencedAt = DateTime.UtcNow
                         };
 
-                        _db.ConversationMemories.Add(newMemory);
+                        _store.ConversationMemories.Add(newMemory);
                         memoriesCreated++;
                         _logger.LogInformation($"Created new memory: {memory.Content}");
                     }
                 }
 
-                await _db.SaveChangesAsync();
+                await _store.SaveChangesAsync();
 
                 return new MemoryExtractionResult
                 {
@@ -151,8 +151,9 @@ Guidelines:
         {
             try
             {
-                var memories = await _db.ConversationMemories
-                    .Where(m => m.UserProfileId == userProfileId && m.Importance >= _config.MinImportanceThreshold)
+                var allMemories = await _store.ConversationMemories
+                    .WhereAsync(m => m.UserProfileId == userProfileId && m.Importance >= _config.MinImportanceThreshold);
+                var memories = allMemories
                     .OrderByDescending(m => m.Importance)
                     .ThenByDescending(m => m.LastReferencedAt)
                     .Take(limit)
@@ -166,7 +167,7 @@ Guidelines:
                         LastReferencedAt = m.LastReferencedAt,
                         CreatedAt = m.CreatedAt
                     })
-                    .ToListAsync();
+                    .ToList();
 
                 return memories;
             }
@@ -181,11 +182,11 @@ Guidelines:
         {
             try
             {
-                var memory = await _db.ConversationMemories.FindAsync(memoryId);
+                var memory = await _store.ConversationMemories.FindByIdAsync(memoryId);
                 if (memory != null)
                 {
                     memory.LastReferencedAt = DateTime.UtcNow;
-                    await _db.SaveChangesAsync();
+                    await _store.SaveChangesAsync();
                     _logger.LogInformation($"Updated memory {memoryId} relevance");
                 }
             }
@@ -209,8 +210,8 @@ Guidelines:
                     LastReferencedAt = DateTime.UtcNow
                 };
 
-                _db.ConversationMemories.Add(memory);
-                await _db.SaveChangesAsync();
+                _store.ConversationMemories.Add(memory);
+                await _store.SaveChangesAsync();
 
                 _logger.LogInformation($"Added manual memory for user {userProfileId}");
                 return memory.Id;
@@ -226,11 +227,12 @@ Guidelines:
         {
             try
             {
-                var stats = await _db.ConversationMemories
-                    .Where(m => m.UserProfileId == userProfileId)
+                var allMemories = await _store.ConversationMemories
+                    .WhereAsync(m => m.UserProfileId == userProfileId);
+                var stats = allMemories
                     .GroupBy(m => m.FactType)
                     .Select(g => new { Type = g.Key, Count = g.Count() })
-                    .ToDictionaryAsync(x => x.Type, x => x.Count);
+                    .ToDictionary(x => x.Type, x => x.Count);
 
                 return stats;
             }
@@ -245,11 +247,11 @@ Guidelines:
         {
             try
             {
-                var memory = await _db.ConversationMemories.FindAsync(memoryId);
+                var memory = await _store.ConversationMemories.FindByIdAsync(memoryId);
                 if (memory != null)
                 {
-                    _db.ConversationMemories.Remove(memory);
-                    await _db.SaveChangesAsync();
+                    _store.ConversationMemories.Remove(memory);
+                    await _store.SaveChangesAsync();
                     return true;
                 }
                 return false;

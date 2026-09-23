@@ -1,4 +1,5 @@
 using Domain.Shared.Models;
+using MauiApp2.Features.MentalModels;
 using System;
 using System.Collections.Generic;
 
@@ -19,17 +20,10 @@ namespace MauiApp2.Features.Chat
         public bool IsTranslating { get; set; }
     }
 
-    public class SendMessageRequest
+    public class CorrectionCheckResult
     {
-        public string Content { get; set; } = string.Empty;
-    }
-
-    public class SendMessageResponse
-    {
-        public bool Success { get; set; }
-        public ChatMessage? UserMessage { get; set; }
-        public ChatMessage? CompanionResponse { get; set; }
-        public string ErrorMessage { get; set; } = string.Empty;
+        public List<CorrectionData>? Corrections { get; set; }
+        public List<string> NewlyMasteredConcepts { get; set; } = new();
     }
 
     public class ConversationState
@@ -52,5 +46,20 @@ namespace MauiApp2.Features.Chat
         public List<ChatMessage> ConversationHistory { get; set; } = new();
         public List<LearningActivity> EligibleActivities { get; set; } = new();
         public SkillProfile UserSkillProfile { get; set; } = new();
+
+        /// <summary>
+        /// Tracks whether the user has completed a learning activity in the last 15 minutes.
+        /// If true, activity suggestions should be withheld from the prompt.
+        /// </summary>
+        public bool HasRecentActivity { get; set; }
+
+        /// <summary>
+        /// The composed output of the mental models and the conversation strategist for
+        /// this turn (per-model insights plus the next objective). Populated by the
+        /// Conversation Engine and rendered into the prompt; may be null if reasoning
+        /// could not be produced, in which case the prompt builder falls back to its
+        /// legacy inline sections.
+        /// </summary>
+        public MentalModelReasoning? Reasoning { get; set; }
     }
 }

@@ -1,10 +1,10 @@
 using Domain.Shared.Models;
-using Microsoft.EntityFrameworkCore;
+using LiteDB;
 using System;
 
 namespace Infrastructure.Data
 {
-    public class PetDbContext : DbContext
+    public class PetDbContext
     {
         public static readonly CompanionTable DefaultCompanion = new CompanionTable
         {
@@ -17,75 +17,48 @@ namespace Infrastructure.Data
             "Favorite kaomojis: (๏ᆺ๏υ), ٩(＾◡＾)۶, ( ˘▽˘)っ♨, ┏(-_-)┛┗(-_- )┓, ¯\\(ツ)/¯, (_ _ ) Zzz z",
             CurrentMood = CompanionMood.Curious,
             LastMoodChange = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+            EnergyLevel = 100,
+            LastEnergyUpdate = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
         };
 
-        public PetDbContext(DbContextOptions<PetDbContext> options) : base(options) { }
+        private readonly ILiteDatabase _database;
 
-        public DbSet<CompanionTable> Companions { get; set; }
-        public DbSet<UserProfileTable> UserProfiles { get; set; }
-        public DbSet<ConversationTable> Conversations { get; set; }
-        public DbSet<MessageTable> Messages { get; set; }
-        public DbSet<LanguageMistakeTable> LanguageMistakes { get; set; }
-        public DbSet<ConversationMemoryTable> ConversationMemories { get; set; }
-        public DbSet<UserActivityTable> UserActivities { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        public PetDbContext(ILiteDatabase database)
         {
-            base.OnModelCreating(modelBuilder);
+            _database = database;
+        }
 
-            // Configure relationships
-            modelBuilder.Entity<ConversationTable>()
-                .HasOne(c => c.UserProfile)
-                .WithMany(u => u.Conversations)
-                .HasForeignKey(c => c.UserProfileId)
-                .OnDelete(DeleteBehavior.Cascade);
+        public ILiteCollection<CompanionTable> Companions => _database.GetCollection<CompanionTable>("companions");
+        public ILiteCollection<UserProfileTable> UserProfiles => _database.GetCollection<UserProfileTable>("userProfiles");
+        public ILiteCollection<ConversationTable> Conversations => _database.GetCollection<ConversationTable>("conversations");
+        public ILiteCollection<MessageTable> Messages => _database.GetCollection<MessageTable>("messages");
+        public ILiteCollection<LanguageMistakeTable> LanguageMistakes => _database.GetCollection<LanguageMistakeTable>("languageMistakes");
+        public ILiteCollection<ConversationMemoryTable> ConversationMemories => _database.GetCollection<ConversationMemoryTable>("conversationMemories");
+        public ILiteCollection<UserActivityTable> UserActivities => _database.GetCollection<UserActivityTable>("userActivities");
 
-            modelBuilder.Entity<MessageTable>()
-                .HasOne(m => m.Conversation)
-                .WithMany(c => c.Messages)
-                .HasForeignKey(m => m.ConversationId)
-                .OnDelete(DeleteBehavior.Cascade);
+        public void EnsureIndexes()
+        {
+            Conversations.EnsureIndex(x => x.UserProfileId);
+            Messages.EnsureIndex(x => x.ConversationId);
+            Messages.EnsureIndex(x => x.Timestamp);
+            LanguageMistakes.EnsureIndex(x => x.UserProfileId);
+            ConversationMemories.EnsureIndex(x => x.UserProfileId);
+            UserActivities.EnsureIndex(x => x.UserProfileId);
+        }
 
-            modelBuilder.Entity<LanguageMistakeTable>()
-                .HasOne(lm => lm.UserProfile)
-                .WithMany(u => u.LanguageMistakes)
-                .HasForeignKey(lm => lm.UserProfileId)
-                .OnDelete(DeleteBehavior.Cascade);
+        public bool BeginTrans() => _database.BeginTrans();
+        public bool Commit() => _database.Commit();
+        public bool Rollback() => _database.Rollback();
 
-            modelBuilder.Entity<ConversationMemoryTable>()
-                .HasOne(cm => cm.UserProfile)
-                .WithMany(u => u.ConversationMemories)
-                .HasForeignKey(cm => cm.UserProfileId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<UserActivityTable>()
-                .HasOne(ua => ua.UserProfile)
-                .WithMany(u => u.UserActivities)
-                .HasForeignKey(ua => ua.UserProfileId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            // Indexes for performance
-            modelBuilder.Entity<MessageTable>()
-                .HasIndex(m => m.ConversationId);
-
-            modelBuilder.Entity<MessageTable>()
-                .HasIndex(m => m.Timestamp);
-
-            modelBuilder.Entity<ConversationTable>()
-                .HasIndex(c => new { c.UserProfileId, c.IsActive });
-
-            modelBuilder.Entity<LanguageMistakeTable>()
-                .HasIndex(lm => new { lm.UserProfileId, lm.Concept });
-
-            modelBuilder.Entity<ConversationMemoryTable>()
-                .HasIndex(cm => new { cm.UserProfileId, cm.LastReferencedAt });
-
-            modelBuilder.Entity<UserActivityTable>()
-                .HasIndex(ua => new { ua.UserProfileId, ua.Timestamp });
-
-            // Seed default companion
-            modelBuilder.Entity<CompanionTable>().HasData(DefaultCompanion);
+        public void DropUserCollections()
+        {
+            _database.DropCollection("userProfiles");
+            _database.DropCollection("conversations");
+            _database.DropCollection("messages");
+            _database.DropCollection("languageMistakes");
+            _database.DropCollection("conversationMemories");
+            _database.DropCollection("userActivities");
         }
     }
 }

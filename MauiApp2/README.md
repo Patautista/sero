@@ -119,6 +119,76 @@ Default supported languages (configurable):
 - Arabic (ar) 🇸🇦
 - Hindi (hi) 🇮🇳
 
+## 🧠 Mental Model Architecture
+
+Instead of stuffing everything into one generic prompt, the companion's reasoning is split into specialized, single-responsibility **mental models** that each answer one class of question. A **Conversation Engine** orchestrates them every turn, and a **Conversation Strategist** decides what that turn should accomplish. This lives under `Features/MentalModels/` and favors long-term consistency over ad-hoc, isolated replies.
+
+### The models
+
+| Model | Answers | Backed by |
+|---|---|---|
+| **Skill Model** | "What can this user comfortably do? What should be practised next?" | `SkillProfile` scores + recurring mistake patterns |
+| **User Model** | "What topics interest the user? What shouldn't be asked again?" | Profile interests + durable memory facts (`Interest`, `Preference`, `Goal`) |
+| **Pet Model** | "Who am I? What have I already told the user?" | A stable, code-defined `PetIdentity` (traits, likes, dislikes, hobbies, dream, fear, opinions) |
+| **Relationship Model** | "How close are we? What's OK to say?" | `RelationshipState`, derived deterministically from message count + account tenure + mood |
+| **Conversation Memory** | "What have we talked about recently?" | Episodic (`Event`) memories + the tail of the current conversation |
+
+Each model implements `IMentalModel.ObserveAsync(...)` and returns a single `MentalModelInsight` (a titled block of text) or `null` when it has nothing relevant to add. Models never call each other — all coordination flows through the engine — so a new model (Emotion, Motivation, Goal, …) can be added later with just one new class and one DI registration.
+
+### The Conversation Strategist
+
+The `ConversationStrategist` is the planner: it looks at the Skill Model's data and the user's interests to decide the next objective, then degrades gracefully:
+
+1. **Practise the weakest skill** when it's below the practice threshold (score < 60), optionally themed around the user's top interest and paired with a matching activity.
+2. **Learn something new about the user** when little is known yet.
+3. **Have a warm, casual conversation** anchored on a known interest, once skills are solid and the user is known.
+
+The result is a `ConversationStrategyPlan` (primary/secondary objective, suggested action, reasoning).
+
+### The Conversation Engine
+
+`ConversationEngine.ReasonAsync(...)` runs every registered `IMentalModel` sequentially, collects their insights (skipping and logging any that fail, so one bad model can't break a turn), then hands the insights to the strategist. The combined result is a `MentalModelReasoning` — every model's insight plus the strategy plan.
+
+### How it reaches the prompt
+
+`ChatService.BuildResponseContextAsync` materializes a `MentalModelRequest` from already-loaded conversation/user data, calls the engine, and stores the result on `CompanionResponseContext.Reasoning`. `CompanionPromptBuilder` then renders it into two prompt sections — **MENTAL MODELS** (each insight) and **CONVERSATION STRATEGY** (the plan) — instructing the companion to pursue the primary objective this turn while staying consistent with its own identity and the relationship's social permissions. If reasoning couldn't be produced for any reason, the prompt builder falls back to its legacy inline sections so a reply is never blocked.
+
+```
+ChatService → ConversationEngine → [SkillModel, UserModel, PetModel, RelationshipModel, ConversationMemoryModel] → ConversationStrategist
+                                                                ↓
+                                                   MentalModelReasoning → CompanionPromptBuilder → AI prompt
+```
+
+## 💡 Living-Relationship Notifications
+
+As you chat with your companion, the system tracks what it learns about you and what you learn about it. Three types of in-chat notifications reflect this evolving relationship:
+
+### **User Insight** 🧠 (Purple pill)
+Fires when the companion discovers a **genuinely new, durable fact about you** that wasn't already known (e.g., a new interest, preference, or goal). The fact is automatically saved to memory so it won't be "re-discovered" on future turns.
+
+**Example:**
+```
+💡 Blip has learned a new thing about you: loves hiking on weekends
+```
+
+### **Companion Insight** ✨ (Teal pill)
+Fires when the companion **shares a durable new fact about itself** consistent with its identity (e.g., a like, dream, opinion, or past experience).
+
+**Example:**
+```
+✨ You've learned a new thing about Blip: dreams of visiting the ocean
+```
+
+### **Skill Update** 📈 (Green pill)
+Fires after you complete a learning activity and your skill scores change.
+
+**Example:**
+```
+📈 Blip has updated your skill profile: Reading +5, Writing -2
+```
+
+All three notices appear as **centered system pills** in the chat, visually distinct from normal conversation. They're designed to emphasize long-term consistency: once a fact is learned, the companion remembers it and the User Model stays coherent across conversations.
+
 ## 🐛 Troubleshooting
 
 ### "appsettings.json not found"

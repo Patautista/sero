@@ -1,4 +1,5 @@
 using Business.Interfaces;
+using MauiApp1.Services.Cache;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Logging;
 using System.Text.Json.Nodes;
@@ -12,11 +13,13 @@ namespace MauiApp2.Services
     {
         private readonly IChatClient _chatClient;
         private readonly ILogger _logger;
+        private readonly AiDefinitionCache _cache;
 
-        public AiDefinitionHelper(IChatClient chatClient, ILogger logger)
+        public AiDefinitionHelper(IChatClient chatClient, ILogger logger, AiDefinitionCache cache)
         {
             _chatClient = chatClient;
             _logger = logger;
+            _cache = cache;
         }
 
         /// <summary>
@@ -29,6 +32,13 @@ namespace MauiApp2.Services
         {
             try
             {
+                var cached = await _cache.GetAsync(word, sourceLanguage, targetLanguage);
+                if (cached != null)
+                {
+                    _logger.LogInformation($"Using cached AI definition for '{word}'");
+                    return cached;
+                }
+
                 _logger.LogInformation($"Generating AI definition for '{word}'");
 
                 var prompt = $@"Generate a concise definition for the {sourceLanguage} word ""{word}"" in {targetLanguage}.
@@ -92,6 +102,15 @@ Return ONLY a valid JSON object (no markdown, no explanation) with this exact st
                         }
                     }
                 };
+
+                try
+                {
+                    await _cache.SetAsync(word, sourceLanguage, targetLanguage, result);
+                }
+                catch (Exception cacheEx)
+                {
+                    _logger.LogWarning(cacheEx, $"Failed to cache AI definition for '{word}'");
+                }
 
                 _logger.LogInformation($"Successfully generated AI definition for '{word}'");
                 return result;

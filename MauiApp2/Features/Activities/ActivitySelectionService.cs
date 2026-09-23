@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Domain.Shared.Models;
-using Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
+using Infrastructure.Data.Repositories;
 using Microsoft.Extensions.Logging;
 
 namespace MauiApp2.Features.Activities
@@ -19,12 +18,12 @@ namespace MauiApp2.Features.Activities
         /// <summary>Default score gain applied to each trained skill on completion.</summary>
         public const int DefaultSkillGain = 5;
 
-        private readonly PetDbContext _db;
+        private readonly IPetDataStore _store;
         private readonly ILogger<ActivitySelectionService> _logger;
 
-        public ActivitySelectionService(PetDbContext db, ILogger<ActivitySelectionService> logger)
+        public ActivitySelectionService(IPetDataStore store, ILogger<ActivitySelectionService> logger)
         {
-            _db = db;
+            _store = store;
             _logger = logger;
         }
 
@@ -39,7 +38,7 @@ namespace MauiApp2.Features.Activities
         /// <summary>Loads the current user's skills and recommends the best next activity.</summary>
         public async Task<LearningActivity?> GetRecommendedActivityAsync()
         {
-            var profile = await _db.UserProfiles.FirstOrDefaultAsync();
+            var profile = await _store.UserProfiles.FirstOrDefaultAsync(p => true);
             if (profile is null)
             {
                 _logger.LogWarning("No user profile found; cannot recommend an activity.");
@@ -52,7 +51,7 @@ namespace MauiApp2.Features.Activities
         /// <summary>Loads the current user's skill profile, or an empty profile when none exists.</summary>
         public async Task<SkillProfile> GetCurrentSkillProfileAsync()
         {
-            var profile = await _db.UserProfiles.FirstOrDefaultAsync();
+            var profile = await _store.UserProfiles.FirstOrDefaultAsync(p => true);
             return SkillProfile.FromJson(profile?.SkillsJson);
         }
 
@@ -68,7 +67,7 @@ namespace MauiApp2.Features.Activities
         {
             ArgumentNullException.ThrowIfNull(skillAdjustments);
 
-            var profileTable = await _db.UserProfiles.FirstOrDefaultAsync();
+            var profileTable = await _store.UserProfiles.FirstOrDefaultAsync(p => true);
             if (profileTable is null)
             {
                 _logger.LogWarning("No user profile found; cannot apply skill adjustments.");
@@ -86,7 +85,7 @@ namespace MauiApp2.Features.Activities
 
             profileTable.SkillsJson = skills.ToJson();
             profileTable.LastActiveAt = DateTime.UtcNow;
-            await _db.SaveChangesAsync();
+            await _store.SaveChangesAsync();
 
             _logger.LogInformation(
                 "Applied activity skill adjustments; updated skills: {Skills}",

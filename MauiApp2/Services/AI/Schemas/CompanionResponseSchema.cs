@@ -19,6 +19,24 @@ namespace MauiApp2.Services.AI.Schemas
         /// </summary>
         [JsonPropertyName("startActivityId")]
         public string? StartActivityId { get; set; }
+
+        /// <summary>
+        /// Optional signal that this turn revealed a genuinely new, durable fact about the
+        /// user (an interest, preference or goal not already known). When set, the
+        /// conversation engine persists it to memory and shows a "{companion} has learned a
+        /// new thing about you!" notice. Left empty when nothing new was learned.
+        /// </summary>
+        [JsonPropertyName("learnedAboutUser")]
+        public string? LearnedAboutUser { get; set; }
+
+        /// <summary>
+        /// Optional signal that the companion shared a genuinely new, durable fact about
+        /// itself (its likes, dreams, opinions, history) that the user did not know before.
+        /// When set, the conversation engine shows a "You've learned a new thing about
+        /// {companion}" notice. Left empty when nothing new was shared.
+        /// </summary>
+        [JsonPropertyName("sharedAboutSelf")]
+        public string? SharedAboutSelf { get; set; }
     }
 
     public class CompanionCorrectionItem

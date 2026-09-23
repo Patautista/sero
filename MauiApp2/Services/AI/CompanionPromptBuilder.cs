@@ -1,7 +1,9 @@
 using Domain.Shared.Models;
 using MauiApp2.Features.Chat;
+using MauiApp2.Features.MentalModels;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace MauiApp2.Services.AI
 {
@@ -48,10 +50,11 @@ namespace MauiApp2.Services.AI
         private static readonly IReadOnlyList<string> GeneralInstructions = new[]
         {
             "Balance the use of the target language and the native language based on the user's proficiency levels shown above. Communicate mostly using the native language for novice users and the target language for advanced users. The levels indicate where they're strongest and weakest. Adjust explanation depth and language ratio accordingly—explain difficult concepts in native language.",
+            "DO NOT change between languages abruptly. If you need to switch languages, do so gradually and provide context for the switch. At least a 'Ok, I'm switching to x now ok?' is required.",
             "Your main goal is to help the user practice and improve their language skills. So keep trying to introduce the user to the target language-specific topics such as grammar and vocabulary relative to their level.",
             "Be respectful of regional dialects and cultural nuances.",
             "You may use **bold** for emphasis and *italics* for foreign words, titles, or gentle stress — use them sparingly to feel natural.",
-            "This is an internet conversation, so use internet language. ALL CAPS, looooooong text and lols/lmaos are encouraged when relavant for tone, but do not use them all the time."
+            "This is an internet conversation, so use internet language. ALL CAPS, looooooong text and lols/lmaos are encouraged, but do not use them all the time."
         };
 
         public string BuildWelcomeMessagePrompt(CompanionPersonaContext context)
@@ -107,22 +110,51 @@ Return ONLY the welcome message, no JSON, no quotes.";
                     $"- '{c.Original}' → '{c.Corrected}' ({c.Explanation})"))
                 : "No mistakes detected";
 
-            var activitiesText = context.EligibleActivities.Any()
-                ? string.Join("\n", context.EligibleActivities.Select(a =>
+            // Filter out activities if the user has completed one recently (within 15 minutes)
+            var activitiesToOffer = context.HasRecentActivity 
+                ? new List<LearningActivity>() 
+                : context.EligibleActivities;
+
+            var activitiesText = activitiesToOffer.Any()
+                ? string.Join("\n", activitiesToOffer.Select(a =>
                     $"- id: {a.Id} | {a.Name}: {a.Objective}"))
                 : "No activities are available right now";
 
-            // Build proficiency summary from user's skill profile
+            // Build proficiency summary from user's skill profile (used only when the
+            // mental-model reasoning is unavailable; otherwise the Skill Model covers it).
             var proficiencyText = BuildProficiencySummary(context.UserSkillProfile);
 
-            var conversationSpecificInstructions = new[]
+            // When the Conversation Engine produced reasoning, it replaces the ad-hoc
+            // proficiency and memories sections (the Skill Model and Conversation Memory
+            // model own those) and adds the strategy. Otherwise we keep the legacy sections.
+            var proficiencySection = context.Reasoning is null
+                ? $"USER'S PROFICIENCY LEVELS:\n{proficiencyText}\n\n"
+                : string.Empty;
+
+            var memoriesSection = context.Reasoning is null
+                ? $"RECENT MEMORIES:\n{memoriesText}\n\n"
+                : string.Empty;
+
+            var reasoningSection = context.Reasoning is { } reasoning
+                ? BuildReasoningSection(reasoning) + "\n\n"
+                : string.Empty;
+
+            var conversationSpecificInstructions = new List<string>
             {
                 "Reference past conversations or user's interests when relevant",
                 $"Match your current mood: {moodDescription}",
                 "Split your reply into 1–3 short paragraphs (each 1–2 sentences). Put each paragraph as a separate entry in the \"blocks\" array",
                 "Ask a follow-up question to keep the conversation going",
-                "If — and only if — this is a natural moment to practise, you may gently offer ONE of the activities listed above. To start it, set \"startActivityId\" to that activity's id and briefly invite the user in your \"blocks\". Otherwise leave \"startActivityId\" empty. Never describe how the activity works or run it yourself; simply offer it and a dedicated guide will take over."
+                "If — and only if — this is a natural moment to practise, you may gently offer ONE of the activities listed above. To start it, set \"startActivityId\" to that activity's id and briefly invite the user in your \"blocks\". Otherwise leave \"startActivityId\" empty. Never describe how the activity works or run it yourself; simply offer it and a dedicated guide will take over.",
+                "If this turn revealed a GENUINELY NEW, durable fact about the user (a new interest, preference or goal that is NOT already listed in the sections above), set \"learnedAboutUser\" to a short third-person summary of it (e.g. \"loves hiking on weekends\"). Otherwise leave it empty. Never set it for small talk, restatements, or anything already known.",
+                "If in this reply YOU shared a GENUINELY NEW, durable fact about yourself that the user did not already know (one of your likes, dreams, opinions or history — consistent with your Pet Model identity), set \"sharedAboutSelf\" to a short summary of it (e.g. \"dreams of visiting the ocean\"). Otherwise leave it empty. Never invent facts that contradict your identity, and don't set it for things you've already told the user."
             };
+
+            if (context.Reasoning is not null)
+            {
+                conversationSpecificInstructions.Insert(0,
+                    "Let the MENTAL MODELS and CONVERSATION STRATEGY sections above guide THIS turn: pursue the primary objective now, weave in the secondary one when it fits, and stay consistent with your own Pet Model identity and the Relationship Model's social permissions.");
+            }
 
             var prompt = $@"You are {context.CompanionName}, a {context.Personality} language learning companion.
 
@@ -132,17 +164,11 @@ USER CONTEXT:
 - Native language: {context.NativeLanguage}
 - Interests: {FormatInterests(context.Interests)}
 
-USER'S PROFICIENCY LEVELS:
-{proficiencyText}
-
-YOUR STATE:
+{proficiencySection}YOUR STATE:
 - Current mood: {context.CurrentMood}
 - {moodDescription}
 
-RECENT MEMORIES:
-{memoriesText}
-
-RECENT CONVERSATION:
+{reasoningSection}{memoriesSection}RECENT CONVERSATION:
 {historyText}
 
 USER'S NEW MESSAGE:
@@ -165,6 +191,36 @@ CONVERSATION-SPECIFIC INSTRUCTIONS:
 
         private static string FormatInstructions(IEnumerable<string> instructions) =>
             string.Join("\n", instructions.Select((instruction, index) => $"{index + 1}. {instruction}"));
+
+        /// <summary>
+        /// Renders the Conversation Engine's output — each mental model's insight followed
+        /// by the conversation strategy — into a single prompt block. This is the single
+        /// place the persistent reasoning becomes prompt text, so tuning how models are
+        /// presented lives here alongside the rest of the companion's prompting.
+        /// </summary>
+        private static string BuildReasoningSection(MentalModelReasoning reasoning)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("MENTAL MODELS (persistent reasoning about you, the user, and your relationship — treat as authoritative):");
+
+            foreach (var insight in reasoning.OrderedInsights)
+            {
+                sb.AppendLine();
+                sb.AppendLine($"{insight.Title}:");
+                sb.AppendLine(insight.Content);
+            }
+
+            var strategy = reasoning.Strategy;
+            sb.AppendLine();
+            sb.AppendLine("CONVERSATION STRATEGY (what THIS turn should accomplish):");
+            sb.AppendLine($"- Primary objective: {strategy.PrimaryObjective}");
+            if (!string.IsNullOrWhiteSpace(strategy.SecondaryObjective))
+                sb.AppendLine($"- Secondary objective: {strategy.SecondaryObjective}");
+            sb.AppendLine($"- Suggested action: {strategy.SuggestedAction}");
+            sb.Append($"- Reason: {strategy.Reason}");
+
+            return sb.ToString();
+        }
 
         private static string GetMoodDescription(CompanionMood mood) => mood switch
         {

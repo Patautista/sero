@@ -30,7 +30,7 @@ namespace MauiApp2.Features.Activities
                 Id = "listen-and-answer",
                 Name = "Listen and Answer",
                 Objective = "Practise listening comprehension by answering a simple question about a short spoken line.",
-                Instructions = "Present a short line as if spoken aloud (write it out), then ask one simple comprehension question about it. Encourage the learner to answer in the target language and react to their answer.",
+                Instructions = "Put ONLY the literal line to be spoken aloud in \"generatedContent\" (a short, natural, everyday sentence in the target language - no narration, quotes, or stage directions). In \"blocks\", ask one simple comprehension question about that line, without repeating its text. Encourage the learner to answer in the target language and react to their answer.",
                 EvaluationCriteria = "Whether the learner correctly understood the spoken line and answered the question appropriately.",
                 CompletionCriteria = "The learner has answered the comprehension question and received feedback.",
                 MinimumSkills = new() { [SkillType.Listening] = 10 },
@@ -60,18 +60,6 @@ namespace MauiApp2.Features.Activities
                 MinimumSkills = new() { [SkillType.Reading] = 25 },
                 TrainedSkills = new() { SkillType.Reading },
                 Difficulty = 40
-            },
-            new LearningActivity
-            {
-                Id = "transcribe-audio",
-                Name = "Transcribe Audio",
-                Objective = "Combine listening and writing by transcribing a short spoken line accurately.",
-                Instructions = "Present a short line as if spoken aloud (write it out once), then ask the learner to write down exactly what they heard. Compare their transcription to the original and highlight differences kindly.",
-                EvaluationCriteria = "Accuracy of the transcription, including spelling and word choice.",
-                CompletionCriteria = "The learner has submitted a transcription and received a comparison against the original.",
-                MinimumSkills = new() { [SkillType.Listening] = 30 },
-                TrainedSkills = new() { SkillType.Listening, SkillType.Writing },
-                Difficulty = 45
             },
             new LearningActivity
             {

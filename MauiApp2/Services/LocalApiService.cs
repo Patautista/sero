@@ -1,3 +1,4 @@
+using Business.Audio;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Logging;
 using System;
@@ -13,13 +14,15 @@ namespace MauiApp2.Services
     public class LocalApiService : IApiService
     {
         private readonly IChatClient _chatClient;
+        private readonly ISpeechService? _speechService;
         private readonly ILogger<LocalApiService> _logger;
         private readonly Dictionary<string, string> _translationCache = new();
 
-        public LocalApiService(IChatClient chatClient, ILogger<LocalApiService> logger)
+        public LocalApiService(IChatClient chatClient, ILogger<LocalApiService> logger, ISpeechService? speechService = null)
         {
             _chatClient = chatClient;
             _logger = logger;
+            _speechService = speechService;
         }
 
         // Translation
@@ -59,15 +62,21 @@ Translation:";
             }
         }
 
-        // TTS - Mock implementation using platform TTS
+        // TTS - Generates real speech audio via Google Cloud Text-to-Speech (ISpeechService),
+        // the same infrastructure demonstrated in TestScripts/GoogleSpeechTest.cs. Falls back
+        // to an empty array (silently skipping playback) if the service isn't configured.
         public async Task<byte[]> GetTTSAsync(string text, string language)
         {
+            if (_speechService is null)
+            {
+                _logger.LogWarning("TTS requested but no ISpeechService is configured; returning empty audio.");
+                return Array.Empty<byte>();
+            }
+
             try
             {
-                // For now, return empty byte array - platform TTS will be used directly in UI
-                // In production, this could call Google Cloud TTS API
                 _logger.LogInformation($"TTS requested for text: {text} in language: {language}");
-                return Array.Empty<byte>();
+                return await _speechService.GenerateSpeechAsync(text, VoiceGender.Female, language);
             }
             catch (Exception ex)
             {

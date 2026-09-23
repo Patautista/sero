@@ -7,7 +7,8 @@ namespace Infrastructure.Data
     /// Design-time factory for EF Core migrations.
     /// This is only used by dotnet ef commands, not at runtime.
     /// </summary>
-    public class PetDbContextFactory : IDesignTimeDbContextFactory<PetDbContext>
+    /*
+     public class PetDbContextFactory : IDesignTimeDbContextFactory<PetDbContext>
     {
         public PetDbContext CreateDbContext(string[] args)
         {
@@ -20,4 +21,5 @@ namespace Infrastructure.Data
             return new PetDbContext(optionsBuilder.Options);
         }
     }
+     */
 }
