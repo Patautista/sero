@@ -77,7 +77,7 @@
                     {
                         <article class="frontier-card">
                             <div class="frontier-card-top">
-                                <span class="area-kind-pill area-kind-@area.Kind.ToString().ToLowerInvariant()">@area.Kind</span>
+                                <span class="area-kind-pill">@FormatCategory(area.Category)</span>
                                 <span class="stage-pill">Stage @area.Stage</span>
                             </div>
                             <h4>@area.Name</h4>
@@ -93,24 +93,24 @@
 
         <section class="skill-section">
             <div class="skill-section-header">
-                <h3>Concepts</h3>
-                <span class="skill-section-caption">Grammar and language building blocks</span>
+                <h3>Skill areas</h3>
+                <span class="skill-section-caption">Organized by learning path</span>
             </div>
-            @if (conceptStageGroups.Count == 0)
+            @if (categoryGroups.Count == 0)
             {
-                <div class="skill-empty-state">No concept areas found.</div>
+                <div class="skill-empty-state">No skill areas found for this language.</div>
             }
             else
             {
-                @foreach (var stage in conceptStageGroups)
+                @foreach (var category in categoryGroups)
                 {
                     <div class="stage-group">
                         <div class="stage-group-header">
-                            <h4>Stage @stage.Stage</h4>
-                            <span>@stage.MasteredCount / @stage.Areas.Count mastered</span>
+                            <h4>@FormatCategory(category.Category)</h4>
+                            <span>@category.MasteredCount / @category.Areas.Count mastered</span>
                         </div>
                         <div class="area-list">
-                            @foreach (var area in stage.Areas)
+                            @foreach (var area in category.Areas)
                             {
                                 <article class="area-row @(area.IsMastered ? "mastered" : string.Empty)">
                                     <div class="area-row-main">
@@ -121,7 +121,7 @@
                                                 <span class="mastered-pill">Mastered</span>
                                             }
                                         </div>
-                                        <span class="area-row-score">@area.Score/100</span>
+                                        <span class="area-row-score">@area.Score/100 · Stage @area.Stage</span>
                                     </div>
                                     <div class="skill-progress-track compact">
                                         <div class="skill-progress-fill" style="width: @area.Score%;"></div>
@@ -130,43 +130,6 @@
                                     {
                                         <div class="area-row-prereqs">Needs: @string.Join(", ", area.Prerequisites)</div>
                                     }
-                                </article>
-                            }
-                        </div>
-                    </div>
-                }
-            }
-        </section>
-
-        <section class="skill-section">
-            <div class="skill-section-header">
-                <h3>Conversation topics</h3>
-                <span class="skill-section-caption">Themes you can talk about naturally</span>
-            </div>
-            @if (topicStageGroups.Count == 0)
-            {
-                <div class="skill-empty-state">No conversation topics found.</div>
-            }
-            else
-            {
-                @foreach (var stage in topicStageGroups)
-                {
-                    <div class="stage-group">
-                        <div class="stage-group-header">
-                            <h4>Stage @stage.Stage</h4>
-                            <span>@stage.MasteredCount / @stage.Areas.Count mastered</span>
-                        </div>
-                        <div class="topic-chip-grid">
-                            @foreach (var area in stage.Areas)
-                            {
-                                <article class="topic-chip @(area.IsMastered ? "mastered" : string.Empty)">
-                                    <div class="topic-chip-header">
-                                        <h5>@area.Name</h5>
-                                        <span>@area.Score/100</span>
-                                    </div>
-                                    <div class="skill-progress-track compact">
-                                        <div class="skill-progress-fill" style="width: @area.Score%;"></div>
-                                    </div>
                                 </article>
                             }
                         </div>
@@ -185,8 +148,7 @@
     private string weakestSkillName = string.Empty;
     private List<SkillScoreCard> skillCards = new();
     private List<AreaProgressCard> frontierAreas = new();
-    private List<SkillAreaStageGroup> conceptStageGroups = new();
-    private List<SkillAreaStageGroup> topicStageGroups = new();
+    private List<SkillAreaCategoryGroup> categoryGroups = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -204,7 +166,8 @@
             var areaProgress = userProfile.AreaProgress;
 
             overallScore = (int)Math.Round(skills.AverageScore);
-            masteredCount = catalog.All.Count(area => areaProgress.IsMastered(area.Id));
+            var applicableAreas = catalog.ApplicableTo(userProfile.TargetLanguage);
+            masteredCount = applicableAreas.Count(area => areaProgress.IsMastered(area.Id));
             weakestSkillName = skills.WeakestSkill?.ToString() ?? string.Empty;
 
             skillCards = SkillProfile.AllSkills
@@ -215,12 +178,20 @@
                 .OrderByDescending(card => card.Score)
                 .ToList();
 
-            frontierAreas = areaProgress.GetFrontier(catalog, take: 6)
+            frontierAreas = areaProgress.GetFrontier(catalog, userProfile.TargetLanguage, take: 6)
                 .Select(area => ToAreaCard(area, areaProgress, catalog))
                 .ToList();
 
-            conceptStageGroups = BuildStageGroups(catalog, areaProgress, SkillAreaKind.Concept);
-            topicStageGroups = BuildStageGroups(catalog, areaProgress, SkillAreaKind.Topic);
+            categoryGroups = applicableAreas
+                .GroupBy(area => area.Category, StringComparer.OrdinalIgnoreCase)
+                .OrderBy(group => group.Key, StringComparer.OrdinalIgnoreCase)
+                .Select(group => new SkillAreaCategoryGroup(
+                    group.Key,
+                    group.OrderBy(area => area.Stage)
+                        .ThenBy(area => area.Name, StringComparer.OrdinalIgnoreCase)
+                        .Select(area => ToAreaCard(area, areaProgress, catalog))
+                        .ToList()))
+                .ToList();
         }
         catch (Exception ex)
         {
@@ -232,20 +203,6 @@
         }
     }
 
-    private static List<SkillAreaStageGroup> BuildStageGroups(
-        SkillAreaCatalog catalog,
-        AreaProgress areaProgress,
-        SkillAreaKind kind) =>
-        catalog.All
-            .Where(area => area.Kind == kind)
-            .OrderBy(area => area.Stage)
-            .ThenBy(area => area.Name, StringComparer.OrdinalIgnoreCase)
-            .GroupBy(area => area.Stage)
-            .Select(group => new SkillAreaStageGroup(
-                group.Key,
-                group.Select(area => ToAreaCard(area, areaProgress, catalog)).ToList()))
-            .ToList();
-
     private static AreaProgressCard ToAreaCard(
         SkillArea area,
         AreaProgress progress,
@@ -253,7 +210,7 @@
         new(
             area.Id,
             area.Name,
-            area.Kind,
+            area.Category,
             area.Stage,
             progress[area.Id],
             progress.IsMastered(area.Id),
@@ -270,6 +227,10 @@
         _ => "Just starting"
     };
 
+    private static string FormatCategory(string category) => string.Join(" ", category
+        .Split('-', StringSplitOptions.RemoveEmptyEntries)
+        .Select(word => char.ToUpperInvariant(word[0]) + word[1..]));
+
     private void GoBack() => Navigation.NavigateTo("/home");
 
     private sealed record SkillScoreCard(string Name, int Score, string Level);
@@ -277,13 +238,13 @@
     private sealed record AreaProgressCard(
         string Id,
         string Name,
-        SkillAreaKind Kind,
+        string Category,
         int Stage,
         int Score,
         bool IsMastered,
         List<string> Prerequisites);
 
-    private sealed record SkillAreaStageGroup(int Stage, List<AreaProgressCard> Areas)
+    private sealed record SkillAreaCategoryGroup(string Category, List<AreaProgressCard> Areas)
     {
         public int MasteredCount => Areas.Count(area => area.IsMastered);
     }

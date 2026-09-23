@@ -1,63 +1,813 @@
 [
-  { "Id": "introductions", "Name": "Introductions", "Kind": "topic", "Stage": 1, "Prerequisites": [] },
-  { "Id": "pronouns-singular", "Name": "Singular subject pronouns (I / you / he / she)", "Kind": "concept", "Stage": 1, "Prerequisites": [] },
-  { "Id": "present-simple", "Name": "Present tense", "Kind": "concept", "Stage": 1, "Prerequisites": [ "pronouns-singular" ] },
-  { "Id": "possessives", "Name": "Possessive pronouns & qualifiers", "Kind": "concept", "Stage": 1, "Prerequisites": [ "pronouns-singular" ] },
-  { "Id": "numbers", "Name": "Numbers", "Kind": "concept", "Stage": 1, "Prerequisites": [] },
-  { "Id": "have", "Name": "Have / possess", "Kind": "concept", "Stage": 1, "Prerequisites": [ "present-simple" ] },
-  { "Id": "need", "Name": "Need", "Kind": "concept", "Stage": 1, "Prerequisites": [ "present-simple" ] },
-  { "Id": "want", "Name": "Want", "Kind": "concept", "Stage": 1, "Prerequisites": [ "present-simple" ] },
-  { "Id": "like", "Name": "Like", "Kind": "concept", "Stage": 1, "Prerequisites": [ "present-simple" ] },
-  { "Id": "negation", "Name": "Negation", "Kind": "concept", "Stage": 1, "Prerequisites": [ "present-simple" ] },
-  { "Id": "questions", "Name": "Asking questions", "Kind": "concept", "Stage": 1, "Prerequisites": [ "present-simple" ] },
-  { "Id": "present-continuous", "Name": "Present continuous", "Kind": "concept", "Stage": 1, "Prerequisites": [ "present-simple" ] },
-  { "Id": "family", "Name": "Family", "Kind": "topic", "Stage": 1, "Prerequisites": [ "possessives" ] },
-  { "Id": "home", "Name": "Home", "Kind": "topic", "Stage": 1, "Prerequisites": [ "have" ] },
-  { "Id": "food", "Name": "Food", "Kind": "topic", "Stage": 1, "Prerequisites": [ "want", "like" ] },
-  { "Id": "animals", "Name": "Animals", "Kind": "topic", "Stage": 1, "Prerequisites": [] },
-  { "Id": "colors", "Name": "Colors", "Kind": "topic", "Stage": 1, "Prerequisites": [] },
-  { "Id": "feelings", "Name": "Feelings & emotions", "Kind": "topic", "Stage": 1, "Prerequisites": [ "present-simple" ] },
-  { "Id": "daily-life", "Name": "Daily life", "Kind": "topic", "Stage": 1, "Prerequisites": [ "present-simple" ] },
-  { "Id": "work", "Name": "Work", "Kind": "topic", "Stage": 1, "Prerequisites": [ "present-simple" ] },
-  { "Id": "time", "Name": "Telling time", "Kind": "topic", "Stage": 1, "Prerequisites": [ "numbers" ] },
-  { "Id": "directions", "Name": "Directions / where", "Kind": "topic", "Stage": 1, "Prerequisites": [ "questions" ] },
-  { "Id": "weather", "Name": "Weather", "Kind": "topic", "Stage": 1, "Prerequisites": [] },
-
-  { "Id": "adjectives", "Name": "Adjectives", "Kind": "concept", "Stage": 2, "Prerequisites": [ "present-simple" ] },
-  { "Id": "imperative", "Name": "Imperative", "Kind": "concept", "Stage": 2, "Prerequisites": [ "present-simple" ] },
-  { "Id": "movement-verbs", "Name": "Verbs of movement", "Kind": "concept", "Stage": 2, "Prerequisites": [ "present-simple" ] },
-  { "Id": "frequency-adverbs", "Name": "Frequency adverbs", "Kind": "concept", "Stage": 2, "Prerequisites": [ "present-simple" ] },
-  { "Id": "manner-adverbs", "Name": "Manner adverbs", "Kind": "concept", "Stage": 2, "Prerequisites": [ "adjectives" ] },
-  { "Id": "habits", "Name": "Talking about habits", "Kind": "concept", "Stage": 2, "Prerequisites": [ "frequency-adverbs" ] },
-  { "Id": "facts", "Name": "Stating facts", "Kind": "concept", "Stage": 2, "Prerequisites": [ "present-simple" ] },
-  { "Id": "comparison", "Name": "Comparisons", "Kind": "concept", "Stage": 2, "Prerequisites": [ "adjectives" ] },
-  { "Id": "modal-can", "Name": "Can", "Kind": "concept", "Stage": 2, "Prerequisites": [ "present-simple" ] },
-  { "Id": "modal-must", "Name": "Must", "Kind": "concept", "Stage": 2, "Prerequisites": [ "present-simple" ] },
-  { "Id": "modal-may", "Name": "May", "Kind": "concept", "Stage": 2, "Prerequisites": [ "present-simple" ] },
-  { "Id": "modal-should", "Name": "Should", "Kind": "concept", "Stage": 2, "Prerequisites": [ "present-simple" ] },
-  { "Id": "seem", "Name": "Seem", "Kind": "concept", "Stage": 2, "Prerequisites": [ "adjectives" ] },
-  { "Id": "past", "Name": "Past tense", "Kind": "concept", "Stage": 2, "Prerequisites": [ "present-simple" ] },
-  { "Id": "future", "Name": "Future tense", "Kind": "concept", "Stage": 2, "Prerequisites": [ "present-simple" ] },
-  { "Id": "transport", "Name": "Transport", "Kind": "topic", "Stage": 2, "Prerequisites": [ "movement-verbs" ] },
-
-  { "Id": "conditional", "Name": "Conditionals", "Kind": "concept", "Stage": 3, "Prerequisites": [ "past", "future" ] },
-  { "Id": "contrast", "Name": "Expressing contrast", "Kind": "concept", "Stage": 3, "Prerequisites": [ "comparison" ] },
-  { "Id": "past-perfect", "Name": "Past perfect", "Kind": "concept", "Stage": 3, "Prerequisites": [ "past" ] },
-  { "Id": "slang", "Name": "Slang & colloquialisms", "Kind": "concept", "Stage": 3, "Prerequisites": [] },
-  { "Id": "poetic-register", "Name": "Poetic register", "Kind": "concept", "Stage": 3, "Prerequisites": [] },
-  { "Id": "sports", "Name": "Sports", "Kind": "topic", "Stage": 3, "Prerequisites": [] },
-  { "Id": "health", "Name": "Health", "Kind": "topic", "Stage": 3, "Prerequisites": [ "modal-should" ] },
-  { "Id": "education", "Name": "Education", "Kind": "topic", "Stage": 3, "Prerequisites": [] },
-  { "Id": "nature", "Name": "Nature", "Kind": "topic", "Stage": 3, "Prerequisites": [] },
-  { "Id": "geography", "Name": "Geography", "Kind": "topic", "Stage": 3, "Prerequisites": [ "directions" ] },
-  { "Id": "travel", "Name": "Travel", "Kind": "topic", "Stage": 3, "Prerequisites": [ "transport", "future" ] },
-  { "Id": "culture", "Name": "Culture", "Kind": "topic", "Stage": 3, "Prerequisites": [] },
-  { "Id": "humour", "Name": "Humour", "Kind": "topic", "Stage": 3, "Prerequisites": [ "slang" ] },
-  { "Id": "language", "Name": "Language & linguistics", "Kind": "topic", "Stage": 3, "Prerequisites": [] },
-  { "Id": "quotes", "Name": "Quotes & sayings", "Kind": "topic", "Stage": 3, "Prerequisites": [] },
-  { "Id": "history", "Name": "History", "Kind": "topic", "Stage": 3, "Prerequisites": [ "past" ] },
-  { "Id": "politics", "Name": "Politics", "Kind": "topic", "Stage": 3, "Prerequisites": [ "contrast" ] },
-  { "Id": "pop-culture", "Name": "Pop culture", "Kind": "topic", "Stage": 3, "Prerequisites": [] },
-  { "Id": "science", "Name": "Science", "Kind": "topic", "Stage": 3, "Prerequisites": [ "facts" ] },
-  { "Id": "philosophy", "Name": "Philosophy", "Kind": "topic", "Stage": 3, "Prerequisites": [ "conditional" ] }
+  {
+    "Id": "communication/questions",
+    "Name": "Asking questions",
+    "Stage": 1,
+    "Prerequisites": [
+      "grammar/present-simple"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user how to form and ask questions in the present simple tense."
+  },
+  {
+    "Id": "communication/habits",
+    "Name": "Talking about habits",
+    "Stage": 2,
+    "Prerequisites": [
+      "grammar/frequency-adverbs"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user how to talk about habits and routines, using the present simple and adverbs of frequency."
+  },
+  {
+    "Id": "communication/facts",
+    "Name": "Stating facts",
+    "Stage": 2,
+    "Prerequisites": [
+      "grammar/present-simple"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user how to state facts and use the present simple to describe general truths."
+  },
+  {
+    "Id": "communication/contrast",
+    "Name": "Expressing contrast",
+    "Stage": 3,
+    "Prerequisites": [
+      "grammar/comparison"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user how to express contrast and differences between ideas, objects, or situations."
+  },
+  {
+    "Id": "communication/slang",
+    "Name": "Slang & colloquialisms",
+    "Stage": 3,
+    "Prerequisites": [],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Expose the user to informal language, slang, and colloquial expressions used in everyday conversations."
+  },
+  {
+    "Id": "communication/poetic-register",
+    "Name": "Poetic register",
+    "Stage": 3,
+    "Prerequisites": [],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Introduce the user to figurative language, imagery, and expressive forms used in poetry and literature."
+  },
+  {
+    "Id": "culture/customs",
+    "Name": "Culture",
+    "Stage": 3,
+    "Prerequisites": [],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Introduce the user to cultural norms, values, etiquette, celebrations, and regional practices associated with the target language."
+  },
+  {
+    "Id": "culture/humour",
+    "Name": "Humour",
+    "Stage": 3,
+    "Prerequisites": [
+      "communication/slang"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user about humour, including jokes, puns, and culturally specific references."
+  },
+  {
+    "Id": "culture/language",
+    "Name": "Language & linguistics",
+    "Stage": 3,
+    "Prerequisites": [],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Introduce the user to the study of language, including its structure, use, and the various languages spoken around the world."
+  },
+  {
+    "Id": "culture/quotes",
+    "Name": "Quotes & sayings",
+    "Stage": 3,
+    "Prerequisites": [],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach well-known quotes, sayings, and proverbs in the target language, including their meanings, cultural context, and appropriate usage."
+  },
+  {
+    "Id": "culture/pop-culture",
+    "Name": "Pop culture",
+    "Stage": 3,
+    "Prerequisites": [],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user about popular culture, including contemporary media, trends, and cultural phenomena."
+  },
+  {
+    "Id": "daily-life/feelings",
+    "Name": "Feelings & emotions",
+    "Stage": 1,
+    "Prerequisites": [
+      "grammar/present-simple"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user vocabulary for expressing basic feelings and emotions, and forming adjectival expressions."
+  },
+  {
+    "Id": "daily-life/routines",
+    "Name": "Daily life",
+    "Stage": 1,
+    "Prerequisites": [
+      "grammar/present-simple"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user to describe daily activities and routines using the present simple tense."
+  },
+  {
+    "Id": "education/study",
+    "Name": "Education",
+    "Stage": 3,
+    "Prerequisites": [],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user vocabulary and expressions related to educational settings, studying, and academic subjects."
+  },
+  {
+    "Id": "food/meals",
+    "Name": "Food",
+    "Stage": 1,
+    "Prerequisites": [
+      "grammar/want",
+      "grammar/like"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user vocabulary for common foods and expressions for discussing preferences and dietary restrictions."
+  },
+  {
+    "Id": "food/groceries",
+    "Name": "Groceries",
+    "Stage": 2,
+    "Prerequisites": [
+      "food/meals",
+      "foundations/numbers"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach grocery items, quantities, packaging, prices, shopping requests, and locating products in a store or market."
+  },
+  {
+    "Id": "food/dining-out",
+    "Name": "Dining out",
+    "Stage": 2,
+    "Prerequisites": [
+      "food/meals",
+      "communication/questions"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach reading menus, ordering politely, asking about dishes, handling dietary needs, paying, and discussing service."
+  },
+  {
+    "Id": "foundations/numbers",
+    "Name": "Numbers",
+    "Stage": 1,
+    "Prerequisites": [],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user to recognize and use numbers in order to count, ask about quantity, and discuss prices."
+  },
+  {
+    "Id": "foundations/colors",
+    "Name": "Colors",
+    "Stage": 1,
+    "Prerequisites": [],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user to recognize and name common colors and use them naturally to describe objects in the target language."
+  },
+  {
+    "Id": "foundations/time",
+    "Name": "Telling time",
+    "Stage": 1,
+    "Prerequisites": [
+      "foundations/numbers"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user how to ask for and tell the time, discuss schedules, and use natural time expressions in the target language."
+  },
+  {
+    "Id": "grammar/pronouns-singular",
+    "Name": "Singular subject pronouns (I / you / he / she)",
+    "Stage": 1,
+    "Prerequisites": [],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user the target language's singular subject pronouns, when they may be omitted, and how they behave in a sentence."
+  },
+  {
+    "Id": "grammar/present-simple",
+    "Name": "Present tense",
+    "Stage": 1,
+    "Prerequisites": [
+      "grammar/pronouns-singular"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user how to describe habitual actions and universal truths using the present simple tense."
+  },
+  {
+    "Id": "grammar/possessives",
+    "Name": "Possessive pronouns & qualifiers",
+    "Stage": 1,
+    "Prerequisites": [
+      "grammar/pronouns-singular"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user to express ownership and relationships with possessive pronouns and qualifiers."
+  },
+  {
+    "Id": "grammar/have",
+    "Name": "Have / possess",
+    "Stage": 1,
+    "Prerequisites": [
+      "grammar/present-simple"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user how to use the verb 'have' to indicate possession and in expressions of age."
+  },
+  {
+    "Id": "grammar/need",
+    "Name": "Need",
+    "Stage": 1,
+    "Prerequisites": [
+      "grammar/present-simple"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user how to express needs and requirements using the verb 'need'."
+  },
+  {
+    "Id": "grammar/want",
+    "Name": "Want",
+    "Stage": 1,
+    "Prerequisites": [
+      "grammar/present-simple"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user how to express desires and wants using the verb 'want'."
+  },
+  {
+    "Id": "grammar/like",
+    "Name": "Like",
+    "Stage": 1,
+    "Prerequisites": [
+      "grammar/present-simple"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user how to express preferences and likes using the verb 'like'."
+  },
+  {
+    "Id": "grammar/negation",
+    "Name": "Negation",
+    "Stage": 1,
+    "Prerequisites": [
+      "grammar/present-simple"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user how to form negative sentences and negate verbs in the present simple tense."
+  },
+  {
+    "Id": "grammar/present-continuous",
+    "Name": "Present continuous",
+    "Stage": 1,
+    "Prerequisites": [
+      "grammar/present-simple"
+    ],
+    "ApplicableTo": [
+      "en",
+      "fr",
+      "it",
+      "no"
+    ],
+    "Purpose": "Teach the user how to describe ongoing actions and current activities using the present continuous tense."
+  },
+  {
+    "Id": "grammar/adjectives",
+    "Name": "Adjectives",
+    "Stage": 2,
+    "Prerequisites": [
+      "grammar/present-simple"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user how to use adjectives to describe people, objects, and experiences."
+  },
+  {
+    "Id": "grammar/imperative",
+    "Name": "Imperative",
+    "Stage": 2,
+    "Prerequisites": [
+      "grammar/present-simple"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user how to use the imperative mood to give commands, make requests, and offer invitations."
+  },
+  {
+    "Id": "grammar/movement-verbs",
+    "Name": "Verbs of movement",
+    "Stage": 2,
+    "Prerequisites": [
+      "grammar/present-simple"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user vocabulary and expressions related to movement and common verbs of motion."
+  },
+  {
+    "Id": "grammar/frequency-adverbs",
+    "Name": "Frequency adverbs",
+    "Stage": 2,
+    "Prerequisites": [
+      "grammar/present-simple"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user how to use adverbs of frequency to describe how often they do activities."
+  },
+  {
+    "Id": "grammar/manner-adverbs",
+    "Name": "Manner adverbs",
+    "Stage": 2,
+    "Prerequisites": [
+      "grammar/adjectives"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user how to use adverbs of manner to describe how actions are performed."
+  },
+  {
+    "Id": "grammar/comparison",
+    "Name": "Comparisons",
+    "Stage": 2,
+    "Prerequisites": [
+      "grammar/adjectives"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user how to make comparisons between people, objects, and actions, using comparative and superlative forms."
+  },
+  {
+    "Id": "grammar/modal-can",
+    "Name": "Can",
+    "Stage": 2,
+    "Prerequisites": [
+      "grammar/present-simple"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user how to use the modal verb 'can' to express ability, possibility, and permission."
+  },
+  {
+    "Id": "grammar/modal-must",
+    "Name": "Must",
+    "Stage": 2,
+    "Prerequisites": [
+      "grammar/present-simple"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user how to use the modal verb 'must' to express obligation and necessity."
+  },
+  {
+    "Id": "grammar/modal-may",
+    "Name": "May",
+    "Stage": 2,
+    "Prerequisites": [
+      "grammar/present-simple"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user how to use the modal verb 'may' to express possibility and make polite requests."
+  },
+  {
+    "Id": "grammar/modal-should",
+    "Name": "Should",
+    "Stage": 2,
+    "Prerequisites": [
+      "grammar/present-simple"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user how to use the modal verb 'should' to give advice and make recommendations."
+  },
+  {
+    "Id": "grammar/seem",
+    "Name": "Seem",
+    "Stage": 2,
+    "Prerequisites": [
+      "grammar/adjectives"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user how to use the verb 'seem' to describe appearances and perceptions."
+  },
+  {
+    "Id": "grammar/past",
+    "Name": "Past tense",
+    "Stage": 2,
+    "Prerequisites": [
+      "grammar/present-simple"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user how to describe past events and actions using the past simple tense."
+  },
+  {
+    "Id": "grammar/future",
+    "Name": "Future tense",
+    "Stage": 2,
+    "Prerequisites": [
+      "grammar/present-simple"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user how to talk about future plans and predictions using the going to-future and present continuous."
+  },
+  {
+    "Id": "grammar/conditional",
+    "Name": "Conditionals",
+    "Stage": 3,
+    "Prerequisites": [
+      "grammar/past",
+      "grammar/future"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user how to use conditional sentences to express real and hypothetical situations."
+  },
+  {
+    "Id": "grammar/past-perfect",
+    "Name": "Past perfect",
+    "Stage": 3,
+    "Prerequisites": [
+      "grammar/past"
+    ],
+    "ApplicableTo": [
+      "en",
+      "fr",
+      "it",
+      "no"
+    ],
+    "Purpose": "Teach the user how to use the past perfect tense to describe actions that were completed before a certain point in the past."
+  },
+  {
+    "Id": "grammar/classifiers",
+    "Name": "Noun classifiers",
+    "Stage": 2,
+    "Prerequisites": [
+      "foundations/numbers"
+    ],
+    "ApplicableTo": [
+      "vi",
+      "zh"
+    ],
+    "Purpose": "Teach common classifiers used with numbers and demonstratives, including which classifier naturally pairs with different nouns."
+  },
+  {
+    "Id": "grammar/definite-suffixes",
+    "Name": "Definite noun suffixes",
+    "Stage": 2,
+    "Prerequisites": [
+      "grammar/possessives"
+    ],
+    "ApplicableTo": [
+      "no"
+    ],
+    "Purpose": "Teach Norwegian definite noun endings, gender and number agreement, and when a separate determiner is also required."
+  },
+  {
+    "Id": "grammar/partitive-articles",
+    "Name": "Partitive articles",
+    "Stage": 2,
+    "Prerequisites": [
+      "food/meals"
+    ],
+    "ApplicableTo": [
+      "fr",
+      "it"
+    ],
+    "Purpose": "Teach article and preposition forms used for unspecified quantities, especially with food, drink, and other mass nouns."
+  },
+  {
+    "Id": "grammar/phrasal-verbs",
+    "Name": "Phrasal verbs",
+    "Stage": 3,
+    "Prerequisites": [
+      "grammar/movement-verbs"
+    ],
+    "ApplicableTo": [
+      "en"
+    ],
+    "Purpose": "Teach common English verb-particle combinations, separability, idiomatic meanings, register, and natural usage in context."
+  },
+  {
+    "Id": "health/wellbeing",
+    "Name": "Health",
+    "Stage": 3,
+    "Prerequisites": [
+      "grammar/modal-should"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user how to talk about health, fitness, and wellbeing, and give advice using modal verbs."
+  },
+  {
+    "Id": "home/living-room",
+    "Name": "Living Room",
+    "Stage": 1,
+    "Prerequisites": [
+      "grammar/have"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user vocabulary and expressions related to the living room and its objects."
+  },
+  {
+    "Id": "home/kitchen",
+    "Name": "Kitchen",
+    "Stage": 1,
+    "Prerequisites": [
+      "grammar/have"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user vocabulary and expressions related to the kitchen and cooking."
+  },
+  {
+    "Id": "home/household-tasks",
+    "Name": "Household tasks",
+    "Stage": 2,
+    "Prerequisites": [
+      "grammar/imperative"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach language for cleaning, organizing, repairs, chores, requests, and dividing household responsibilities."
+  },
+  {
+    "Id": "nature/animals",
+    "Name": "Animals",
+    "Stage": 1,
+    "Prerequisites": [],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user vocabulary for common animals and basic animal-related actions."
+  },
+  {
+    "Id": "nature/weather",
+    "Name": "Weather",
+    "Stage": 1,
+    "Prerequisites": [],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user vocabulary for common weather conditions and expressions for discussing the weather."
+  },
+  {
+    "Id": "nature/outdoors",
+    "Name": "Nature",
+    "Stage": 3,
+    "Prerequisites": [],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user vocabulary for talking about nature, landscapes, and outdoor activities."
+  },
+  {
+    "Id": "pronunciation/tones",
+    "Name": "Lexical tones",
+    "Stage": 1,
+    "Prerequisites": [],
+    "ApplicableTo": [
+      "vi",
+      "zh"
+    ],
+    "Purpose": "Teach learners to hear and produce lexical tone contrasts, understand tone marks or contours, and avoid meaning-changing tone errors."
+  },
+  {
+    "Id": "recreation/sports",
+    "Name": "Sports",
+    "Stage": 3,
+    "Prerequisites": [],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user vocabulary and expressions related to sports, physical activities, and games."
+  },
+  {
+    "Id": "relationships/introductions",
+    "Name": "Introductions",
+    "Stage": 1,
+    "Prerequisites": [],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user how to introduce themselves and ask others' names in social situations."
+  },
+  {
+    "Id": "relationships/family",
+    "Name": "Family",
+    "Stage": 1,
+    "Prerequisites": [
+      "grammar/possessives"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user words for family members, usage in social gatherings, family relationships, and ways to discuss family history."
+  },
+  {
+    "Id": "relationships/romance",
+    "Name": "Romance and dating",
+    "Stage": 2,
+    "Prerequisites": [
+      "relationships/introductions",
+      "grammar/like"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach respectful language for attraction, dating, partners, invitations, affection, boundaries, and relationship status."
+  },
+  {
+    "Id": "society/geography",
+    "Name": "Geography",
+    "Stage": 3,
+    "Prerequisites": [
+      "travel/directions"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user about geographical features, locations, and how to describe them."
+  },
+  {
+    "Id": "society/history",
+    "Name": "History",
+    "Stage": 3,
+    "Prerequisites": [
+      "grammar/past"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user how to talk about historical events and periods, and use the past tense to describe them."
+  },
+  {
+    "Id": "society/politics",
+    "Name": "Politics",
+    "Stage": 3,
+    "Prerequisites": [
+      "communication/contrast"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Introduce the user to political vocabulary, concepts, and the language used in political discussions."
+  },
+  {
+    "Id": "society/science",
+    "Name": "Science",
+    "Stage": 3,
+    "Prerequisites": [
+      "communication/facts"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Introduce the user to basic scientific vocabulary, concepts, and the language used in scientific contexts."
+  },
+  {
+    "Id": "society/philosophy",
+    "Name": "Philosophy",
+    "Stage": 3,
+    "Prerequisites": [
+      "grammar/conditional"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Introduce the user to philosophical vocabulary, concepts, and the language used in philosophical discussions."
+  },
+  {
+    "Id": "travel/directions",
+    "Name": "Directions / where",
+    "Stage": 1,
+    "Prerequisites": [
+      "communication/questions"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user how to ask for and give directions, and the vocabulary for describing locations."
+  },
+  {
+    "Id": "travel/transport",
+    "Name": "Transport",
+    "Stage": 2,
+    "Prerequisites": [
+      "grammar/movement-verbs"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user vocabulary and expressions related to different modes of transport and travel activities."
+  },
+  {
+    "Id": "travel/journeys",
+    "Name": "Travel",
+    "Stage": 3,
+    "Prerequisites": [
+      "travel/transport",
+      "grammar/future"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user how to plan and describe journeys, including future travel plans."
+  },
+  {
+    "Id": "work/workplace",
+    "Name": "Work",
+    "Stage": 1,
+    "Prerequisites": [
+      "grammar/present-simple"
+    ],
+    "ApplicableTo": [
+      "*"
+    ],
+    "Purpose": "Teach the user vocabulary and expressions common in work contexts, and how to describe their job and responsibilities."
+  }
 ]

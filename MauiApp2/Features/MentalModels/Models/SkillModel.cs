@@ -34,15 +34,18 @@ namespace MauiApp2.Features.MentalModels.Models
                 sb.AppendLine("- No proficiency data yet (assume an early beginner).");
             }
 
-            var frontierConcepts = request.AreaProgress.GetFrontierByKind(request.SkillAreaCatalog, SkillAreaKind.Concept, take: 2);
-            var frontierTopics = request.AreaProgress.GetFrontierByKind(request.SkillAreaCatalog, SkillAreaKind.Topic, take: 2);
-            if (frontierConcepts.Count > 0 || frontierTopics.Count > 0)
+            var frontierAreas = request.AreaProgress.GetFrontier(
+                request.SkillAreaCatalog,
+                request.TargetLanguage,
+                take: 6);
+            if (frontierAreas.Count > 0)
             {
                 sb.AppendLine("NEXT SKILL AREAS ON THE LEARNING PATH:");
 
-                foreach (var area in frontierConcepts.Concat(frontierTopics))
+                foreach (var area in frontierAreas)
                 {
-                    sb.AppendLine($"- {area.Name} ({area.Kind}, stage {area.Stage}): {request.AreaProgress[area.Id]}/100");
+                    sb.AppendLine($"- {area.Name} ({area.Category}, stage {area.Stage}): {request.AreaProgress[area.Id]}/100");
+                    sb.AppendLine($"  Teaching purpose: {area.Purpose}");
                 }
             }
 

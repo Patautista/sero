@@ -327,7 +327,8 @@ CONVERSATION-SPECIFIC INSTRUCTIONS:
                 foreach (var area in learningContext.TargetAreas)
                 {
                     var firstPractice = area.IsFirstPractice ? "FIRST PRACTICE — teach it with an example before the exercise" : "previously practised";
-                    sb.AppendLine($"  - {area.Name} ({area.Kind}): {area.Score}/100; {firstPractice}; id: {area.Id}");
+                    sb.AppendLine($"  - {area.Name} ({area.Category}): {area.Score}/100; {firstPractice}; id: {area.Id}");
+                    sb.AppendLine($"    Teaching purpose: {area.Purpose}");
                 }
             }
 

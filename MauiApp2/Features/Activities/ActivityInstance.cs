@@ -69,7 +69,13 @@ namespace MauiApp2.Features.Activities
 
     public sealed record ActivitySkillSnapshot(SkillType Skill, int Score);
 
-    public sealed record ActivityAreaSnapshot(string Id, string Name, SkillAreaKind Kind, int Score, bool IsFirstPractice);
+    public sealed record ActivityAreaSnapshot(
+        string Id,
+        string Name,
+        string Category,
+        string Purpose,
+        int Score,
+        bool IsFirstPractice);
 
     /// <summary>A single message exchanged inside an activity.</summary>
     public class ActivityTurn

@@ -6,13 +6,6 @@ using System.Text.Json.Serialization;
 
 namespace Domain.Shared.Models
 {
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum SkillAreaKind
-    {
-        Concept,
-        Topic
-    }
-
     /// <summary>
     /// A skill area in the learner's progress path. Separate from broad proficiency
     /// skills such as Reading/Writing/Listening: this describes what is being learnt.
@@ -21,9 +14,25 @@ namespace Domain.Shared.Models
     {
         public string Id { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
-        public SkillAreaKind Kind { get; set; }
         public int Stage { get; set; }
         public List<string> Prerequisites { get; set; } = new();
+        public List<string> ApplicableTo { get; set; } = new();
+        public string Purpose { get; set; } = string.Empty;
+
+        [JsonIgnore]
+        public string Category => Id.Split('/', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() ?? string.Empty;
+
+        public bool IsApplicableTo(string? languageCode)
+        {
+            if (ApplicableTo.Contains("*", StringComparer.OrdinalIgnoreCase))
+                return true;
+
+            if (string.IsNullOrWhiteSpace(languageCode))
+                return false;
+
+            var normalizedCode = languageCode.Split('-', '_')[0];
+            return ApplicableTo.Contains(normalizedCode, StringComparer.OrdinalIgnoreCase);
+        }
     }
 
     /// <summary>
@@ -33,8 +42,7 @@ namespace Domain.Shared.Models
     {
         private static readonly JsonSerializerOptions JsonOptions = new()
         {
-            PropertyNameCaseInsensitive = true,
-            Converters = { new JsonStringEnumConverter() }
+            PropertyNameCaseInsensitive = true
         };
 
         private readonly IReadOnlyDictionary<string, SkillArea> _areas;
@@ -56,10 +64,18 @@ namespace Domain.Shared.Models
             if (string.IsNullOrWhiteSpace(id))
                 return null;
 
-            return _areas.TryGetValue(id, out var area) ? area : null;
+            if (_areas.TryGetValue(id, out var area))
+                return area;
+
+            return _areas.Values.SingleOrDefault(candidate =>
+                string.Equals(GetLegacyId(candidate.Id), id, StringComparison.OrdinalIgnoreCase));
         }
 
         public bool Contains(string? id) => Find(id) is not null;
+
+        public IReadOnlyList<SkillArea> ApplicableTo(string? languageCode) => _areas.Values
+            .Where(area => area.IsApplicableTo(languageCode))
+            .ToList();
 
         public static SkillAreaCatalog FromJson(string json)
         {
@@ -81,9 +97,28 @@ namespace Domain.Shared.Models
                 if (string.IsNullOrWhiteSpace(area.Name))
                     throw new InvalidOperationException($"Skill area '{area.Id}' must have a non-empty Name.");
 
+                var pathSegments = area.Id.Split('/');
+                if (pathSegments.Length < 2 || pathSegments.Any(string.IsNullOrWhiteSpace))
+                    throw new InvalidOperationException($"Skill area '{area.Id}' must use a category/name path.");
+
+                if (string.IsNullOrWhiteSpace(area.Purpose))
+                    throw new InvalidOperationException($"Skill area '{area.Id}' must have a non-empty Purpose.");
+
+                if (area.ApplicableTo.Count == 0 || area.ApplicableTo.Any(string.IsNullOrWhiteSpace))
+                    throw new InvalidOperationException($"Skill area '{area.Id}' must declare at least one ApplicableTo language code.");
+
+                if (area.ApplicableTo.Contains("*", StringComparer.OrdinalIgnoreCase) && area.ApplicableTo.Count != 1)
+                    throw new InvalidOperationException($"Skill area '{area.Id}' must use '*' by itself in ApplicableTo.");
+
                 if (!ids.Add(area.Id))
                     throw new InvalidOperationException($"Duplicate skill area id '{area.Id}'.");
             }
+
+            var duplicateLegacyId = areas
+                .GroupBy(area => GetLegacyId(area.Id), StringComparer.OrdinalIgnoreCase)
+                .FirstOrDefault(group => group.Count() > 1);
+            if (duplicateLegacyId is not null)
+                throw new InvalidOperationException($"Skill area leaf id '{duplicateLegacyId.Key}' must be unique for legacy progress compatibility.");
 
             foreach (var area in areas)
             {
@@ -95,6 +130,15 @@ namespace Domain.Shared.Models
             }
 
             DetectCycles(areas);
+        }
+
+        internal static string GetLegacyId(string areaId)
+        {
+            if (string.Equals(areaId, "home/living-room", StringComparison.OrdinalIgnoreCase))
+                return "home";
+
+            var separatorIndex = areaId.LastIndexOf('/');
+            return separatorIndex >= 0 ? areaId[(separatorIndex + 1)..] : areaId;
         }
 
         private static void DetectCycles(IReadOnlyList<SkillArea> areas)
@@ -138,13 +182,26 @@ namespace Domain.Shared.Models
 
         public int this[string areaId]
         {
-            get => string.IsNullOrWhiteSpace(areaId) ? SkillProfile.MinScore : _scores.TryGetValue(areaId, out var score) ? score : SkillProfile.MinScore;
+            get
+            {
+                if (string.IsNullOrWhiteSpace(areaId))
+                    return SkillProfile.MinScore;
+
+                if (_scores.TryGetValue(areaId, out var score))
+                    return score;
+
+                var legacyId = SkillAreaCatalog.GetLegacyId(areaId);
+                return _scores.TryGetValue(legacyId, out score) ? score : SkillProfile.MinScore;
+            }
             set
             {
                 if (string.IsNullOrWhiteSpace(areaId))
                     return;
 
                 _scores[areaId] = SkillProfile.Clamp(value);
+                var legacyId = SkillAreaCatalog.GetLegacyId(areaId);
+                if (!string.Equals(legacyId, areaId, StringComparison.OrdinalIgnoreCase))
+                    _scores.Remove(legacyId);
             }
         }
 
@@ -154,11 +211,18 @@ namespace Domain.Shared.Models
 
         public bool IsMastered(string areaId) => this[areaId] >= MasteredThreshold;
 
-        public IReadOnlyList<SkillArea> GetFrontier(SkillAreaCatalog catalog, int take = int.MaxValue)
+        public IReadOnlyList<SkillArea> GetFrontier(
+            SkillAreaCatalog catalog,
+            string? languageCode = null,
+            int take = int.MaxValue)
         {
             ArgumentNullException.ThrowIfNull(catalog);
 
-            return catalog.All
+            var areas = string.IsNullOrWhiteSpace(languageCode)
+                ? catalog.All
+                : catalog.ApplicableTo(languageCode);
+
+            return areas
                 .Where(area => !IsMastered(area.Id) && area.Prerequisites.All(IsMastered))
                 .OrderBy(area => area.Stage)
                 .ThenBy(area => this[area.Id])
@@ -167,12 +231,17 @@ namespace Domain.Shared.Models
                 .ToList();
         }
 
-        public IReadOnlyList<SkillArea> GetFrontierByKind(SkillAreaCatalog catalog, SkillAreaKind kind, int take = int.MaxValue)
+        public IReadOnlyList<SkillArea> GetFrontierByCategory(
+            SkillAreaCatalog catalog,
+            string category,
+            string? languageCode = null,
+            int take = int.MaxValue)
         {
             ArgumentNullException.ThrowIfNull(catalog);
+            ArgumentException.ThrowIfNullOrWhiteSpace(category);
 
-            return GetFrontier(catalog, int.MaxValue)
-                .Where(area => area.Kind == kind)
+            return GetFrontier(catalog, languageCode, int.MaxValue)
+                .Where(area => string.Equals(area.Category, category, StringComparison.OrdinalIgnoreCase))
                 .Take(Math.Max(0, take))
                 .ToList();
         }

@@ -686,7 +686,9 @@ namespace MauiApp2.Features.Chat
             // of these; it never decides how they are run (that is the Activity Agent's job).
             var skills = userProfile?.Skills ?? new SkillProfile();
             var areaProgress = userProfile?.AreaProgress ?? new AreaProgress();
-            var eligibleActivities = _activitySelection.GetEligibleActivities(skills, areaProgress, catalog).ToList();
+            var eligibleActivities = _activitySelection
+                .GetEligibleActivities(skills, areaProgress, catalog, userProfile?.TargetLanguage)
+                .ToList();
 
             var context = new CompanionResponseContext
             {

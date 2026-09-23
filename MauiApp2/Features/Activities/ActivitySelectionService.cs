@@ -44,16 +44,19 @@ namespace MauiApp2.Features.Activities
         public IReadOnlyList<LearningActivity> GetEligibleActivities(
             SkillProfile skills,
             AreaProgress areaProgress,
-            SkillAreaCatalog catalog)
+            SkillAreaCatalog catalog,
+            string? targetLanguage = null)
         {
             ArgumentNullException.ThrowIfNull(areaProgress);
             ArgumentNullException.ThrowIfNull(catalog);
 
-            var frontierIds = areaProgress.GetFrontier(catalog)
+            var frontierIds = areaProgress.GetFrontier(catalog, targetLanguage)
                 .Select(a => a.Id)
                 .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
             return ActivityRecommender.GetEligible(skills, ActivityCatalog.GetActivities())
+                .Where(activity => activity.TargetAreaIds.All(areaId =>
+                    catalog.Find(areaId)?.IsApplicableTo(targetLanguage) != false))
                 .OrderByDescending(a => ActivityRecommender.Score(skills, a, frontierIds))
                 .ThenBy(a => a.Name, StringComparer.OrdinalIgnoreCase)
                 .ToList();
@@ -66,8 +69,9 @@ namespace MauiApp2.Features.Activities
         public LearningActivity? RecommendActivity(
             SkillProfile skills,
             AreaProgress areaProgress,
-            SkillAreaCatalog catalog) =>
-            ActivityRecommender.Recommend(skills, areaProgress, catalog, ActivityCatalog.GetActivities());
+            SkillAreaCatalog catalog,
+            string? targetLanguage = null) =>
+            GetEligibleActivities(skills, areaProgress, catalog, targetLanguage).FirstOrDefault();
 
         /// <summary>Loads the current user's skills and recommends the best next activity.</summary>
         public async Task<LearningActivity?> GetRecommendedActivityAsync()
@@ -83,7 +87,8 @@ namespace MauiApp2.Features.Activities
             return RecommendActivity(
                 profile.Skills,
                 profile.AreaProgress,
-                catalog);
+                catalog,
+                profile.TargetLanguage);
         }
 
         /// <summary>Loads the current user's skill profile, or an empty profile when none exists.</summary>
@@ -126,7 +131,8 @@ namespace MauiApp2.Features.Activities
                 var catalog = await _skillAreaCatalogProvider.GetCatalogAsync();
                 foreach (var (areaId, delta) in areaAdjustments)
                 {
-                    if (delta == 0 || string.IsNullOrWhiteSpace(areaId) || !catalog.Contains(areaId))
+                    var area = catalog.Find(areaId);
+                    if (delta == 0 || string.IsNullOrWhiteSpace(areaId) || area is null || !area.IsApplicableTo(profileTable.TargetLanguage))
                     {
                         continue;
                     }

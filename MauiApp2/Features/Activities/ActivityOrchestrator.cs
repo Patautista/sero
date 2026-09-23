@@ -82,7 +82,13 @@ namespace MauiApp2.Features.Activities
 
             var profile = await _dataStore.UserProfiles.FirstOrDefaultAsync(p => true);
             var skills = profile?.Skills ?? new SkillProfile();
-            var learningContext = await BuildLearningContextAsync(profile?.Id, definition, skills, profile?.AreaProgress ?? new AreaProgress(), cancellationToken);
+            var learningContext = await BuildLearningContextAsync(
+                profile?.Id,
+                definition,
+                skills,
+                profile?.AreaProgress ?? new AreaProgress(),
+                context.TargetLanguage,
+                cancellationToken);
 
             var instance = new ActivityInstance
             {
@@ -232,11 +238,16 @@ namespace MauiApp2.Features.Activities
             if (skillChanges.Count > 0)
                 sections.Add($"Skills: {string.Join(", ", skillChanges.Select(change => $"{change.Skill} {FormatDelta(change.Delta)}"))}");
 
-            foreach (var kind in new[] { SkillAreaKind.Concept, SkillAreaKind.Topic })
+            foreach (var category in areaChanges
+                .Select(change => change.Area!.Category)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(value => value, StringComparer.OrdinalIgnoreCase))
             {
-                var changes = areaChanges.Where(change => change.Area!.Kind == kind).ToList();
+                var changes = areaChanges
+                    .Where(change => string.Equals(change.Area!.Category, category, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
                 if (changes.Count > 0)
-                    sections.Add($"{kind}s: {string.Join(", ", changes.Select(change => $"{change.Area!.Name} {FormatDelta(change.Delta)}"))}");
+                    sections.Add($"{category}: {string.Join(", ", changes.Select(change => $"{change.Area!.Name} {FormatDelta(change.Delta)}"))}");
             }
 
             if (multiplier > 1 && skillChanges.Any(change => change.Delta > 0))
@@ -289,6 +300,7 @@ namespace MauiApp2.Features.Activities
             LearningActivity definition,
             SkillProfile skills,
             AreaProgress areaProgress,
+            string targetLanguage,
             CancellationToken cancellationToken)
         {
             var catalog = await _skillAreaCatalogProvider.GetCatalogAsync(cancellationToken);
@@ -316,6 +328,7 @@ namespace MauiApp2.Features.Activities
                     .Select(skill => new ActivitySkillSnapshot(skill, skills[skill]))
                     .ToList(),
                 TargetAreas = definition.TargetAreaIds
+                    .Where(areaId => catalog.Find(areaId)?.IsApplicableTo(targetLanguage) != false)
                     .Select(areaId =>
                     {
                         var area = catalog.Find(areaId);
@@ -323,7 +336,8 @@ namespace MauiApp2.Features.Activities
                         return new ActivityAreaSnapshot(
                             areaId,
                             area?.Name ?? areaId,
-                            area?.Kind ?? SkillAreaKind.Concept,
+                            area?.Category ?? "uncategorized",
+                            area?.Purpose ?? string.Empty,
                             areaProgress[areaId],
                             !hasBeenPractised);
                     })
