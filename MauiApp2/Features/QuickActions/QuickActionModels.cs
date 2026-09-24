@@ -51,4 +51,11 @@ namespace MauiApp2.Features.QuickActions
         public string Translation { get; set; } = string.Empty;
         public string Note { get; set; } = string.Empty;
     }
+
+    public class QuickActionHistoryItem
+    {
+        public string OriginalText { get; set; } = string.Empty;
+        public string Summary { get; set; } = string.Empty;
+        public DateTime UsedAt { get; set; }
+    }
 }

@@ -196,6 +196,24 @@ namespace Infrastructure.Data
         public UserProfileTable? UserProfile { get; set; }
     }
 
+    public class QuickActionHistoryTable
+    {
+        public int Id { get; set; }
+
+        public int UserProfileId { get; set; }
+
+        public string ActionType { get; set; } = string.Empty;
+
+        public string OriginalText { get; set; } = string.Empty;
+
+        public string Summary { get; set; } = string.Empty;
+
+        public DateTime UsedAt { get; set; }
+
+        [BsonIgnore]
+        public UserProfileTable? UserProfile { get; set; }
+    }
+
     /// <summary>
     /// A completed learning activity retained to provide varied future practice for the
     /// same combination of broad skills and target areas, and track successful streaks.

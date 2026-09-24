@@ -1,7 +1,9 @@
 using MauiApp2.Services;
 using MauiApp2.Services.AI;
 using MauiApp2.Services.AI.Schemas;
+using Infrastructure.Data;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,15 +15,48 @@ namespace MauiApp2.Features.QuickActions
         private readonly LocalApiService _api;
         private readonly ICompanionPromptBuilder _promptBuilder;
         private readonly ILogger<QuickActionsService> _logger;
+        private readonly PetDbContext _dbContext;
 
         public QuickActionsService(
             LocalApiService api,
             ICompanionPromptBuilder promptBuilder,
-            ILogger<QuickActionsService> logger)
+            ILogger<QuickActionsService> logger,
+            PetDbContext dbContext)
         {
             _api = api;
             _promptBuilder = promptBuilder;
             _logger = logger;
+            _dbContext = dbContext;
+        }
+
+        public Task AddHistoryAsync(int userProfileId, string actionType, string originalText, string summary)
+        {
+            _dbContext.QuickActionHistories.Insert(new QuickActionHistoryTable
+            {
+                UserProfileId = userProfileId,
+                ActionType = actionType,
+                OriginalText = originalText,
+                Summary = summary,
+                UsedAt = DateTime.UtcNow
+            });
+
+            return Task.CompletedTask;
+        }
+
+        public Task<List<QuickActionHistoryItem>> GetHistoryAsync(int userProfileId, string actionType)
+        {
+            var history = _dbContext.QuickActionHistories
+                .Find(entry => entry.UserProfileId == userProfileId && entry.ActionType == actionType)
+                .OrderByDescending(entry => entry.UsedAt)
+                .Select(entry => new QuickActionHistoryItem
+                {
+                    OriginalText = entry.OriginalText,
+                    Summary = entry.Summary,
+                    UsedAt = entry.UsedAt
+                })
+                .ToList();
+
+            return Task.FromResult(history);
         }
 
         public async Task<PronunciationResult> GetPronunciationAsync(string text, string language)

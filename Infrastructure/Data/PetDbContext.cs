@@ -36,6 +36,7 @@ namespace Infrastructure.Data
         public ILiteCollection<LanguageMistakeTable> LanguageMistakes => _database.GetCollection<LanguageMistakeTable>("languageMistakes");
         public ILiteCollection<ConversationMemoryTable> ConversationMemories => _database.GetCollection<ConversationMemoryTable>("conversationMemories");
         public ILiteCollection<UserActivityTable> UserActivities => _database.GetCollection<UserActivityTable>("userActivities");
+        public ILiteCollection<QuickActionHistoryTable> QuickActionHistories => _database.GetCollection<QuickActionHistoryTable>("quickActionHistories");
         public ILiteCollection<CompletedLearningActivityTable> CompletedLearningActivities => _database.GetCollection<CompletedLearningActivityTable>("completedLearningActivities");
 
         public void EnsureIndexes()
@@ -46,6 +47,9 @@ namespace Infrastructure.Data
             LanguageMistakes.EnsureIndex(x => x.UserProfileId);
             ConversationMemories.EnsureIndex(x => x.UserProfileId);
             UserActivities.EnsureIndex(x => x.UserProfileId);
+            QuickActionHistories.EnsureIndex(x => x.UserProfileId);
+            QuickActionHistories.EnsureIndex(x => x.ActionType);
+            QuickActionHistories.EnsureIndex(x => x.UsedAt);
             CompletedLearningActivities.EnsureIndex(x => x.UserProfileId);
         }
 
@@ -61,6 +65,7 @@ namespace Infrastructure.Data
             _database.DropCollection("languageMistakes");
             _database.DropCollection("conversationMemories");
             _database.DropCollection("userActivities");
+            _database.DropCollection("quickActionHistories");
             _database.DropCollection("completedLearningActivities");
         }
     }

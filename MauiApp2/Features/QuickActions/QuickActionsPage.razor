@@ -15,7 +15,16 @@
 <div class="home-container">
     <div class="header">
         <div class="companion-section">
-            <div class="companion-avatar">🌙</div>
+            <div class="companion-avatar">
+                @if (!string.IsNullOrEmpty(companionAvatarImagePath))
+                {
+                    <img src="@companionAvatarImagePath" alt="@companionName" class="w-16 h-16 rounded-full object-cover" />
+                }
+                else
+                {
+                    @companionAvatar
+                }
+            </div>
             <div class="companion-info">
                 <h2>@companionName</h2>
                 <span class="mood-badge mood-@currentMood.ToString().ToLower()">@currentMood</span>
@@ -63,7 +72,15 @@
     {
         <div class="dialog-overlay" @onclick="CloseDialog">
             <div class="dialog-content" @onclick:stopPropagation="true">
-                <h3>@GetDialogTitle()</h3>
+                <div class="flex items-center mb-4">
+                    <h3 class="mb-0">@GetDialogTitle()</h3>
+                    @if (SupportsHistory)
+                    {
+                        <button type="button" class="ml-auto p-2" @onclick="ToggleHistoryAsync" title="Show history" aria-label="Show history">
+                            <i class="fa fa-history" aria-hidden="true"></i>
+                        </button>
+                    }
+                </div>
 
                 @if (currentAction == ActionType.TextAnalysis)
                 {
@@ -72,6 +89,27 @@
                 else
                 {
                     <input type="text" @bind="inputText" @bind:event="oninput" placeholder="@GetPlaceholder()" class="input-field" />
+                }
+
+                @if (showHistory)
+                {
+                    <div class="mb-4 max-h-48 overflow-y-auto rounded-lg border border-gray-200 bg-gray-50 p-3">
+                        @if (historyItems.Count == 0)
+                        {
+                            <p class="text-sm text-gray-500">No history yet.</p>
+                        }
+                        else
+                        {
+                            @foreach (var item in historyItems)
+                            {
+                                <div class="border-b border-gray-200 py-2 last:border-b-0">
+                                    <div class="font-semibold">@item.OriginalText</div>
+                                    <div class="text-sm text-gray-600">@item.Summary</div>
+                                    <div class="text-xs text-gray-400">@item.UsedAt.ToLocalTime().ToString("g")</div>
+                                </div>
+                            }
+                        }
+                    </div>
                 }
 
                 <LoadingText IsLoading="@isLoading">
@@ -165,6 +203,8 @@
 @code {
     private string userName = "Friend";
     private string companionName = "Luna";
+    private string companionAvatar = string.Empty;
+    private string? companionAvatarImagePath;
     private CompanionMood currentMood = CompanionMood.Curious;
 
     private bool showDialog = false;
@@ -178,6 +218,9 @@
     private byte[] audioData = Array.Empty<byte>();
     private List<TextChunk>? analysisChunks = null;
     private TextChunk? selectedChunk = null;
+    private int userProfileId;
+    private bool showHistory;
+    private List<QuickActionHistoryItem> historyItems = new();
 
     private string targetLanguage = "es";
     private string nativeLanguage = "en";
@@ -204,6 +247,7 @@
             var userProfile = await OnboardingService.GetCurrentUserProfileAsync();
             if (userProfile != null)
             {
+                userProfileId = userProfile.Id;
                 userName = userProfile.Name;
                 targetLanguage = userProfile.TargetLanguage;
                 nativeLanguage = userProfile.NativeLanguage;
@@ -211,6 +255,8 @@
 
             var companion = await OnboardingService.GetOrCreateCompanionAsync();
             companionName = companion.Name;
+            companionAvatar = companion.Avatar;
+            companionAvatarImagePath = GetCompanionAvatarImagePath(companionName);
             currentMood = companion.CurrentMood;
         }
         catch (Exception ex)
@@ -231,6 +277,8 @@
         audioData = Array.Empty<byte>();
         analysisChunks = null;
         selectedChunk = null;
+        showHistory = false;
+        historyItems.Clear();
     }
 
     private void CloseDialog()
@@ -298,6 +346,7 @@
                         analysisChunks = transResult.Chunks;
                         audioData = transResult.AudioData;
                         canPlayAudio = audioData.Length > 0;
+                        await SaveHistoryAsync(transResult.OriginalText, transResult.TranslatedText);
                     }
                     else
                     {
@@ -325,6 +374,9 @@
                     {
                         analysisChunks = analysisResult.Chunks;
                         resultText = "Analysis complete!";
+                        await SaveHistoryAsync(
+                            analysisResult.OriginalText,
+                            string.Join(", ", analysisResult.Chunks.Take(5).Select(chunk => $"{chunk.Word} ({chunk.Translation})")));
                     }
                     else
                     {
@@ -345,6 +397,25 @@
     }
 
     private Task PlayAudio() => PlayVoiceClip(audioData);
+
+    private bool SupportsHistory => currentAction is ActionType.Translation or ActionType.TextAnalysis;
+
+    private async Task ToggleHistoryAsync()
+    {
+        showHistory = !showHistory;
+        if (showHistory && userProfileId > 0)
+        {
+            historyItems = await QuickActionsService.GetHistoryAsync(userProfileId, currentAction.ToString());
+        }
+    }
+
+    private Task SaveHistoryAsync(string originalText, string summary)
+    {
+        if (userProfileId == 0)
+            return Task.CompletedTask;
+
+        return QuickActionsService.AddHistoryAsync(userProfileId, currentAction.ToString(), originalText, summary);
+    }
 
     private async Task OnChunkBlockClick(TextChunk chunk, MouseEventArgs e)
     {
@@ -453,4 +524,10 @@
     {
         Navigation.NavigateTo("/settings");
     }
+
+    private static string? GetCompanionAvatarImagePath(string name) => name?.Trim().ToLowerInvariant() switch
+    {
+        "blip" => "assets/blip.jpeg",
+        _ => null
+    };
 }
