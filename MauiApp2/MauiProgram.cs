@@ -86,7 +86,17 @@ namespace MauiApp2
             {
                 try
                 {
-                    var ttsClient = TextToSpeechClient.Create();
+                    if (string.IsNullOrWhiteSpace(config.GoogleTtsCredentialsJson))
+                    {
+                        throw new InvalidOperationException("Google TTS requires service-account credentials JSON.");
+                    }
+
+                    var ttsSettings = new TextToSpeechSettings();
+                    var ttsClient = new Google.Cloud.TextToSpeech.V1.TextToSpeechClientBuilder
+                    {
+                        Settings = ttsSettings,
+                        JsonCredentials = config.GoogleTtsCredentialsJson
+                    }.Build();
                     builder.Services.AddSingleton(ttsClient);
                     builder.Services.AddScoped<ISpeechService, GoogleSpeechService>();
                 }

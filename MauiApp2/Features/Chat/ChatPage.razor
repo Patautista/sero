@@ -42,7 +42,9 @@
                 <span class="mood-indicator mood-@currentMood.ToString().ToLower()">@currentMood</span>
             </div>
         </div>
-        <button class="bookmarks-toggle" @onclick="ToggleBookmarksList" aria-expanded="@showBookmarks" aria-label="Show bookmarked messages">🔖 Bookmarks</button>
+        <button class="bookmarks-toggle" @onclick="ToggleBookmarksList" aria-expanded="@showBookmarks" aria-label="Show bookmarked messages">
+            <i class="fa fa-bookmark" aria-hidden="true"></i>
+        </button>
     </div>
 
     @if (showBookmarks)
@@ -203,7 +205,7 @@
         var contextMessage = messages.FirstOrDefault(m => m.Id == contextMessageId);
         if (contextMessage != null)
         {
-            <div class="message-context-menu-backdrop" @onclick="CloseMessageContextMenu" @oncontextmenu="CloseMessageContextMenu" @oncontextmenu:preventDefault="true"></div>
+            <div class="message-context-menu-backdrop" @onclick="HandleContextMenuBackdropClick" @oncontextmenu="CloseMessageContextMenu" @oncontextmenu:preventDefault="true"></div>
             <div class="message-context-menu" style="left: @(contextMenuX)px; top: @(contextMenuY)px;">
                 <button class="message-context-menu-item" @onclick="() => ToggleBookmarkAsync(contextMessage)">
                     @(contextMessage.IsBookmarked ? "🔖 Remove bookmark" : "🔖 Bookmark")
@@ -227,6 +229,7 @@
     private double contextMenuX;
     private double contextMenuY;
     private CancellationTokenSource? longPressCts;
+    private DateTimeOffset? longPressMenuOpenedAt;
     private int? highlightedMessageId;
     private int? pendingScrollMessageId;
     private bool isShowingLatest = true;
@@ -309,6 +312,18 @@
     private void CloseMessageContextMenu()
     {
         contextMenuMessageId = null;
+        longPressMenuOpenedAt = null;
+    }
+
+    private void HandleContextMenuBackdropClick()
+    {
+        if (longPressMenuOpenedAt is { } openedAt
+            && DateTimeOffset.UtcNow - openedAt < TimeSpan.FromMilliseconds(750))
+        {
+            return;
+        }
+
+        CloseMessageContextMenu();
     }
 
     private void OnMessagePointerDown(int messageId, PointerEventArgs e)
@@ -330,6 +345,7 @@
             contextMenuMessageId = messageId;
             contextMenuX = x;
             contextMenuY = y;
+            longPressMenuOpenedAt = DateTimeOffset.UtcNow;
             StateHasChanged();
         }
         catch (TaskCanceledException)
