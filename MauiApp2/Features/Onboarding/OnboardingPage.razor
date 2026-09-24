@@ -24,6 +24,7 @@
                 <h2>What's your name?</h2>
                 <InputText placeholder="Enter your name" 
            class="input-field" 
+           @bind-Value:event="oninput"
            @bind-Value="userName" />
                 <div class="button-group">
                     <ButtonSecondary OnClick="PreviousStep">Back</ButtonSecondary>

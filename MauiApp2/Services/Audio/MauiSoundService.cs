@@ -60,6 +60,27 @@ namespace MauiApp2.Services.Audio
             }
         }
 
+        public Task<bool> PlayAudioAsync(byte[] audioData)
+        {
+            try
+            {
+                if (audioData == null || audioData.Length == 0)
+                {
+                    return Task.FromResult(false);
+                }
+
+                var stream = new MemoryStream(audioData, writable: false);
+                _currentPlayer = _audioManager.CreatePlayer(stream);
+                _currentPlayer.Play();
+                return Task.FromResult(true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to play audio: {ex.Message}");
+                return Task.FromResult(false);
+            }
+        }
+
         /// <summary>
         /// Preloads (caches) audio for a text without playing it
         /// </summary>

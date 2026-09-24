@@ -6,6 +6,8 @@
 @using Domain.Shared.Models
 @using Business.Interfaces
 @using Infrastructure.Factories
+@using MauiApp2.Services.Audio
+@inherits SharedBaseComponent
 @inject QuickActionsService QuickActionsService
 @inject OnboardingService OnboardingService
 @inject NavigationManager Navigation
@@ -65,15 +67,15 @@
 
                 @if (currentAction == ActionType.TextAnalysis)
                 {
-                    <textarea @bind="inputText" placeholder="@GetPlaceholder()" rows="5" class="input-field"></textarea>
+                    <textarea @bind="inputText" @bind:event="oninput" placeholder="@GetPlaceholder()" rows="5" class="input-field"></textarea>
                 }
                 else
                 {
-                    <input type="text" @bind="inputText" placeholder="@GetPlaceholder()" class="input-field" />
+                    <input type="text" @bind="inputText" @bind:event="oninput" placeholder="@GetPlaceholder()" class="input-field" />
                 }
 
                 <LoadingText IsLoading="@isLoading">
-                    @if (!string.IsNullOrWhiteSpace(resultText))
+                    @if (!string.IsNullOrWhiteSpace(resultText) || canPlayAudio)
                     {
                         <div class="result-section">
                             @if ((currentAction == ActionType.TextAnalysis || currentAction == ActionType.Translation) && analysisChunks != null && analysisChunks.Any())
@@ -134,7 +136,9 @@
 
                             @if (canPlayAudio && currentAction != ActionType.TextAnalysis)
                             {
-                                <ButtonSecondary OnClick="PlayAudio">🔊 Play Pronunciation</ButtonSecondary>
+                                <ButtonSecondary OnClick="PlayAudio" Class="block mx-auto">
+                                    <i class="fa fa-play" aria-label="Play pronunciation" title="Play pronunciation"></i>
+                                </ButtonSecondary>
                             }
                         </div>
                     }
@@ -171,6 +175,7 @@
     private string exampleText = string.Empty;
     private bool isLoading = false;
     private bool canPlayAudio = false;
+    private byte[] audioData = Array.Empty<byte>();
     private List<TextChunk>? analysisChunks = null;
     private TextChunk? selectedChunk = null;
 
@@ -223,6 +228,7 @@
         contextText = string.Empty;
         exampleText = string.Empty;
         canPlayAudio = false;
+        audioData = Array.Empty<byte>();
         analysisChunks = null;
         selectedChunk = null;
     }
@@ -265,6 +271,7 @@
             contextText = string.Empty;
             exampleText = string.Empty;
             canPlayAudio = false;
+            audioData = Array.Empty<byte>();
             analysisChunks = null;
             selectedChunk = null;
 
@@ -274,8 +281,8 @@
                     var pronResult = await QuickActionsService.GetPronunciationAsync(inputText, targetLanguage);
                     if (pronResult.Success)
                     {
-                        resultText = $"'{inputText}' - Ready to play!";
-                        canPlayAudio = true;
+                        audioData = pronResult.AudioData;
+                        canPlayAudio = audioData.Length > 0;
                     }
                     else
                     {
@@ -289,7 +296,8 @@
                     {
                         resultText = transResult.TranslatedText;
                         analysisChunks = transResult.Chunks;
-                        canPlayAudio = true;
+                        audioData = transResult.AudioData;
+                        canPlayAudio = audioData.Length > 0;
                     }
                     else
                     {
@@ -336,18 +344,7 @@
         }
     }
 
-    private async Task PlayAudio()
-    {
-        try
-        {
-            // Use platform TTS
-            await TextToSpeech.Default.SpeakAsync(resultText);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error playing audio: {ex.Message}");
-        }
-    }
+    private Task PlayAudio() => PlayVoiceClip(audioData);
 
     private async Task OnChunkBlockClick(TextChunk chunk, MouseEventArgs e)
     {

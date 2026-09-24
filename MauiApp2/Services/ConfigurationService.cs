@@ -101,6 +101,7 @@ namespace MauiApp2.Services
         public double MessageBubbleMaxWidth => GetDoubleValue("UI:MessageBubbleMaxWidth", 0.7);
 
         // Optional External APIs
+        public string? ElevenLabsApiKey => GetValue("Optional:ElevenLabsApiKey");
         public string? GoogleTtsCredentialsJson => GetValue("Optional:GoogleTtsCredentialsJson");
         public string? TranslationApiKey => GetValue("Optional:TranslationApiKey");
         public string? TranslationApiUrl => GetValue("Optional:TranslationApiUrl");

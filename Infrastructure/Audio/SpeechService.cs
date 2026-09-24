@@ -65,6 +65,37 @@ namespace Infrastructure.Audio
             {
                 return "uNsWM1StCcpydKYOjKyu";
             }
+            if (lang == AvailableCodes.French && voiceGender == VoiceGender.Female)
+            {
+                return "O31r762Gb3WFygrEOGh0";
+            }
+            if (lang == AvailableCodes.Portuguese && voiceGender == VoiceGender.Female)
+            {
+                return "RGymW84CSmfVugnA5tvA";
+            }
+            if (lang == AvailableCodes.Vietnamese && voiceGender == VoiceGender.Female)
+            {
+                return "iSFxP4Z6YNcx9OXl62Ic";
+            }
+            if (lang == AvailableCodes.Chinese && voiceGender == VoiceGender.Female)
+            {
+                return "V3z1DARAbkkTVEx5lmEl";
+            }
+            if (lang == AvailableCodes.English && voiceGender == VoiceGender.Female)
+            {
+                return "FF59babHL8N8gfTgtBMT";
+            }
+            /*
+            if (lang == AvailableCodes.Spanish && voiceGender == VoiceGender.Female)
+            {
+                return "D3ws14YxTqcjPaXEOehR";
+            }
+            */
+            if (lang == AvailableCodes.German && voiceGender == VoiceGender.Female)
+            {
+                return "R24r0IV80Iw9eyByq1ps";
+            }
+
             throw new NotSupportedException($"No voice configured for {lang}-{voiceGender}");
         }
     }

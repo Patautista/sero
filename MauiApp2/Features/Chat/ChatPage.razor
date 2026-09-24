@@ -12,10 +12,10 @@
 @using Infrastructure.Factories
 @using Microsoft.Extensions.AI
 @using Microsoft.Extensions.Logging
+@inherits SharedBaseComponent
 @inject ChatService ChatService
 @inject OnboardingService OnboardingService
 @inject IApiService ApiService
-@inject MauiSoundService SoundService
 @inject NavigationManager Navigation
 @inject IJSRuntime JSRuntime
 @inject Microsoft.Extensions.AI.IChatClient ChatClient
@@ -599,22 +599,7 @@
         StateHasChanged();
     }
 
-    private async Task PlayMessageAudio(ChatMessage message)
-    {
-        try
-        {
-            var locales = await TextToSpeech.Default.GetLocalesAsync();
-            var locale = locales.FirstOrDefault(l =>
-                l.Language.Equals(targetLanguage, StringComparison.OrdinalIgnoreCase) ||
-                l.Id.StartsWith(targetLanguage, StringComparison.OrdinalIgnoreCase));
-            await TextToSpeech.Default.SpeakAsync(message.Content, new SpeechOptions { Locale = locale });
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error playing audio: {ex.Message}");
-            errorMessage = "Failed to play audio";
-        }
-    }
+    private Task PlayMessageAudio(ChatMessage message) => PlayVoiceClip(message.Content, targetLanguage);
 
     private async Task PlayAudioMessage(ChatMessage message)
     {
@@ -624,13 +609,8 @@
         StateHasChanged();
         try
         {
-            await SoundService.PlayVoiceClip(message.Content, targetLanguage);
+            await PlayVoiceClip(message.Content, targetLanguage);
             playingAudioMessageId = message.Id;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error playing audio message: {ex.Message}");
-            errorMessage = "Failed to play audio";
         }
         finally
         {

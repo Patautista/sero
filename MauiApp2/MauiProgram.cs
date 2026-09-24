@@ -1,5 +1,6 @@
 ﻿using Business.Audio;
 using CommunityToolkit.Maui;
+using ElevenLabs;
 using Google.Cloud.TextToSpeech.V1;
 using Infrastructure.Audio;
 using Infrastructure.Data;
@@ -77,32 +78,37 @@ namespace MauiApp2
             builder.Services.AddSingleton<ICompanionPromptBuilder, CompanionPromptBuilder>();
             builder.Services.AddSingleton<LanguageDetectionService>();
 
-            // Voice / TTS — powers audio-only companion messages (e.g. listening activities).
-            // Registered defensively: if Google Cloud credentials aren't available on this
-            // device, ISpeechService is simply left unregistered and LocalApiService.GetTTSAsync
-            // falls back to returning empty audio instead of crashing the app at startup.
+            // Voice / TTS — prefer ElevenLabs when configured, otherwise use Google Cloud TTS.
             builder.Services.AddScoped<IAudioCache>(_ => new MobileAudioCache());
             if (config.EnableVoiceFeatures)
             {
-                try
+                if (!string.IsNullOrWhiteSpace(config.ElevenLabsApiKey))
                 {
-                    if (string.IsNullOrWhiteSpace(config.GoogleTtsCredentialsJson))
-                    {
-                        throw new InvalidOperationException("Google TTS requires service-account credentials JSON.");
-                    }
-
-                    var ttsSettings = new TextToSpeechSettings();
-                    var ttsClient = new Google.Cloud.TextToSpeech.V1.TextToSpeechClientBuilder
-                    {
-                        Settings = ttsSettings,
-                        JsonCredentials = config.GoogleTtsCredentialsJson
-                    }.Build();
-                    builder.Services.AddSingleton(ttsClient);
-                    builder.Services.AddScoped<ISpeechService, GoogleSpeechService>();
+                    builder.Services.AddSingleton(_ => new ElevenLabsClient(config.ElevenLabsApiKey));
+                    builder.Services.AddScoped<ISpeechService, SpeechService>();
                 }
-                catch (Exception ex)
+                else
                 {
-                    System.Diagnostics.Debug.WriteLine($"Voice features disabled: could not initialise Google TTS client ({ex.Message}).");
+                    try
+                    {
+                        if (string.IsNullOrWhiteSpace(config.GoogleTtsCredentialsJson))
+                        {
+                            throw new InvalidOperationException("Neither ElevenLabs API key nor Google TTS credentials are configured.");
+                        }
+
+                        var ttsSettings = new TextToSpeechSettings();
+                        var ttsClient = new Google.Cloud.TextToSpeech.V1.TextToSpeechClientBuilder
+                        {
+                            Settings = ttsSettings,
+                            JsonCredentials = config.GoogleTtsCredentialsJson
+                        }.Build();
+                        builder.Services.AddSingleton(ttsClient);
+                        builder.Services.AddScoped<ISpeechService, GoogleSpeechService>();
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Voice features disabled: could not initialise TTS client ({ex.Message}).");
+                    }
                 }
             }
             builder.Services.AddScoped<MauiSoundService>();
